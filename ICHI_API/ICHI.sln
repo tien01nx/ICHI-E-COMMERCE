@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICHI_CORE", "..\ICHI_CORE\ICHI_CORE.csproj", "{4E091F25-DD22-449F-BF66-CD671BD0296E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICHI_API", "ICHI_API.csproj", "{A40CC2AF-8F44-4BFE-AD5C-A6A3DD41EC41}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E091F25-DD22-449F-BF66-CD671BD0296E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E091F25-DD22-449F-BF66-CD671BD0296E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E091F25-DD22-449F-BF66-CD671BD0296E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E091F25-DD22-449F-BF66-CD671BD0296E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A40CC2AF-8F44-4BFE-AD5C-A6A3DD41EC41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A40CC2AF-8F44-4BFE-AD5C-A6A3DD41EC41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A40CC2AF-8F44-4BFE-AD5C-A6A3DD41EC41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A40CC2AF-8F44-4BFE-AD5C-A6A3DD41EC41}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A94FC10C-D1FA-44C9-9D03-80D2CF072E4B}
+	EndGlobalSection
+EndGlobal

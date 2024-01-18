@@ -1,0 +1,226 @@
+﻿using API.Helpers;
+using API.Model;
+using ICHI_CORE.Domain;
+using ICHI_CORE.Model;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using ICHI_CORE.Controllers.BaseController;
+using ICHI_CORE.Entities;
+using ICHI_CORE.Helpers;
+using ICHI_CORE.NlogConfig;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using ICHI_CORE.Domain.MasterModel;
+using Microsoft.EntityFrameworkCore;
+
+namespace ICHI_CORE.Controllers.MasterController
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AuthController : BaseController<User>
+    {
+        private readonly IConfiguration _configuration;
+        public AuthController(PcsApiContext context, IConfiguration configuration = null) : base(context)
+        {
+            _configuration = configuration;
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("Register")]
+        public async Task<ApiResponse<String>> Register([FromBody] UserRegister userRegister)
+        {
+            ApiResponse<String> result;
+
+            try
+            {
+                User loginUser = GetUserByUsername(userRegister.UserName);
+
+                if (loginUser != null)
+                {
+                    result = new ApiResponse<string>(System.Net.HttpStatusCode.Forbidden, "User already exists", null);
+                    return result;
+                }
+
+                User user = new User();
+                MapperHelper.Map<UserRegister, User>(userRegister, user);
+                user.UsePassword = BCrypt.Net.BCrypt.HashPassword(userRegister.UsePassword);
+                user.UserId = Guid.NewGuid().ToString();
+                user.Active = true;
+                user.CreateUserId = userRegister.UserName;
+                user.UpdateUserId = userRegister.UserName;
+                var userResponse = await Create(user);
+
+                var Role = await _context.Roles.FirstOrDefaultAsync(a => a.Name == AppSettings.USER);
+                UserRole userRole = new UserRole
+                {
+                    RoleId = Role.Id,
+                    UserId = user.UserId
+                };
+
+                var userRoleResponse = await _context.UserRoles.AddAsync(userRole);
+                await _context.SaveChangesAsync();
+
+                var accessToken = await GenerateAccessToken(user);
+                SetJWTCookie(accessToken);
+
+                return new ApiResponse<string>(System.Net.HttpStatusCode.OK, "Register error", accessToken);
+            }
+            catch (Exception ex)
+            {
+                NLogger.log.Error(ex.ToString());
+                result = new ApiResponse<String>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+            }
+            return result;
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("Login")]
+        public async Task<ApiResponse<String>> Login([FromBody] UserLogin userLogin)
+        {
+            ApiResponse<String> result;
+
+            try
+            {
+                User loginUser = GetUserByUsername(userLogin.UserName);
+
+                if (loginUser == null || !BCrypt.Net.BCrypt.Verify(userLogin.Password, loginUser.UsePassword))
+                {
+                    result = new ApiResponse<string>(System.Net.HttpStatusCode.Forbidden, "User not found or password incorrect", null);
+                    return result;
+                }
+
+                var accessToken = await GenerateAccessToken(loginUser);
+                SetJWTCookie(accessToken);
+
+                return new ApiResponse<string>(System.Net.HttpStatusCode.OK, "Login sussess", accessToken);
+            }
+            catch (Exception ex)
+            {
+                NLogger.log.Error(ex.ToString());
+                result = new ApiResponse<String>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+            }
+            return result;
+        }
+
+        [HttpPost]
+        [Route("refresh-token")]
+        [AllowAnonymous]
+        public async Task<ApiResponse<string>> RefreshToken([FromBody] UserRefreshToken user)
+        {
+            ApiResponse<string> result;
+
+            try
+            {
+                var usersResponse = FindAll(new API.Helpers.PaginationParams());
+
+
+                if (usersResponse.Result.Code != System.Net.HttpStatusCode.OK)
+                {
+                    result = new ApiResponse<string>(System.Net.HttpStatusCode.ExpectationFailed, "Error retrieving users", null);
+                    return result;
+                }
+
+
+                User loginUser = GetUserByUsername(user.UserName);
+
+
+                if (loginUser == null || !BCrypt.Net.BCrypt.Verify(user.Password, loginUser.UsePassword))
+                {
+                    result = new ApiResponse<string>(System.Net.HttpStatusCode.Forbidden, "User not found or password incorrect", null);
+                    return result;
+                }
+
+                var oldClaims = GetClaimsFromToken(user.Token);
+                var newAccessToken = GenerateWebToken(oldClaims);
+                SetJWTCookie(newAccessToken);
+
+                return new ApiResponse<string>(System.Net.HttpStatusCode.OK, "Token refreshed successfully", newAccessToken);
+            }
+            catch (Exception ex)
+            {
+                NLogger.log.Error(ex.ToString());
+                result = new ApiResponse<string>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+            }
+
+            return result;
+        }
+        private async Task<string> GenerateAccessToken(User user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.UserId),
+                new Claim(ClaimTypes.Name, user.UserName),
+            };
+            var roles = await _context.UserRoles
+                .Where(ur => ur.UserId == user.UserId)
+                .Join(_context.Roles,
+                      userRole => userRole.RoleId,
+                      role => role.Id,
+                      (userRole, role) => role.Name)
+                .ToListAsync();
+
+            roles.ForEach(role => claims.Add(new Claim(ClaimTypes.Role, role)));
+
+            var accessToken = GenerateWebToken(claims.ToList());
+            return accessToken;
+        }
+
+        private User GetUserByUsername(string username)
+        {
+            var usersResponse = FindAll(new PaginationParams());
+
+            if (usersResponse.Result.Code != System.Net.HttpStatusCode.OK)
+            {
+                return null;
+            }
+
+            var users = usersResponse.Result.Data;
+            return users.FirstOrDefault(a => a.UserName.ToLower().Equals(username.ToLower()));
+        }
+
+        private string GenerateWebToken(List<Claim> claims)
+        {
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            double expireHours = Convert.ToDouble(_configuration["Jwt:ExpireDay"]);
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                expires: DateTime.Now.AddDays(expireHours), // thời gian sống của token 
+                signingCredentials: credentials,
+                claims: claims.ToArray()
+                );
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+        private void SetJWTCookie(string token)
+        {
+            double expireHours = Convert.ToDouble(_configuration["Jwt:ExpireDay"]);
+
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddDays(expireHours), // thời gian sống của cookie 
+            };
+            Response.Cookies.Append("Jwt", token, cookieOptions);
+        }
+
+        private List<Claim> GetClaimsFromToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+            return jsonToken?.Claims.ToList() ?? new List<Claim>();
+        }
+
+        // kiểm tra xem token có hết hạn hay không
+        private DateTime GetTokenExpirationTime(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+            return jsonToken?.ValidTo ?? DateTime.MinValue;
+        }
+    }
+}
