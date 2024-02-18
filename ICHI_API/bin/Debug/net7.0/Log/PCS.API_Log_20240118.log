@@ -28,3 +28,9 @@
 -- 2024-01-18 13:38:56.4273 ERROR[40] | Program.<Main>$. 
       MSG_CONTENT:Test log error
       EXXCEPTION:  | MESSAGE:
+-- 2024-01-18 13:49:49.1775 INFO[38] | Program.<Main>$. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-01-18 13:49:49.2809 ERROR[39] | Program.<Main>$. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:

@@ -4139,11 +4139,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\DoAn\\API\\ICHI_API\\ICHI_API.csproj",
+      "projectUniqueName": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj",
       "projectName": "ICHI_API",
-      "projectPath": "D:\\DoAn\\API\\ICHI_API\\ICHI_API.csproj",
+      "projectPath": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj",
       "packagesPath": "C:\\Users\\tien0\\.nuget\\packages\\",
-      "outputPath": "D:\\DoAn\\API\\ICHI_API\\obj\\",
+      "outputPath": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4164,8 +4164,8 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "D:\\DoAn\\API\\ICHI_CORE\\ICHI_CORE.csproj": {
-              "projectPath": "D:\\DoAn\\API\\ICHI_CORE\\ICHI_CORE.csproj"
+            "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj": {
+              "projectPath": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj"
             }
           }
         }
