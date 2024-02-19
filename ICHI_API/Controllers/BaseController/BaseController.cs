@@ -25,43 +25,43 @@ namespace ICHI_CORE.Controllers.BaseController
         /// Get All resource
         /// </summary>
         /// <returns></returns>
-        //[HttpGet]
-        //public virtual async Task<ApiResponse<IEnumerable<T>>> FindAll()
-        //{
-        //    ApiResponse<IEnumerable<T>> result;
-        //    try
-        //    {
-        //        var data = _context.Set<T>().AsEnumerable();
-        //        result = new ApiResponse<IEnumerable<T>>(System.Net.HttpStatusCode.OK, "", data);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        NLogger.log.Error("{0} | FindAll | Exception: {1}", typeof(T).Name, ex.ToString());
-        //        result = new ApiResponse<IEnumerable<T>>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
-        //    }
-        //    return result;
-        //}
-
         [HttpGet]
-        public virtual async Task<ApiResponse<PagedList<T>>> FindAll([FromQuery] PaginationParams ? paginationParams)
+        public virtual async Task<ApiResponse<IEnumerable<T>>> FindAll()
         {
-            ApiResponse<PagedList<T>> result;
+            ApiResponse<IEnumerable<T>> result;
             try
             {
-                var query = _context.Set<T>().AsQueryable();
-
-                // Áp dụng phân trang
-                var pagedData = await PagedList<T>.CreateAsync(query, paginationParams.PageNumber, paginationParams.PageSize);
-
-                result = new ApiResponse<PagedList<T>>(HttpStatusCode.OK, "Success", pagedData);
+                var data = _context.Set<T>().AsEnumerable();
+                result = new ApiResponse<IEnumerable<T>>(System.Net.HttpStatusCode.OK, "", data);
             }
             catch (Exception ex)
             {
                 NLogger.log.Error("{0} | FindAll | Exception: {1}", typeof(T).Name, ex.ToString());
-                result = new ApiResponse<PagedList<T>>(HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+                result = new ApiResponse<IEnumerable<T>>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
             }
             return result;
         }
+
+        //[HttpGet]
+        //public virtual async Task<ApiResponse<PagedList<T>>> FindAll([FromQuery] PaginationParams ? paginationParams)
+        //{
+        //    ApiResponse<PagedList<T>> result;
+        //    try
+        //    {
+        //        var query = _context.Set<T>().AsQueryable();
+
+        //        // Áp dụng phân trang
+        //        var pagedData = await PagedList<T>.CreateAsync(query, paginationParams.PageNumber, paginationParams.PageSize);
+
+        //        result = new ApiResponse<PagedList<T>>(HttpStatusCode.OK, "Success", pagedData);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        NLogger.log.Error("{0} | FindAll | Exception: {1}", typeof(T).Name, ex.ToString());
+        //        result = new ApiResponse<PagedList<T>>(HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+        //    }
+        //    return result;
+        //}
 
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace ICHI_CORE.Controllers.BaseController
             ApiResponse<T> result;
             try
             {
-                if(entitys.Count > 0)
+                if (entitys.Count > 0)
                 {
                     foreach (var entity in entitys)
                     {

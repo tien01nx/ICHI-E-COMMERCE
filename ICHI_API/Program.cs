@@ -46,7 +46,7 @@ try
     {
         builder.Services.RemoveAll<ILoggerProvider>(); // Xóa tất cả các log tự động của hệ thống
     });
-    var app = builder.Build();
+    var app = builder.Build(); 
     // Configure the HTTP request pipeline
     // // tắt swagger.
     if (app.Environment.IsDevelopment())
@@ -54,17 +54,18 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
+    app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
     app.UseRouting();
     //app.UseHttpsRedirection();
     app.UseMiddleware<JWTInHeaderMiddleware>();
     app.UseAuthentication();
     app.UseAuthorization();
     // Yêu cầu xác thực cho tất cả các endpoint
-    app.UseEndpoints(endpoints =>
-    {
+    //app.UseEndpoints(endpoints =>
+    //{
 
-        endpoints.MapControllers().RequireAuthorization();
-    });
+    //    endpoints.MapControllers().RequireAuthorization();
+    //});
     SeedDatabase();
     app.MapControllers();
     var websocketOptions = new WebSocketOptions

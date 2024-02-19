@@ -7,6 +7,12 @@
         public static String USER = "USER";
         public static String EMPLOYEE = "EMPLOYEE";
         public static String FolderImage = @"/Uploads/";
+
+        public static int PageNumber = 1;
+        public static int PageSize = 10;
+        public static string SortBy = "Id";
+        public static string SortDirection = "asc";
+
         public static bool InitData(IConfiguration configuration)
         {
             try

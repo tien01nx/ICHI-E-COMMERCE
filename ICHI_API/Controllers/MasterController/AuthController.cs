@@ -114,7 +114,7 @@ namespace ICHI_CORE.Controllers.MasterController
 
             try
             {
-                var usersResponse = FindAll(new API.Helpers.PaginationParams());
+                var usersResponse = FindAll();
 
 
                 if (usersResponse.Result.Code != System.Net.HttpStatusCode.OK)
@@ -170,7 +170,7 @@ namespace ICHI_CORE.Controllers.MasterController
 
         private User GetUserByUsername(string username)
         {
-            var usersResponse = FindAll(new PaginationParams());
+            var usersResponse = FindAll();
 
             if (usersResponse.Result.Code != System.Net.HttpStatusCode.OK)
             {

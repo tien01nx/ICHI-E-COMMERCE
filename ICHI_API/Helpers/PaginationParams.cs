@@ -1,15 +1,13 @@
-﻿namespace API.Helpers
+﻿using ICHI_CORE.Helpers;
+
+namespace API.Helpers
 {
     public class PaginationParams
     {
-        private const int MaxPageSize = 50;
-        public int PageNumber { get; set; } = 1;
-        private int _pageSize = 10;
-
-        public int PageSize
-        {
-            get => _pageSize;
-            set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
-        }
+        public int PageNumber { get; set; } = AppSettings.PageNumber;
+        public int PageSize { get; set; } = AppSettings.PageSize;
+        public string Search { get; set; } = string.Empty;
+        public string SortBy { get; set; } = AppSettings.SortBy;
+        public string SortDirection { get; set; } = AppSettings.SortDirection;
     }
 }

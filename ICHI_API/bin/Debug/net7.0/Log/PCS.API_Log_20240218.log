@@ -1,0 +1,42 @@
+-- 2024-02-18 18:00:35.1650 INFO[38] | Program.<Main>$. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-18 18:00:35.6452 ERROR[39] | Program.<Main>$. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-18 18:03:12.9443 INFO[38] | Program.<Main>$. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-18 18:03:12.9834 ERROR[39] | Program.<Main>$. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-18 22:33:02.3772 INFO[38] | Program.<Main>$. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-18 22:33:02.4833 ERROR[39] | Program.<Main>$. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-18 22:34:02.7341 INFO[38] | Program.<Main>$. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-18 22:34:02.7741 ERROR[39] | Program.<Main>$. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-18 22:34:21.0621 INFO[38] | Program.<Main>$. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-18 22:34:21.1058 ERROR[39] | Program.<Main>$. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-18 22:37:42.4415 INFO[38] | Program.<Main>$. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-18 22:37:42.4839 ERROR[39] | Program.<Main>$. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-18 22:39:49.3925 INFO[38] | Program.<Main>$. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-18 22:39:49.4339 ERROR[39] | Program.<Main>$. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:

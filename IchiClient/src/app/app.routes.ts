@@ -1,4 +1,3 @@
-import { RouterModule, Routes } from '@angular/router';
 import { ClientLayoutComponent } from './components/client/client-layout/client-layout.component';
 import { DetailProductComponent } from './components/client/detail-product/detail-product.component';
 import { ProductsFilterComponent } from './components/client/products-filter/products-filter.component';
@@ -10,17 +9,23 @@ import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
 import { VerificationCodeComponent } from './components/auth/verification-code/verification-code.component';
 import { AdminLayoutComponent } from './components/admin/admin-layout/admin-layout.component';
-import { AdminFooterComponent } from './components/admin/admin-footer/admin-footer.component';
-import { AdminHeaderComponent } from './components/admin/admin-header/admin-header.component';
 import { AdminHomeComponent } from './components/admin/admin-home/admin-home.component';
 import { NgModule } from '@angular/core';
+import { ProductComponent } from './components/admin/product/product.component';
+import { InsertAdminProductComponent } from './components/admin/product/insert/insert-admin-product.component';
+import { CategoryComponent } from './components/admin/category/category.component';
+import { RouterModule, Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
     path: 'admin',
     component: AdminLayoutComponent,
-
-    children: [{ path: '', component: AdminHomeComponent }],
+    children: [
+      { path: '', component: AdminHomeComponent },
+      { path: 'products', component: ProductComponent },
+      { path: 'product_insert', component: InsertAdminProductComponent },
+      { path: 'categories', component: CategoryComponent },
+    ],
   },
   { path: '', component: ClientLayoutComponent },
   { path: 'product_detail', component: DetailProductComponent },
