@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './insert-admin-product.component.html',
-  styleUrl: './insert-admin-product.component.css'
+  styleUrl: './insert-admin-product.component.css',
 })
-export class InsertAdminProductComponent {
-
-}
+export class InsertAdminProductComponent {}

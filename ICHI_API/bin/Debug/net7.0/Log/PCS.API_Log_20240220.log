@@ -1,0 +1,56 @@
+-- 2024-02-20 11:13:29.3791 INFO[38] | Program.<Main>$. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-20 11:13:29.4609 ERROR[39] | Program.<Main>$. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-20 11:14:06.2465 INFO[38] | Program.<Main>$. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-20 11:14:06.2765 ERROR[39] | Program.<Main>$. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-20 11:14:06.3033 ERROR[49] | Program.<Main>$. 
+      MSG_CONTENT:Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\Program.cs:line 49
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-20 11:14:16.6384 INFO[38] | Program.<Main>$. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-20 11:14:16.6711 ERROR[39] | Program.<Main>$. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-20 11:14:16.6956 ERROR[49] | Program.<Main>$. 
+      MSG_CONTENT:Microsoft.Extensions.Hosting.HostAbortedException: The host was aborted.
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.ThrowHostAborted()
+   at Microsoft.Extensions.Hosting.HostFactoryResolver.HostingListener.OnNext(KeyValuePair`2 value)
+   at System.Diagnostics.DiagnosticListener.Write(String name, Object value)
+   at Microsoft.Extensions.Hosting.HostBuilder.ResolveHost(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
+   at Microsoft.Extensions.Hosting.HostApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build()
+   at Program.<Main>$(String[] args) in D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\Program.cs:line 49
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-20 11:14:39.8730 INFO[38] | Program.<Main>$. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-20 11:14:39.9256 ERROR[39] | Program.<Main>$. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-20 11:15:23.4822 INFO[38] | Program.<Main>$. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-20 11:15:23.5728 ERROR[39] | Program.<Main>$. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-20 17:11:41.9776 INFO[38] | Program.<Main>$. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-20 17:11:42.0775 ERROR[39] | Program.<Main>$. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:

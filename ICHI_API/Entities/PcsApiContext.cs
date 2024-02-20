@@ -17,6 +17,7 @@ namespace ICHI_CORE.Entities
 
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<Log> Logs { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

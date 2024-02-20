@@ -7,7 +7,4 @@ export interface CategoryProduct extends MasterEntity {
   categoryName: string;
   notes: string;
   isDeleted: boolean;
-
-
-
 }
