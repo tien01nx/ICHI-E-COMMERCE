@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ICHI_CORE.Domain.MasterModel
 {
-    public class OrderHeaders :MasterEntity
+    public class OrderHeaders : MasterEntity
     {
         public string UserId { get; set; } = string.Empty;
         public DateTime OrderDate { get; set; }
@@ -27,6 +27,8 @@ namespace ICHI_CORE.Domain.MasterModel
 
         public string PostalCode { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
+
+        public bool IsDeleted { get; set; } = false;
 
 
     }

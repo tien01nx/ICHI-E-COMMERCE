@@ -8,6 +8,8 @@ using ICHI_CORE.NlogConfig;
 using ICHI_CORE.Domain;
 using ICHI_CORE.Model;
 using System.Data;
+using ICHI_CORE.Domain.MasterModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace ICHI_CORE.Controllers
 {
@@ -44,5 +46,6 @@ namespace ICHI_CORE.Controllers
             }
             return result;
         }
+
     }
 }

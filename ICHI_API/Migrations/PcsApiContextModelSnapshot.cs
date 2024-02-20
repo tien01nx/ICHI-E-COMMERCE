@@ -178,6 +178,9 @@ namespace ICHI_API.Migrations
                         .HasColumnType("nvarchar(10)")
                         .HasColumnName("create_user_id");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

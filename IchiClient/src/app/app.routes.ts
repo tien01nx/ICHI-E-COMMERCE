@@ -15,6 +15,7 @@ import { ProductComponent } from './components/admin/product/product.component';
 import { InsertAdminProductComponent } from './components/admin/product/insert/insert-admin-product.component';
 import { CategoryComponent } from './components/admin/category/category.component';
 import { RouterModule, Routes } from '@angular/router';
+import { SupplierAdminComponent } from './components/admin/supplier/supplier.admin/supplier.admin.component';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,7 @@ export const routes: Routes = [
       { path: 'products', component: ProductComponent },
       { path: 'product_insert', component: InsertAdminProductComponent },
       { path: 'categories', component: CategoryComponent },
+      { path: 'supplier', component: SupplierAdminComponent },
     ],
   },
   { path: '', component: ClientLayoutComponent },

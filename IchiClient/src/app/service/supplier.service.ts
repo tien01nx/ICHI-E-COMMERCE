@@ -34,48 +34,95 @@ export class SupplierService {
   //   );
   // }
 
-  findAll(
+  // findAllByName(
+
+  //   PageNumber: number,
+  //   PageSize: number,
+  //   SortDirection: string,
+  //   SortBy: string,
+  //   Search: string
+  // ): Observable<ApiResponse<SupplierModel>> {
+  //   let params = new HttpParams()
+  //     .set('PageNumber', PageNumber.toString())
+  //     .set('PageSize', PageSize.toString())
+  //   debugger;
+  //   if (SortDirection && SortDirection.trim() !== '') {
+  //     params = params.set('SortDirection', SortDirection);
+  //   }
+  //   if (SortBy && SortBy.trim() !== '') {
+  //     params = params.set('SortDirection', SortBy);
+  //   }
+  //   if (Search && Search.trim() !== '') {
+  //     params = params.set('Search', Search);
+  //   }
+  //   return this.apiService.callApi<SupplierModel>(
+  //     '/Supplier/FindAllPaged',
+  //     'get',
+  //     params
+  //   );
+  // }
+
+  findAllByName(
     PageNumber: number,
     PageSize: number,
     SortDirection: string,
     SortBy: string,
     Search: string
-  ): Observable<ApiResponse<SupplierModel[]>> {
-    const params = new HttpParams()
-      .set('PageNumber', PageNumber.toString())
-      .set('PageSize', PageSize.toString())
-      .set('Search', Search)
-      .set('SortDirection', SortDirection)
-      .set('SortBy', SortBy);
+  ): Observable<ApiResponse<SupplierModel>> {
+    let params = new HttpParams();
 
-    return this.apiService.callApi<SupplierModel[]>(
+    const paramConfig = {
+      PageNumber: PageNumber.toString(),
+      PageSize: PageSize.toString(),
+      SortDirection: SortDirection,
+      SortBy: SortBy,
+      Search: Search,
+    };
+    debugger
+
+    // Duyệt qua đối tượng config và chỉ thêm những tham số có giá trị
+    Object.entries(paramConfig).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        params = params.set(key, value);
+      }
+    });
+
+    return this.apiService.callApi<SupplierModel>(
       '/Supplier/FindAllPaged',
       'get',
       params
     );
   }
 
-  // findAll() {
-  //   return this.http.get(this.apiSupplierUrl);
-  // }
-
-  create(supplierDto: SupplierDto) {
-    return this.http.post(
-      this.apiSupplierAdminUrl,
-      supplierDto,
-      this.apiConfigUrl
+  findAll() {
+    return this.apiService.callApi<SupplierModel>(
+      '/Supplier/FindAllPaged',
+      'get'
     );
   }
 
-  update(supplierDto: SupplierDto) {
-    return this.http.put(
-      this.apiSupplierAdminUrl,
-      supplierDto,
-      this.apiConfigUrl
+  create(supplier: SupplierModel) {
+    return this.apiService.callApi<SupplierModel>(
+      '/Supplier/Create',
+      'post',
+      null,
+      supplier
+    );
+  }
+
+  update(supplier: SupplierModel) {
+    return this.apiService.callApi<SupplierModel>(
+      '/Supplier/Update',
+      'put',
+      null,
+      supplier
     );
   }
 
   delete(id: number) {
-    return this.http.delete(`${this.apiSupplierAdminUrl}/${id}`);
+    return this.apiService.callApi<SupplierModel[]>(
+      '/Supplier/' + id,
+      'delete'
+    );
   }
 }

@@ -5,6 +5,7 @@ using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Helpers;
 using ICHI_CORE.Model;
 using ICHI_CORE.NlogConfig;
+using Microsoft.EntityFrameworkCore;
 
 namespace ICHI_CORE.Controllers.MasterController
 {
@@ -41,8 +42,8 @@ namespace ICHI_CORE.Controllers.MasterController
                         base64ImageData = Convert.ToBase64String(imageData);
                         // kiểm tra trong productimages đã có hình ảnh này chưa nếu có thì xóa đi
                         var productImage = _context.ProductImages.Where(x => x.ProductId == item.ProductId && x.ImageName == Path.GetFileName(item.ImagePath)).FirstOrDefault();
-                        
-                            if (productImage != null)
+
+                        if (productImage != null)
                         {
                             imageDelete++;
                             _context.ProductImages.Remove(productImage);
@@ -93,6 +94,27 @@ namespace ICHI_CORE.Controllers.MasterController
             }
             return result;
 
+        }
+
+        [HttpDelete("{id}")]
+
+        public async Task<ActionResult<ApiResponse<ProductImages>>> Delete(int id)
+        {
+            try
+            {
+                var data = await _context.ProductImages.FirstOrDefaultAsync(x => x.Id == id);
+                data.IsDeleted = true;
+                data.UpdateDatetime = DateTime.Now;
+                data.UpdateUserId = "Admin";
+                _context.ProductImages.Update(data);
+                await _context.SaveChangesAsync();
+                var result = new ApiResponse<ProductImages>(System.Net.HttpStatusCode.OK, "", data);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse<ProductImages>(System.Net.HttpStatusCode.BadRequest, ex.Message, null));
+            }
         }
     }
 }

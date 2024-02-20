@@ -21,8 +21,8 @@ namespace ICHI_CORE.Controllers.MasterController
         //public string Search { get; set; } = string.Empty;
         //public string SortBy { get; set; } = AppSettings.SortBy;
         //public string SortDirection { get; set; } = AppSettings.SortDirection;
-        [HttpPost("FindAllPaged")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<CategoryProduct>>>> FindAllPaged(PaginationParams paginationParams)
+        [HttpGet("FindAllPaged")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<CategoryProduct>>>> FindAllPaged([FromQuery] PaginationParams paginationParams)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace ICHI_CORE.Controllers.MasterController
         }
 
         // viết API delete theo id
-        [HttpPost("/delete{id}")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult<ApiResponse<CategoryProduct>>> Delete(int id)
         {
             try

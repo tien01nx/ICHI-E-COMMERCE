@@ -4,6 +4,6 @@ export interface MasterEntity {
   id: number;
   createDatetime: Date;
   createUserId: string;
-  updateDatetime: Data;
+  updateDatetime: Date;
   updateUserId: string;
 }

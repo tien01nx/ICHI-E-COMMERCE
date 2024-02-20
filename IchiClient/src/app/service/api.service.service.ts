@@ -42,7 +42,21 @@ export class ApiServiceService {
             options
           )
           .pipe(catchError(ApiServiceService.handleError));
-      // Thêm các method khác nếu cần
+      case 'put':
+        return this.http
+          .post<ApiResponse<T>>(
+            `${Environment.apiBaseUrl}${actionAPI}`,
+            bodyInput,
+            options
+          )
+          .pipe(catchError(ApiServiceService.handleError));
+      case 'delete':
+        return this.http
+          .delete<ApiResponse<T>>(
+            `${Environment.apiBaseUrl}${actionAPI}`,
+            options
+          )
+          .pipe(catchError(ApiServiceService.handleError));
       default:
         throw new Error(`Unsupported method: ${method}`);
     }

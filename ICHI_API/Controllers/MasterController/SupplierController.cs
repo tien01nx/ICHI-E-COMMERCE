@@ -16,8 +16,10 @@ namespace ICHI_CORE.Controllers.MasterController
     {
         public SupplierController(PcsApiContext context) : base(context) { }
 
+
+
         [HttpGet("FindAllPaged")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<Supplier>>>> FindAllPaged(PaginationParams paginationParams)
+        public async Task<ActionResult<ApiResponse<IEnumerable<Supplier>>>> FindAllPaged([FromQuery] PaginationParams paginationParams)
         {
             try
             {
@@ -41,6 +43,25 @@ namespace ICHI_CORE.Controllers.MasterController
             catch (Exception ex)
             {
                 return BadRequest(new ApiResponse<IEnumerable<Supplier>>(System.Net.HttpStatusCode.BadRequest, ex.Message, null));
+            }
+        }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ApiResponse<Supplier>>> Delete(int id)
+        {
+            try
+            {
+                var data = await _context.Suppliers.FirstOrDefaultAsync(x => x.Id == id);
+                data.IsDeleted = true;
+                data.UpdateDatetime = DateTime.Now;
+                data.UpdateUserId = "Admin";
+                _context.Suppliers.Update(data);
+                await _context.SaveChangesAsync();
+                var result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.OK, "", data);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse<Supplier>(System.Net.HttpStatusCode.BadRequest, ex.Message, null));
             }
         }
     }
