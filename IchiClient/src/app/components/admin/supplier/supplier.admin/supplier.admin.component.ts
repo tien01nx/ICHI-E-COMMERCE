@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Data } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { SupplierModel } from '../../../../models/supplier.model';
 import { CommonModule } from '@angular/common';
@@ -25,11 +25,13 @@ import { Utils } from '../../../../Utils.ts/utils';
 })
 export class SupplierAdminComponent implements OnInit {
   protected readonly Utils = Utils;
-  paginationModel!: PaginationDTO<SupplierModel>;
-  searchTemp: any = this.activatedRoute.snapshot.queryParams['bankName'] || '';
+  // paginationModel!: PaginationDTO<SupplierModel> =
+  //   new PaginationDTO<SupplierModel>();
+  paginationModel: PaginationDTO<SupplierModel> = PaginationDTO.createEmpty();
+  searchTemp: any = this.activatedRoute.snapshot.queryParams['Search'] || '';
   selectAll: boolean = false;
   sortDir: string = 'ASC';
-  sortBy: string = 'id';
+  SortBy: string = 'id';
 
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   titleModal: string = '';
@@ -48,6 +50,30 @@ export class SupplierAdminComponent implements OnInit {
       Validators.minLength(10),
       Validators.pattern('^0[0-9]{9}$'),
     ]),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(10),
+      Validators.minLength(10),
+      Validators.pattern('^0[0-9]{9}$'),
+    ]),
+    tax_code: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(10),
+      Validators.minLength(10),
+      Validators.pattern('^0[0-9]{9}$'),
+    ]),
+    banK_account: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(10),
+      Validators.minLength(10),
+      Validators.pattern('^0[0-9]{9}$'),
+    ]),
+    bank_name: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(10),
+      Validators.minLength(10),
+      Validators.pattern('^0[0-9]{9}$'),
+    ]),
     address: new FormControl('', [Validators.maxLength(200)]),
   });
 
@@ -58,18 +84,15 @@ export class SupplierAdminComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService
   ) {}
-
   ngOnInit() {
     this.title.setTitle('Quản lý nhà cung cấp');
-    debugger;
     this.activatedRoute.queryParams.subscribe((params) => {
-      const bankName = params['supplier_name'] || '';
-      const pageSize = +params['page-size'] || 10;
-      const pageNumber = +params['page-number'] || 1;
-      const sortDir = params['sort-direction'] || '';
-      const sortBy = params['sort-by'] || '';
-
-      this.findAll(bankName, pageSize, pageNumber, sortDir, sortBy);
+      const search = params['Search'] || '';
+      const pageSize = +params['PageSize'] || 10;
+      const pageNumber = +params['PageNumber'] || 1;
+      const sortDir = params['SortDirection'] || 'ASC';
+      const sortBy = params['SortBy'] || '';
+      this.findAll(pageSize, pageNumber, sortBy, sortDir, search);
     });
   }
 
@@ -78,17 +101,19 @@ export class SupplierAdminComponent implements OnInit {
   }
 
   findAll(
-    supplier_name: string,
     pageSize: number,
     pageNumber: number,
+    sortBy: string,
     sortDir: string,
-    sortBy: string
+    search: string
   ) {
+    debugger  // tslint:disable-line
     this.supplierService
-      .findAllByName(pageSize, pageNumber, sortDir, sortBy, supplier_name)
+      .findAllByName(pageNumber, pageSize, sortDir, sortBy, search)
       .subscribe({
         next: (response: any) => {
-          this.paginationModel.content = response.content;
+          console.log(response);
+          this.paginationModel.content = response.data;
           this.paginationModel.totalPages = response.totalPages;
           this.paginationModel.totalElements = response.totalElements;
           this.paginationModel.numberOfElements = response.numberOfElements;
@@ -98,6 +123,7 @@ export class SupplierAdminComponent implements OnInit {
           this.paginationModel.lastElementOnPage = response.lastElementOnPage;
           this.paginationModel.sortBy = response.sortBy;
           this.paginationModel.sortDirection = response.sortDirection;
+          console.log(response);
         },
         error: (error: any) => {
           console.log(error);
@@ -108,7 +134,7 @@ export class SupplierAdminComponent implements OnInit {
   changePageNumber(pageNumber: number): void {
     this.router
       .navigate(['/admin/supplier'], {
-        queryParams: { 'page-number': pageNumber },
+        queryParams: { PageNumber: pageNumber },
         queryParamsHandling: 'merge',
       })
       .then((r) => {});
@@ -117,7 +143,7 @@ export class SupplierAdminComponent implements OnInit {
   changePageSize(pageSize: number): void {
     this.router
       .navigate(['/admin/supplier'], {
-        queryParams: { 'page-size': pageSize, 'page-number': 1 },
+        queryParams: { PageSize: pageSize, PageNumber: 1 },
         queryParamsHandling: 'merge',
       })
       .then((r) => {});
@@ -126,18 +152,24 @@ export class SupplierAdminComponent implements OnInit {
   sortByField(sortBy: string): void {
     this.router
       .navigate(['/admin/supplier'], {
-        queryParams: { 'sort-by': sortBy, 'sort-direction': this.sortDir },
+        queryParams: { SortBy: sortBy, SortDirection: this.sortDir },
         queryParamsHandling: 'merge',
       })
       .then((r) => {});
     this.sortDir = this.sortDir === 'ASC' ? 'DESC' : 'ASC';
-    this.sortBy = sortBy;
+    this.SortBy = sortBy;
+    // let newSortDir = this.sortDir === 'ASC' ? 'DESC' : 'ASC';
+    // this.router.navigate(['/admin/supplier'], {
+    //   queryParams: { SortBy: sortBy, SortDirection: newSortDir },
+    //   queryParamsHandling: 'merge',
+    // });
+    // debugger;
   }
 
   search() {
     this.router
       .navigate(['/admin/supplier'], {
-        queryParams: { bankName: this.searchTemp, 'page-number': 1 },
+        queryParams: { Search: this.searchTemp, PageNumber: 1 },
         queryParamsHandling: 'merge',
       })
       .then((r) => {});
@@ -223,6 +255,10 @@ export class SupplierAdminComponent implements OnInit {
       bankName: supplier.bankName,
       phone: supplier.phone,
       address: supplier.address,
+      email: supplier.email,
+      tax_code: supplier.taxCode,
+      banK_account: supplier.bankAccount,
+      bank_name: supplier.bankName,
     });
     this.titleModal = 'Cập nhật nhà cung cấp';
     this.btnSave = 'Cập nhật';
@@ -231,6 +267,6 @@ export class SupplierAdminComponent implements OnInit {
   updateTable() {
     this.isDisplayNone = false;
     this.errorMessage = '';
-    this.findAll('', this.paginationModel.pageSize, 1, '', '');
+    this.findAll(this.paginationModel.pageSize, 1, '', '', '');
   }
 }

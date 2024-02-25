@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ICHI_API.Migrations
 {
     [DbContext(typeof(PcsApiContext))]
-    [Migration("20240220143043_update")]
-    partial class update
+    [Migration("20240222084616_dd-migration database")]
+    partial class ddmigrationdatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

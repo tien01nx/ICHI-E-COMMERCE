@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 import { ApiResponse } from '../models/api.response.model';
@@ -28,7 +28,14 @@ export class ApiServiceService {
     });
 
     let options = { headers: headers, params: params };
+    // Tạo URL hoàn chỉnh để log ra
+    const queryParams = params instanceof HttpParams ? params.toString() : '';
 
+    // Tạo URL hoàn chỉnh bao gồm cả query parameters
+    const fullUrl = `${Environment.apiBaseUrl}${actionAPI}${
+      queryParams ? '?' + queryParams : ''
+    }`;
+    console.log(`API ${method.toUpperCase()}: ${fullUrl}`);
     switch (method.toLowerCase()) {
       case 'get':
         return this.http

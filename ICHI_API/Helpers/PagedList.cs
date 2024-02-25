@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ICHI_API.Helpers;
+using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 
 namespace API.Helpers
 {
@@ -18,11 +20,19 @@ namespace API.Helpers
         public int PageSize { get; set; }
         public int TotalCount { get; set; }
 
-        public static async Task<PagedList<T>> CreateAsync(IQueryable<T> source, int pageNumber, int pageSize)
+        public static async Task<PagedResult<T>> CreateAsync(IQueryable<T> query, int pageNumber, int pageSize)
         {
-            var count = await source.CountAsync();
-            var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-            return new PagedList<T>(items, count, pageNumber, pageSize);
+            var pagedList = await query.ToPagedListAsync(pageNumber, pageSize);
+            return new PagedResult<T>
+            {
+                Items = pagedList.ToList(),
+                TotalCount = pagedList.TotalItemCount,
+                PageCount = pagedList.PageCount,
+                CurrentPage = pagedList.PageNumber,
+                PageSize = pagedList.PageSize,
+                HasPreviousPage = pagedList.HasPreviousPage,
+                HasNextPage = pagedList.HasNextPage
+            };
         }
     }
 }

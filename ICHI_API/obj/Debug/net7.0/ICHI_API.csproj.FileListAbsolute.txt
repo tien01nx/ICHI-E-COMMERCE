@@ -355,3 +355,5 @@ D:\Code\ICHI-E-COMMERCE\ICHI_API\obj\Debug\net7.0\ICHI_API.genruntimeconfig.cach
 D:\Code\ICHI-E-COMMERCE\ICHI_API\obj\Debug\net7.0\ref\ICHI_API.dll
 D:\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\System.Linq.Dynamic.Core.dll
 D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\System.Linq.Dynamic.Core.dll
+D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\JetBrains.Annotations.dll
+D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\X.PagedList.dll

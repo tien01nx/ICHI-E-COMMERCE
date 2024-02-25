@@ -65,44 +65,28 @@
                 class="sort white-space-nowrap align-middle ps-4"
                 scope="col"
                 style="width: 250px"
-                (click)="sortByField('bankName')"
+                (click)="sortByField('SupplierName')"
               >
                 Tên nhà cung cấp
                 <label
                   [class.d-none]="
-                    sortBy === 'bankName' &&
+                    SortBy === 'SupplierName' &&
                     (sortDir === 'DESC' || sortDir === 'ASC')
                   "
                 >
                   <span class="fas fa-sort align-middle fs-9"></span>
                 </label>
-                <label [class.d-none]="sortBy !== 'bankName' || sortDir !== 'ASC'">
-                  <span class="fas fa-sort-up align-middle fs-9"></span>
-                </label>
-                <label [class.d-none]="sortBy !== 'bankName' || sortDir !== 'DESC'">
-                  <span class="fas fa-sort-down align-middle fs-9"></span>
-                </label>
-              </th>
-              <th
-                class="sort align-middle ps-4"
-                scope="col"
-                style="width: 150px"
-                (click)="sortByField('phone')"
-              >
-                Số điện thoại
                 <label
                   [class.d-none]="
-                    sortBy === 'phone' &&
-                    (sortDir === 'DESC' || sortDir === 'ASC')
+                    SortBy !== 'SupplierName' || sortDir !== 'ASC'
                   "
                 >
-                  <span class="fas fa-sort align-middle fs-9"></span>
-                </label>
-                <label [class.d-none]="sortBy !== 'phone' || sortDir !== 'ASC'">
                   <span class="fas fa-sort-up align-middle fs-9"></span>
                 </label>
                 <label
-                  [class.d-none]="sortBy !== 'phone' || sortDir !== 'DESC'"
+                  [class.d-none]="
+                    SortBy !== 'SupplierName' || sortDir !== 'DESC'
+                  "
                 >
                   <span class="fas fa-sort-down align-middle fs-9"></span>
                 </label>
@@ -115,19 +99,19 @@
                 Địa chỉ
                 <label
                   [class.d-none]="
-                    sortBy === 'address' &&
+                    SortBy === 'address' &&
                     (sortDir === 'DESC' || sortDir === 'ASC')
                   "
                 >
                   <span class="fas fa-sort align-middle fs-9"></span>
                 </label>
                 <label
-                  [class.d-none]="sortBy !== 'address' || sortDir !== 'ASC'"
+                  [class.d-none]="SortBy !== 'address' || sortDir !== 'ASC'"
                 >
                   <span class="fas fa-sort-up align-middle fs-9"></span>
                 </label>
                 <label
-                  [class.d-none]="sortBy !== 'address' || sortDir !== 'DESC'"
+                  [class.d-none]="SortBy !== 'address' || sortDir !== 'DESC'"
                 >
                   <span class="fas fa-sort-down align-middle fs-9"></span>
                 </label>
@@ -135,25 +119,160 @@
               <th
                 class="sort align-middle ps-4"
                 scope="col"
-                (click)="sortByField('createdDate')"
+                style="width: 150px"
+                (click)="sortByField('phone')"
               >
-                Ngày tạo
+                Số điện thoại
                 <label
                   [class.d-none]="
-                    sortBy === 'createdDate' &&
+                    SortBy === 'phone' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label [class.d-none]="SortBy !== 'phone' || sortDir !== 'ASC'">
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'phone' || sortDir !== 'DESC'"
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <th
+                class="sort align-middle ps-4"
+                scope="col"
+                style="width: 150px"
+                (click)="sortByField('TaxCode')"
+              >
+                Mã số thuế
+                <label
+                  [class.d-none]="
+                    SortBy === 'TaxCode' &&
                     (sortDir === 'DESC' || sortDir === 'ASC')
                   "
                 >
                   <span class="fas fa-sort align-middle fs-9"></span>
                 </label>
                 <label
-                  [class.d-none]="sortBy !== 'createdDate' || sortDir !== 'ASC'"
+                  [class.d-none]="SortBy !== 'TaxCode' || sortDir !== 'ASC'"
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'TaxCode' || sortDir !== 'DESC'"
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <th
+                class="sort align-middle ps-4"
+                scope="col"
+                style="width: 160px"
+                (click)="sortByField('BankName')"
+              >
+                Tên ngân hàng
+                <label
+                  [class.d-none]="
+                    SortBy === 'BankName' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'BankName' || sortDir !== 'ASC'"
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'BankName' || sortDir !== 'DESC'"
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <th
+                class="sort align-middle ps-4"
+                scope="col"
+                style="width: 150px"
+                (click)="sortByField('BankAccount')"
+              >
+                Số tài khoản
+                <label
+                  [class.d-none]="
+                    SortBy === 'BankAccount' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'BankAccount' || sortDir !== 'ASC'"
                 >
                   <span class="fas fa-sort-up align-middle fs-9"></span>
                 </label>
                 <label
                   [class.d-none]="
-                    sortBy !== 'createdDate' || sortDir !== 'DESC'
+                    SortBy !== 'BankAccount' || sortDir !== 'DESC'
+                  "
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <th
+                class="sort align-middle ps-4"
+                scope="col"
+                style="width: 150px"
+                (click)="sortByField('UpdateDatetime')"
+              >
+                Ngày sửa
+                <label
+                  [class.d-none]="
+                    SortBy === 'UpdateDatetime' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="
+                    SortBy !== 'UpdateDatetime' || sortDir !== 'ASC'
+                  "
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="
+                    SortBy !== 'UpdateDatetime' || sortDir !== 'DESC'
+                  "
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <!-- ngày tạo và ngày sửa -->
+              <!-- <th
+                class="sort align-middle ps-4"
+                scope="col"
+                (click)="sortByField('createdDate')"
+              >
+                Ngày tạo
+                <label
+                  [class.d-none]="
+                    SortBy === 'createdDate' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'createdDate' || sortDir !== 'ASC'"
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="
+                    SortBy !== 'createdDate' || sortDir !== 'DESC'
                   "
                 >
                   <span class="fas fa-sort-down align-middle fs-9"></span>
@@ -167,26 +286,31 @@
                 Ngày sửa
                 <label
                   [class.d-none]="
-                    sortBy === 'updatedDate' &&
+                    SortBy === 'updatedDate' &&
                     (sortDir === 'DESC' || sortDir === 'ASC')
                   "
                 >
                   <span class="fas fa-sort align-middle fs-9"></span>
                 </label>
                 <label
-                  [class.d-none]="sortBy !== 'updatedDate' || sortDir !== 'ASC'"
+                  [class.d-none]="SortBy !== 'updatedDate' || sortDir !== 'ASC'"
                 >
                   <span class="fas fa-sort-up align-middle fs-9"></span>
                 </label>
                 <label
                   [class.d-none]="
-                    sortBy !== 'updatedDate' || sortDir !== 'DESC'
+                    SortBy !== 'updatedDate' || sortDir !== 'DESC'
                   "
                 >
                   <span class="fas fa-sort-down align-middle fs-9"></span>
                 </label>
-              </th>
-              <th class="sort text-end align-middle pe-0 ps-4" scope="col"></th>
+              </th> -->
+              <!-- end ngày tạo và ngày sửa -->
+              <th
+                class="sort text-end align-middle pe-0 ps-4"
+                scope="col"
+                style="width: 50px"
+              ></th>
             </tr>
           </thead>
           <tbody class="list" id="supplier-table-body">
@@ -209,14 +333,23 @@
                   />
                 </div>
               </td>
-              <td class="align-middle ps-4">{{ supplier.supplierName }}</td>
+              <!-- <td class="align-middle ps-4">{{ supplier.supplierCode }}</td> -->
               <td class="align-middle white-space-nowrap text-700 ps-4">
-                {{ supplier.phone }}
+                {{ supplier.supplierName }}
               </td>
               <td class="align-middle text-600 ps-4">{{ supplier.address }}</td>
-              <td class="align-middle white-space-nowrap text-600 ps-4">
-                {{ supplier.createDatetime | date : "dd/MM/yyyy HH:mm:ss" }}
+              <td class="align-middle text-600 ps-4">{{ supplier.phone }}</td>
+              <td class="align-middle text-600 ps-4">{{ supplier.taxCode }}</td>
+              <td class="align-middle text-600 ps-4">
+                {{ supplier.bankName }}
               </td>
+              <td class="align-middle text-600 ps-4">
+                {{ supplier.bankAccount }}
+              </td>
+
+              <!-- <td class="align-middle white-space-nowrap text-600 ps-4">
+                {{ supplier.createDatetime | date : "dd/MM/yyyy HH:mm:ss" }}
+              </td> -->
               <td class="align-middle white-space-nowrap text-600 ps-3">
                 {{ supplier.updateDatetime | date : "dd/MM/yyyy HH:mm:ss" }}
               </td>
@@ -382,7 +515,7 @@
             </label>
           </div>
           <div class="row mb-3">
-            <label class="col-sm-4 col-form-label fs-9" for="name"
+            <label class="col-sm-4 col-form-label fs-9" for="bankName"
               >Tên nhà cung cấp</label
             >
             <div class="col-sm-8">
@@ -407,6 +540,26 @@
                 >
                   Tên nhà cung cấp không được vượt quá 50 ký tự
                 </span>
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="address"
+              >Địa chỉ</label
+            >
+            <div class="col-sm-8">
+              <textarea
+                class="form-control"
+                id="address"
+                rows="3"
+                placeholder="Địa chỉ"
+                formControlName="address"
+              ></textarea>
+              <small
+                class="text-danger mt-1"
+                *ngIf="supplierForm['controls']['address'].dirty && supplierForm['controls']['address'].errors?.['maxlength']"
+              >
+                Địa chỉ không được vượt quá 200 ký tự
               </small>
             </div>
           </div>
@@ -447,23 +600,84 @@
               </small>
             </div>
           </div>
+
           <div class="row mb-3">
-            <label class="col-sm-4 col-form-label fs-9" for="address"
-              >Địa chỉ</label
+            <label class="col-sm-4 col-form-label fs-9" for="email"
+              >Email</label
             >
             <div class="col-sm-8">
               <textarea
                 class="form-control"
-                id="address"
+                id="email"
                 rows="3"
                 placeholder="Địa chỉ"
-                formControlName="address"
+                formControlName="email"
               ></textarea>
               <small
                 class="text-danger mt-1"
-                *ngIf="supplierForm['controls']['address'].dirty && supplierForm['controls']['address'].errors?.['maxlength']"
+                *ngIf="supplierForm['controls']['email'].dirty && supplierForm['controls']['email'].errors?.['maxlength']"
               >
                 Địa chỉ không được vượt quá 200 ký tự
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="tax_code"
+              >Mã số thuế</label
+            >
+            <div class="col-sm-8">
+              <textarea
+                class="form-control"
+                id="tax_code"
+                rows="3"
+                placeholder="Địa chỉ"
+                formControlName="tax_code"
+              ></textarea>
+              <small
+                class="text-danger mt-1"
+                *ngIf="supplierForm['controls']['tax_code'].dirty && supplierForm['controls']['tax_code'].errors?.['maxlength']"
+              >
+                Mã số thuế không được vượt quá 200 ký tự
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="banK_account"
+              >Số tài khoản</label
+            >
+            <div class="col-sm-8">
+              <textarea
+                class="form-control"
+                id="banK_account"
+                rows="3"
+                placeholder="Địa chỉ"
+                formControlName="banK_account"
+              ></textarea>
+              <small
+                class="text-danger mt-1"
+                *ngIf="supplierForm['controls']['banK_account'].dirty && supplierForm['controls']['banK_account'].errors?.['maxlength']"
+              >
+                Mã số thuế không được vượt quá 200 ký tự
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="bank_name"
+              >Tên ngân hàng</label
+            >
+            <div class="col-sm-8">
+              <textarea
+                class="form-control"
+                id="bank_name"
+                rows="3"
+                placeholder="Địa chỉ"
+                formControlName="bank_name"
+              ></textarea>
+              <small
+                class="text-danger mt-1"
+                *ngIf="supplierForm['controls']['bank_name'].dirty && supplierForm['controls']['bank_name'].errors?.['maxlength']"
+              >
+                Mã số thuế không được vượt quá 200 ký tự
               </small>
             </div>
           </div>

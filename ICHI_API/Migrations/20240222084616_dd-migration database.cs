@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ICHI_API.Migrations
 {
     /// <inheritdoc />
-    public partial class update : Migration
+    public partial class ddmigrationdatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
