@@ -4,6 +4,7 @@ import { SupplierModel } from '../models/supplier.model';
 import { ApiResponse } from '../models/api.response.model';
 import { Observable, tap } from 'rxjs';
 import { ApiServiceService } from './api.service.service';
+import { InsertSupplierDTO } from '../dtos/insert.supplier.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -41,21 +42,21 @@ export class SupplierService {
     SortBy: string,
     Search: string
   ): Observable<ApiResponse<SupplierModel>> {
-    let params = new HttpParams()
+    let params = new HttpParams();
     if (PageNumber && PageNumber.toString().trim() !== '') {
-      params = params.set('PageNumber', PageNumber.toString());
+      params = params.set('page-number', PageNumber.toString());
     }
     if (PageSize && PageSize.toString().trim() !== '') {
-      params = params.set('PageSize', PageSize.toString());
+      params = params.set('page-size', PageSize.toString());
     }
     if (SortDirection && SortDirection.trim() !== '') {
-      params = params.set('SortDirection', SortDirection);
+      params = params.set('sort-direction', SortDirection);
     }
     if (SortBy && SortBy.trim() !== '') {
-      params = params.set('SortBy', SortBy);
+      params = params.set('sort-by', SortBy);
     }
     if (Search && Search.trim() !== '') {
-      params = params.set('Search', Search);
+      params = params.set('search', Search);
     }
     console.log(params);
     return this.apiService.callApi<SupplierModel>(
@@ -105,7 +106,8 @@ export class SupplierService {
     );
   }
 
-  create(supplier: SupplierModel) {
+  create(supplier: InsertSupplierDTO) {
+    debugger;
     return this.apiService.callApi<SupplierModel>(
       '/Supplier/Create',
       'post',

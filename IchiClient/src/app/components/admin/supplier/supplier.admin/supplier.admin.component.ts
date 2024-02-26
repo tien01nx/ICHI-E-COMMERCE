@@ -39,42 +39,39 @@ export class SupplierAdminComponent implements OnInit {
   isDisplayNone: boolean = false;
   errorMessage: string = '';
   supplierForm: FormGroup = new FormGroup({
-    id: new FormControl(null),
-    bankName: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(50),
+    // id: new FormControl('0'),
+    supplierCode: new FormControl('', [
+      // Validators.required,
+      // Validators.maxLength(50),
     ]),
-    phone: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(10),
-      Validators.minLength(10),
-      Validators.pattern('^0[0-9]{9}$'),
-    ]),
-    email: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(10),
-      Validators.minLength(10),
-      Validators.pattern('^0[0-9]{9}$'),
-    ]),
-    tax_code: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(10),
-      Validators.minLength(10),
-      Validators.pattern('^0[0-9]{9}$'),
-    ]),
-    banK_account: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(10),
-      Validators.minLength(10),
-      Validators.pattern('^0[0-9]{9}$'),
-    ]),
-    bank_name: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(10),
-      Validators.minLength(10),
-      Validators.pattern('^0[0-9]{9}$'),
+    supplierName: new FormControl('', [
+      // Validators.required,
+      // Validators.maxLength(50),
     ]),
     address: new FormControl('', [Validators.maxLength(200)]),
+    phone: new FormControl('', [
+      // Validators.required,
+      // Validators.maxLength(10),
+      // Validators.minLength(10),
+      // Validators.pattern('^0[0-9]{9}$'),
+    ]),
+    email: new FormControl('', [
+      // Validators.required, Validators.email
+    ]),
+    taxCode: new FormControl('', [
+      // Validators.required,
+      // Validators.maxLength(20),
+      // Validators.minLength(10),
+    ]),
+    bankAccount: new FormControl('', [
+      // Validators.required,
+      // Validators.maxLength(20),
+      // Validators.minLength(5),
+    ]),
+    bankName: new FormControl('', [
+      // Validators.required,
+      // Validators.maxLength(50),
+    ]),
   });
 
   constructor(
@@ -87,11 +84,11 @@ export class SupplierAdminComponent implements OnInit {
   ngOnInit() {
     this.title.setTitle('Quản lý nhà cung cấp');
     this.activatedRoute.queryParams.subscribe((params) => {
-      const search = params['Search'] || '';
-      const pageSize = +params['PageSize'] || 10;
-      const pageNumber = +params['PageNumber'] || 1;
-      const sortDir = params['SortDirection'] || 'ASC';
-      const sortBy = params['SortBy'] || '';
+      const search = params['search'] || '';
+      const pageSize = +params['page-size'] || 10;
+      const pageNumber = +params['page-number'] || 1;
+      const sortDir = params['sort-direction'] || 'ASC';
+      const sortBy = params['sort-by'] || '';
       this.findAll(pageSize, pageNumber, sortBy, sortDir, search);
     });
   }
@@ -107,23 +104,23 @@ export class SupplierAdminComponent implements OnInit {
     sortDir: string,
     search: string
   ) {
-    debugger  // tslint:disable-line
     this.supplierService
       .findAllByName(pageNumber, pageSize, sortDir, sortBy, search)
       .subscribe({
         next: (response: any) => {
           console.log(response);
-          this.paginationModel.content = response.data;
-          this.paginationModel.totalPages = response.totalPages;
-          this.paginationModel.totalElements = response.totalElements;
+          this.paginationModel.content = response.data.items;
+          debugger;
+          this.paginationModel.totalPages = response.data.pageCount;
+          this.paginationModel.totalElements = response.data.totalCount;
           this.paginationModel.numberOfElements = response.numberOfElements;
-          this.paginationModel.pageSize = response.pageSize;
-          this.paginationModel.pageNumber = response.pageNumber;
+          this.paginationModel.pageSize = response.data.pageSize;
+          this.paginationModel.pageNumber = response.data.currentPage;
           this.paginationModel.firstElementOnPage = response.firstElementOnPage;
           this.paginationModel.lastElementOnPage = response.lastElementOnPage;
           this.paginationModel.sortBy = response.sortBy;
           this.paginationModel.sortDirection = response.sortDirection;
-          console.log(response);
+          console.log(this.paginationModel);
         },
         error: (error: any) => {
           console.log(error);
@@ -134,7 +131,7 @@ export class SupplierAdminComponent implements OnInit {
   changePageNumber(pageNumber: number): void {
     this.router
       .navigate(['/admin/supplier'], {
-        queryParams: { PageNumber: pageNumber },
+        queryParams: { 'page-number': pageNumber },
         queryParamsHandling: 'merge',
       })
       .then((r) => {});
@@ -143,7 +140,7 @@ export class SupplierAdminComponent implements OnInit {
   changePageSize(pageSize: number): void {
     this.router
       .navigate(['/admin/supplier'], {
-        queryParams: { PageSize: pageSize, PageNumber: 1 },
+        queryParams: { 'page-size': pageSize, 'page-number': 1 },
         queryParamsHandling: 'merge',
       })
       .then((r) => {});
@@ -152,24 +149,18 @@ export class SupplierAdminComponent implements OnInit {
   sortByField(sortBy: string): void {
     this.router
       .navigate(['/admin/supplier'], {
-        queryParams: { SortBy: sortBy, SortDirection: this.sortDir },
+        queryParams: { 'sort-by': sortBy, 'sort-direction': this.sortDir },
         queryParamsHandling: 'merge',
       })
       .then((r) => {});
     this.sortDir = this.sortDir === 'ASC' ? 'DESC' : 'ASC';
     this.SortBy = sortBy;
-    // let newSortDir = this.sortDir === 'ASC' ? 'DESC' : 'ASC';
-    // this.router.navigate(['/admin/supplier'], {
-    //   queryParams: { SortBy: sortBy, SortDirection: newSortDir },
-    //   queryParamsHandling: 'merge',
-    // });
-    // debugger;
   }
 
   search() {
     this.router
       .navigate(['/admin/supplier'], {
-        queryParams: { Search: this.searchTemp, PageNumber: 1 },
+        queryParams: { search: this.searchTemp, 'page-number': 1 },
         queryParamsHandling: 'merge',
       })
       .then((r) => {});

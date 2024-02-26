@@ -17,7 +17,7 @@ namespace ICHI_CORE.Domain
         [Column("create_user_id")]
         [Required]
         [StringLength(10)]
-        public string CreateUserId { get; set; }
+        public string CreateUserId { get; set; } = "Admin";
 
         [Column("update_datetime")]
         [Required]
@@ -26,6 +26,6 @@ namespace ICHI_CORE.Domain
         [Column("update_user_id")]
         [Required]
         [StringLength(10)]
-        public string UpdateUserId { get; set; } 
+        public string UpdateUserId { get; set; } = "Admin";
     }
 }

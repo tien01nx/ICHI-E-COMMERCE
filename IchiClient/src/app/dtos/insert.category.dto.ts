@@ -8,7 +8,6 @@ import {
 import { MasterEntityDTO } from './master.entity.dto';
 
 export class InsertCategoryDTO extends MasterEntityDTO {
-  id: number;
 
   @IsNumber()
   @IsNotEmpty({ message: 'ParentID is required' })
@@ -28,19 +27,18 @@ export class InsertCategoryDTO extends MasterEntityDTO {
   isDeleted: boolean;
 
   constructor(
+    id: number,
     createDatetime: Date,
     createUserId: string,
     updateDatetime: Date,
     updateUserId: string,
-    id: number,
     parentID: number,
     categoryLevel: number,
     categoryName: string,
     notes: string,
     isDeleted: boolean
   ) {
-    super(createDatetime, createUserId, updateDatetime, updateUserId);
-    this.id = id;
+    super(id, createDatetime, createUserId, updateDatetime, updateUserId);
     this.parentID = parentID;
     this.categoryLevel = categoryLevel;
     this.categoryName = categoryName;

@@ -45,13 +45,13 @@ namespace ICHI_CORE.Controllers.MasterController
 
         [HttpGet("FindAllPaged")]
         public async Task<ActionResult<ApiResponse<PagedResult<Supplier>>>> GetAll(
-                        [FromQuery(Name = "name")] string name = "",
+                        [FromQuery(Name = "search")] string name = "",
                         [FromQuery(Name = "page-size")] int pageSize = 10,
                         [FromQuery(Name = "page-number")] int pageNumber = 1,
                         [FromQuery(Name = "sort-direction")] string sortDir = "desc",
                         [FromQuery(Name = "sort-by")] string sortBy = "Id")
         {
-            var query = _context.Suppliers.AsQueryable();
+            var query = _context.Suppliers.AsQueryable().Where(u => u.IsDeleted == false);
 
             if (!string.IsNullOrEmpty(name))
             {
