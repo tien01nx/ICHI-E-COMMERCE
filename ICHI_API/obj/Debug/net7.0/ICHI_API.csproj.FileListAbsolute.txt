@@ -357,3 +357,5 @@ D:\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\System.Linq.Dynamic.Core.dll
 D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\System.Linq.Dynamic.Core.dll
 D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\JetBrains.Annotations.dll
 D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\X.PagedList.dll
+D:\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\JetBrains.Annotations.dll
+D:\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\X.PagedList.dll

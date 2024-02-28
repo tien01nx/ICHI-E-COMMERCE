@@ -57,3 +57,7 @@ ICHI_CORE/obj/ICHI_CORE.csproj.nuget.dgspec.json
 ICHI_CORE/obj/ICHI_CORE.csproj.nuget.g.props
 ICHI_CORE/obj/project.assets.json
 ICHI_CORE/obj/project.nuget.cache
+ICHI_CORE/obj
+ICHI_CORE/bin
+ICHI_API/bin
+ICHI_API/obj

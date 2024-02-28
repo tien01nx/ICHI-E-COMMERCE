@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qW20nRhqPC5rFjiuVBqmK1jToRb+AP1f7nkzy7fvEl3sAnTkSH6KOeQkxl8EhtjYtNvc7xGyarch/g1Xh99JQg==",
+  "dgSpecHash": "HxbOgkuc0DwBmTvT/Fidv1kXejEdQB4MfAa0tHxh7OTWjWA0H7gFQF+3pF1bNJdQgqRw+xOStyyQoDkBvy41NA==",
   "success": true,
-  "projectFilePath": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj",
+  "projectFilePath": "D:\\Code\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tien0\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\tien0\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
@@ -99,11 +99,7 @@
     "C:\\Users\\tien0\\.nuget\\packages\\system.text.json\\7.0.0\\system.text.json.7.0.0.nupkg.sha512",
     "C:\\Users\\tien0\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "C:\\Users\\tien0\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512",
-    "C:\\Users\\tien0\\.nuget\\packages\\x.pagedlist\\8.4.7\\x.pagedlist.8.4.7.nupkg.sha512",
-    "C:\\Users\\tien0\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.14\\microsoft.windowsdesktop.app.ref.7.0.14.nupkg.sha512",
-    "C:\\Users\\tien0\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.14\\microsoft.netcore.app.ref.7.0.14.nupkg.sha512",
-    "C:\\Users\\tien0\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.14\\microsoft.aspnetcore.app.ref.7.0.14.nupkg.sha512",
-    "C:\\Users\\tien0\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\7.0.14\\microsoft.netcore.app.host.win-x64.7.0.14.nupkg.sha512"
+    "C:\\Users\\tien0\\.nuget\\packages\\x.pagedlist\\8.4.7\\x.pagedlist.8.4.7.nupkg.sha512"
   ],
   "logs": [
     {

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ICHI_API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+421bcd72bf4507d8be7576a285be840ec1ff241b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4951e09f3af35f77c8e929d82271619e3df15b6f")]
 [assembly: System.Reflection.AssemblyProductAttribute("ICHI_API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ICHI_API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
