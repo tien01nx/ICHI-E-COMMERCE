@@ -13,65 +13,90 @@ namespace ICHI_CORE.Controllers.MasterController
     {
         public SupplierController(PcsApiContext context) : base(context) { }
 
-
-
-        //[HttpGet("FindAllPaged")]
-        //public async Task<ActionResult<ApiResponse<IEnumerable<Supplier>>>> FindAllPaged([FromQuery] PaginationParams paginationParams)
-        //{
-        //    try
-        //    {
-        //        IQueryable<Supplier> query = _context.Suppliers.Where(x => !x.IsDeleted);
-
-        //        if (!string.IsNullOrWhiteSpace(paginationParams.Search))
-        //        {
-        //            query = query.Where(p => p.SupplierName.Contains(paginationParams.Search));
-        //        }
-
-        //        var direction = paginationParams.SortDirection.ToLower() == "asc" ? "" : " descending";
-        //        query = query.OrderBy($"{paginationParams.SortBy}{direction}");
-
-        //        var data = await query.Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize).Take(paginationParams.PageSize).ToListAsync();
-        //        var totalRecords = await query.CountAsync();
-
-        //        var responseData = new PagedList<Supplier>(data, totalRecords, paginationParams.PageNumber, paginationParams.PageSize);
-        //        var result = new ApiResponse<IEnumerable<Supplier>>(System.Net.HttpStatusCode.OK, "", responseData);
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(new ApiResponse<IEnumerable<Supplier>>(System.Net.HttpStatusCode.BadRequest, ex.Message, null));
-        //    }
-        //}
-
         [HttpGet("FindAllPaged")]
-        public async Task<ActionResult<ApiResponse<PagedResult<Supplier>>>> GetAll(
+        public async Task<ActionResult<ApiResponse<ICHI_API.Helpers.PagedResult<Supplier>>>> GetAll(
                         [FromQuery(Name = "search")] string name = "",
                         [FromQuery(Name = "page-size")] int pageSize = 10,
                         [FromQuery(Name = "page-number")] int pageNumber = 1,
                         [FromQuery(Name = "sort-direction")] string sortDir = "desc",
                         [FromQuery(Name = "sort-by")] string sortBy = "Id")
         {
-            var query = _context.Suppliers.AsQueryable().Where(u => u.IsDeleted == false);
-
-            if (!string.IsNullOrEmpty(name))
+            ApiResponse<ICHI_API.Helpers.PagedResult<Supplier>> result;
+            try
             {
-                query = query.Where(e => e.SupplierName.Contains(name));
+                var query = _context.Suppliers.AsQueryable().Where(u => u.IsDeleted == false);
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    query = query.Where(e => e.SupplierName.Contains(name));
+                }
+
+                var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
+                query = query.OrderBy(orderBy);
+
+                var pagedResult = await ICHI_API.Helpers.PagedResult<Supplier>.CreatePagedResultAsync(query, pageNumber, pageSize);
+
+                result = new ApiResponse<ICHI_API.Helpers.PagedResult<Supplier>>(
+                     System.Net.HttpStatusCode.OK,
+                     "Retrieved successfully",
+                     pagedResult
+                 );
             }
+            catch (Exception ex)
+            {
+                result = new ApiResponse<ICHI_API.Helpers.PagedResult<Supplier>>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+            }
+            return result;
+        }
 
-            // Sắp xếp theo cột và hướng sắp xếp
-            var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
-            query = query.OrderBy(orderBy);
+        // API v1/Create
+        [HttpPost("Create-Supplier")]
+        public async Task<ApiResponse<Supplier>> CreateSupplỉer([FromBody] Supplier supplier)
+        {
+            ApiResponse<Supplier> result;
+            try
+            {
+                // kiểm tra xem mã nhà cung cấp đã tồn tại chưa
+                var checkSupplier = await _context.Suppliers.FirstOrDefaultAsync(x => x.SupplierCode == supplier.SupplierCode);
+                if (checkSupplier != null)
+                {
+                    result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.Forbidden, "Supplier code already exists", null);
+                    return result;
+                }
+                // kiểm tra email nhà cung cấp đã tồn tại chưa
+                var checkEmail = await _context.Suppliers.FirstOrDefaultAsync(x => x.Email == supplier.Email);
+                if (checkEmail != null)
+                {
+                    result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.Forbidden, "Email already exists", null);
+                    return result;
+                }
+                // kiểm tra số điện thoại nhà cung cấp đã tồn tại chưa
+                var checkPhone = await _context.Suppliers.FirstOrDefaultAsync(x => x.Phone == supplier.Phone);
+                if (checkPhone != null)
+                {
+                    result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.Forbidden, "Phone already exists", null);
+                    return result;
+                }
+                // kiêm tra mã số thueé
+                var checkTaxCode = await _context.Suppliers.FirstOrDefaultAsync(x => x.TaxCode == supplier.TaxCode);
+                if (checkTaxCode != null)
+                {
+                    result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.Forbidden, "Tax code already exists", null);
+                    return result;
+                }
+                supplier.CreateUserId = "Admin";
+                supplier.UpdateUserId = "Admin";
 
-            // Sử dụng phương thức tạo tĩnh để tạo PagedResult
-            var pagedResult = await ICHI_API.Helpers.PagedResult<Supplier>.CreatePagedResultAsync(query, pageNumber, pageSize);
-
-            var response = new ApiResponse<ICHI_API.Helpers.PagedResult<Supplier>>(
-                  System.Net.HttpStatusCode.OK,
-                  "Retrieved successfully",
-                  pagedResult
-              );
-
-            return Ok(response);
+                await _context.Suppliers.AddAsync(supplier);
+                await _context.SaveChangesAsync();
+                var data = await GetByKeys(supplier);
+                result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.OK, "Created successfully", data);
+            }
+            catch (Exception ex)
+            {
+                result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+            }
+            return result;
         }
 
 

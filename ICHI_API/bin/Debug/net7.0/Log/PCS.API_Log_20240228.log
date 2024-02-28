@@ -1,0 +1,12 @@
+-- 2024-02-28 00:01:56.9536 INFO[38] | Program.<Main>$. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-28 00:01:57.0401 ERROR[39] | Program.<Main>$. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-28 00:03:45.7239 INFO[38] | Program.<Main>$. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-02-28 00:03:45.8836 ERROR[39] | Program.<Main>$. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:

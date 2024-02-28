@@ -10,20 +10,25 @@ using System.Threading.Tasks;
 namespace ICHI_CORE.Domain.MasterModel
 {
     [Table("product")]
-    public class Product :MasterEntity
+    public class Product : MasterEntity
     {
         [Column("description")]
         [StringLength(500)]
-        public  string Description { get; set; } = string.Empty;
-        public  int CategoryProductID { get; set; } 
-        public  decimal Price { get; set; } = 0;
-        public  string Notes { get; set; } = string.Empty;
-        public  bool IsActive { get; set; } = true;
+        public string Description { get; set; } = string.Empty;
+        public int CategoryProductID { get; set; }
+        [ForeignKey("CategoryProductID")]
+        [ValidateNever]
+        public CategoryProduct? CategoryProduct { get; set; }
+
+        public decimal Price { get; set; } = 0;
+        public string Notes { get; set; } = string.Empty;
+        public bool IsActive { get; set; } = true;
         public bool IsDeleted { get; set; }
         [ValidateNever]
         public List<ProductImages> ProductImages { get; set; }
 
-        public  string DisplayValue
+
+        public string DisplayValue
         {
             get
             {

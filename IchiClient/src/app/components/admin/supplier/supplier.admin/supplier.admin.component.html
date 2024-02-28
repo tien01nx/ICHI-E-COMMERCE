@@ -516,7 +516,7 @@
           </div>
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="supplierName"
-              >Tên nhà cung cấp</label
+              >Mã nhà cung cấp</label
             >
             <div class="col-sm-8">
               <input
@@ -644,9 +644,18 @@
               ></textarea>
               <small
                 class="text-danger mt-1"
-                *ngIf="supplierForm['controls']['email'].dirty && supplierForm['controls']['email'].errors?.['maxlength']"
+                *ngIf="supplierForm['controls']['email'].dirty"
               >
-                Địa chỉ không được vượt quá 200 ký tự
+                <span
+                  *ngIf="supplierForm['controls']['email'].errors?.['required']"
+                >
+                  Email không được để trống
+                </span>
+                <span
+                  *ngIf="( supplierForm['controls']['email'].errors?.['email'])"
+                >
+                  Email không hợp lệ
+                </span>
               </small>
             </div>
           </div>
@@ -659,14 +668,24 @@
                 class="form-control"
                 id="taxCode"
                 rows="3"
-                placeholder="Địa chỉ"
+                placeholder="Mã số thuế"
                 formControlName="taxCode"
               ></textarea>
               <small
                 class="text-danger mt-1"
-                *ngIf="supplierForm['controls']['taxCode'].dirty && supplierForm['controls']['taxCode'].errors?.['maxlength']"
+                *ngIf="supplierForm['controls']['taxCode'].dirty"
               >
-                Mã số thuế không được vượt quá 200 ký tự
+                <span
+                  *ngIf="supplierForm['controls']['taxCode'].errors?.['required']"
+                >
+                  Mã số thuế không được để trống
+                </span>
+                <span
+                  *ngIf="supplierForm['controls']['taxCode'].errors?.['maxlength']
+                  || supplierForm['controls']['taxCode'].errors?.['minlength']"
+                >
+                  Mã số thuế phải đủ 10 số và nhỏ hơn 20 số
+                </span>
               </small>
             </div>
           </div>
@@ -679,14 +698,24 @@
                 class="form-control"
                 id="bankAccount"
                 rows="3"
-                placeholder="Địa chỉ"
+                placeholder="Số tài khoản"
                 formControlName="bankAccount"
               ></textarea>
               <small
                 class="text-danger mt-1"
-                *ngIf="supplierForm['controls']['bankAccount'].dirty && supplierForm['controls']['bankAccount'].errors?.['maxlength']"
+                *ngIf="supplierForm['controls']['bankAccount'].dirty"
               >
-                Mã số thuế không được vượt quá 200 ký tự
+                <span
+                  *ngIf="supplierForm['controls']['bankAccount'].errors?.['required']"
+                >
+                  Số tài khoản không được để trống
+                </span>
+                <span
+                  *ngIf="supplierForm['controls']['bankAccount'].errors?.['maxlength']
+                  || supplierForm['controls']['bankAccount'].errors?.['minlength']"
+                >
+                  Số tài khoản phải đủ 5 số và nhỏ hơn 20 số
+                </span>
               </small>
             </div>
           </div>
@@ -699,14 +728,23 @@
                 class="form-control"
                 id="bankName"
                 rows="3"
-                placeholder="Địa chỉ"
+                placeholder="Tên ngân hàng"
                 formControlName="bankName"
               ></textarea>
               <small
                 class="text-danger mt-1"
-                *ngIf="supplierForm['controls']['bankName'].dirty && supplierForm['controls']['bankName'].errors?.['maxlength']"
+                *ngIf="supplierForm['controls']['bankName'].dirty"
               >
-                Mã số thuế không được vượt quá 200 ký tự
+                <span
+                  *ngIf="supplierForm['controls']['bankName'].errors?.['required']"
+                >
+                  Tên ngân hàng không được để trống
+                </span>
+                <span
+                  *ngIf="supplierForm['controls']['bankName'].errors?.['maxlength']"
+                >
+                  Tên ngân hàng phải đủ 5 số và nhỏ hơn 20 số
+                </span>
               </small>
             </div>
           </div>

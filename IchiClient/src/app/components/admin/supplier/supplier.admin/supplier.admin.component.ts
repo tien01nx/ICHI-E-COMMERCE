@@ -41,36 +41,34 @@ export class SupplierAdminComponent implements OnInit {
   supplierForm: FormGroup = new FormGroup({
     // id: new FormControl('0'),
     supplierCode: new FormControl('', [
-      // Validators.required,
-      // Validators.maxLength(50),
+      Validators.required,
+      Validators.maxLength(50),
     ]),
     supplierName: new FormControl('', [
-      // Validators.required,
-      // Validators.maxLength(50),
+      Validators.required,
+      Validators.maxLength(50),
     ]),
     address: new FormControl('', [Validators.maxLength(200)]),
     phone: new FormControl('', [
-      // Validators.required,
-      // Validators.maxLength(10),
-      // Validators.minLength(10),
-      // Validators.pattern('^0[0-9]{9}$'),
+      Validators.required,
+      Validators.maxLength(10),
+      Validators.minLength(10),
+      Validators.pattern('^0[0-9]{9}$'),
     ]),
-    email: new FormControl('', [
-      // Validators.required, Validators.email
-    ]),
+    email: new FormControl('', [Validators.required, Validators.email]),
     taxCode: new FormControl('', [
-      // Validators.required,
-      // Validators.maxLength(20),
-      // Validators.minLength(10),
+      Validators.required,
+      Validators.maxLength(20),
+      Validators.minLength(10),
     ]),
     bankAccount: new FormControl('', [
-      // Validators.required,
-      // Validators.maxLength(20),
-      // Validators.minLength(5),
+      Validators.required,
+      Validators.maxLength(20),
+      Validators.minLength(5),
     ]),
     bankName: new FormControl('', [
-      // Validators.required,
-      // Validators.maxLength(50),
+      Validators.required,
+      Validators.maxLength(50),
     ]),
   });
 
@@ -178,10 +176,15 @@ export class SupplierAdminComponent implements OnInit {
     this.isDisplayNone = true;
     this.supplierService.create(this.supplierForm.value).subscribe({
       next: (response: any) => {
-        this.supplierForm.reset();
-        this.btnCloseModal.nativeElement.click();
-        this.updateTable();
-        this.toastr.success('Thêm nhà cung cấp thành công', 'Thông báo');
+        if (response.code === 200) {
+          this.supplierForm.reset();
+          this.btnCloseModal.nativeElement.click();
+          this.updateTable();
+          this.toastr.success('Thêm nhà cung cấp thành công', 'Thông báo');
+        } else {
+          this.errorMessage = response.message;
+          this.isDisplayNone = false;
+        }
       },
       error: (error: any) => {
         this.errorMessage = error.error;
@@ -238,6 +241,7 @@ export class SupplierAdminComponent implements OnInit {
     this.supplierForm.reset();
     this.titleModal = 'Thêm nhà cung cấp';
     this.btnSave = 'Thêm mới';
+    this.errorMessage = '';
   }
 
   openModalUpdate(supplier: SupplierModel) {

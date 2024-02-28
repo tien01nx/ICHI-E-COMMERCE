@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SupplierModel } from '../models/supplier.model';
 import { ApiResponse } from '../models/api.response.model';
@@ -109,12 +109,14 @@ export class SupplierService {
   create(supplier: InsertSupplierDTO) {
     debugger;
     return this.apiService.callApi<SupplierModel>(
-      '/Supplier/Create',
+      '/Supplier/Create-Supplier',
       'post',
       null,
       supplier
     );
   }
+
+ 
 
   update(supplier: SupplierModel) {
     return this.apiService.callApi<SupplierModel>(

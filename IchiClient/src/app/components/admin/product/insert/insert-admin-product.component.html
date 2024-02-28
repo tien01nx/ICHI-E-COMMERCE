@@ -33,13 +33,20 @@
       />
       <div class="mb-6">
         <h4 class="mb-3">Product Description</h4>
-        <textarea
+        <!-- <textarea
           class="tinymce"
           name="content"
           data-tinymce='{"height":"15rem","placeholder":"Write a description here..."}'
           id="mce_0"
           style="visibility: hidden"
-        ></textarea>
+        ></textarea> -->
+        <editor
+          apiKey="gj95nksg3ionftnqn5uftwoqunmga9lfr7pi9zzpgv3egm95"
+          [init]="{
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+          }"
+        ></editor>
       </div>
       <h4 class="mb-3">Display images</h4>
       <div

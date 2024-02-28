@@ -19,21 +19,53 @@ export class CategoryService {
     SortDirection: string,
     SortBy: string,
     Search: string
-  ): Observable<ApiResponse<CategoryProduct[]>> {
-    const requestBody = {
-      PageNumber: PageNumber,
-      PageSize: PageSize,
-      Search: Search,
-      SortDirection: SortDirection,
-      SortBy: SortBy,
-    };
-    return this.apiService.callApi<CategoryProduct[]>(
-      '/CategoryProduct/FindAllPaged',
-      'post',
-      null,
-      requestBody // Đối tượng HttpParams được truyền vào đây
+  ): Observable<ApiResponse<CategoryProduct>> {
+    let params = new HttpParams();
+    debugger;
+    if (PageNumber && PageNumber.toString().trim() !== '') {
+      params = params.set('page-number', PageNumber.toString());
+    }
+    if (PageSize && PageSize.toString().trim() !== '') {
+      params = params.set('page-size', PageSize.toString());
+    }
+    if (SortDirection && SortDirection.trim() !== '') {
+      params = params.set('sort-direction', SortDirection);
+    }
+    if (SortBy && SortBy.trim() !== '') {
+      params = params.set('sort-by', SortBy);
+    }
+    if (Search && Search.trim() !== '') {
+      params = params.set('search', Search);
+    }
+    console.log(params);
+    return this.apiService.callApi<CategoryProduct>(
+      '/Supplier/FindAllPaged',
+      'get',
+      params
     );
   }
+
+  // findAll(
+  //   PageNumber: number,
+  //   PageSize: number,
+  //   SortDirection: string,
+  //   SortBy: string,
+  //   Search: string
+  // ): Observable<ApiResponse<CategoryProduct[]>> {
+  //   const requestBody = {
+  //     PageNumber: PageNumber,
+  //     PageSize: PageSize,
+  //     Search: Search,
+  //     SortDirection: SortDirection,
+  //     SortBy: SortBy,
+  //   };
+  //   return this.apiService.callApi<CategoryProduct[]>(
+  //     '/CategoryProduct/FindAllPaged',
+  //     'post',
+  //     null,
+  //     requestBody // Đối tượng HttpParams được truyền vào đây
+  //   );
+  // }
 
   UpSertCategory(
     categoryData: InsertCategoryDTO
