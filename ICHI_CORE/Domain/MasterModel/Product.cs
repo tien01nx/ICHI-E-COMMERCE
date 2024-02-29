@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,19 +15,20 @@ namespace ICHI_CORE.Domain.MasterModel
     {
         [Column("description")]
         [StringLength(500)]
+        public string ProductName { get; set; } = string.Empty;
+        [Column("description")]
+        [StringLength(500)]
         public string Description { get; set; } = string.Empty;
         public int CategoryProductID { get; set; }
         [ForeignKey("CategoryProductID")]
         [ValidateNever]
         public CategoryProduct? CategoryProduct { get; set; }
 
-        public decimal Price { get; set; } = 0;
+        public decimal SuggestedPrice { get; set; } = 0;
+        public decimal SellingPrice { get; set; } = 0;
         public string Notes { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;
         public bool IsDeleted { get; set; }
-        [ValidateNever]
-        public List<ProductImages> ProductImages { get; set; }
-
 
         public string DisplayValue
         {

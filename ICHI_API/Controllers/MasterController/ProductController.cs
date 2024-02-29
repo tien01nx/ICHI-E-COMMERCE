@@ -6,6 +6,9 @@ using System.Net.Http.Headers;
 using ICHI_CORE.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
+using ICHI_CORE.Helpers;
+using ICHI_API.Model;
+using Microsoft.AspNetCore.Hosting;
 
 
 namespace ICHI_CORE.Controllers.MasterController
@@ -14,35 +17,87 @@ namespace ICHI_CORE.Controllers.MasterController
     [Route("api/[controller]")]
     public class ProductController : BaseController<Product>
     {
-        public ProductController(PcsApiContext context) : base(context) { }
-
-        [HttpPost]
-        [Route("UploadImage")]
-        public IActionResult UploadImage([FromBody] Product request)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public ProductController(PcsApiContext context, IWebHostEnvironment webHostEnvironment) : base(context)
         {
-            return Ok(new { ProductId = request.Id, DisplayValue = request.DisplayValue });
+            _webHostEnvironment = webHostEnvironment;
         }
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ApiResponse<Product>>> Delete(int id)
+        [HttpPost("Upsert/Product")]
+        public async Task<ApiResponse<Product>> UpSert([FromForm] Product product, List<IFormFile>? files)
         {
+            ApiResponse<Product> result;
             try
             {
-                var data = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
-                data.IsDeleted = true;
-                data.UpdateDatetime = DateTime.Now;
-                data.UpdateUserId = "Admin";
-                await Update(data);
-                var result = new ApiResponse<Product>(System.Net.HttpStatusCode.OK, "", data);
-                return Ok(result);
+                if (product.Id == 0)
+                {
+                    var checkProduct = await _context.Products.FirstOrDefaultAsync(x => x.ProductName == product.ProductName);
+                    if (checkProduct != null)
+                    {
+                        result = new ApiResponse<Product>(System.Net.HttpStatusCode.Forbidden, "Product code already exists", null);
+                        return result;
+                    }
+
+                    product.CreateUserId = "Admin";
+                    product.UpdateUserId = "Admin";
+
+                    await _context.Products.AddAsync(product);
+                    await _context.SaveChangesAsync();
+                    if (files != null && files.Count > 0)
+                    {
+                        foreach (var file in files)
+                        {
+                            var image = new ProductImages();
+                            image.ProductId = product.Id;
+                            image.ImageName = file.FileName;
+                            image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id, file);
+                            image.IsDefault = false;
+                            image.IsActive = true;
+                            image.IsDeleted = false;
+                            image.CreateUserId = "Admin";
+                            image.UpdateUserId = "Admin";
+                            await _context.ProductImages.AddAsync(image);
+                        }
+                        await _context.SaveChangesAsync();
+                    }
+                    result = new ApiResponse<Product>(System.Net.HttpStatusCode.OK, "Created successfully", product);
+                }
+                _context.Update(product);
+                await _context.SaveChangesAsync();
+
+                var productImages = await _context.ProductImages.Where(x => x.ProductId == product.Id).ToListAsync();
+                // thực hiện xóa ảnh cũ
+                foreach (var item in productImages)
+                {
+                    ImageHelper.DeleteImage(_webHostEnvironment.WebRootPath, item.ImagePath);
+                    _context.ProductImages.Remove(item);
+                }
+                if (files != null)
+                {
+                    foreach (var file in files)
+                    {
+                        var image = new ProductImages();
+                        image.ProductId = product.Id;
+
+                        image.ImageName = file.FileName;
+                        image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id, file);
+                        image.IsDefault = false;
+                        image.IsActive = true;
+                        image.IsDeleted = false;
+                        image.CreateUserId = "Admin";
+                        image.UpdateUserId = "Admin";
+                        await _context.ProductImages.AddAsync(image);
+                    }
+                }
+                await _context.SaveChangesAsync();
+
+                result = new ApiResponse<Product>(System.Net.HttpStatusCode.OK, "Created successfully", product);
             }
             catch (Exception ex)
             {
-                return BadRequest(new ApiResponse<Product>(System.Net.HttpStatusCode.BadRequest, ex.Message, null));
+                result = new ApiResponse<Product>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
             }
+            return result;
         }
-
-
-
         [HttpGet("FindAllPaged")]
         public async Task<ActionResult<ApiResponse<ICHI_API.Helpers.PagedResult<Product>>>> GetAll(
                 [FromQuery(Name = "search")] string name = "",
@@ -58,7 +113,7 @@ namespace ICHI_CORE.Controllers.MasterController
 
                 if (!string.IsNullOrEmpty(name))
                 {
-                    query = query.Where(e => e.Description.Contains(name));
+                    query = query.Where(e => e.ProductName.Contains(name));
                 }
 
                 var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
@@ -77,37 +132,80 @@ namespace ICHI_CORE.Controllers.MasterController
             }
             return result;
         }
-
-
-
-        // API v1/Create
-        [HttpPost("Create-Product")]
-        public async Task<ApiResponse<Product>> CreateSupplỉer(Product product)
+        // Lấy ra sản phẩm theo id
+        [HttpGet("GetProductById/{id}")]
+        public async Task<ApiResponse<ProductDTO>> GetProductById(int id)
         {
-            ApiResponse<Product> result;
+            ApiResponse<ProductDTO> result;
             try
             {
-                // kiểm tra xem mã nhà cung cấp đã tồn tại chưa
-                var checkProduct = await _context.Products.FirstOrDefaultAsync(x => x.Description == product.Description);
-                if (checkProduct != null)
+                ProductDTO data = new ProductDTO
                 {
-                    result = new ApiResponse<Product>(System.Net.HttpStatusCode.Forbidden, "Product code already exists", null);
+                    Product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id),
+                    ProductImages = await _context.ProductImages.Where(x => x.ProductId == id).ToListAsync(),
+                    CategoryProduct = await _context.CategoryProducts.FirstOrDefaultAsync(x => x.Id == id)
+                };
+                if (data == null)
+                {
+                    result = new ApiResponse<ProductDTO>(System.Net.HttpStatusCode.Forbidden, "Product does not exist! ", null);
                     return result;
                 }
-
-                product.CreateUserId = "Admin";
-                product.UpdateUserId = "Admin";
-
-                await _context.Products.AddAsync(product);
-                await _context.SaveChangesAsync();
-                var data = await GetByKeys(product);
-                result = new ApiResponse<Product>(System.Net.HttpStatusCode.OK, "Created successfully", data);
+                else
+                {
+                    return new ApiResponse<ProductDTO>(System.Net.HttpStatusCode.OK, "Get Product success", data);
+                }
             }
             catch (Exception ex)
             {
-                result = new ApiResponse<Product>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+                result = new ApiResponse<ProductDTO>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
             }
             return result;
+        }
+        // xóa productimage theo productId và imageName
+        [HttpDelete("Delete-Image/{productId}/{imageName}")]
+        public async Task<ApiResponse<ProductImages>> DeleteProductImage(int productId, string imageName)
+        {
+            ApiResponse<ProductImages> result;
+            try
+            {
+                var productImage = await _context.ProductImages.FirstOrDefaultAsync(x => x.ProductId == productId && x.ImageName == imageName);
+                if (productImage == null)
+                {
+                    result = new ApiResponse<ProductImages>(System.Net.HttpStatusCode.Forbidden, "ProductImage does not exist! ", null);
+                    return result;
+                }
+                if (!ImageHelper.DeleteImage(_webHostEnvironment.WebRootPath, productImage.ImagePath))
+                {
+                    result = new ApiResponse<ProductImages>(System.Net.HttpStatusCode.Forbidden, "Xóa ảnh không thành công! ", null);
+                    return result;
+                }
+                _context.ProductImages.Remove(productImage);
+                await _context.SaveChangesAsync();
+                result = new ApiResponse<ProductImages>(System.Net.HttpStatusCode.OK, "Delete ProductImage success", productImage);
+            }
+            catch (Exception ex)
+            {
+                result = new ApiResponse<ProductImages>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+            }
+            return result;
+        }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ApiResponse<Product>>> Delete(int id)
+        {
+            try
+            {
+                var data = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
+                data.IsDeleted = true;
+                data.UpdateDatetime = DateTime.Now;
+                data.UpdateUserId = "Admin";
+                await Update(data);
+                var result = new ApiResponse<Product>(System.Net.HttpStatusCode.OK, "", data);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse<Product>(System.Net.HttpStatusCode.BadRequest, ex.Message, null));
+            }
         }
     }
 

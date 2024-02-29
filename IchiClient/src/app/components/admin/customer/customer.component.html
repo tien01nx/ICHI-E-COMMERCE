@@ -1,1 +1,659 @@
-<p>customer works!</p>
+<nav class="mb-2" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a href="/admin">Trang chủ</a></li>
+    <li class="breadcrumb-item">Quản lý danh mục</li>
+    <li class="breadcrumb-item active">khách hàng</li>
+  </ol>
+</nav>
+<div class="mb-9">
+  <div class="row g-3 mb-4">
+    <div class="col-auto">
+      <h2 class="mb-0">Danh sách khách hàng</h2>
+    </div>
+  </div>
+  <div id="customer">
+    <div class="mb-4">
+      <div class="row g-3">
+        <div class="col-auto">
+          <div class="search-box">
+            <form class="position-relative">
+              <input
+                class="form-control search-input search"
+                type="text"
+                placeholder="Tìm kiếm khách hàng"
+                name="searchTemp"
+                (input)="search()"
+                [(ngModel)]="searchTemp"
+              />
+              <span class="fas fa-search search-box-icon"></span>
+            </form>
+          </div>
+        </div>
+        <div class="col-auto ms-auto">
+          <button
+            class="btn btn-primary"
+            data-bs-target="#modalcustomer"
+            data-bs-toggle="modal"
+            (click)="openModalCreate()"
+          >
+            <span class="fas fa-plus me-2"></span>Thêm khách hàng
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="mx-n4 px-4 mx-lg-n6 px-lg-6 bg-white border-top border-bottom border-200 position-relative top-1"
+    >
+      <div class="table-responsive scrollbar mx-n1 px-1">
+        <table class="table fs--1 mb-0">
+          <thead>
+            <tr>
+              <th
+                class="white-space-nowrap fs--1 align-middle ps-0"
+                style="max-width: 20px; width: 18px"
+              >
+                <div class="form-check mb-0 fs-0">
+                  <input
+                    class="form-check-input"
+                    id="checkbox-bulk-products-select"
+                    type="checkbox"
+                    (input)="toggleSelectAll()"
+                  />
+                </div>
+              </th>
+              <th
+                class="sort white-space-nowrap align-middle ps-4"
+                scope="col"
+                style="width: 250px"
+                (click)="sortByField('name')"
+              >
+                Tên khách hàng
+                <label
+                  [class.d-none]="
+                    SortBy === 'name' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label [class.d-none]="SortBy !== 'name' || sortDir !== 'ASC'">
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label [class.d-none]="SortBy !== 'name' || sortDir !== 'DESC'">
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <th
+                class="sort align-middle ps-4"
+                scope="col"
+                style="width: 150px"
+                (click)="sortByField('PhoneNumber')"
+              >
+                Số điện thoại
+                <label
+                  [class.d-none]="
+                    SortBy === 'PhoneNumber' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'PhoneNumber' || sortDir !== 'ASC'"
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="
+                    SortBy !== 'PhoneNumber' || sortDir !== 'DESC'
+                  "
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <th
+                class="sort align-middle ps-4"
+                scope="col"
+                style="width: 150px"
+                (click)="sortByField('Gender')"
+              >
+                Giới tính
+                <label
+                  [class.d-none]="
+                    SortBy === 'Gender' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'Gender' || sortDir !== 'ASC'"
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'Gender' || sortDir !== 'DESC'"
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <th
+                class="sort align-middle ps-4"
+                scope="col"
+                style="width: 160px"
+                (click)="sortByField('Birthday')"
+              >
+                Ngày sinh
+                <label
+                  [class.d-none]="
+                    SortBy === 'Birthday' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'Birthday' || sortDir !== 'ASC'"
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'Birthday' || sortDir !== 'DESC'"
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <th
+                class="sort align-middle ps-4"
+                scope="col"
+                style="width: 150px"
+                (click)="sortByField('UpdateDatetime')"
+              >
+                Ngày sửa
+                <label
+                  [class.d-none]="
+                    SortBy === 'UpdateDatetime' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="
+                    SortBy !== 'UpdateDatetime' || sortDir !== 'ASC'
+                  "
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="
+                    SortBy !== 'UpdateDatetime' || sortDir !== 'DESC'
+                  "
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <th
+                class="sort text-end align-middle pe-0 ps-4"
+                scope="col"
+                style="width: 50px"
+              ></th>
+            </tr>
+          </thead>
+          <tbody class="list" id="customer-table-body">
+            <tr *ngIf="paginationModel.content.length <= 0">
+              <td colspan="7" class="text-center">
+                <span class="fs-7">Không có dữ liệu</span>
+              </td>
+            </tr>
+            <tr
+              class="position-static"
+              *ngFor="let customer of paginationModel.content"
+            >
+              <td class="fs--1 align-middle">
+                <div class="form-check mb-0 fs-0">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    [value]="customer.id"
+                    [checked]="selectAll"
+                  />
+                </div>
+              </td>
+              <!-- <td class="align-middle ps-4">{{ customer.customerCode }}</td> -->
+              <td class="align-middle white-space-nowrap text-700 ps-4">
+                {{ customer.name }}
+              </td>
+              <td class="align-middle text-600 ps-4">{{ customer.phoneNumber }}</td>
+              <td class="align-middle text-600 ps-4">{{ customer.gender }}</td>
+              <td class="align-middle text-600 ps-4">{{ customer.birthday }}</td>
+
+              <!-- <td class="align-middle white-space-nowrap text-600 ps-4">
+                {{ customer.createDatetime | date : "dd/MM/yyyy HH:mm:ss" }}
+              </td> -->
+              <td class="align-middle white-space-nowrap text-600 ps-3">
+                {{ customer.updateDatetime | date : "dd/MM/yyyy HH:mm:ss" }}
+              </td>
+              <td
+                class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger"
+              >
+                <div class="font-sans-serif btn-reveal-trigger position-static">
+                  <button
+                    class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    data-boundary="window"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    data-bs-reference="parent"
+                  >
+                    <span class="fas fa-ellipsis-h fs--2"></span>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end py-2">
+                    <button
+                      class="dropdown-item"
+                      data-bs-target="#modalcustomer"
+                      data-bs-toggle="modal"
+                      (click)="openModalUpdate(customer)"
+                    >
+                      Cập nhật
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <button
+                      class="dropdown-item text-danger"
+                      (click)="delete(customer.id)"
+                    >
+                      Xóa
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row align-items-center py-2 pe-0 fs--1">
+        <div class="col-auto d-flex">
+          <label>
+            <select
+              class="form-select form-select-sm form-select-solid"
+              name="sizeSelected"
+              [(ngModel)]="paginationModel.pageSize"
+              (change)="changePageSize(paginationModel.pageSize)"
+            >
+              <option value="5" [selected]="paginationModel.pageSize == 5">
+                5
+              </option>
+              <option value="10" [selected]="paginationModel.pageSize == 10">
+                10
+              </option>
+              <option value="25" [selected]="paginationModel.pageSize == 25">
+                25
+              </option>
+              <option value="50" [selected]="paginationModel.pageSize == 50">
+                50
+              </option>
+              <option value="100" [selected]="paginationModel.pageSize == 100">
+                100
+              </option>
+            </select>
+          </label>
+        </div>
+        <div class="col-auto d-flex">
+          <p class="mb-0 d-none d-sm-block me-3 fw-semi-bold text-900">
+            Hiển thị {{ paginationModel.firstElementOnPage }} đến
+            {{ paginationModel.lastElementOnPage }}
+            <span class="text-body-tertiary"> của </span
+            >{{ paginationModel.totalElements }} danh mục
+          </p>
+        </div>
+        <div class="col-auto ms-auto d-flex">
+          <button
+            type="button"
+            class="page-link"
+            (click)="changePageNumber(1)"
+            [class.disabled]="paginationModel.pageNumber <= 1"
+          >
+            <span class="fas fa-angle-double-left"></span>
+          </button>
+          <button
+            type="button"
+            class="page-link"
+            (click)="changePageNumber(paginationModel.pageNumber - 1)"
+            [class.disabled]="paginationModel.pageNumber <= 1"
+          >
+            <span class="fas fa-angle-left"></span>
+          </button>
+          <ul class="mb-0 pagination">
+            <li
+              class="page-item"
+              *ngFor="
+                let i of Utils.getVisiblePages(
+                  paginationModel.pageNumber,
+                  paginationModel.totalPages,
+                  5
+                )
+              "
+              [class.active]="i === paginationModel.pageNumber"
+            >
+              <button
+                type="button"
+                class="page-link"
+                (click)="changePageNumber(i)"
+              >
+                {{ i }}
+              </button>
+            </li>
+          </ul>
+          <button
+            type="button"
+            class="page-link"
+            (click)="changePageNumber(paginationModel.pageNumber + 1)"
+            [class.disabled]="
+              paginationModel.pageNumber >= paginationModel.totalPages
+            "
+          >
+            <span class="fas fa-angle-right"></span>
+          </button>
+          <button
+            type="button"
+            class="page-link"
+            (click)="changePageNumber(paginationModel.totalPages)"
+            [class.disabled]="
+              paginationModel.pageNumber >= paginationModel.totalPages
+            "
+          >
+            <span class="fas fa-angle-double-right"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalcustomer" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalcustomerLabel">{{ titleModal }}</h5>
+        <button
+          class="btn p-1"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          #btnCloseModal
+        >
+          <span class="fas fa-times fs-9"></span>
+        </button>
+      </div>
+      <form class="form" [formGroup]="customerForm" (submit)="onSubmit()">
+        <div class="modal-body">
+          <div class="row px-3" *ngIf="errorMessage != ''">
+            <label
+              class="col-sm-12 col-form-label fs-9 alert alert-subtle-danger p-2"
+              role="alert"
+            >
+              {{ errorMessage }}
+            </label>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="customerName"
+              >Mã khách hàng</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="customerCode"
+                type="text"
+                formControlName="customerCode"
+                placeholder="Mã khách hàng"
+              />
+              <small
+                class="text-danger mt-1"
+                *ngIf="customerForm['controls']['customerCode'].dirty"
+              >
+                <span
+                  *ngIf="customerForm['controls']['customerCode'].errors?.['required']"
+                >
+                  Mã khách hàng không được để trống
+                </span>
+                <span
+                  *ngIf="customerForm['controls']['customerCode'].errors?.['maxlength']"
+                >
+                  Mã khách hàng không được vượt quá 50 ký tự
+                </span>
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="customerName"
+              >Tên khách hàng</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="customerName"
+                type="text"
+                formControlName="customerName"
+                placeholder="Tên khách hàng"
+              />
+              <small
+                class="text-danger mt-1"
+                *ngIf="customerForm['controls']['customerName'].dirty"
+              >
+                <span
+                  *ngIf="customerForm['controls']['customerName'].errors?.['required']"
+                >
+                  Tên khách hàng không được để trống
+                </span>
+                <span
+                  *ngIf="customerForm['controls']['customerName'].errors?.['maxlength']"
+                >
+                  Tên khách hàng không được vượt quá 50 ký tự
+                </span>
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="address"
+              >Địa chỉ</label
+            >
+            <div class="col-sm-8">
+              <textarea
+                class="form-control"
+                id="address"
+                rows="3"
+                placeholder="Địa chỉ"
+                formControlName="address"
+              ></textarea>
+              <small
+                class="text-danger mt-1"
+                *ngIf="customerForm['controls']['address'].dirty && customerForm['controls']['address'].errors?.['maxlength']"
+              >
+                Địa chỉ không được vượt quá 200 ký tự
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="phone"
+              >Số điện thoại</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="phone"
+                type="text"
+                formControlName="phone"
+                placeholder="Số điện thoại"
+              />
+              <small
+                class="text-danger mt-1"
+                *ngIf="customerForm['controls']['phone'].dirty"
+              >
+                <span
+                  *ngIf="customerForm['controls']['phone'].errors?.['required']"
+                >
+                  Số điện thoại không được để trống
+                </span>
+                <span
+                  *ngIf="customerForm['controls']['phone'].errors?.['maxlength']
+                  || customerForm['controls']['phone'].errors?.['minlength']"
+                >
+                  Số điện thoại phải đủ 10 số
+                </span>
+                <span
+                  *ngIf="!(customerForm['controls']['phone'].errors?.['maxlength']
+                              || customerForm['controls']['phone'].errors?.['minlength'])
+                              && customerForm['controls']['phone'].errors?.['pattern']"
+                >
+                  Số điện thoại không hợp lệ
+                </span>
+              </small>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="email"
+              >Email</label
+            >
+            <div class="col-sm-8">
+              <textarea
+                class="form-control"
+                id="email"
+                rows="3"
+                placeholder="Địa chỉ"
+                formControlName="email"
+              ></textarea>
+              <small
+                class="text-danger mt-1"
+                *ngIf="customerForm['controls']['email'].dirty"
+              >
+                <span
+                  *ngIf="customerForm['controls']['email'].errors?.['required']"
+                >
+                  Email không được để trống
+                </span>
+                <span
+                  *ngIf="( customerForm['controls']['email'].errors?.['email'])"
+                >
+                  Email không hợp lệ
+                </span>
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="taxCode"
+              >Mã số thuế</label
+            >
+            <div class="col-sm-8">
+              <textarea
+                class="form-control"
+                id="taxCode"
+                rows="3"
+                placeholder="Mã số thuế"
+                formControlName="taxCode"
+              ></textarea>
+              <small
+                class="text-danger mt-1"
+                *ngIf="customerForm['controls']['taxCode'].dirty"
+              >
+                <span
+                  *ngIf="customerForm['controls']['taxCode'].errors?.['required']"
+                >
+                  Mã số thuế không được để trống
+                </span>
+                <span
+                  *ngIf="customerForm['controls']['taxCode'].errors?.['maxlength']
+                  || customerForm['controls']['taxCode'].errors?.['minlength']"
+                >
+                  Mã số thuế phải đủ 10 số và nhỏ hơn 20 số
+                </span>
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="bankAccount"
+              >Số tài khoản</label
+            >
+            <div class="col-sm-8">
+              <textarea
+                class="form-control"
+                id="bankAccount"
+                rows="3"
+                placeholder="Số tài khoản"
+                formControlName="bankAccount"
+              ></textarea>
+              <small
+                class="text-danger mt-1"
+                *ngIf="customerForm['controls']['bankAccount'].dirty"
+              >
+                <span
+                  *ngIf="customerForm['controls']['bankAccount'].errors?.['required']"
+                >
+                  Số tài khoản không được để trống
+                </span>
+                <span
+                  *ngIf="customerForm['controls']['bankAccount'].errors?.['maxlength']
+                  || customerForm['controls']['bankAccount'].errors?.['minlength']"
+                >
+                  Số tài khoản phải đủ 5 số và nhỏ hơn 20 số
+                </span>
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="bankName"
+              >Tên ngân hàng</label
+            >
+            <div class="col-sm-8">
+              <textarea
+                class="form-control"
+                id="bankName"
+                rows="3"
+                placeholder="Tên ngân hàng"
+                formControlName="bankName"
+              ></textarea>
+              <small
+                class="text-danger mt-1"
+                *ngIf="customerForm['controls']['bankName'].dirty"
+              >
+                <span
+                  *ngIf="customerForm['controls']['bankName'].errors?.['required']"
+                >
+                  Tên ngân hàng không được để trống
+                </span>
+                <span
+                  *ngIf="customerForm['controls']['bankName'].errors?.['maxlength']"
+                >
+                  Tên ngân hàng phải đủ 5 số và nhỏ hơn 20 số
+                </span>
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-primary"
+            type="submit"
+            [disabled]="customerForm.invalid"
+          >
+            <span [class.d-none]="isDisplayNone">{{ btnSave }}</span>
+            <span class="indicator-progress" [class.d-none]="!isDisplayNone">
+              Vui lòng chờ...
+              <span
+                class="spinner-border spinner-border-sm align-middle ms-2"
+              ></span>
+            </span>
+          </button>
+
+          <button
+            class="btn btn-outline-primary"
+            type="button"
+            data-bs-dismiss="modal"
+          >
+            Quay lại
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

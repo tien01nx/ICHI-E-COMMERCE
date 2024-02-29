@@ -36,4 +36,8 @@
     <ProjectReference Include="..\ICHI_CORE\ICHI_CORE.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

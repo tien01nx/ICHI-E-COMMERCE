@@ -3,9 +3,11 @@ import { MasterEntity } from './master.entity';
 import { CategoryProduct } from './category.product';
 
 export interface ProductModel extends MasterEntity {
+  productName: string;
   description: string;
   categoryProductID: number;
-  price: number;
+  suggestedPrice: number;
+  sellingPrice: number;
   notes: string;
   isActive: boolean;
   isDeleted: boolean;

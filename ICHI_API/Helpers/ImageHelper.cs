@@ -1,31 +1,37 @@
 ﻿using FluentFTP;
+using ICHI_CORE.Domain;
+using ICHI_CORE.Domain.MasterModel;
+using Microsoft.AspNetCore.Hosting;
 using System.Formats.Asn1;
 using System.Globalization;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ICHI_CORE.Helpers
 {
     public class ImageHelper
     {
+
+
         /// <summary>
         /// Lưu ảnh lên server
         /// </summary>
         /// <param name="imgContent">Nội dung của ảnh</param>
         /// <param name="fileName">Tên ảnh</param>
         /// <returns></returns>
-        public static string SaveImage(string imgContent, string fileName,string imageRooot)
+        public static string SaveImage(string imgContent, string fileName, string imageRooot)
         {
             // Lưu dữ liệu ảnh vào thư mục
             string rootPath = AppDomain.CurrentDomain.BaseDirectory;
             string folderName = imageRooot;
             string imageName = fileName;
-            string folderImage=Path.Combine(folderName, imageName);
-            string filePath = Path.Combine(rootPath, folderName,imageName);
+            string folderImage = Path.Combine(folderName, imageName);
+            string filePath = Path.Combine(rootPath, folderName, imageName);
 
-            if (!Directory.Exists(Path.Combine(rootPath,folderName)))
-                Directory.CreateDirectory(Path.Combine(rootPath,folderName));
+            if (!Directory.Exists(Path.Combine(rootPath, folderName)))
+                Directory.CreateDirectory(Path.Combine(rootPath, folderName));
 
             if (File.Exists(filePath))
             {
@@ -35,6 +41,55 @@ namespace ICHI_CORE.Helpers
             File.WriteAllBytes(filePath, imageData);
             return folderImage;
         }
+
+        public static string AddImage(string webHostEnvironment, int id, IFormFile file)
+        {
+            try
+            {
+                string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                string productPath = @"images\products\product-" + id;
+                string finalPath = Path.Combine(webHostEnvironment, productPath);
+                if (!Directory.Exists(finalPath))
+                {
+                    Directory.CreateDirectory(finalPath);
+                }
+                using (var fileStream = new FileStream(Path.Combine(finalPath, filename), FileMode.Create))
+                {
+                    file.CopyTo(fileStream);
+
+                }
+                return @"\" + productPath + @"\" + filename;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static bool DeleteImage(string webHostEnvironment, string patch)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(patch))
+                {
+                    patch = patch.TrimStart('\\', '/');
+                    var imagePath = Path.Combine(webHostEnvironment, patch.Replace("/", "\\"));
+
+                    if (File.Exists(imagePath))
+                    {
+                        File.Delete(imagePath);
+                        return true;
+                    }
+                }
+                return false;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         /// <summary>
         /// Hàm lấy dữ liệu ảnh từ Server
@@ -50,20 +105,18 @@ namespace ICHI_CORE.Helpers
             return base64ImageName;
         }
 
-
-
         /// <summary>
         /// function write data to csv
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="items"></param>
         /// <param name="path"></param>
-        public static string WriteCSV(string rootpath, string date,string hour,string vin,int status,string prod_line_tp,string admin_psn,int comjudge)
+        public static string WriteCSV(string rootpath, string date, string hour, string vin, int status, string prod_line_tp, string admin_psn, int comjudge)
         {
             // check lại đường dẫn đang chưa đúng 
             string rootPath = rootpath;
-            
-            string fileName = DateTime.Now.ToString("yyyyMMddHHmmss")+"_"+vin + ".csv"; // Lấy tên tệp
+
+            string fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + vin + ".csv"; // Lấy tên tệp
             var filePath = Path.Combine(rootPath, fileName);
 
             // Kiểm tra nếu thư mục không tồn tại, tạo thư mục mới

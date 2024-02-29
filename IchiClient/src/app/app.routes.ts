@@ -1,3 +1,4 @@
+import { CustomerComponent } from './components/admin/customer/customer.component';
 import { ClientLayoutComponent } from './components/client/client-layout/client-layout.component';
 import { DetailProductComponent } from './components/client/detail-product/detail-product.component';
 import { ProductsFilterComponent } from './components/client/products-filter/products-filter.component';
@@ -24,9 +25,10 @@ export const routes: Routes = [
     children: [
       { path: '', component: AdminHomeComponent },
       { path: 'products', component: ProductComponent },
-      { path: 'product_insert', component: InsertAdminProductComponent },
+      { path: 'product/insert', component: InsertAdminProductComponent },
       { path: 'categories', component: CategoryComponent },
       { path: 'supplier', component: SupplierAdminComponent },
+      { path: 'customer', component: CustomerComponent },
     ],
   },
   { path: '', component: ClientLayoutComponent },

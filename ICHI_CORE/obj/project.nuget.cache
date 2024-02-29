@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HU/0s35j/OpawoR2/fNG7IpmSHZFeYhSZDaRq/YMUnp3tsdBgjCdb1GfnqANP4uT95SVHz/q0eDBGvkgxbU1fQ==",
+  "dgSpecHash": "f4YnZYFalF0eBGeYcUnBf2FOE61/DRFwNgMx20S/JHM3coTKLPTUBfGDwWVD2YLA57zoILyd+Tc6znz5gOPYeg==",
   "success": true,
-  "projectFilePath": "D:\\Code\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj",
+  "projectFilePath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tien0\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\tien0\\.nuget\\packages\\microsoft.aspnetcore.authentication.core\\2.2.0\\microsoft.aspnetcore.authentication.core.2.2.0.nupkg.sha512",

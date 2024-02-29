@@ -10,7 +10,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
@@ -20,7 +20,13 @@ import { ProductsService } from '../../../service/products.service';
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [EditorModule, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [
+    EditorModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    RouterLink,
+  ],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css',
 })
@@ -106,7 +112,6 @@ export class ProductComponent implements OnInit {
         next: (response: any) => {
           console.log(response);
           this.paginationModel.content = response.data.items;
-          debugger;
           this.paginationModel.totalPages = response.data.pageCount;
           this.paginationModel.totalElements = response.data.totalCount;
           this.paginationModel.numberOfElements = response.numberOfElements;
@@ -161,52 +166,6 @@ export class ProductComponent implements OnInit {
       })
       .then((r) => {});
   }
-
-  onSubmit() {
-    if (this.productForm.invalid) {
-      return;
-    }
-    if (this.productForm.value.id == null) this.create();
-    else this.update();
-  }
-
-  create() {
-    this.isDisplayNone = true;
-    this.productService.create(this.productForm.value).subscribe({
-      next: (response: any) => {
-        if (response.code === 200) {
-          this.productForm.reset();
-          this.btnCloseModal.nativeElement.click();
-          this.updateTable();
-          this.toastr.success('Thêm nhà cung cấp thành công', 'Thông báo');
-        } else {
-          this.errorMessage = response.message;
-          this.isDisplayNone = false;
-        }
-      },
-      error: (error: any) => {
-        this.errorMessage = error.error;
-        this.isDisplayNone = false;
-      },
-    });
-  }
-
-  update() {
-    this.isDisplayNone = true;
-    this.productService.update(this.productForm.value).subscribe({
-      next: (response: any) => {
-        this.productForm.reset();
-        this.btnCloseModal.nativeElement.click();
-        this.updateTable();
-        this.toastr.success('Cập nhật nhà cung cấp thành công', 'Thông báo');
-      },
-      error: (error: any) => {
-        this.errorMessage = error.error;
-        this.isDisplayNone = false;
-      },
-    });
-  }
-
   delete(id: number) {
     Swal.fire({
       title: 'Bạn có chắc chắn muốn xóa?',
@@ -222,9 +181,8 @@ export class ProductComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.productService.delete(id).subscribe({
+        this.productService.deleteProductDetails(id).subscribe({
           next: (response: any) => {
-            this.updateTable();
             this.toastr.success('Xóa nhà cung cấp thành công', 'Thông báo');
           },
           error: (error: any) => {
@@ -234,25 +192,12 @@ export class ProductComponent implements OnInit {
       }
     });
   }
-
-  openModalCreate() {
-    this.productForm.reset();
-    this.titleModal = 'Thêm nhà cung cấp';
-    this.btnSave = 'Thêm mới';
-    this.errorMessage = '';
-  }
-
-  openModalUpdate(product: ProductModel) {
-    this.productForm.patchValue({
-      id: product.id,
-    });
-    this.titleModal = 'Cập nhật nhà cung cấp';
-    this.btnSave = 'Cập nhật';
-  }
-
   updateTable() {
     this.isDisplayNone = false;
     this.errorMessage = '';
     this.findAll(this.paginationModel.pageSize, 1, '', '', '');
+  }
+  insertProduct() {
+    this.router.navigate(['/admin/product/insert']);
   }
 }

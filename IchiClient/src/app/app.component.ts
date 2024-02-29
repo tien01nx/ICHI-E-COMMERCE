@@ -4,6 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { ClientLayoutComponent } from './components/client/client-layout/client-layout.component';
 import { ClientHeaderComponent } from './components/client/client-header/client-header.component';
 import { ClientMenuComponent } from './components/client/client-menu/client-menu.component';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ import { ClientMenuComponent } from './components/client/client-menu/client-menu
     ClientLayoutComponent,
     ClientHeaderComponent,
     ClientMenuComponent,
+    NgxDropzoneModule,
   ],
 })
 export class AppComponent {

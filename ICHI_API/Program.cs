@@ -46,7 +46,7 @@ try
     {
         builder.Services.RemoveAll<ILoggerProvider>(); // Xóa tất cả các log tự động của hệ thống
     });
-    var app = builder.Build(); 
+    var app = builder.Build();
     // Configure the HTTP request pipeline
     // // tắt swagger.
     if (app.Environment.IsDevelopment())
@@ -67,6 +67,7 @@ try
     //    endpoints.MapControllers().RequireAuthorization();
     //});
     SeedDatabase();
+    app.UseStaticFiles();
     app.MapControllers();
     var websocketOptions = new WebSocketOptions
     {

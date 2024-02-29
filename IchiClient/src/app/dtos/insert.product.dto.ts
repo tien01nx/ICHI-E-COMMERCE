@@ -1,14 +1,11 @@
 import { CategoryProduct } from './../models/category.product';
-import {
-  IsString,
-  IsNotEmpty,
-  IsPhoneNumber,
-  IsBoolean,
-  IsNumber,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsBoolean, IsNumber } from 'class-validator';
 import { MasterEntityDTO } from './master.entity.dto';
 
 export class InsertProductDTO extends MasterEntityDTO {
+  @IsString()
+  @IsNotEmpty()
+  productName: string;
   @IsString()
   @IsNotEmpty()
   description: string;
@@ -17,7 +14,10 @@ export class InsertProductDTO extends MasterEntityDTO {
   categoryProductID: number;
   @IsString()
   @IsNumber()
-  price: number;
+  suggestedPrice: number;
+  @IsString()
+  @IsNumber()
+  sellingPrice: number;
   @IsString()
   notes: string;
   @IsBoolean()
@@ -33,18 +33,22 @@ export class InsertProductDTO extends MasterEntityDTO {
     createUserId: string,
     updateDatetime: Date,
     updateUserId: string,
+    productName: string,
     description: string,
     categoryProductID: number,
-    price: number,
+    suggestedPrice: number,
+    sellingPrice: number,
     notes: string,
     isActive: boolean,
     isDeleted: boolean,
     productImages: any
   ) {
     super(id, createDatetime, createUserId, updateDatetime, updateUserId);
+    this.productName = productName;
     this.description = description;
     this.categoryProductID = categoryProductID;
-    this.price = price;
+    this.suggestedPrice = suggestedPrice;
+    this.sellingPrice = sellingPrice;
     this.notes = notes;
     this.isActive = isActive;
     this.isDeleted = isDeleted;

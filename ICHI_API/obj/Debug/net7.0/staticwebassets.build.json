@@ -1,11 +1,19 @@
 {
   "Version": 1,
-  "Hash": "SI/ym+rm8fqVL/1RRA/yMdbKFcvTHNmnd60ePHP+ZSQ=",
+  "Hash": "8LPlukQ0811VW/AVB55Xz7ujJiv4FcFSO0cf+1f7yo4=",
   "Source": "ICHI_API",
   "BasePath": "_content/ICHI_API",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "ICHI_API\\wwwroot",
+      "Source": "ICHI_API",
+      "ContentRoot": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\wwwroot\\",
+      "BasePath": "_content/ICHI_API",
+      "Pattern": "**"
+    }
+  ],
   "Assets": []
 }

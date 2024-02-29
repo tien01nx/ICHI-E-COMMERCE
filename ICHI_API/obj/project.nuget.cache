@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HxbOgkuc0DwBmTvT/Fidv1kXejEdQB4MfAa0tHxh7OTWjWA0H7gFQF+3pF1bNJdQgqRw+xOStyyQoDkBvy41NA==",
+  "dgSpecHash": "Y8Auef4LkxW3UcAu13h+mQQXGo1nIuVs2rLB38xVde+e9FLaSWmcDMnwoAwscclxS0mntJXIYn0K9+WOphSJwg==",
   "success": true,
-  "projectFilePath": "D:\\Code\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj",
+  "projectFilePath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tien0\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\tien0\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
