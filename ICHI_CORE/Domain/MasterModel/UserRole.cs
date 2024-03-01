@@ -10,21 +10,21 @@ using System.Threading.Tasks;
 
 namespace ICHI_CORE.Domain.MasterModel
 {
-    [Table("user_role")]
-    public class UserRole 
-    {
-        [Key]
-        public int Id { get; set; }
+  [Table("user_role")]
+  public class UserRole
+  {
+    [Key]
+    public int Id { get; set; }
 
-        [Column("role_id")]
-        public int RoleId { get; set; }
-        public Role Role { get; set; }
-  
+    [Column("role_id")]
+    public int RoleId { get; set; }
 
-        [Column("user_id")]
-        public string UserId { get; set; }
-        public User User { get; set; }
+    public Role Role { get; set; }
 
+    [Column("user_id")]
+    public string UserId { get; set; }
 
-    }
+    public User User { get; set; }
+
+  }
 }

@@ -73,6 +73,67 @@ namespace ICHI_API.Migrations
                     b.ToTable("category_product");
                 });
 
+            modelBuilder.Entity("ICHI_CORE.Domain.MasterModel.Customer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Avatar")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Birthday")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreateDatetime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("create_datetime");
+
+                    b.Property<string>("CreateUserId")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("create_user_id");
+
+                    b.Property<bool>("Gender")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateDatetime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("update_datetime");
+
+                    b.Property<string>("UpdateUserId")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("update_user_id");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Customers");
+                });
+
             modelBuilder.Entity("ICHI_CORE.Domain.MasterModel.Log", b =>
                 {
                     b.Property<byte?>("LogStatus")
@@ -293,7 +354,16 @@ namespace ICHI_API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("productName");
+
+                    b.Property<decimal>("SellingPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("SuggestedPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("UpdateDatetime")
@@ -307,6 +377,8 @@ namespace ICHI_API.Migrations
                         .HasColumnName("update_user_id");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryProductID");
 
                     b.ToTable("product");
                 });
@@ -597,10 +669,32 @@ namespace ICHI_API.Migrations
                     b.ToTable("user");
                 });
 
+            modelBuilder.Entity("ICHI_CORE.Domain.MasterModel.Customer", b =>
+                {
+                    b.HasOne("ICHI_CORE.Domain.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ICHI_CORE.Domain.MasterModel.Product", b =>
+                {
+                    b.HasOne("ICHI_CORE.Domain.MasterModel.CategoryProduct", "CategoryProduct")
+                        .WithMany()
+                        .HasForeignKey("CategoryProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CategoryProduct");
+                });
+
             modelBuilder.Entity("ICHI_CORE.Domain.MasterModel.ProductImages", b =>
                 {
                     b.HasOne("ICHI_CORE.Domain.MasterModel.Product", "Product")
-                        .WithMany("ProductImages")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -625,11 +719,6 @@ namespace ICHI_API.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ICHI_CORE.Domain.MasterModel.Product", b =>
-                {
-                    b.Navigation("ProductImages");
                 });
 
             modelBuilder.Entity("ICHI_CORE.Domain.MasterModel.Role", b =>

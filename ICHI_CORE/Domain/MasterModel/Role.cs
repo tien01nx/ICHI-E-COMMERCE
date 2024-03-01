@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace ICHI_CORE.Domain.MasterModel
 {
-    [Table("role")]
-    
-    public class Role : MasterEntity
-    {
-        [Column("name")]
-        [Required]
-        public string Name { get; set; } = string.Empty;
+  [Table("role")]
 
-        public ICollection<UserRole> UserRoles { get; set; }
-    }
+  public class Role : MasterEntity
+  {
+    [Column("name")]
+    [Required]
+    public string Name { get; set; } = string.Empty;
+
+    public ICollection<UserRole> UserRoles { get; set; }
+  }
 }

@@ -10,32 +10,32 @@ using System.Threading.Tasks;
 
 namespace ICHI_CORE.Domain.MasterModel
 {
-    [Table("product")]
-    public class Product : MasterEntity
+  [Table("product")]
+  public class Product : MasterEntity
+  {
+    [Column("productName")]
+    [StringLength(500)]
+    public string ProductName { get; set; } = string.Empty;
+    [Column("description")]
+    [StringLength(500)]
+    public string Description { get; set; } = string.Empty;
+    public int CategoryProductID { get; set; }
+    [ForeignKey("CategoryProductID")]
+    [ValidateNever]
+    public CategoryProduct? CategoryProduct { get; set; }
+
+    public decimal SuggestedPrice { get; set; } = 0;
+    public decimal SellingPrice { get; set; } = 0;
+    public string Notes { get; set; } = string.Empty;
+    public bool IsActive { get; set; } = true;
+    public bool IsDeleted { get; set; }
+
+    public string DisplayValue
     {
-        [Column("description")]
-        [StringLength(500)]
-        public string ProductName { get; set; } = string.Empty;
-        [Column("description")]
-        [StringLength(500)]
-        public string Description { get; set; } = string.Empty;
-        public int CategoryProductID { get; set; }
-        [ForeignKey("CategoryProductID")]
-        [ValidateNever]
-        public CategoryProduct? CategoryProduct { get; set; }
-
-        public decimal SuggestedPrice { get; set; } = 0;
-        public decimal SellingPrice { get; set; } = 0;
-        public string Notes { get; set; } = string.Empty;
-        public bool IsActive { get; set; } = true;
-        public bool IsDeleted { get; set; }
-
-        public string DisplayValue
-        {
-            get
-            {
-                return string.Format("{0} - {1}", Id, Description);
-            }
-        }
+      get
+      {
+        return string.Format("{0} - {1}", Id, ProductName);
+      }
     }
+  }
 }
