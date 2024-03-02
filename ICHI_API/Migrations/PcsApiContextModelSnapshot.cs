@@ -102,9 +102,6 @@ namespace ICHI_API.Migrations
                     b.Property<bool>("Gender")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -123,15 +120,9 @@ namespace ICHI_API.Migrations
                         .HasColumnType("nvarchar(10)")
                         .HasColumnName("update_user_id");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Customers");
+                    b.ToTable("customer");
                 });
 
             modelBuilder.Entity("ICHI_CORE.Domain.MasterModel.Log", b =>
@@ -313,7 +304,7 @@ namespace ICHI_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OrderHeaders");
+                    b.ToTable("order_header");
                 });
 
             modelBuilder.Entity("ICHI_CORE.Domain.MasterModel.Product", b =>
@@ -555,7 +546,7 @@ namespace ICHI_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("supplier");
                 });
 
             modelBuilder.Entity("ICHI_CORE.Domain.MasterModel.UserRole", b =>
@@ -667,17 +658,6 @@ namespace ICHI_API.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("user");
-                });
-
-            modelBuilder.Entity("ICHI_CORE.Domain.MasterModel.Customer", b =>
-                {
-                    b.HasOne("ICHI_CORE.Domain.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ICHI_CORE.Domain.MasterModel.Product", b =>

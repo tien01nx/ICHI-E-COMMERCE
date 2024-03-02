@@ -222,11 +222,17 @@
               </td>
               <!-- <td class="align-middle ps-4">{{ customer.customerCode }}</td> -->
               <td class="align-middle white-space-nowrap text-700 ps-4">
-                {{ customer.name }}
+                {{ customer.customerName }}
               </td>
-              <td class="align-middle text-600 ps-4">{{ customer.phoneNumber }}</td>
-              <td class="align-middle text-600 ps-4">{{ customer.gender }}</td>
-              <td class="align-middle text-600 ps-4">{{ customer.birthday }}</td>
+              <td class="align-middle text-600 ps-4">
+                {{ customer.phoneNumber }}
+              </td>
+              <td class="align-middle text-600 ps-4">
+                {{ customer.gender }}
+              </td>
+              <td class="align-middle text-600 ps-4">
+                {{ customer.birthday | date : "dd/MM/yyyy" }}
+              </td>
 
               <!-- <td class="align-middle white-space-nowrap text-600 ps-4">
                 {{ customer.createDatetime | date : "dd/MM/yyyy HH:mm:ss" }}
@@ -397,35 +403,6 @@
           </div>
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="customerName"
-              >Mã khách hàng</label
-            >
-            <div class="col-sm-8">
-              <input
-                class="form-control"
-                id="customerCode"
-                type="text"
-                formControlName="customerCode"
-                placeholder="Mã khách hàng"
-              />
-              <small
-                class="text-danger mt-1"
-                *ngIf="customerForm['controls']['customerCode'].dirty"
-              >
-                <span
-                  *ngIf="customerForm['controls']['customerCode'].errors?.['required']"
-                >
-                  Mã khách hàng không được để trống
-                </span>
-                <span
-                  *ngIf="customerForm['controls']['customerCode'].errors?.['maxlength']"
-                >
-                  Mã khách hàng không được vượt quá 50 ký tự
-                </span>
-              </small>
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label class="col-sm-4 col-form-label fs-9" for="customerName"
               >Tên khách hàng</label
             >
             <div class="col-sm-8">
@@ -453,57 +430,38 @@
               </small>
             </div>
           </div>
+
           <div class="row mb-3">
-            <label class="col-sm-4 col-form-label fs-9" for="address"
-              >Địa chỉ</label
-            >
-            <div class="col-sm-8">
-              <textarea
-                class="form-control"
-                id="address"
-                rows="3"
-                placeholder="Địa chỉ"
-                formControlName="address"
-              ></textarea>
-              <small
-                class="text-danger mt-1"
-                *ngIf="customerForm['controls']['address'].dirty && customerForm['controls']['address'].errors?.['maxlength']"
-              >
-                Địa chỉ không được vượt quá 200 ký tự
-              </small>
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label class="col-sm-4 col-form-label fs-9" for="phone"
+            <label class="col-sm-4 col-form-label fs-9" for="phoneNumber"
               >Số điện thoại</label
             >
             <div class="col-sm-8">
               <input
                 class="form-control"
-                id="phone"
+                id="phoneNumber"
                 type="text"
-                formControlName="phone"
+                formControlName="phoneNumber"
                 placeholder="Số điện thoại"
               />
               <small
                 class="text-danger mt-1"
-                *ngIf="customerForm['controls']['phone'].dirty"
+                *ngIf="customerForm['controls']['phoneNumber'].dirty"
               >
                 <span
-                  *ngIf="customerForm['controls']['phone'].errors?.['required']"
+                  *ngIf="customerForm['controls']['phoneNumber'].errors?.['required']"
                 >
                   Số điện thoại không được để trống
                 </span>
                 <span
-                  *ngIf="customerForm['controls']['phone'].errors?.['maxlength']
-                  || customerForm['controls']['phone'].errors?.['minlength']"
+                  *ngIf="customerForm['controls']['phoneNumber'].errors?.['maxlength']
+                  || customerForm['controls']['phoneNumber'].errors?.['minlength']"
                 >
                   Số điện thoại phải đủ 10 số
                 </span>
                 <span
-                  *ngIf="!(customerForm['controls']['phone'].errors?.['maxlength']
-                              || customerForm['controls']['phone'].errors?.['minlength'])
-                              && customerForm['controls']['phone'].errors?.['pattern']"
+                  *ngIf="!(customerForm['controls']['phoneNumber'].errors?.['maxlength']
+                              || customerForm['controls']['phoneNumber'].errors?.['minlength'])
+                              && customerForm['controls']['phoneNumber'].errors?.['pattern']"
                 >
                   Số điện thoại không hợp lệ
                 </span>
@@ -512,119 +470,44 @@
           </div>
 
           <div class="row mb-3">
-            <label class="col-sm-4 col-form-label fs-9" for="email"
-              >Email</label
+            <label class="col-sm-4 col-form-label fs-9" for="gender"
+              >Giới tính</label
             >
             <div class="col-sm-8">
-              <textarea
-                class="form-control"
-                id="email"
-                rows="3"
-                placeholder="Địa chỉ"
-                formControlName="email"
-              ></textarea>
-              <small
-                class="text-danger mt-1"
-                *ngIf="customerForm['controls']['email'].dirty"
+              <select
+                class="form-select"
+                id="basic-form-gender"
+                aria-label="Default select example"
+                formControlName="gender"
               >
-                <span
-                  *ngIf="customerForm['controls']['email'].errors?.['required']"
-                >
-                  Email không được để trống
-                </span>
-                <span
-                  *ngIf="( customerForm['controls']['email'].errors?.['email'])"
-                >
-                  Email không hợp lệ
-                </span>
-              </small>
+                <option selected="selected">Chọn giới tính</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+              </select>
             </div>
           </div>
           <div class="row mb-3">
-            <label class="col-sm-4 col-form-label fs-9" for="taxCode"
-              >Mã số thuế</label
+            <label class="col-sm-4 col-form-label fs-9" for="birthday"
+              >Ngày sinh</label
             >
             <div class="col-sm-8">
-              <textarea
+              <input
                 class="form-control"
-                id="taxCode"
+                id="birthday"
                 rows="3"
-                placeholder="Mã số thuế"
-                formControlName="taxCode"
-              ></textarea>
+                placeholder="Ngày sinh"
+                formControlName="birthday"
+                type="date"
+                value="{{ birthday | date : 'yyyy-MM-dd' }}"
+              />
               <small
                 class="text-danger mt-1"
-                *ngIf="customerForm['controls']['taxCode'].dirty"
+                *ngIf="customerForm['controls']['birthday'].dirty"
               >
                 <span
-                  *ngIf="customerForm['controls']['taxCode'].errors?.['required']"
+                  *ngIf="customerForm['controls']['birthday'].errors?.['required']"
                 >
-                  Mã số thuế không được để trống
-                </span>
-                <span
-                  *ngIf="customerForm['controls']['taxCode'].errors?.['maxlength']
-                  || customerForm['controls']['taxCode'].errors?.['minlength']"
-                >
-                  Mã số thuế phải đủ 10 số và nhỏ hơn 20 số
-                </span>
-              </small>
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label class="col-sm-4 col-form-label fs-9" for="bankAccount"
-              >Số tài khoản</label
-            >
-            <div class="col-sm-8">
-              <textarea
-                class="form-control"
-                id="bankAccount"
-                rows="3"
-                placeholder="Số tài khoản"
-                formControlName="bankAccount"
-              ></textarea>
-              <small
-                class="text-danger mt-1"
-                *ngIf="customerForm['controls']['bankAccount'].dirty"
-              >
-                <span
-                  *ngIf="customerForm['controls']['bankAccount'].errors?.['required']"
-                >
-                  Số tài khoản không được để trống
-                </span>
-                <span
-                  *ngIf="customerForm['controls']['bankAccount'].errors?.['maxlength']
-                  || customerForm['controls']['bankAccount'].errors?.['minlength']"
-                >
-                  Số tài khoản phải đủ 5 số và nhỏ hơn 20 số
-                </span>
-              </small>
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label class="col-sm-4 col-form-label fs-9" for="bankName"
-              >Tên ngân hàng</label
-            >
-            <div class="col-sm-8">
-              <textarea
-                class="form-control"
-                id="bankName"
-                rows="3"
-                placeholder="Tên ngân hàng"
-                formControlName="bankName"
-              ></textarea>
-              <small
-                class="text-danger mt-1"
-                *ngIf="customerForm['controls']['bankName'].dirty"
-              >
-                <span
-                  *ngIf="customerForm['controls']['bankName'].errors?.['required']"
-                >
-                  Tên ngân hàng không được để trống
-                </span>
-                <span
-                  *ngIf="customerForm['controls']['bankName'].errors?.['maxlength']"
-                >
-                  Tên ngân hàng phải đủ 5 số và nhỏ hơn 20 số
+                  Ngày sinh không được để trống
                 </span>
               </small>
             </div>

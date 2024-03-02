@@ -10,11 +10,9 @@ import { MasterEntityDTO } from './master.entity.dto';
 export class InsertCustomerDTO extends MasterEntityDTO {
   name: string;
   phoneNumber: string;
-  gender: boolean;
+  gender: string;
   birthday: Date;
   avatar: string;
-  isDeleted: boolean;
-  userId: string;
 
   constructor(
     id: number,
@@ -24,11 +22,9 @@ export class InsertCustomerDTO extends MasterEntityDTO {
     updateUserId: string,
     name: string,
     phoneNumber: string,
-    gender: boolean,
+    gender: string,
     birthday: Date,
-    avatar: string,
-    isDeleted: boolean,
-    userId: string
+    avatar: string
   ) {
     super(id, createDatetime, createUserId, updateDatetime, updateUserId);
     this.name = name;
@@ -36,7 +32,5 @@ export class InsertCustomerDTO extends MasterEntityDTO {
     this.gender = gender;
     this.birthday = birthday;
     this.avatar = avatar;
-    this.userId = userId;
-    this.isDeleted = isDeleted;
   }
 }

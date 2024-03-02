@@ -28,7 +28,7 @@ namespace ICHI_CORE.Controllers.MasterController
 
                 if (!string.IsNullOrEmpty(name))
                 {
-                    query = query.Where(e => e.Name.Contains(name));
+                    query = query.Where(e => e.CustomerName.Contains(name));
                 }
 
                 var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
@@ -51,7 +51,7 @@ namespace ICHI_CORE.Controllers.MasterController
 
         // API v1/Create
         [HttpPost("Create-Customer")]
-        public async Task<ApiResponse<Customer>> CreateSupplỉer([FromBody] Customer customer)
+        public async Task<ApiResponse<Customer>> CreateSupplỉer(Customer customer)
         {
             ApiResponse<Customer> result;
             try
@@ -79,24 +79,23 @@ namespace ICHI_CORE.Controllers.MasterController
         }
 
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ApiResponse<Customer>>> Delete(int id)
-        {
-            try
-            {
-                var data = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id);
-                data.IsDeleted = true;
-                data.UpdateDatetime = DateTime.Now;
-                data.UpdateUserId = "Admin";
-                _context.Customers.Update(data);
-                await _context.SaveChangesAsync();
-                var result = new ApiResponse<Customer>(System.Net.HttpStatusCode.OK, "", data);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ApiResponse<Customer>(System.Net.HttpStatusCode.BadRequest, ex.Message, null));
-            }
-        }
+        //[HttpDelete("{id}")]
+        //public async Task<ActionResult<ApiResponse<Customer>>> Delete(int id)
+        //{
+        //    try
+        //    {
+        //        var data = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id);
+        //        data.UpdateDatetime = DateTime.Now;
+        //        data.UpdateUserId = "Admin";
+        //        _context.Customers.Update(data);
+        //        await _context.SaveChangesAsync();
+        //        var result = new ApiResponse<Customer>(System.Net.HttpStatusCode.OK, "", data);
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(new ApiResponse<Customer>(System.Net.HttpStatusCode.BadRequest, ex.Message, null));
+        //    }
+        //}
     }
 }

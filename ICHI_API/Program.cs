@@ -54,6 +54,7 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
+    app.UseStaticFiles();
     app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
     app.UseRouting();
     //app.UseHttpsRedirection();
@@ -67,7 +68,6 @@ try
     //    endpoints.MapControllers().RequireAuthorization();
     //});
     SeedDatabase();
-    app.UseStaticFiles();
     app.MapControllers();
     var websocketOptions = new WebSocketOptions
     {

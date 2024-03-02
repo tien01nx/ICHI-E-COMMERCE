@@ -33,6 +33,7 @@ export class CustomerComponent {
   sortDir: string = 'ASC';
   SortBy: string = 'id';
 
+  birthday: Date = new Date();
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   titleModal: string = '';
   btnSave: string = '';
@@ -40,15 +41,18 @@ export class CustomerComponent {
   errorMessage: string = '';
   customerForm: FormGroup = new FormGroup({
     // id: new FormControl('0'),
-    Name: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-    PhoneNumber: new FormControl('', [
+    customerName: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(50),
+    ]),
+    phoneNumber: new FormControl('', [
       Validators.required,
       Validators.maxLength(10),
       Validators.minLength(10),
       Validators.pattern('^0[0-9]{9}$'),
     ]),
-    Gender: new FormControl('', [Validators.required]),
-    Birthday: new FormControl('', [Validators.required]),
+    gender: new FormControl('', [Validators.required]),
+    birthday: new FormControl('', [Validators.required]),
   });
 
   constructor(
@@ -87,7 +91,6 @@ export class CustomerComponent {
         next: (response: any) => {
           console.log(response);
           this.paginationModel.content = response.data.items;
-          debugger;
           this.paginationModel.totalPages = response.data.pageCount;
           this.paginationModel.totalElements = response.data.totalCount;
           this.paginationModel.numberOfElements = response.numberOfElements;
@@ -143,7 +146,14 @@ export class CustomerComponent {
       .then((r) => {});
   }
 
+  getGenderValue(): boolean {
+    const value = this.customerForm.value('gender').value;
+    const isMale = value === '1';
+
+    return isMale;
+  }
   onSubmit() {
+    debugger;
     if (this.customerForm.invalid) {
       return;
     }
@@ -174,6 +184,7 @@ export class CustomerComponent {
 
   update() {
     this.isDisplayNone = true;
+    debugger;
     this.customerService.update(this.customerForm.value).subscribe({
       next: (response: any) => {
         this.customerForm.reset();
@@ -225,15 +236,14 @@ export class CustomerComponent {
 
   openModalUpdate(customer: CustomerModel) {
     this.customerForm.patchValue({
-      // id: customer.id,
-      // bankName: customer.bankName,
-      // phone: customer.phone,
-      // address: customer.address,
-      // email: customer.email,
-      // tax_code: customer.taxCode,
-      // banK_account: customer.bankAccount,
-      // bank_name: customer.bankName,
+      id: customer.id,
+      customerName: customer.customerName,
+      phoneNumber: customer.phoneNumber,
+      gender: customer.gender,
+      birthday: customer.birthday,
     });
+    this.birthday = customer.birthday;
+    debugger; // This is a debug statement
     this.titleModal = 'Cập nhật nhà cung cấp';
     this.btnSave = 'Cập nhật';
   }

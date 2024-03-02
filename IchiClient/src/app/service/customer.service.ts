@@ -60,7 +60,7 @@ export class CustomerService {
     }
     console.log(params);
     return this.apiService.callApi<CustomerModel>(
-      '/Supplier/FindAllPaged',
+      '/Customer/FindAllPaged',
       'get',
       params
     );
@@ -101,24 +101,23 @@ export class CustomerService {
 
   findAll() {
     return this.apiService.callApi<CustomerModel>(
-      '/Supplier/FindAllPaged',
+      '/Customer/FindAllPaged',
       'get'
     );
   }
 
-  create(supplier: InsertCustomerDTO) {
-    debugger;
+  create(customer: any) {
     return this.apiService.callApi<CustomerModel>(
-      '/Supplier/Create-Supplier',
+      '/Customer/Create-Customer',
       'post',
       null,
-      supplier
+      customer
     );
   }
 
   update(supplier: CustomerModel) {
     return this.apiService.callApi<CustomerModel>(
-      '/Supplier/Update',
+      '/Customer/Update',
       'put',
       null,
       supplier
@@ -127,7 +126,7 @@ export class CustomerService {
 
   delete(id: number) {
     return this.apiService.callApi<CustomerModel[]>(
-      '/Supplier/' + id,
+      '/Customer/' + id,
       'delete'
     );
   }

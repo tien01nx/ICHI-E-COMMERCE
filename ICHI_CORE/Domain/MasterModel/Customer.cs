@@ -12,18 +12,14 @@ using System.Xml.Linq;
 
 namespace ICHI_CORE.Domain.MasterModel
 {
-  public class Customer : MasterEntity
-  {
-    public string Name { get; set; } = string.Empty;
-    public string PhoneNumber { get; set; }
-    public bool Gender { get; set; }
-    public DateTime Birthday { get; set; }
-    public string Avatar { get; set; } = string.Empty;
-    public bool IsDeleted { get; set; } = false;
-    public string UserId { get; set; }
-    [ForeignKey("UserId")]
-    [ValidateNever]
-    public User? User { get; set; }
+    [Table("customer")]
 
-  }
+    public class Customer : MasterEntity
+    {
+        public string CustomerName { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; }
+        public string Gender { get; set; }
+        public DateTime Birthday { get; set; }
+        public string? Avatar { get; set; } = string.Empty;
+    }
 }
