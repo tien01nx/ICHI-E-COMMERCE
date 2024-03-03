@@ -38,27 +38,27 @@ namespace ICHI_CORE.Entities.DbInitializer
                 {
                     new Role
                     {
-                        Name = AppSettings.ADMIN,
-                        CreateDatetime = DateTime.Now,
-                        CreateUserId = AppSettings.ADMIN,
-                        UpdateDatetime = DateTime.Now,
-                        UpdateUserId = AppSettings.ADMIN
+                        RoleName = AppSettings.ADMIN,
+                        CreateDate = DateTime.Now,
+                        CreateBy = AppSettings.ADMIN,
+                        ModifiedDate = DateTime.Now,
+                        ModifiedBy = AppSettings.ADMIN
                     },
                     new Role
                     {
-                        Name = AppSettings.USER,
-                        CreateDatetime = DateTime.Now,
-                        CreateUserId = AppSettings.ADMIN,
-                        UpdateDatetime = DateTime.Now,
-                        UpdateUserId = AppSettings.ADMIN
+                        RoleName = AppSettings.USER,
+                        CreateDate = DateTime.Now,
+                        CreateBy = AppSettings.ADMIN,
+                        ModifiedDate = DateTime.Now,
+                        ModifiedBy = AppSettings.ADMIN
                     },
                     new Role
                     {
-                        Name = AppSettings.EMPLOYEE,
-                        CreateDatetime = DateTime.Now,
-                        CreateUserId = AppSettings.ADMIN,
-                        UpdateDatetime = DateTime.Now,
-                        UpdateUserId = AppSettings.ADMIN
+                        RoleName = AppSettings.EMPLOYEE,
+                        CreateDate = DateTime.Now,
+                        CreateBy = AppSettings.ADMIN,
+                        ModifiedDate = DateTime.Now,
+                        ModifiedBy = AppSettings.ADMIN
                     }
                 };
 
@@ -66,29 +66,27 @@ namespace ICHI_CORE.Entities.DbInitializer
                 _db.SaveChanges();
                 var user = new User
                 {
-                    UserId = "185fe62b-1a55-4927-b5f0-927155858470",
+                    Id = 99,
                     UserName = AppSettings.ADMIN,
-                    UsePassword = BCrypt.Net.BCrypt.HashPassword("Admin"),
-                    PhoneNumber="0346790482",
-                    FullName="Tiến Nguyễn",
-                    Active = true,
-                    CreateDatetime = DateTime.Now,
-                    CreateUserId = "Admin",
-                    UpdateDatetime = DateTime.Now,
-                    UpdateUserId = "Admin"
+                    Password = BCrypt.Net.BCrypt.HashPassword("Admin"),
+                    IsLocked = false,
+                    CreateDate = DateTime.Now,
+                    CreateBy = AppSettings.ADMIN,
+                    ModifiedDate = DateTime.Now,
+                    ModifiedBy = AppSettings.ADMIN
                 };
                 _db.Users.Add(user);
-                var Role = _db.Roles.Where(x => x.Name == AppSettings.ADMIN).FirstOrDefault();
+                var Role = _db.Roles.Where(x => x.RoleName == AppSettings.ADMIN).FirstOrDefault();
                 var userRole = new UserRole
                 {
-                    RoleId= Role.Id,
-                    UserId = user.UserId,
+                    RoleId = Role.Id,
+                    UserId = user.Id,
                 };
                 _db.UserRoles.Add(userRole);
 
                 _db.SaveChanges();
             }
-          
+
             return;
         }
     }

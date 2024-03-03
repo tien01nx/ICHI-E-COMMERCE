@@ -46,18 +46,17 @@ namespace ICHI_CORE.Controllers.MasterController
 
                 User user = new User();
                 MapperHelper.Map<UserRegister, User>(userRegister, user);
-                user.UsePassword = BCrypt.Net.BCrypt.HashPassword(userRegister.UsePassword);
-                user.UserId = Guid.NewGuid().ToString();
-                user.Active = true;
-                user.CreateUserId = userRegister.UserName;
-                user.UpdateUserId = userRegister.UserName;
+                user.Password = BCrypt.Net.BCrypt.HashPassword(userRegister.UsePassword);
+                user.IsLocked = false;
+                user.CreateBy = userRegister.UserName;
+                user.ModifiedBy = userRegister.UserName;
                 var userResponse = await Create(user);
 
-                var Role = await _context.Roles.FirstOrDefaultAsync(a => a.Name == AppSettings.USER);
+                var Role = await _context.Roles.FirstOrDefaultAsync(a => a.RoleName == AppSettings.USER);
                 UserRole userRole = new UserRole
                 {
                     RoleId = Role.Id,
-                    UserId = user.UserId
+                    UserId = user.Id
                 };
 
                 var userRoleResponse = await _context.UserRoles.AddAsync(userRole);
@@ -86,7 +85,7 @@ namespace ICHI_CORE.Controllers.MasterController
             {
                 User loginUser = GetUserByUsername(userLogin.UserName);
 
-                if (loginUser == null || !BCrypt.Net.BCrypt.Verify(userLogin.Password, loginUser.UsePassword))
+                if (loginUser == null || !BCrypt.Net.BCrypt.Verify(userLogin.Password, loginUser.Id.ToString()))
                 {
                     result = new ApiResponse<string>(System.Net.HttpStatusCode.Forbidden, "User not found or password incorrect", null);
                     return result;
@@ -127,7 +126,7 @@ namespace ICHI_CORE.Controllers.MasterController
                 User loginUser = GetUserByUsername(user.UserName);
 
 
-                if (loginUser == null || !BCrypt.Net.BCrypt.Verify(user.Password, loginUser.UsePassword))
+                if (loginUser == null || !BCrypt.Net.BCrypt.Verify(user.Password, loginUser.Id.ToString()))
                 {
                     result = new ApiResponse<string>(System.Net.HttpStatusCode.Forbidden, "User not found or password incorrect", null);
                     return result;
@@ -151,15 +150,15 @@ namespace ICHI_CORE.Controllers.MasterController
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.UserId),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
             };
             var roles = await _context.UserRoles
-                .Where(ur => ur.UserId == user.UserId)
+                .Where(ur => ur.UserId == user.Id)
                 .Join(_context.Roles,
                       userRole => userRole.RoleId,
                       role => role.Id,
-                      (userRole, role) => role.Name)
+                      (userRole, role) => role.RoleName)
                 .ToListAsync();
 
             roles.ForEach(role => claims.Add(new Claim(ClaimTypes.Role, role)));

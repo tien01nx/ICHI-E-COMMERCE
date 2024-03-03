@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,18 +14,15 @@ namespace ICHI_CORE.Domain.MasterModel
   [Table("user_role")]
   public class UserRole
   {
-    [Key]
-    public int Id { get; set; }
+    public int Id { get; set; } = 0;
+    public int RoleId { get; set; } = 0;
+    [ForeignKey("RoleId")]
+    [ValidateNever]
+    public Role? Role { get; set; }
 
-    [Column("role_id")]
-    public int RoleId { get; set; }
-
-    public Role Role { get; set; }
-
-    [Column("user_id")]
-    public string UserId { get; set; }
-
-    public User User { get; set; }
-
+    public int UserId { get; set; } = 0;
+    [ForeignKey("UserId")]
+    [ValidateNever]
+    public User? User { get; set; }
   }
 }

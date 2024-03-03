@@ -9,6 +9,6 @@ namespace ICHI_API.Model
     {
         public Product Product { get; set; }
         public List<ProductImages> ProductImages { get; set; }
-        public CategoryProduct CategoryProduct { get; set; }
+        public Category CategoryProduct { get; set; }
     }
 }

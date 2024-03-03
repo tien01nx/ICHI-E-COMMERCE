@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ICHI_CORE.Domain.MasterModel
+{
+  public class Employee : MasterEntity
+  {
+    [Required]
+    [StringLength(255)]
+    public string FullName { get; set; } = string.Empty;
+    [Required]
+    [StringLength(3)]
+    public string Gender { get; set; } = string.Empty;
+    public DateTime Birthday { get; set; }
+    [StringLength(255)]
+    public string Email { get; set; } = string.Empty;
+    [Required]
+    [StringLength(12)]
+    public string PhoneNumber { get; set; } = string.Empty;
+    [StringLength(255)]
+    public string Address { get; set; } = string.Empty;
+    public bool isActive { get; set; } = false;
+    public bool isDeleted { get; set; } = false;
+    public string Avatar { get; set; } = string.Empty;
+
+
+  }
+}

@@ -104,8 +104,8 @@ namespace ICHI_CORE.Controllers.MasterController
             {
                 var data = await _context.ProductImages.FirstOrDefaultAsync(x => x.Id == id);
                 data.IsDeleted = true;
-                data.UpdateDatetime = DateTime.Now;
-                data.UpdateUserId = "Admin";
+                data.ModifiedDate = DateTime.Now;
+                data.ModifiedBy = "Admin";
                 _context.ProductImages.Update(data);
                 await _context.SaveChangesAsync();
                 var result = new ApiResponse<ProductImages>(System.Net.HttpStatusCode.OK, "", data);
