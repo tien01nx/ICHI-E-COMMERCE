@@ -8,7 +8,7 @@ import {
 import { MasterEntityDTO } from './master.entity.dto';
 
 export class InsertCustomerDTO extends MasterEntityDTO {
-  name: string;
+  fullName: string;
   phoneNumber: string;
   gender: string;
   birthday: Date;
@@ -20,14 +20,14 @@ export class InsertCustomerDTO extends MasterEntityDTO {
     createUserId: string,
     updateDatetime: Date,
     updateUserId: string,
-    name: string,
+    fullName: string,
     phoneNumber: string,
     gender: string,
     birthday: Date,
     avatar: string
   ) {
     super(id, createDatetime, createUserId, updateDatetime, updateUserId);
-    this.name = name;
+    this.fullName = fullName;
     this.phoneNumber = phoneNumber;
     this.gender = gender;
     this.birthday = birthday;

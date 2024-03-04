@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
 })
 export class SignUpComponent implements OnInit {
   errorMessage: string = '';
+  successMessage: string = '';
   isActive: boolean = false;
 
   ngOnInit(): void {}
@@ -62,8 +63,9 @@ export class SignUpComponent implements OnInit {
       next: (response: any) => {
         if (response.code === 200) {
           this.userForm.reset();
-          // this.toastr.success('Đăng nhập thành công', 'Thông báo');
-          this.router.navigate(['/']);
+          this.errorMessage = '';
+
+          this.successMessage = 'Đăng ký thành công';
         } else {
           this.errorMessage = response.message;
           // this.isDisplayNone = false;

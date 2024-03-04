@@ -148,7 +148,7 @@ namespace ICHI_CORE.Controllers.MasterController
           {
             PhoneNumber = userRegister.PhoneNumber,
             FullName = userRegister.FullName,
-            UserID = user.Id,
+            UserId = user.Id,
           };
           var customerResponse = await _context.Customers.AddAsync(customer);
 

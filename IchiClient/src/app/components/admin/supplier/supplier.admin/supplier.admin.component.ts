@@ -39,17 +39,13 @@ export class SupplierAdminComponent implements OnInit {
   isDisplayNone: boolean = false;
   errorMessage: string = '';
   supplierForm: FormGroup = new FormGroup({
-    // id: new FormControl('0'),
-    supplierCode: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(50),
-    ]),
+    id: new FormControl('0'),
     supplierName: new FormControl('', [
       Validators.required,
       Validators.maxLength(50),
     ]),
     address: new FormControl('', [Validators.maxLength(200)]),
-    phone: new FormControl('', [
+    phoneNumber: new FormControl('', [
       Validators.required,
       Validators.maxLength(10),
       Validators.minLength(10),
@@ -108,7 +104,6 @@ export class SupplierAdminComponent implements OnInit {
         next: (response: any) => {
           console.log(response);
           this.paginationModel.content = response.data.items;
-          debugger;
           this.paginationModel.totalPages = response.data.pageCount;
           this.paginationModel.totalElements = response.data.totalCount;
           this.paginationModel.numberOfElements = response.numberOfElements;
@@ -197,6 +192,7 @@ export class SupplierAdminComponent implements OnInit {
     this.isDisplayNone = true;
     this.supplierService.update(this.supplierForm.value).subscribe({
       next: (response: any) => {
+        console.log(response);
         this.supplierForm.reset();
         this.btnCloseModal.nativeElement.click();
         this.updateTable();
@@ -248,12 +244,13 @@ export class SupplierAdminComponent implements OnInit {
     this.supplierForm.patchValue({
       id: supplier.id,
       bankName: supplier.bankName,
-      phone: supplier.phone,
+      phoneNumber: supplier.phoneNumber,
       address: supplier.address,
       email: supplier.email,
-      tax_code: supplier.taxCode,
-      banK_account: supplier.bankAccount,
-      bank_name: supplier.bankName,
+      taxCode: supplier.taxCode,
+      bankAccount: supplier.bankAccount,
+      supplierCode: supplier.supplierCode,
+      supplierName: supplier.supplierName,
     });
     this.titleModal = 'Cập nhật nhà cung cấp';
     this.btnSave = 'Cập nhật';

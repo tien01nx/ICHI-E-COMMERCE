@@ -51,7 +51,7 @@ export class ApiServiceService {
           .pipe(catchError(ApiServiceService.handleError));
       case 'put':
         return this.http
-          .post<ApiResponse<T>>(
+          .put<ApiResponse<T>>(
             `${Environment.apiBaseUrl}${actionAPI}`,
             bodyInput,
             options

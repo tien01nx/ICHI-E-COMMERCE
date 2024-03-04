@@ -116,12 +116,11 @@ export class SupplierService {
     );
   }
 
- 
-
   update(supplier: SupplierModel) {
+    debugger;
     return this.apiService.callApi<SupplierModel>(
-      '/Supplier/Update',
-      'put',
+      '/Supplier/Update-Supplier',
+      'post',
       null,
       supplier
     );

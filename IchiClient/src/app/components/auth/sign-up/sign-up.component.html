@@ -136,7 +136,7 @@
                       </small>
                     </div>
                     <div class="mb-3 text-start">
-                      <label class="form-label" for="email">Tên tài khoản</label
+                      <label class="form-label">Tên tài khoản</label
                       ><input
                         class="form-control"
                         id="userName"
@@ -162,12 +162,11 @@
                     </div>
 
                     <div class="mb-3 text-start">
-                      <label class="form-label" for="email">Số điện thoại</label
+                      <label class="form-label">Số điện thoại</label
                       ><input
                         class="form-control"
-                        id="email"
-                        type="email"
-                        placeholder="Vui lòng nhập tên tài khoản"
+                        type="text"
+                        placeholder="Vui lòng nhâp số điện thoại"
                         formControlName="phoneNumber"
                       />
                       <small
@@ -256,8 +255,11 @@
                       >
                     </div>
                     <div class="row g-3 mb-3 text-center">
-                      <label class="form-label" for="password">
+                      <label class="form-label text-danger" for="password">
                         {{ errorMessage }}</label
+                      >
+                      <label class="form-label text-success" for="password">
+                        {{ successMessage }}</label
                       >
                     </div>
                     <button
@@ -268,7 +270,7 @@
                       Đăng ký
                     </button>
                     <div class="text-center">
-                      <a class="fs-9 fw-bold" href="sign-in.html"
+                      <a class="fs-9 fw-bold" href="/login"
                         >Đăng nhập vào tài khoản hiện có</a
                       >
                     </div>

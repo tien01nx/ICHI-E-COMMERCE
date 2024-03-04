@@ -5,7 +5,7 @@ export interface SupplierModel extends MasterEntity {
   supplierCode: string;
   supplierName: string;
   address: string;
-  phone: string;
+  phoneNumber: string;
   email: string;
   taxCode: string;
   bankAccount: string;

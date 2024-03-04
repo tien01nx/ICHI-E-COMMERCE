@@ -100,6 +100,54 @@ namespace ICHI_CORE.Controllers.MasterController
     }
 
 
+    [HttpPost("Update-Supplier")]
+    public async Task<ApiResponse<Supplier>> UpdateSupplỉer([FromBody] Supplier supplier)
+    {
+      ApiResponse<Supplier> result;
+      try
+      {
+        // kiểm tra xem mã nhà cung cấp đã tồn tại chưa
+        var checkSupplier = await _context.Suppliers.FirstOrDefaultAsync(x => x.SupplierName == supplier.SupplierName);
+        if (checkSupplier != null)
+        {
+          result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.Forbidden, "Supplier code already exists", null);
+          return result;
+        }
+        // kiểm tra email nhà cung cấp đã tồn tại chưa
+        var checkEmail = await _context.Suppliers.FirstOrDefaultAsync(x => x.Email == supplier.Email);
+        if (checkEmail != null)
+        {
+          result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.Forbidden, "Email already exists", null);
+          return result;
+        }
+        // kiểm tra số điện thoại nhà cung cấp đã tồn tại chưa
+        var checkPhone = await _context.Suppliers.FirstOrDefaultAsync(x => x.PhoneNumber == supplier.PhoneNumber);
+        if (checkPhone != null)
+        {
+          result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.Forbidden, "Phone already exists", null);
+          return result;
+        }
+        // kiêm tra mã số thueé
+        var checkTaxCode = await _context.Suppliers.FirstOrDefaultAsync(x => x.TaxCode == supplier.TaxCode);
+        if (checkTaxCode != null)
+        {
+          result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.Forbidden, "Tax code already exists", null);
+          return result;
+        }
+        supplier.CreateBy = "Admin";
+        supplier.ModifiedBy = "Admin";
+        await Update(supplier);
+        var data = await GetByKeys(supplier);
+        result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.OK, "Created successfully", data);
+      }
+      catch (Exception ex)
+      {
+        result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+      }
+      return result;
+    }
+
+
     [HttpDelete("{id}")]
     public async Task<ActionResult<ApiResponse<Supplier>>> Delete(int id)
     {

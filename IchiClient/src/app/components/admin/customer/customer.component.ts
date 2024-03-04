@@ -40,8 +40,11 @@ export class CustomerComponent {
   isDisplayNone: boolean = false;
   errorMessage: string = '';
   customerForm: FormGroup = new FormGroup({
-    // id: new FormControl('0'),
-    customerName: new FormControl('', [
+    id: new FormControl('0'),
+    userId: new FormControl('0'),
+    isActive: new FormControl('false'),
+    isDeleted: new FormControl('false'),
+    fullName: new FormControl('', [
       Validators.required,
       Validators.maxLength(50),
     ]),
@@ -235,12 +238,16 @@ export class CustomerComponent {
   }
 
   openModalUpdate(customer: CustomerModel) {
+    debugger;
     this.customerForm.patchValue({
       id: customer.id,
-      customerName: customer.customerName,
+      fullname: customer.fullName,
       phoneNumber: customer.phoneNumber,
       gender: customer.gender,
       birthday: customer.birthday,
+      userId: customer.userId,
+      isActive: customer.isActive,
+      isDeleted: customer.isDeleted,
     });
     this.birthday = customer.birthday;
     debugger; // This is a debug statement
