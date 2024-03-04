@@ -17,4 +17,13 @@ export class AuthService {
       userLogin
     );
   }
+
+  register(userRegister: any) {
+    return this.apiService.callApi<any>(
+      '/Auth/Register',
+      'post',
+      null,
+      userRegister
+    );
+  }
 }

@@ -4287,24 +4287,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\tien0\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\tien0\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj",
+      "projectUniqueName": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj",
       "projectName": "ICHI_API",
-      "projectPath": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj",
+      "projectPath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj",
       "packagesPath": "C:\\Users\\tien0\\.nuget\\packages\\",
-      "outputPath": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_API\\obj\\",
+      "outputPath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
         "C:\\Users\\tien0\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4318,8 +4313,8 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj": {
-              "projectPath": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj"
+            "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj": {
+              "projectPath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj"
             }
           }
         }
@@ -4418,24 +4413,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[7.0.14, 7.0.14]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[7.0.14, 7.0.14]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[7.0.14, 7.0.14]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[7.0.14, 7.0.14]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -4444,7 +4421,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }

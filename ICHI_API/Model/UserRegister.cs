@@ -7,7 +7,7 @@ namespace API.Model
   {
     [StringLength(64)]
     [Required]
-    public string UsePassword { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
 
     [Required]
     [StringLength(50)]

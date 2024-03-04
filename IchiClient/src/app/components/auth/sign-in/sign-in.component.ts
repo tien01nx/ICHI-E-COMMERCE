@@ -32,8 +32,14 @@ export class SignInComponent implements OnInit {
   ) {}
 
   userForm: FormGroup = new FormGroup({
-    userName: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required]),
+    userName: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(100),
+    ]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(100),
+    ]),
   });
 
   userLogin() {
@@ -41,9 +47,8 @@ export class SignInComponent implements OnInit {
       next: (response: any) => {
         if (response.code === 200) {
           this.userForm.reset();
+          // this.toastr.success('Đăng nhập thành công', 'Thông báo');
           this.router.navigate(['/']);
-          this.toastr.success('Đăng nhập thành công', 'Thông báo');
-
         } else {
           this.errorMessage = response.message;
           // this.isDisplayNone = false;
@@ -54,5 +59,9 @@ export class SignInComponent implements OnInit {
         // this.isDisplayNone = false;
       },
     });
+  }
+
+  signUp() {
+    this.router.navigate(['/register']);
   }
 }

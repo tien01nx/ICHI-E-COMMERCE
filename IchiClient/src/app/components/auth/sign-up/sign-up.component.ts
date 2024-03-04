@@ -1,12 +1,86 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../../service/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.css'
+  styleUrl: './sign-up.component.css',
 })
-export class SignUpComponent {
+export class SignUpComponent implements OnInit {
+  errorMessage: string = '';
+  isActive: boolean = false;
 
+  ngOnInit(): void {}
+  constructor(
+    private authServer: AuthService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
+
+  userForm: FormGroup = new FormGroup({
+    userName: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(100),
+    ]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(100),
+    ]),
+    confirmPassword: new FormControl('', [Validators.required]),
+    fullname: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(100),
+    ]),
+    phoneNumber: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(10),
+      Validators.minLength(10),
+      Validators.pattern('^0[0-9]{9}$'),
+    ]),
+  });
+
+  userRegister() {
+    debugger;
+    if (this.userForm.value.password !== this.userForm.value.confirmPassword) {
+      this.errorMessage = 'Mật khẩu và xác nhận mật khẩu không khớp.';
+      return;
+    }
+    this.authServer.register(this.userForm.value).subscribe({
+      next: (response: any) => {
+        if (response.code === 200) {
+          this.userForm.reset();
+          // this.toastr.success('Đăng nhập thành công', 'Thông báo');
+          this.router.navigate(['/']);
+        } else {
+          this.errorMessage = response.message;
+          // this.isDisplayNone = false;
+        }
+      },
+      error: (error: any) => {
+        this.errorMessage = error.error;
+        // this.isDisplayNone = false;
+      },
+    });
+  }
+
+  signUp() {
+    this.router.navigate(['/register']);
+  }
+
+  handleTermsChange(event: any) {
+    this.isActive = event.target.checked;
+  }
 }

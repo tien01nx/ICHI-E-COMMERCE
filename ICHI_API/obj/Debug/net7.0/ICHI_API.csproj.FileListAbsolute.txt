@@ -370,7 +370,6 @@ C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\AutoM
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Azure.Core.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Azure.Identity.dll
-C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\BCrypt.Net.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\FluentFTP.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Humanizer.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\JetBrains.Annotations.dll
@@ -453,3 +452,4 @@ C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\obj\Debug\net7.0\ref\I
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\ICHI_API.staticwebassets.runtime.json
 D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\ICHI_API.staticwebassets.runtime.json
 D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\BCrypt.Net-Next.dll
+C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\BCrypt.Net-Next.dll

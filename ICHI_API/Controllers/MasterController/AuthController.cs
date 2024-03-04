@@ -27,6 +27,76 @@ namespace ICHI_CORE.Controllers.MasterController
       _configuration = configuration;
     }
 
+    //[HttpPost]
+    //[AllowAnonymous]
+    //[Route("Register")]
+    //public async Task<ApiResponse<String>> Register([FromBody] UserRegister userRegister)
+    //{
+    //  ApiResponse<String> result;
+
+    //  try
+    //  {
+    //    var userExists = await _context.Users.AnyAsync(a => a.UserName.ToLower().Equals(userRegister.UserName.ToLower()));
+    //    if (userExists)
+    //    {
+    //      result = new ApiResponse<string>(System.Net.HttpStatusCode.Forbidden, "Tên tài khoản đã tồn tại", null);
+    //      return result;
+    //    }
+    //    var phoneCustomerExists = await _context.Customers.AnyAsync(a => a.PhoneNumber == userRegister.PhoneNumber);
+    //    var phoneEmployeeExists = await _context.Employees.AnyAsync(a => a.PhoneNumber == userRegister.PhoneNumber);
+
+    //    if (phoneCustomerExists && phoneEmployeeExists)
+    //    {
+    //      result = new ApiResponse<string>(System.Net.HttpStatusCode.Forbidden, "Số điện thoại đã tồn tại", null);
+    //      return result;
+    //    }
+
+    //    User user = new User();
+    //    MapperHelper.Map<UserRegister, User>(userRegister, user);
+    //    string salt = BCrypt.Net.BCrypt.GenerateSalt();
+    //    string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userRegister.Password, salt);
+    //    user.Password = hashedPassword;
+    //    user.IsLocked = false;
+    //    user.CreateBy = userRegister.UserName;
+    //    user.ModifiedBy = userRegister.UserName;
+    //    user.UserName = userRegister.UserName.Trim();
+    //    var userResponse = await Create(user);
+    //    await _context.SaveChangesAsync();
+
+    //    var Role = await _context.Roles.FirstOrDefaultAsync(a => a.RoleName == AppSettings.USER);
+    //    UserRole userRole = new UserRole
+    //    {
+    //      RoleId = Role.Id,
+    //      UserId = user.Id
+    //    };
+
+    //    var userRoleResponse = await _context.UserRoles.AddAsync(userRole);
+    //    await _context.SaveChangesAsync();
+
+    //    // insert vào customer
+    //    Customer customer = new Customer()
+    //    {
+    //      PhoneNumber = userRegister.PhoneNumber,
+    //      FullName = userRegister.FullName,
+    //      UserID = user.Id,
+    //    };
+    //    var customerResponse = await _context.Customers.AddAsync(customer);
+    //    await _context.SaveChangesAsync();
+
+    //    var accessToken = await GenerateAccessToken(user);
+    //    SetJWTCookie(accessToken);
+
+    //    return new ApiResponse<string>(System.Net.HttpStatusCode.OK, "Đăng ký tài khoản thành công", accessToken);
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    NLogger.log.Error(ex.ToString());
+    //    result = new ApiResponse<String>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+    //  }
+    //  return result;
+    //}
+
+
     [HttpPost]
     [AllowAnonymous]
     [Route("Register")]
@@ -36,46 +106,71 @@ namespace ICHI_CORE.Controllers.MasterController
 
       try
       {
-        User loginUser = GetUserByUsername(userRegister.UserName);
-
-        if (loginUser != null)
+        using (var transaction = _context.Database.BeginTransaction())
         {
-          result = new ApiResponse<string>(System.Net.HttpStatusCode.Forbidden, "User already exists", null);
-          return result;
+          var userExists = await _context.Users.AnyAsync(a => a.UserName.ToLower().Equals(userRegister.UserName.ToLower()));
+          if (userExists)
+          {
+            result = new ApiResponse<string>(System.Net.HttpStatusCode.Forbidden, "Tên tài khoản đã tồn tại", null);
+            return result;
+          }
+          var phoneCustomerExists = await _context.Customers.AnyAsync(a => a.PhoneNumber == userRegister.PhoneNumber);
+          var phoneEmployeeExists = await _context.Employees.AnyAsync(a => a.PhoneNumber == userRegister.PhoneNumber);
+
+          if (phoneCustomerExists && phoneEmployeeExists)
+          {
+            result = new ApiResponse<string>(System.Net.HttpStatusCode.Forbidden, "Số điện thoại đã tồn tại", null);
+            return result;
+          }
+
+          User user = new User();
+          MapperHelper.Map<UserRegister, User>(userRegister, user);
+          string salt = BCrypt.Net.BCrypt.GenerateSalt();
+          string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userRegister.Password, salt);
+          user.Password = hashedPassword;
+          user.IsLocked = false;
+          user.CreateBy = userRegister.UserName;
+          user.ModifiedBy = userRegister.UserName;
+          user.UserName = userRegister.UserName.Trim();
+          var userResponse = await Create(user);
+
+          var Role = await _context.Roles.FirstOrDefaultAsync(a => a.RoleName == AppSettings.USER);
+          UserRole userRole = new UserRole
+          {
+            RoleId = Role.Id,
+            UserId = user.Id
+          };
+
+          var userRoleResponse = await _context.UserRoles.AddAsync(userRole);
+
+          // insert vào customer
+          Customer customer = new Customer()
+          {
+            PhoneNumber = userRegister.PhoneNumber,
+            FullName = userRegister.FullName,
+            UserID = user.Id,
+          };
+          var customerResponse = await _context.Customers.AddAsync(customer);
+
+          // Thực hiện commit transaction
+          await _context.SaveChangesAsync();
+          transaction.Commit();
+
+          var accessToken = await GenerateAccessToken(user);
+          SetJWTCookie(accessToken);
+
+          return new ApiResponse<string>(System.Net.HttpStatusCode.OK, "Đăng ký tài khoản thành công", accessToken);
         }
-
-        User user = new User();
-        MapperHelper.Map<UserRegister, User>(userRegister, user);
-        string salt = BCrypt.Net.BCrypt.GenerateSalt();
-        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userRegister.UsePassword, salt);
-        user.Password = hashedPassword;
-        user.IsLocked = false;
-        user.CreateBy = userRegister.UserName;
-        user.ModifiedBy = userRegister.UserName;
-        var userResponse = await Create(user);
-
-        var Role = await _context.Roles.FirstOrDefaultAsync(a => a.RoleName == AppSettings.USER);
-        UserRole userRole = new UserRole
-        {
-          RoleId = Role.Id,
-          UserId = user.Id
-        };
-
-        var userRoleResponse = await _context.UserRoles.AddAsync(userRole);
-        await _context.SaveChangesAsync();
-
-        var accessToken = await GenerateAccessToken(user);
-        SetJWTCookie(accessToken);
-
-        return new ApiResponse<string>(System.Net.HttpStatusCode.OK, "Đăng ký tài khoản thành công", accessToken);
       }
       catch (Exception ex)
       {
         NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<String>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+        result = new ApiResponse<String>(System.Net.HttpStatusCode.ExpectationFailed, "Có lỗi xảy ra", null);
+
+        return result;
       }
-      return result;
     }
+
     [HttpPost]
     [AllowAnonymous]
     [Route("Login")]
@@ -85,13 +180,13 @@ namespace ICHI_CORE.Controllers.MasterController
 
       try
       {
-        User loginUser = GetUserByUsername(userLogin.UserName);
+        User loginUser = GetUserByUsername(userLogin.UserName.Trim());
 
 
 
         if (loginUser == null || !BCrypt.Net.BCrypt.Verify(userLogin.Password, loginUser.Password))
         {
-          result = new ApiResponse<string>(System.Net.HttpStatusCode.Forbidden, "Username hoặc mật khẩu không đúng", null);
+          result = new ApiResponse<string>(System.Net.HttpStatusCode.Forbidden, "Tài khoản hoặc mật khẩu không đúng", null);
           return result;
         }
 
@@ -103,7 +198,7 @@ namespace ICHI_CORE.Controllers.MasterController
       catch (Exception ex)
       {
         NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<String>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+        result = new ApiResponse<String>(System.Net.HttpStatusCode.ExpectationFailed, "Có lỗi xảy ra", null);
       }
       return result;
     }
@@ -162,15 +257,21 @@ namespace ICHI_CORE.Controllers.MasterController
 
     private User GetUserByUsername(string username)
     {
-      var usersResponse = FindAll();
+      //var usersResponse = FindAll();
 
-      if (usersResponse.Result.Code != System.Net.HttpStatusCode.OK)
+      //if (usersResponse.Result.Code != System.Net.HttpStatusCode.OK)
+      //{
+      //  return null;
+      //}
+
+      //var users = usersResponse.Result.Data;
+      //return users.FirstOrDefault(a => a.UserName.ToLower().Equals(username.ToLower()));
+      var user = _context.Users.FirstOrDefault(a => a.UserName.ToLower().Equals(username.ToLower()));
+      if (user == null)
       {
         return null;
       }
-
-      var users = usersResponse.Result.Data;
-      return users.FirstOrDefault(a => a.UserName.ToLower().Equals(username.ToLower()));
+      return user;
     }
 
     private string GenerateWebToken(List<Claim> claims)
