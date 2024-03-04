@@ -11,7 +11,6 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace ICHI_CORE.Domain.MasterModel
 {
-  [Table("product")]
   public class Product : MasterEntity
   {
     public int TrademarkID { get; set; }

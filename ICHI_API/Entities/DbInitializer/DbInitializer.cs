@@ -5,36 +5,36 @@ using ICHI_CORE.Helpers;
 
 namespace ICHI_CORE.Entities.DbInitializer
 {
-    public class DbInitializer : IDbInitializer
+  public class DbInitializer : IDbInitializer
+  {
+    private readonly PcsApiContext _db;
+
+    public DbInitializer(PcsApiContext db)
     {
-        private readonly PcsApiContext _db;
+      _db = db;
+    }
+    public void Initialize()
+    {
+      // di chuyển nếu chúng không được áp dụng
 
-        public DbInitializer(PcsApiContext db)
+      try
+      {
+        if (_db.Database.GetPendingMigrations().Count() > 0)
         {
-            _db = db;
+          _db.Database.Migrate();
         }
-        public void Initialize()
-        {
-            // di chuyển nếu chúng không được áp dụng
 
-            try
-            {
-                if (_db.Database.GetPendingMigrations().Count() > 0)
-                {
-                    _db.Database.Migrate();
-                }
+      }
+      catch (Exception)
+      {
 
-            }
-            catch (Exception)
-            {
+      }
 
-            }
+      var RoleCount = _db.Roles.Count();
 
-            var RoleCount = _db.Roles.Count();
-
-            if (RoleCount == 0)
-            {
-                var rolesToAdd = new List<Role>
+      if (RoleCount == 0)
+      {
+        var rolesToAdd = new List<Role>
                 {
                     new Role
                     {
@@ -62,32 +62,36 @@ namespace ICHI_CORE.Entities.DbInitializer
                     }
                 };
 
-                _db.Roles.AddRange(rolesToAdd);
-                _db.SaveChanges();
-                var user = new User
-                {
-                    Id = 99,
-                    UserName = AppSettings.ADMIN,
-                    Password = BCrypt.Net.BCrypt.HashPassword("Admin"),
-                    IsLocked = false,
-                    CreateDate = DateTime.Now,
-                    CreateBy = AppSettings.ADMIN,
-                    ModifiedDate = DateTime.Now,
-                    ModifiedBy = AppSettings.ADMIN
-                };
-                _db.Users.Add(user);
-                var Role = _db.Roles.Where(x => x.RoleName == AppSettings.ADMIN).FirstOrDefault();
-                var userRole = new UserRole
-                {
-                    RoleId = Role.Id,
-                    UserId = user.Id,
-                };
-                _db.UserRoles.Add(userRole);
+        _db.Roles.AddRange(rolesToAdd);
+        _db.SaveChanges();
+        string salt = BCrypt.Net.BCrypt.GenerateSalt();
+        string hashedPassword = BCrypt.Net.BCrypt.HashPassword("Admin", salt);
+        var user = new User
+        {
+          UserName = AppSettings.ADMIN,
 
-                _db.SaveChanges();
-            }
+          Password = hashedPassword,
+          IsLocked = false,
+          CreateDate = DateTime.Now,
+          CreateBy = AppSettings.ADMIN,
+          ModifiedDate = DateTime.Now,
+          ModifiedBy = AppSettings.ADMIN
+        };
+        _db.Users.Add(user);
+        _db.SaveChanges();
 
-            return;
-        }
+        var Role = _db.Roles.Where(x => x.RoleName == AppSettings.ADMIN).FirstOrDefault();
+        var userRole = new UserRole
+        {
+          RoleId = Role.Id,
+          UserId = user.Id,
+        };
+        _db.UserRoles.Add(userRole);
+
+        _db.SaveChanges();
+      }
+
+      return;
     }
+  }
 }

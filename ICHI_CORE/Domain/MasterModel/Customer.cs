@@ -14,10 +14,14 @@ using System.Xml.Linq;
 
 namespace ICHI_CORE.Domain.MasterModel
 {
-  [Table("customer")]
 
   public class Customer : MasterEntity
   {
+    public int UserID { get; set; }
+    [ForeignKey("UserID")]
+    [ValidateNever]
+    public User? User { get; set; }
+
     [Required]
     [StringLength(255)]
     public string FullName { get; set; } = string.Empty;

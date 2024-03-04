@@ -68,7 +68,7 @@ namespace ICHI_CORE.Controllers.MasterController
       ApiResponse<ICHI_API.Helpers.PagedResult<Category>> result;
       try
       {
-        var query = _context.CategoryProducts.AsQueryable().Where(u => u.IsDeleted == false);
+        var query = _context.Categories.AsQueryable().Where(u => u.IsDeleted == false);
 
         if (!string.IsNullOrEmpty(name))
         {
@@ -99,7 +99,7 @@ namespace ICHI_CORE.Controllers.MasterController
     {
       try
       {
-        var data = await _context.CategoryProducts.FirstOrDefaultAsync(x => x.Id == id);
+        var data = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);
         var result = new ApiResponse<Category>(System.Net.HttpStatusCode.OK, "", data);
         return Ok(result);
       }
@@ -115,11 +115,11 @@ namespace ICHI_CORE.Controllers.MasterController
     {
       try
       {
-        var data = await _context.CategoryProducts.FirstOrDefaultAsync(x => x.Id == id);
+        var data = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);
         data.IsDeleted = true;
         data.ModifiedDate = DateTime.Now;
         data.ModifiedBy = "Admin";
-        _context.CategoryProducts.Update(data);
+        _context.Categories.Update(data);
         await _context.SaveChangesAsync();
         var result = new ApiResponse<Category>(System.Net.HttpStatusCode.OK, "", data);
         return Ok(result);

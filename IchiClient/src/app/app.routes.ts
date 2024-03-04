@@ -41,6 +41,7 @@ export const routes: Routes = [
   { path: 'register', component: SignUpComponent },
   { path: 'forgot_password', component: ForgotPasswordComponent },
   { path: 'verify_email', component: VerificationCodeComponent },
+  
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

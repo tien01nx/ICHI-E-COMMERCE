@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace ICHI_CORE.Domain.MasterModel
 {
-  [Table("user_role")]
   public class UserRole
   {
     public int Id { get; set; } = 0;

@@ -3,13 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ICHI_CORE.Domain.MasterModel
 {
-  [Table("product_images")]
   public class ProductImages : MasterEntity
   {
-    public int ProductId { get; set; }
-    [ForeignKey("ProductId")]
+    public int ProductDetailId { get; set; }
+    [ForeignKey("ProductDetailId")]
     [ValidateNever]
-    public Product Product { get; set; }
+    public ProductDetail ProductDetail { get; set; }
     public string ImageName { get; set; } = string.Empty;
     public string ImagePath { get; set; } = string.Empty;
     public bool IsDefault { get; set; }

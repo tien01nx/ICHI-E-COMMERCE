@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +11,12 @@ namespace ICHI_CORE.Domain.MasterModel
 {
   public class Employee : MasterEntity
   {
+    public int UserID { get; set; }
+    [ForeignKey("UserID")]
+    [ValidateNever]
+    public User? User { get; set; }
+
+
     [Required]
     [StringLength(255)]
     public string FullName { get; set; } = string.Empty;

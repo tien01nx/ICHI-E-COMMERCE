@@ -10,12 +10,10 @@ using System.Threading.Tasks;
 
 namespace ICHI_CORE.Domain.MasterModel
 {
-    [Table("role")]
+  public class Role : MasterEntity
+  {
+    public string RoleName { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
 
-    public class Role : MasterEntity
-    {
-        public string RoleName { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-
-    }
+  }
 }

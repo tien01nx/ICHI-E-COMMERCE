@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ICHI_CORE.Domain.MasterModel
 {
-  [Table("category_product")]
   public class Category : MasterEntity
   {
     [Required]

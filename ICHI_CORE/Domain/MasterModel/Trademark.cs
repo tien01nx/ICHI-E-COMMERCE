@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ICHI_CORE.Domain.MasterModel
 {
-  public class Trademark
+  public class Trademark : MasterEntity
   {
     [Required]
     [StringLength(255)]

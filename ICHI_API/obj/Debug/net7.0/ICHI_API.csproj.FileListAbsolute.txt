@@ -187,7 +187,6 @@ D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\AutoMapper.dll
 D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Azure.Core.dll
 D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Azure.Identity.dll
-D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\BCrypt.Net.dll
 D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\FluentFTP.dll
 D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Humanizer.dll
 D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
@@ -453,3 +452,4 @@ C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\obj\Debug\net7.0\ICHI_
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\obj\Debug\net7.0\ref\ICHI_API.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\ICHI_API.staticwebassets.runtime.json
 D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\ICHI_API.staticwebassets.runtime.json
+D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\BCrypt.Net-Next.dll

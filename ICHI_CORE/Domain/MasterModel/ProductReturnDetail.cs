@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -17,8 +18,6 @@ namespace ICHI_CORE.Domain.MasterModel
     [ForeignKey("ProductDetailID")]
     [ValidateNever]
     public ProductDetail? ProductDetail { get; set; }
-
-
 
   }
 }

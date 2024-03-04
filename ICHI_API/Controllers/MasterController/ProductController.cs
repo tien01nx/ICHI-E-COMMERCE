@@ -47,7 +47,7 @@ namespace ICHI_CORE.Controllers.MasterController
             foreach (var file in files)
             {
               var image = new ProductImages();
-              image.ProductId = product.Id;
+              image.ProductDetailId = product.Id;
               image.ImageName = file.FileName;
               image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id, file);
               image.IsDefault = false;
@@ -64,7 +64,7 @@ namespace ICHI_CORE.Controllers.MasterController
         _context.Update(product);
         await _context.SaveChangesAsync();
 
-        var productImages = await _context.ProductImages.Where(x => x.ProductId == product.Id).ToListAsync();
+        var productImages = await _context.ProductImages.Where(x => x.ProductDetailId == product.Id).ToListAsync();
         // thực hiện xóa ảnh cũ
         foreach (var item in productImages)
         {
@@ -76,7 +76,7 @@ namespace ICHI_CORE.Controllers.MasterController
           foreach (var file in files)
           {
             var image = new ProductImages();
-            image.ProductId = product.Id;
+            image.ProductDetailId = product.Id;
 
             image.ImageName = file.FileName;
             image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id, file);
@@ -142,8 +142,8 @@ namespace ICHI_CORE.Controllers.MasterController
         ProductDTO data = new ProductDTO
         {
           Product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id),
-          ProductImages = await _context.ProductImages.Where(x => x.ProductId == id).ToListAsync(),
-          CategoryProduct = await _context.CategoryProducts.FirstOrDefaultAsync(x => x.Id == id)
+          ProductImages = await _context.ProductImages.Where(x => x.ProductDetailId == id).ToListAsync(),
+          CategoryProduct = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id)
         };
         if (data == null)
         {
@@ -168,7 +168,7 @@ namespace ICHI_CORE.Controllers.MasterController
       ApiResponse<ProductImages> result;
       try
       {
-        var productImage = await _context.ProductImages.FirstOrDefaultAsync(x => x.ProductId == productId && x.ImageName == imageName);
+        var productImage = await _context.ProductImages.FirstOrDefaultAsync(x => x.ProductDetailId == productId && x.ImageName == imageName);
         if (productImage == null)
         {
           result = new ApiResponse<ProductImages>(System.Net.HttpStatusCode.Forbidden, "ProductImage does not exist! ", null);

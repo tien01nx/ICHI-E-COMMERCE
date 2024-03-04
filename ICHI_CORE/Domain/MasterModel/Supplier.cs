@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace ICHI_CORE.Domain.MasterModel
 {
-  [Table("supplier")]
   public class Supplier : MasterEntity
   {
     [Required]

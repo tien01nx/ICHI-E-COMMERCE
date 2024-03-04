@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "5nyddq/EOJdQV99PXpmREBXAgv9nqhFDhizmnzvamN8=",
+  "Hash": "X+kafvRW/2cq0PCK0fpXNUl87UYiqzfBusDIz1kpN4o=",
   "Source": "ICHI_API",
   "BasePath": "_content/ICHI_API",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "ICHI_API\\wwwroot",
       "Source": "ICHI_API",
-      "ContentRoot": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\wwwroot\\",
+      "ContentRoot": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_API\\wwwroot\\",
       "BasePath": "_content/ICHI_API",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\wwwroot\\images\\products\\product-47\\5b986978-35b8-4c3f-b6cf-b989d816f3f3.png",
+      "Identity": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_API\\wwwroot\\images\\products\\product-47\\5b986978-35b8-4c3f-b6cf-b989d816f3f3.png",
       "SourceId": "ICHI_API",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\wwwroot\\",
+      "ContentRoot": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_API\\wwwroot\\",
       "BasePath": "_content/ICHI_API",
       "RelativePath": "images/products/product-47/5b986978-35b8-4c3f-b6cf-b989d816f3f3.png",
       "AssetKind": "All",
@@ -36,10 +36,10 @@
       "OriginalItemSpec": "wwwroot\\images\\products\\product-47\\5b986978-35b8-4c3f-b6cf-b989d816f3f3.png"
     },
     {
-      "Identity": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\wwwroot\\images\\products\\product-47\\85d3c2db-374f-41bb-8c0c-7707c7d28b12.png",
+      "Identity": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_API\\wwwroot\\images\\products\\product-47\\85d3c2db-374f-41bb-8c0c-7707c7d28b12.png",
       "SourceId": "ICHI_API",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\wwwroot\\",
+      "ContentRoot": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_API\\wwwroot\\",
       "BasePath": "_content/ICHI_API",
       "RelativePath": "images/products/product-47/85d3c2db-374f-41bb-8c0c-7707c7d28b12.png",
       "AssetKind": "All",
@@ -55,10 +55,10 @@
       "OriginalItemSpec": "wwwroot\\images\\products\\product-47\\85d3c2db-374f-41bb-8c0c-7707c7d28b12.png"
     },
     {
-      "Identity": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\wwwroot\\images\\products\\product-47\\de85a564-7eca-4a4e-bf22-728258cb2f64.png",
+      "Identity": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_API\\wwwroot\\images\\products\\product-47\\de85a564-7eca-4a4e-bf22-728258cb2f64.png",
       "SourceId": "ICHI_API",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\wwwroot\\",
+      "ContentRoot": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_API\\wwwroot\\",
       "BasePath": "_content/ICHI_API",
       "RelativePath": "images/products/product-47/de85a564-7eca-4a4e-bf22-728258cb2f64.png",
       "AssetKind": "All",
