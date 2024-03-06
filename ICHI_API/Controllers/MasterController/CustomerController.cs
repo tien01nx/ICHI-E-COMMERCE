@@ -24,7 +24,7 @@ namespace ICHI_CORE.Controllers.MasterController
       ApiResponse<ICHI_API.Helpers.PagedResult<Customer>> result;
       try
       {
-        var query = _context.Customers.AsQueryable();
+        var query = _context.Customers.AsQueryable().Where(u => !u.isDeleted);
 
         if (!string.IsNullOrEmpty(name))
         {
@@ -78,6 +78,25 @@ namespace ICHI_CORE.Controllers.MasterController
       return result;
     }
 
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<ApiResponse<Customer>>> Delete(int id)
+    {
+      try
+      {
+        var data = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id);
+        data.isDeleted = true;
+        data.ModifiedDate = DateTime.Now;
+        data.ModifiedBy = "Admin";
+        _context.Customers.Update(data);
+        await _context.SaveChangesAsync();
+        var result = new ApiResponse<Customer>(System.Net.HttpStatusCode.OK, "", data);
+        return Ok(result);
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(new ApiResponse<Customer>(System.Net.HttpStatusCode.BadRequest, ex.Message, null));
+      }
+    }
 
     //[HttpDelete("{id}")]
     //public async Task<ActionResult<ApiResponse<Customer>>> Delete(int id)

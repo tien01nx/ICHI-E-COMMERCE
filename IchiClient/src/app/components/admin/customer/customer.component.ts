@@ -40,10 +40,7 @@ export class CustomerComponent {
   isDisplayNone: boolean = false;
   errorMessage: string = '';
   customerForm: FormGroup = new FormGroup({
-    id: new FormControl('0'),
-    userId: new FormControl('0'),
-    isActive: new FormControl('false'),
-    isDeleted: new FormControl('false'),
+    id: new FormControl(null),
     fullName: new FormControl('', [
       Validators.required,
       Validators.maxLength(50),
@@ -66,7 +63,7 @@ export class CustomerComponent {
     private toastr: ToastrService
   ) {}
   ngOnInit() {
-    this.title.setTitle('Quản lý nhà cung cấp');
+    this.title.setTitle('Quản lý thông tin khách hàng');
     this.activatedRoute.queryParams.subscribe((params) => {
       const search = params['search'] || '';
       const pageSize = +params['page-size'] || 10;
@@ -160,12 +157,13 @@ export class CustomerComponent {
     if (this.customerForm.invalid) {
       return;
     }
-    if (this.customerForm.value.id == null) this.create();
+    if (this.customerForm.value.id === null) this.create();
     else this.update();
   }
 
   create() {
     this.isDisplayNone = true;
+    this.customerForm.value.id = 0;
     this.customerService.create(this.customerForm.value).subscribe({
       next: (response: any) => {
         if (response.code === 200) {
@@ -232,25 +230,21 @@ export class CustomerComponent {
 
   openModalCreate() {
     this.customerForm.reset();
-    this.titleModal = 'Thêm nhà cung cấp';
+    this.titleModal = 'Thêm khách hàng';
     this.btnSave = 'Thêm mới';
     this.errorMessage = '';
   }
 
   openModalUpdate(customer: CustomerModel) {
-    debugger;
     this.customerForm.patchValue({
       id: customer.id,
-      fullname: customer.fullName,
+      fullName: customer.fullName,
       phoneNumber: customer.phoneNumber,
       gender: customer.gender,
       birthday: customer.birthday,
       userId: customer.userId,
-      isActive: customer.isActive,
-      isDeleted: customer.isDeleted,
     });
     this.birthday = customer.birthday;
-    debugger; // This is a debug statement
     this.titleModal = 'Cập nhật nhà cung cấp';
     this.btnSave = 'Cập nhật';
   }

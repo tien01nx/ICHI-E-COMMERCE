@@ -30,14 +30,14 @@
           </div>
         </div>
         <div class="col-auto ms-auto">
-          <button
+          <!-- <button
             class="btn btn-primary"
             data-bs-target="#modalcustomer"
             data-bs-toggle="modal"
             (click)="openModalCreate()"
           >
             <span class="fas fa-plus me-2"></span>Thêm khách hàng
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
@@ -171,12 +171,12 @@
                 class="sort align-middle ps-4"
                 scope="col"
                 style="width: 150px"
-                (click)="sortByField('UpdateDatetime')"
+                (click)="sortByField('ModifiedDate')"
               >
                 Ngày sửa
                 <label
                   [class.d-none]="
-                    SortBy === 'UpdateDatetime' &&
+                    SortBy === 'ModifiedDate' &&
                     (sortDir === 'DESC' || sortDir === 'ASC')
                   "
                 >
@@ -184,14 +184,14 @@
                 </label>
                 <label
                   [class.d-none]="
-                    SortBy !== 'UpdateDatetime' || sortDir !== 'ASC'
+                    SortBy !== 'ModifiedDate' || sortDir !== 'ASC'
                   "
                 >
                   <span class="fas fa-sort-up align-middle fs-9"></span>
                 </label>
                 <label
                   [class.d-none]="
-                    SortBy !== 'UpdateDatetime' || sortDir !== 'DESC'
+                    SortBy !== 'ModifiedDate' || sortDir !== 'DESC'
                   "
                 >
                   <span class="fas fa-sort-down align-middle fs-9"></span>
@@ -405,6 +405,7 @@
               {{ errorMessage }}
             </label>
           </div>
+
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="fullName"
               >Tên khách hàng</label
@@ -412,10 +413,10 @@
             <div class="col-sm-8">
               <input
                 class="form-control"
-                id="fullName"
+                id="fullname"
                 type="text"
-                formControlName="fullName"
                 placeholder="Tên khách hàng"
+                formControlName="fullName"
               />
               <small
                 class="text-danger mt-1"
@@ -444,8 +445,8 @@
                 class="form-control"
                 id="phoneNumber"
                 type="text"
-                formControlName="phoneNumber"
                 placeholder="Số điện thoại"
+                formControlName="phoneNumber"
               />
               <small
                 class="text-danger mt-1"

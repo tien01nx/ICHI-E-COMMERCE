@@ -14,6 +14,7 @@ using System.Security.Claims;
 using System.Text;
 using ICHI_CORE.Domain.MasterModel;
 using Microsoft.EntityFrameworkCore;
+using ICHI_API.Extension;
 
 namespace ICHI_CORE.Controllers.MasterController
 {
@@ -234,6 +235,57 @@ namespace ICHI_CORE.Controllers.MasterController
 
       return result;
     }
+
+    // viết hàm quên mật khẩu gửi về gmail
+    [HttpPost]
+    [Route("forgot-password")]
+    [AllowAnonymous]
+    public async Task<ApiResponse<string>> ForgotPassword(string email)
+    {
+      ApiResponse<string> result;
+
+      try
+      {
+        User loginUser = GetUserByUsername(email);
+
+        if (loginUser == null)
+        {
+          result = new ApiResponse<string>(System.Net.HttpStatusCode.Forbidden, "Tài khoản không tồn tại", null);
+          return result;
+        }
+
+        var emailService = new EmailService(_configuration);
+        // random mật khẩu mới
+        Random random = new Random();
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
+
+        string randomString = new string(Enumerable.Repeat(chars, random.Next(8, 16))
+          .Select(s => s[random.Next(s.Length)]).ToArray());
+
+        string salt = BCrypt.Net.BCrypt.GenerateSalt();
+        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(randomString, salt);
+
+        User user = await _context.Users.FirstOrDefaultAsync(a => a.UserName == loginUser.UserName || a.Email.Equals(email));
+        user.Password = hashedPassword;
+        user.ModifiedBy = loginUser.UserName;
+        user.ModifiedDate = DateTime.Now;
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+
+        string url = "Mật khẩu mới của bạn là: " + randomString;
+        string body = "Click vào link sau để đổi mật khẩu: " + url;
+        emailService.SendEmail(email, "Reset password", url);
+
+        return new ApiResponse<string>(System.Net.HttpStatusCode.OK, "Gửi email thành công", null);
+      }
+      catch (Exception ex)
+      {
+        NLogger.log.Error(ex.ToString());
+        result = new ApiResponse<string>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+      }
+
+      return result;
+    }
     private async Task<string> GenerateAccessToken(User user)
     {
       var claims = new List<Claim>
@@ -266,13 +318,15 @@ namespace ICHI_CORE.Controllers.MasterController
 
       //var users = usersResponse.Result.Data;
       //return users.FirstOrDefault(a => a.UserName.ToLower().Equals(username.ToLower()));
-      var user = _context.Users.FirstOrDefault(a => a.UserName.ToLower().Equals(username.ToLower()));
+      var user = _context.Users.FirstOrDefault(a => a.UserName.ToLower().Equals(username.ToLower()) || a.Email.Equals(username));
       if (user == null)
       {
         return null;
       }
       return user;
     }
+
+
 
     private string GenerateWebToken(List<Claim> claims)
     {

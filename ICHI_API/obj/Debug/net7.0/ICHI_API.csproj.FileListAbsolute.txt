@@ -453,3 +453,11 @@ C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\ICHI_
 D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\ICHI_API.staticwebassets.runtime.json
 D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\BCrypt.Net-Next.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\BCrypt.Net-Next.dll
+C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\BouncyCastle.Cryptography.dll
+C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\MailKit.dll
+C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\MimeKit.dll
+C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\System.Formats.Asn1.dll
+C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\System.Text.Encoding.CodePages.dll
+C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Text.Encoding.CodePages.dll

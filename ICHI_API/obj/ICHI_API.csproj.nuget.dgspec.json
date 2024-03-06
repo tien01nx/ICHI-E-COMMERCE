@@ -60,6 +60,10 @@
               "target": "Package",
               "version": "[49.0.1, )"
             },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.4.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[7.0.15, )"
@@ -87,6 +91,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[7.0.15, )"
+            },
+            "MimeKit": {
+              "target": "Package",
+              "version": "[4.4.0, )"
             },
             "NLog": {
               "target": "Package",

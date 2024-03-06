@@ -17,6 +17,7 @@ import { InsertAdminProductComponent } from './components/admin/product/insert/i
 import { CategoryComponent } from './components/admin/category/category.component';
 import { RouterModule, Routes } from '@angular/router';
 import { SupplierAdminComponent } from './components/admin/supplier/supplier.admin/supplier.admin.component';
+import { EmployeeComponent } from './components/admin/employee/employee.component';
 
 export const routes: Routes = [
   {
@@ -29,6 +30,7 @@ export const routes: Routes = [
       { path: 'categories', component: CategoryComponent },
       { path: 'supplier', component: SupplierAdminComponent },
       { path: 'customer', component: CustomerComponent },
+      { path: 'employee', component: EmployeeComponent },
     ],
   },
   { path: '', component: ClientLayoutComponent },
@@ -41,7 +43,6 @@ export const routes: Routes = [
   { path: 'register', component: SignUpComponent },
   { path: 'forgot_password', component: ForgotPasswordComponent },
   { path: 'verify_email', component: VerificationCodeComponent },
-  
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

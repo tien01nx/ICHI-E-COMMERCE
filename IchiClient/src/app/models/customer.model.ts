@@ -8,6 +8,4 @@ export interface CustomerModel extends MasterEntity {
   gender: string;
   birthday: Date;
   avatar: string;
-  isActive: boolean;
-  isDeleted: boolean;
 }

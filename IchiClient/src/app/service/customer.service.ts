@@ -12,29 +12,6 @@ import { InsertCustomerDTO } from '../dtos/insert.customer.dto';
 export class CustomerService {
   constructor(private apiService: ApiServiceService) {}
 
-  // truyền đối tượng CustomerModel
-  // findAll(
-  //   PageNumber: number,
-  //   PageSize: number,
-  //   SortDirection: string,
-  //   SortBy: string,
-  //   Search: string
-  // ): Observable<ApiResponse<CustomerModel[]>> {
-  //   const params = {
-  //     PageNumber: PageNumber,
-  //     PageSize: PageSize,
-  //     Search: Search,
-  //     SortDirection: SortDirection,
-  //     SortBy: SortBy,
-  //   };
-  //   return this.apiService.callApi<CustomerModel[]>(
-  //     '/Supplier/FindAllPaged',
-  //     'post',
-  //     null,
-  //     params
-  //   );
-  // }
-
   findAllByName(
     PageNumber: number,
     PageSize: number,

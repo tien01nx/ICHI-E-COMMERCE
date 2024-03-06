@@ -173,7 +173,7 @@ namespace ICHI_API.Migrations
                         .HasMaxLength(12)
                         .HasColumnType("nvarchar(12)");
 
-                    b.Property<int>("UserID")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<bool>("isActive")
@@ -184,7 +184,7 @@ namespace ICHI_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Customers");
                 });
@@ -1012,6 +1012,11 @@ namespace ICHI_API.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<int>("FailedPassAttemptCount")
                         .HasColumnType("int");
 
@@ -1064,7 +1069,7 @@ namespace ICHI_API.Migrations
                 {
                     b.HasOne("ICHI_CORE.Domain.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

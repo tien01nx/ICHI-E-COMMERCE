@@ -25,8 +25,6 @@ import { Utils } from '../../../../Utils.ts/utils';
 })
 export class SupplierAdminComponent implements OnInit {
   protected readonly Utils = Utils;
-  // paginationModel!: PaginationDTO<SupplierModel> =
-  //   new PaginationDTO<SupplierModel>();
   paginationModel: PaginationDTO<SupplierModel> = PaginationDTO.createEmpty();
   searchTemp: any = this.activatedRoute.snapshot.queryParams['Search'] || '';
   selectAll: boolean = false;
@@ -169,6 +167,7 @@ export class SupplierAdminComponent implements OnInit {
 
   create() {
     this.isDisplayNone = true;
+    this.supplierForm.value.id = 0;
     this.supplierService.create(this.supplierForm.value).subscribe({
       next: (response: any) => {
         if (response.code === 200) {
