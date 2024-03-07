@@ -1,5 +1,5 @@
-﻿using ICHI_CORE.Entities;
-using ICHI_CORE.Entities.DbInitializer;
+﻿using ICHI.DataAccess.Data;
+using ICHI.DataAccess.DbInitializer;
 using ICHI_CORE.Extension;
 using ICHI_CORE.Filter;
 using ICHI_CORE.Helpers;

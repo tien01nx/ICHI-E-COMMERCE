@@ -1,21 +1,20 @@
-﻿using API.Helpers;
-using API.Model;
+﻿using API.Model;
+using ICHI.DataAccess.Data;
+using ICHI.DataAccess.Repository.IRepository;
+using ICHI_API.Extension;
+using ICHI_CORE.Controllers.BaseController;
 using ICHI_CORE.Domain;
+using ICHI_CORE.Domain.MasterModel;
+using ICHI_CORE.Helpers;
 using ICHI_CORE.Model;
+using ICHI_CORE.NlogConfig;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using ICHI_CORE.Controllers.BaseController;
-using ICHI_CORE.Entities;
-using ICHI_CORE.Helpers;
-using ICHI_CORE.NlogConfig;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using ICHI_CORE.Domain.MasterModel;
-using Microsoft.EntityFrameworkCore;
-using ICHI_API.Extension;
-
 namespace ICHI_CORE.Controllers.MasterController
 {
   [ApiController]
@@ -23,9 +22,11 @@ namespace ICHI_CORE.Controllers.MasterController
   public class AuthController : BaseController<User>
   {
     private readonly IConfiguration _configuration;
-    public AuthController(PcsApiContext context, IConfiguration configuration = null) : base(context)
+    private readonly IUnitOfWork _unitOfWork;
+    public AuthController(PcsApiContext context, IUnitOfWork unitOfWork, IConfiguration configuration = null) : base(context)
     {
       _configuration = configuration;
+      _unitOfWork = unitOfWork;
     }
 
     //[HttpPost]
@@ -96,7 +97,6 @@ namespace ICHI_CORE.Controllers.MasterController
     //  }
     //  return result;
     //}
-
 
     [HttpPost]
     [AllowAnonymous]
@@ -225,7 +225,7 @@ namespace ICHI_CORE.Controllers.MasterController
         var newAccessToken = GenerateWebToken(oldClaims);
         SetJWTCookie(newAccessToken);
 
-        return new ApiResponse<string>(System.Net.HttpStatusCode.OK, "", newAccessToken);
+        return new ApiResponse<string>(System.Net.HttpStatusCode.OK, string.Empty, newAccessToken);
       }
       catch (Exception ex)
       {
@@ -309,24 +309,13 @@ namespace ICHI_CORE.Controllers.MasterController
 
     private User GetUserByUsername(string username)
     {
-      //var usersResponse = FindAll();
-
-      //if (usersResponse.Result.Code != System.Net.HttpStatusCode.OK)
-      //{
-      //  return null;
-      //}
-
-      //var users = usersResponse.Result.Data;
-      //return users.FirstOrDefault(a => a.UserName.ToLower().Equals(username.ToLower()));
-      var user = _context.Users.FirstOrDefault(a => a.UserName.ToLower().Equals(username.ToLower()) || a.Email.Equals(username));
+      var user = _unitOfWork.User.ExistsByUserNameOrEmail(username);
       if (user == null)
       {
         return null;
       }
       return user;
     }
-
-
 
     private string GenerateWebToken(List<Claim> claims)
     {

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ICHI_CORE.Controllers.BaseController;
-using ICHI_CORE.Entities;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
+using ICHI.DataAccess.Data;
 namespace ICHI_CORE.Controllers.MasterController
 {
   [ApiController]

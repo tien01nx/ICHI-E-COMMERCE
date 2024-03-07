@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ICHI_CORE.Controllers.BaseController;
-using ICHI_CORE.Entities;
 using ICHI_CORE.Domain.MasterModel;
 using System.Net.Http.Headers;
 using ICHI_CORE.Model;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 using ICHI_CORE.Helpers;
 using ICHI_API.Model;
 using Microsoft.AspNetCore.Hosting;
+using ICHI.DataAccess.Data;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace ICHI_CORE.Controllers.MasterController

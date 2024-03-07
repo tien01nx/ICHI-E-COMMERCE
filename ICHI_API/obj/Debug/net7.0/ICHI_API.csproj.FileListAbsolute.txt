@@ -371,7 +371,6 @@ C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\AutoM
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Azure.Core.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Azure.Identity.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\FluentFTP.dll
-C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Humanizer.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\JetBrains.Annotations.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Microsoft.AspNetCore.OpenApi.dll
@@ -379,7 +378,6 @@ C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Micro
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Microsoft.Data.SqlClient.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Abstractions.dll
-C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Design.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
@@ -394,7 +392,6 @@ C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Micro
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Microsoft.OpenApi.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Microsoft.SqlServer.Server.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Microsoft.Win32.SystemEvents.dll
-C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Mono.TextTemplating.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Newtonsoft.Json.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\NLog.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\NLog.Extensions.Logging.dll
@@ -402,7 +399,6 @@ C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\NLog.
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\System.CodeDom.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\System.Configuration.ConfigurationManager.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\System.Drawing.Common.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll
@@ -461,3 +457,6 @@ C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Syste
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\System.Text.Encoding.CodePages.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Text.Encoding.CodePages.dll
+C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\ICHI.DataAccess.dll
+C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\ICHI.DataAccess.pdb
+C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Microsoft.DotNet.PlatformAbstractions.dll

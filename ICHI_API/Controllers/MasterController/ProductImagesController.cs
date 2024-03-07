@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ICHI_CORE.Controllers.BaseController;
-using ICHI_CORE.Entities;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Helpers;
 using ICHI_CORE.Model;
 using ICHI_CORE.NlogConfig;
 using Microsoft.EntityFrameworkCore;
+using ICHI.DataAccess.Data;
 
 namespace ICHI_CORE.Controllers.MasterController
 {
