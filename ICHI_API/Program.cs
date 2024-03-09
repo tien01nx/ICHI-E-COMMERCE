@@ -1,5 +1,5 @@
-﻿using ICHI.DataAccess.Data;
-using ICHI.DataAccess.DbInitializer;
+﻿using ICHI_API;
+using ICHI.API.DbInitializer;
 using ICHI_CORE.Extension;
 using ICHI_CORE.Filter;
 using ICHI_CORE.Helpers;
@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using NLog;
 using NLog.Web;
+using ICHI_API.Data;
 
 try
 {

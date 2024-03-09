@@ -6,7 +6,8 @@ using API.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 using ICHI_CORE.NlogConfig;
-using ICHI.DataAccess.Data;
+using ICHI_API;
+using ICHI_API.Data;
 namespace ICHI_CORE.Controllers.MasterController
 {
   [ApiController]

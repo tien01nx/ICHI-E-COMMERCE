@@ -4,7 +4,8 @@ using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
-using ICHI.DataAccess.Data;
+using ICHI_API;
+using ICHI_API.Data;
 namespace ICHI_CORE.Controllers.MasterController
 {
   [ApiController]

@@ -7,8 +7,9 @@ using System.Linq.Dynamic.Core;
 using ICHI_CORE.Helpers;
 using ICHI_API.Model;
 using Microsoft.AspNetCore.Hosting;
-using ICHI.DataAccess.Data;
+using ICHI_API;
 using Microsoft.EntityFrameworkCore;
+using ICHI_API.Data;
 
 
 namespace ICHI_CORE.Controllers.MasterController

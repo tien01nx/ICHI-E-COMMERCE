@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using ICHI_CORE.Controllers.BaseController;
 using ICHI_CORE.Helpers;
 using ICHI_CORE.NlogConfig;
@@ -9,7 +8,9 @@ using ICHI_CORE.Model;
 using System.Data;
 using ICHI_CORE.Domain.MasterModel;
 using Microsoft.EntityFrameworkCore;
-using ICHI.DataAccess.Data;
+using ICHI_API;
+using ICHI_API.Data;
+using Microsoft.Data.SqlClient;
 
 namespace ICHI_CORE.Controllers
 {

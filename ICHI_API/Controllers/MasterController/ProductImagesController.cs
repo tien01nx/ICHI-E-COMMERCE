@@ -5,7 +5,8 @@ using ICHI_CORE.Helpers;
 using ICHI_CORE.Model;
 using ICHI_CORE.NlogConfig;
 using Microsoft.EntityFrameworkCore;
-using ICHI.DataAccess.Data;
+using ICHI_API;
+using ICHI_API.Data;
 
 namespace ICHI_CORE.Controllers.MasterController
 {

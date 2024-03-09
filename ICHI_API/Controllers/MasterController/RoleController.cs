@@ -8,7 +8,8 @@ using ICHI_CORE.Domain;
 using ICHI_CORE.Model;
 using System.Data;
 using ICHI_CORE.Domain.MasterModel;
-using ICHI.DataAccess.Data;
+using ICHI_API;
+using ICHI_API.Data;
 
 namespace ICHI_CORE.Controllers
 {

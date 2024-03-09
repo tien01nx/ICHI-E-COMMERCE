@@ -1,7 +1,9 @@
 ﻿
-using ICHI.DataAccess.DbInitializer;
+using ICHI.API.DbInitializer;
 using ICHI.DataAccess.Repository;
 using ICHI.DataAccess.Repository.IRepository;
+using ICHI_API.Service;
+using ICHI_API.Service.IService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 
@@ -33,6 +35,8 @@ namespace ICHI_CORE.Extension
       });
       services.AddScoped<IDbInitializer, DbInitializer>();
       services.AddScoped<IUnitOfWork, UnitOfWork>();
+      services.AddScoped<IUserService, UserService>();
+      //services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
       return services;
     }
   }

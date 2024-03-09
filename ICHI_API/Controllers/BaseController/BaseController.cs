@@ -5,8 +5,9 @@ using Newtonsoft.Json;
 using ICHI_CORE.Helpers;
 using ICHI_CORE.NlogConfig;
 using System.Net;
-using ICHI.DataAccess.Data;
+using ICHI_API;
 using Microsoft.EntityFrameworkCore;
+using ICHI_API.Data;
 
 namespace ICHI_CORE.Controllers.BaseController
 {
@@ -117,6 +118,7 @@ namespace ICHI_CORE.Controllers.BaseController
       ApiResponse<IEnumerable<T>> result;
       try
       {
+
         var data = _context.Set<T>().FromSqlRaw(sqlRaw);
         if (data != null)
         {

@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICHI_CORE", "..\ICHI_CORE\I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICHI_API", "ICHI_API.csproj", "{A40CC2AF-8F44-4BFE-AD5C-A6A3DD41EC41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICHI.DataAccess", "..\ICHI.DataAccess\ICHI.DataAccess.csproj", "{DE2D5A86-CA9C-42DF-B6E1-C1D2FD2FBBF0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{A40CC2AF-8F44-4BFE-AD5C-A6A3DD41EC41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A40CC2AF-8F44-4BFE-AD5C-A6A3DD41EC41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A40CC2AF-8F44-4BFE-AD5C-A6A3DD41EC41}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DE2D5A86-CA9C-42DF-B6E1-C1D2FD2FBBF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DE2D5A86-CA9C-42DF-B6E1-C1D2FD2FBBF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DE2D5A86-CA9C-42DF-B6E1-C1D2FD2FBBF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DE2D5A86-CA9C-42DF-B6E1-C1D2FD2FBBF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
