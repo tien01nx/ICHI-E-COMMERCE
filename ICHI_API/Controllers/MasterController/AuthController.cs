@@ -24,14 +24,10 @@ namespace ICHI_CORE.Controllers.MasterController
   [Route("api/[controller]")]
   public class AuthController : BaseController<User>
   {
-    private readonly IConfiguration _configuration;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IUserService _userService;
-    public AuthController(PcsApiContext context, IUnitOfWork unitOfWork, IUserService userService, IConfiguration configuration = null) : base(context)
+    public AuthController(PcsApiContext context, IUserService userService, IConfiguration configuration = null) : base(context)
     {
-      _configuration = configuration;
       _userService = userService;
-      _unitOfWork = unitOfWork;
     }
 
     // đăng ký tài khoản

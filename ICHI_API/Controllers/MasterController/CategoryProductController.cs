@@ -16,48 +16,6 @@ namespace ICHI_CORE.Controllers.MasterController
   {
     public CategoryProductController(PcsApiContext context) : base(context) { }
 
-    //public int PageNumber { get; set; } = AppSettings.PageNumber;
-    //public int PageSize { get; set; } = AppSettings.PageSize;
-    //public string Search { get; set; } = string.Empty;
-    //public string SortBy { get; set; } = AppSettings.SortBy;
-    //public string SortDirection { get; set; } = AppSettings.SortDirection;
-    //[HttpGet("FindAllPaged")]
-    //public async Task<ActionResult<ApiResponse<IEnumerable<CategoryProduct>>>> FindAllPaged(
-    //                [FromQuery(Name = "search")] string name = "",
-    //                [FromQuery(Name = "page-size")] int pageSize = 10,
-    //                [FromQuery(Name = "page-number")] int pageNumber = 1,
-    //                [FromQuery(Name = "sort-direction")] string sortDir = "desc",
-    //                [FromQuery(Name = "sort-by")] string sortBy = "Id")
-    //{
-    //    try
-    //    {
-    //        IQueryable<CategoryProduct> query = _context.CategoryProducts.Where(x => !x.IsDeleted);
-
-    //        // Áp dụng tìm kiếm
-    //        if (!string.IsNullOrWhiteSpace(name))
-    //        {
-    //            query = query.Where(p => p.CategoryName.Contains(name));
-    //        }
-
-    //        // Áp dụng sắp xếp
-    //        var direction = sortDir.ToLower() == "asc" ? "" : " descending";
-    //        query = query.OrderBy($"{sortDir}{direction}");
-
-    //        // Áp dụng phân trang
-    //        var data = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-    //        var totalRecords = await query.CountAsync();
-
-    //        var responseData = new PagedList<CategoryProduct>(data, totalRecords, pageNumber, pageSize);
-    //        var result = new ApiResponse<IEnumerable<CategoryProduct>>(System.Net.HttpStatusCode.OK, "", responseData);
-    //        return Ok(result);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return BadRequest(new ApiResponse<IEnumerable<CategoryProduct>>(System.Net.HttpStatusCode.BadRequest, ex.Message, null));
-    //    }
-    //}
-
-
     [HttpGet("FindAllPaged")]
     public async Task<ActionResult<ApiResponse<ICHI_API.Helpers.PagedResult<Category>>>> GetAll(
               [FromQuery(Name = "search")] string name = "",
@@ -79,7 +37,7 @@ namespace ICHI_CORE.Controllers.MasterController
         var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
         query = query.OrderBy(orderBy);
 
-        var pagedResult = await ICHI_API.Helpers.PagedResult<Category>.CreatePagedResultAsync(query, pageNumber, pageSize);
+        var pagedResult = ICHI_API.Helpers.PagedResult<Category>.CreatePagedResult(query, pageNumber, pageSize);
 
         result = new ApiResponse<ICHI_API.Helpers.PagedResult<Category>>(
              System.Net.HttpStatusCode.OK,

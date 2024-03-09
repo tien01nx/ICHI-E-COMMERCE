@@ -6,13 +6,19 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 using ICHI_API;
 using ICHI_API.Data;
+using ICHI_API.Service.IService;
+using ICHI_CORE.NlogConfig;
 namespace ICHI_CORE.Controllers.MasterController
 {
   [ApiController]
   [Route("api/[controller]")]
   public class SupplierController : BaseController<Supplier>
   {
-    public SupplierController(PcsApiContext context) : base(context) { }
+    private readonly ISupplierService _supplierService;
+    public SupplierController(PcsApiContext context, ISupplierService supplierService) : base(context)
+    {
+      _supplierService = supplierService;
+    }
 
     [HttpGet("FindAllPaged")]
     public async Task<ActionResult<ApiResponse<ICHI_API.Helpers.PagedResult<Supplier>>>> GetAll(
@@ -23,123 +29,72 @@ namespace ICHI_CORE.Controllers.MasterController
                     [FromQuery(Name = "sort-by")] string sortBy = "Id")
     {
       ApiResponse<ICHI_API.Helpers.PagedResult<Supplier>> result;
+      string strMessage = "";
       try
       {
-        var query = _context.Suppliers.AsQueryable().Where(u => u.isDeleted == false);
-
-        if (!string.IsNullOrEmpty(name))
-        {
-          query = query.Where(e => e.SupplierName.Contains(name));
-        }
-
-        var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
-        query = query.OrderBy(orderBy);
-
-        var pagedResult = await ICHI_API.Helpers.PagedResult<Supplier>.CreatePagedResultAsync(query, pageNumber, pageSize);
-
+        var data = _supplierService.GetAll(name, pageSize, pageNumber, sortDir, sortBy, out strMessage);
         result = new ApiResponse<ICHI_API.Helpers.PagedResult<Supplier>>(
              System.Net.HttpStatusCode.OK,
              "Retrieved successfully",
-             pagedResult
+             data
          );
+
       }
       catch (Exception ex)
       {
-        result = new ApiResponse<ICHI_API.Helpers.PagedResult<Supplier>>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+        strMessage = "Có lỗi xảy ra";
+        NLogger.log.Error(ex.ToString());
+        result = new ApiResponse<ICHI_API.Helpers.PagedResult<Supplier>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
       }
       return result;
     }
 
-    // API v1/Create
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ApiResponse<Supplier>>> FindById(int id)
+    {
+      ApiResponse<Supplier> result;
+      string strMessage = "";
+      try
+      {
+        var data = _supplierService.FindById(id, out strMessage);
+        result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.OK, strMessage, data);
+      }
+      catch (Exception ex)
+      {
+        NLogger.log.Error(ex.ToString());
+        strMessage = "Có lỗi xảy ra";
+        result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+      }
+      return result;
+    }
+
     [HttpPost("Create-Supplier")]
     public async Task<ApiResponse<Supplier>> CreateSupplỉer([FromBody] Supplier supplier)
     {
       ApiResponse<Supplier> result;
+      string strMessage = "";
       try
       {
-        // kiểm tra xem mã nhà cung cấp đã tồn tại chưa
-        var checkSupplier = await _context.Suppliers.FirstOrDefaultAsync(x => x.SupplierName == supplier.SupplierName);
-        if (checkSupplier != null)
-        {
-          result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.Forbidden, "Supplier code already exists", null);
-          return result;
-        }
-        // kiểm tra email nhà cung cấp đã tồn tại chưa
-        var checkEmail = await _context.Suppliers.FirstOrDefaultAsync(x => x.Email == supplier.Email);
-        if (checkEmail != null)
-        {
-          result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.Forbidden, "Email already exists", null);
-          return result;
-        }
-        // kiểm tra số điện thoại nhà cung cấp đã tồn tại chưa
-        var checkPhone = await _context.Suppliers.FirstOrDefaultAsync(x => x.PhoneNumber == supplier.PhoneNumber);
-        if (checkPhone != null)
-        {
-          result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.Forbidden, "Phone already exists", null);
-          return result;
-        }
-        // kiêm tra mã số thueé
-        var checkTaxCode = await _context.Suppliers.FirstOrDefaultAsync(x => x.TaxCode == supplier.TaxCode);
-        if (checkTaxCode != null)
-        {
-          result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.Forbidden, "Tax code already exists", null);
-          return result;
-        }
-        supplier.CreateBy = "Admin";
-        supplier.ModifiedBy = "Admin";
-
-        await _context.Suppliers.AddAsync(supplier);
-        await _context.SaveChangesAsync();
-        var data = await GetByKeys(supplier);
-        result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.OK, "Created successfully", data);
+        var data = _supplierService.Create(supplier, out strMessage);
+        result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.OK, strMessage, data);
       }
       catch (Exception ex)
       {
-        result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+        NLogger.log.Error(ex.ToString());
+        strMessage = "Có lỗi xảy ra";
+        result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
       }
       return result;
     }
-
-
     [HttpPost("Update-Supplier")]
     public async Task<ApiResponse<Supplier>> UpdateSupplỉer([FromBody] Supplier supplier)
     {
       ApiResponse<Supplier> result;
+      string strMessage = "";
       try
       {
-        // kiểm tra xem mã nhà cung cấp đã tồn tại chưa
-        var checkSupplier = await _context.Suppliers.FirstOrDefaultAsync(x => x.SupplierName == supplier.SupplierName);
-        if (checkSupplier != null)
-        {
-          result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.Forbidden, "Supplier code already exists", null);
-          return result;
-        }
-        // kiểm tra email nhà cung cấp đã tồn tại chưa
-        var checkEmail = await _context.Suppliers.FirstOrDefaultAsync(x => x.Email == supplier.Email);
-        if (checkEmail != null)
-        {
-          result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.Forbidden, "Email already exists", null);
-          return result;
-        }
-        // kiểm tra số điện thoại nhà cung cấp đã tồn tại chưa
-        var checkPhone = await _context.Suppliers.FirstOrDefaultAsync(x => x.PhoneNumber == supplier.PhoneNumber);
-        if (checkPhone != null)
-        {
-          result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.Forbidden, "Phone already exists", null);
-          return result;
-        }
-        // kiêm tra mã số thueé
-        var checkTaxCode = await _context.Suppliers.FirstOrDefaultAsync(x => x.TaxCode == supplier.TaxCode);
-        if (checkTaxCode != null)
-        {
-          result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.Forbidden, "Tax code already exists", null);
-          return result;
-        }
-        supplier.CreateBy = "Admin";
-        supplier.ModifiedBy = "Admin";
-        await Update(supplier);
-        var data = await GetByKeys(supplier);
-        result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.OK, "Created successfully", data);
+        var data = _supplierService.Update(supplier, out strMessage);
+        result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.OK, strMessage, data);
       }
       catch (Exception ex)
       {
@@ -147,25 +102,21 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       return result;
     }
-
-
     [HttpDelete("{id}")]
     public async Task<ActionResult<ApiResponse<Supplier>>> Delete(int id)
     {
+      string strMessage = "";
       try
       {
-        var data = await _context.Suppliers.FirstOrDefaultAsync(x => x.Id == id);
-        data.isDeleted = true;
-        data.ModifiedDate = DateTime.Now;
-        data.ModifiedBy = "Admin";
-        _context.Suppliers.Update(data);
-        await _context.SaveChangesAsync();
-        var result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.OK, "", data);
+        var data = _supplierService.Delete(id, out strMessage);
+        var result = new ApiResponse<Supplier>(System.Net.HttpStatusCode.OK, strMessage, null);
         return Ok(result);
       }
       catch (Exception ex)
       {
-        return BadRequest(new ApiResponse<Supplier>(System.Net.HttpStatusCode.BadRequest, ex.Message, null));
+        NLogger.log.Error(ex.ToString());
+        strMessage = "Có lỗi xảy ra";
+        return BadRequest(new ApiResponse<Supplier>(System.Net.HttpStatusCode.BadRequest, strMessage, null));
       }
     }
   }

@@ -6,13 +6,19 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 using ICHI_API;
 using ICHI_API.Data;
+using ICHI_API.Service.IService;
+using ICHI_CORE.NlogConfig;
 namespace ICHI_CORE.Controllers.MasterController
 {
   [ApiController]
   [Route("api/[controller]")]
   public class EmployeeController : BaseController<Employee>
   {
-    public EmployeeController(PcsApiContext context) : base(context) { }
+    private IEmployeeService _employeeService;
+    public EmployeeController(PcsApiContext context, IEmployeeService employeeService) : base(context)
+    {
+      _employeeService = employeeService;
+    }
 
     [HttpGet("FindAllPaged")]
     public async Task<ActionResult<ApiResponse<ICHI_API.Helpers.PagedResult<Employee>>>> GetAll(
@@ -23,99 +29,42 @@ namespace ICHI_CORE.Controllers.MasterController
                     [FromQuery(Name = "sort-by")] string sortBy = "Id")
     {
       ApiResponse<ICHI_API.Helpers.PagedResult<Employee>> result;
+      string strMessage = "";
       try
       {
-        var query = _context.Employees.AsQueryable().Where(u => !u.isDeleted);
-
-        if (!string.IsNullOrEmpty(name))
-        {
-          query = query.Where(e => e.FullName.Contains(name));
-        }
-
-        var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
-        query = query.OrderBy(orderBy);
-
-        var pagedResult = await ICHI_API.Helpers.PagedResult<Employee>.CreatePagedResultAsync(query, pageNumber, pageSize);
+        var data = _employeeService.GetAll(name, pageSize, pageNumber, sortDir, sortBy, out strMessage);
 
         result = new ApiResponse<ICHI_API.Helpers.PagedResult<Employee>>(
              System.Net.HttpStatusCode.OK,
-             "Retrieved successfully",
-             pagedResult
-         );
+             strMessage,
+             data);
       }
       catch (Exception ex)
       {
-        result = new ApiResponse<ICHI_API.Helpers.PagedResult<Employee>>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+        strMessage = "Có lỗi xảy ra";
+        NLogger.log.Error(ex.ToString());
+        result = new ApiResponse<ICHI_API.Helpers.PagedResult<Employee>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
       }
       return result;
     }
 
-    // API v1/Create
-    [HttpPost("Create-Employee")]
-    public async Task<ApiResponse<Employee>> CreateSupplỉer(Employee customer)
-    {
-      ApiResponse<Employee> result;
-      try
-      {
-        // kiểm tra xem mã nhà cung cấp đã tồn tại chưa
-        var checkEmployee = await _context.Employees.FirstOrDefaultAsync(x => x.PhoneNumber == customer.PhoneNumber);
-        if (checkEmployee != null)
-        {
-          result = new ApiResponse<Employee>(System.Net.HttpStatusCode.Forbidden, "Số điện thoại đã tồn tại", null);
-          return result;
-        }
-        customer.CreateBy = "Admin";
-        customer.ModifiedBy = "Admin";
-
-        await _context.Employees.AddAsync(customer);
-        await _context.SaveChangesAsync();
-        var data = await GetByKeys(customer);
-        result = new ApiResponse<Employee>(System.Net.HttpStatusCode.OK, "Created successfully", data);
-      }
-      catch (Exception ex)
-      {
-        result = new ApiResponse<Employee>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
-      }
-      return result;
-    }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult<ApiResponse<Employee>>> Delete(int id)
     {
+      string strMessage = "";
       try
       {
-        var data = await _context.Employees.FirstOrDefaultAsync(x => x.Id == id);
-        data.isDeleted = true;
-        data.ModifiedDate = DateTime.Now;
-        data.ModifiedBy = "Admin";
-        _context.Employees.Update(data);
-        await _context.SaveChangesAsync();
-        var result = new ApiResponse<Employee>(System.Net.HttpStatusCode.OK, "", data);
+        var data = _employeeService.Delete(id, out strMessage);
+        var result = new ApiResponse<Employee>(System.Net.HttpStatusCode.OK, strMessage, null);
         return Ok(result);
       }
       catch (Exception ex)
       {
-        return BadRequest(new ApiResponse<Employee>(System.Net.HttpStatusCode.BadRequest, ex.Message, null));
+        NLogger.log.Error(ex.ToString());
+        strMessage = "Có lỗi xảy ra";
+        return BadRequest(new ApiResponse<Employee>(System.Net.HttpStatusCode.BadRequest, strMessage, null));
       }
     }
-
-    //[HttpDelete("{id}")]
-    //public async Task<ActionResult<ApiResponse<Employee>>> Delete(int id)
-    //{
-    //    try
-    //    {
-    //        var data = await _context.Employees.FirstOrDefaultAsync(x => x.Id == id);
-    //        data.UpdateDatetime = DateTime.Now;
-    //        data.UpdateUserId = "Admin";
-    //        _context.Employees.Update(data);
-    //        await _context.SaveChangesAsync();
-    //        var result = new ApiResponse<Employee>(System.Net.HttpStatusCode.OK, "", data);
-    //        return Ok(result);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return BadRequest(new ApiResponse<Employee>(System.Net.HttpStatusCode.BadRequest, ex.Message, null));
-    //    }
-    //}
   }
 }

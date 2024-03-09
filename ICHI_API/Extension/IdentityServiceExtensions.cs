@@ -36,7 +36,10 @@ namespace ICHI_CORE.Extension
       services.AddScoped<IDbInitializer, DbInitializer>();
       services.AddScoped<IUnitOfWork, UnitOfWork>();
       services.AddScoped<IUserService, UserService>();
-      //services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+      services.AddScoped<ISupplierService, SupplierService>();
+      services.AddScoped<IProductService, ProductService>();
+      services.AddScoped<ICustomerService, CustomerService>();
+      services.AddScoped<IEmployeeService, EmployeeService>();
       return services;
     }
   }
