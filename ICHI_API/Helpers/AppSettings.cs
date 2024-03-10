@@ -13,6 +13,9 @@
     public static string SortBy = "Id";
     public static string SortDirection = "asc";
     public static string Encode = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
+    public static string AvatarDefault = "/images/avatar/avatar_default.jpg";
+    public static string PatchProduct = @"images\products\product-";
+    public static string PatchUser = @"images\user\user-";
 
 
     public static bool InitData(IConfiguration configuration)

@@ -47,6 +47,28 @@ namespace ICHI_CORE.Controllers.MasterController
       return result;
     }
 
+    // cập nhật khách hàng 
+    [HttpPut]
+    public async Task<ActionResult<ApiResponse<Customer>>> Update([FromForm] Customer customer, IFormFile? file)
+    {
+      ApiResponse<Customer> result;
+      string strMessage = "";
+      try
+      {
+        var data = _customerService.Update(customer, file, out strMessage);
+        result = new ApiResponse<Customer>(
+          System.Net.HttpStatusCode.OK,
+          strMessage, data);
+      }
+      catch (Exception ex)
+      {
+        NLogger.log.Error(ex.ToString());
+        strMessage = "Có lỗi xảy ra";
+        return BadRequest(new ApiResponse<Customer>(System.Net.HttpStatusCode.BadRequest, strMessage, null));
+      }
+      return result;
+    }
+
     [HttpDelete("{id}")]
     public async Task<ActionResult<ApiResponse<Customer>>> Delete(int id)
     {

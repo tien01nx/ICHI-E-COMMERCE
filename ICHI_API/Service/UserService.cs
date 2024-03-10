@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Linq.Dynamic.Core;
 
 namespace ICHI_API.Service
 {
@@ -46,9 +47,16 @@ namespace ICHI_API.Service
             strMessage = "Số điện thoại đã tồn tại";
             return null;
           }
-          if (ExistsByUserNameOrEmail(userRegister.UserName) != null)
+          if (ExistsByUserNameOrEmail(userRegister.Email) != null)
           {
             strMessage = "User đã tồn tại";
+            return null;
+          }
+          // mật khẩu phải > 8 kí tự, 1 chữ hoa, 1 chữ thường, 1 kí tự đặc biệt
+
+          if (!userRegister.Password.Any(char.IsUpper) || !userRegister.Password.Any(char.IsLower) || !userRegister.Password.Any(char.IsDigit) || userRegister.Password.Length < 8)
+          {
+            strMessage = "Mật khẩu phải có ít nhất 8 kí tự, 1 chữ hoa, 1 chữ thường, 1 kí tự đặc biệt";
             return null;
           }
           User user = new User();
@@ -57,29 +65,55 @@ namespace ICHI_API.Service
           string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userRegister.Password, salt);
           user.Password = hashedPassword;
           user.IsLocked = false;
-          user.CreateBy = userRegister.UserName;
-          user.ModifiedBy = userRegister.UserName;
-          user.UserName = userRegister.UserName.Trim();
+          user.Avatar = AppSettings.AvatarDefault;
+          user.CreateBy = userRegister.Email;
+          user.ModifiedBy = userRegister.Email;
+          user.Email = userRegister.Email.Trim();
           _unitOfWork.User.Add(user);
           _unitOfWork.Save();
-          var Role = _unitOfWork.Role.Get(r => r.RoleName == AppSettings.USER);
-          UserRole userRole = new UserRole
+          if (userRegister.Role == AppSettings.USER)
           {
-            RoleId = Role.Id,
-            UserId = user.Id
-          };
-          _unitOfWork.UserRole.Add(userRole);
-          // insert vào customer
-          Customer customer = new Customer()
+            // insert vào customer
+            Customer customer = new Customer()
+            {
+              PhoneNumber = userRegister.PhoneNumber,
+              FullName = userRegister.FullName,
+              UserId = user.Id,
+            };
+            _unitOfWork.Customer.Add(customer);
+            _unitOfWork.Save();
+          }
+          else
           {
-            PhoneNumber = userRegister.PhoneNumber,
-            FullName = userRegister.FullName,
-            UserId = user.Id,
-          };
-          _unitOfWork.Customer.Add(customer);
-          _unitOfWork.Save();
+            // insert vào employee
+            Employee employee = new Employee()
+            {
+              PhoneNumber = userRegister.PhoneNumber,
+              FullName = userRegister.FullName,
+              UserId = user.Id,
+            };
+            _unitOfWork.Employee.Add(employee);
+            _unitOfWork.Save();
+          }
+          //var Role = _unitOfWork.Role.Get(r => r.RoleName == AppSettings.EMPLOYEE);
+          //UserRole userRole = new UserRole
+          //{
+          //  RoleId = Role.Id,
+          //  UserId = user.Id
+          //};
+          //_unitOfWork.UserRole.Add(userRole);
+          //// insert vào customer
+          //Customer customer = new Customer()
+          //{
+          //  PhoneNumber = userRegister.PhoneNumber,
+          //  FullName = userRegister.FullName,
+          //  UserId = user.Id,
+          //};
+          //_unitOfWork.Customer.Add(customer);
+          //_unitOfWork.Save();
           // Thực hiện commit transaction
           transaction.Commit();
+          strMessage = "Đăng ký thành công";
           var accessToken = GenerateAccessToken(user);
           SetJWTCookie(accessToken);
           return accessToken;
@@ -154,9 +188,9 @@ namespace ICHI_API.Service
                    .Select(s => s[random.Next(s.Length)]).ToArray());
         string salt = BCrypt.Net.BCrypt.GenerateSalt();
         string hashedPassword = BCrypt.Net.BCrypt.HashPassword(randomString, salt);
-        User user = _unitOfWork.User.Get(u => u.UserName == loginUser.UserName || u.Email.Equals(email));
+        User user = _unitOfWork.User.Get(u => u.Email == loginUser.Email || u.Email.Equals(email));
         user.Password = hashedPassword;
-        user.ModifiedBy = loginUser.UserName;
+        user.ModifiedBy = loginUser.Email;
         user.ModifiedDate = DateTime.Now;
         _unitOfWork.User.Update(user);
         _unitOfWork.Save();
@@ -201,7 +235,7 @@ namespace ICHI_API.Service
     // kiểm tra user có tồn tại không theo username
     public User ExistsByUserNameOrEmail(string email)
     {
-      var data = _unitOfWork.User.Get(u => u.UserName.ToLower().Equals(email) || u.Email.Equals(email));
+      var data = _unitOfWork.User.Get(u => u.Email.ToLower().Equals(email) || u.Email.Equals(email));
       if (data != null)
       {
         return data;
@@ -253,7 +287,7 @@ namespace ICHI_API.Service
       var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Name, user.Email),
             };
       var roles = _unitOfWork.UserRole.GetAll(ur => ur.UserId == user.Id, includeProperties: "Role").Select(ur => ur.Role.RoleName).ToList();
 
@@ -307,5 +341,169 @@ namespace ICHI_API.Service
       }
     }
 
+    public Helpers.PagedResult<UserDTO> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
+    {
+      strMessage = string.Empty;
+      try
+      {
+        var query = _unitOfWork.UserRole.GetAll(ur => ur.User != null, includeProperties: "User,Role");
+        var userDTOs = query.Select(ur => new UserDTO
+        {
+          User = ur.User,
+          Role = ur.Role != null ? ur.Role.RoleName : "",
+          Email = ur.User.Email,
+          Password = ur.User.Password,
+        }).ToList();
+
+        foreach (var userDTO in userDTOs)
+        {
+          if (userDTO.Role == AppSettings.USER)
+          {
+            var customer = _unitOfWork.Customer.Get(c => c.UserId == userDTO.User.Id);
+            if (customer == null)
+            {
+              continue;
+            }
+            userDTO.FullName = customer.FullName;
+            userDTO.Birthday = customer.Birthday;
+            userDTO.Gender = customer.Gender;
+          }
+          else if (userDTO.Role == AppSettings.EMPLOYEE)
+          {
+            var employee = _unitOfWork.Employee.Get(e => e.UserId == userDTO.User.Id);
+            if (employee == null)
+            {
+              continue;
+            }
+            userDTO.FullName = employee.FullName;
+            userDTO.Birthday = employee.Birthday;
+            userDTO.Gender = employee.Gender;
+          }
+        }
+
+        if (!string.IsNullOrEmpty(name))
+        {
+          userDTOs = userDTOs.Where(u => u.Email.Contains(name)).ToList();
+        }
+
+        var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
+        userDTOs = userDTOs.AsQueryable().OrderBy(orderBy).ToList();
+        var pagedResult = Helpers.PagedResult<UserDTO>.CreatePagedResult(userDTOs.AsQueryable(), pageNumber, pageSize);
+        return pagedResult;
+      }
+      catch (Exception ex)
+      {
+        NLogger.log.Error(ex.ToString());
+        strMessage = ex.ToString();
+        return null;
+      }
+    }
+
+
+    public string LockAccount(int id, bool status, out string strMessage)
+    {
+      strMessage = string.Empty;
+      try
+      {
+        var data = _unitOfWork.User.Get(u => u.Id == id);
+        if (data == null)
+        {
+          strMessage = "Tài khoản không tồn tại";
+          return null;
+        }
+        data.IsLocked = status;
+        data.ModifiedDate = DateTime.Now;
+        data.ModifiedBy = "Admin";
+        _unitOfWork.User.Update(data);
+        _unitOfWork.Save();
+        strMessage = status ? "Mở khóa tài khoản thành công" : "Khóa tài khoản thành công";
+        return null;
+      }
+      catch (Exception ex)
+      {
+        NLogger.log.Error(ex.ToString());
+        strMessage = ex.ToString();
+        return null;
+      }
+    }
+
+    public UserDTO UpdateAccount(UserDTO userDTO, out string strMessage)
+    {
+      strMessage = string.Empty;
+      try
+      {
+        var userRole = _unitOfWork.UserRole.Get(ur => ur.UserId == userDTO.Id, "User");
+        var userRoleCu = _unitOfWork.UserRole.Get(ur => ur.UserId == userDTO.Id, "User,Role");
+        if (userRole == null)
+        {
+          strMessage = "Tài khoản không tồn tại";
+          return null;
+        }
+        // so sánh tên role người dùng truyền lên với role trong db
+        if (userRoleCu.Role.RoleName != userDTO.Role)
+        {
+          var role = _unitOfWork.Role.Get(r => r.RoleName == userDTO.Role);
+          if (role == null)
+          {
+            strMessage = "Role không tồn tại";
+            return null;
+          }
+          userRole.RoleId = role.Id;
+          _unitOfWork.UserRole.Update(userRole);
+          _unitOfWork.Save();
+        }
+        // kiểm tra userId tồn tại ở bảng nào thì update vào bảng đó là customner hoặc employee kiểm trả về là bool để xem ở bảng nào
+        var isCustomer = _unitOfWork.Customer.Get(c => c.UserId == userDTO.Id) != null;
+        if (isCustomer)
+        {
+          var customer = _unitOfWork.Customer.Get(c => c.UserId == userDTO.Id);
+          if (customer == null)
+          {
+            strMessage = "Khách hàng không tồn tại";
+            return null;
+          }
+          customer.FullName = userDTO.FullName;
+          customer.Gender = userDTO.Gender;
+          customer.Birthday = userDTO.Birthday;
+          _unitOfWork.Customer.Update(customer);
+        }
+        var isEmployee = _unitOfWork.Employee.Get(e => e.UserId == userDTO.Id) != null;
+        if (isEmployee)
+        {
+          var employee = _unitOfWork.Employee.Get(e => e.UserId == userDTO.Id);
+          if (employee == null)
+          {
+            strMessage = "Nhân viên không tồn tại";
+            return null;
+          }
+          employee.FullName = userDTO.FullName;
+          employee.Gender = userDTO.Gender;
+          employee.Birthday = userDTO.Birthday;
+          _unitOfWork.Employee.Update(employee);
+        }
+        // update user khi thay đổi email
+        if (!userRoleCu.User.Email.ToLower().Equals(userDTO.Email))
+        {
+          var userdb = _unitOfWork.User.Get(u => u.Id == userRoleCu.UserId);
+          // kiểm tra email có tồn tại không
+          var user = _unitOfWork.User.Get(u => u.Email.ToLower().Equals(userDTO.Email) && u.Id != userRoleCu.User.Id);
+          if (user != null)
+          {
+            strMessage = "Email đã tồn tại";
+            return null;
+          }
+          userdb.Email = userDTO.Email;
+          _unitOfWork.User.Update(userdb);
+        }
+        _unitOfWork.Save();
+        return userDTO;
+      }
+      catch (Exception ex)
+      {
+        NLogger.log.Error(ex.ToString());
+        strMessage = ex.ToString();
+        return null;
+      }
+    }
   }
 }

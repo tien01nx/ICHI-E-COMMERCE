@@ -146,7 +146,7 @@ namespace ICHI_API.Service
         supplier.ModifiedBy = "Admin";
         _unitOfWork.Supplier.Update(supplier);
         _unitOfWork.Save();
-        strMessage = "Cập nhật thành công";
+        strMessage = "Cập nhật nhà cung cấp thành công";
         return supplier;
       }
       catch (Exception ex)
@@ -161,7 +161,7 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var data = _unitOfWork.Supplier.Get(u => u.Id == id && u.isDeleted);
+        var data = _unitOfWork.Supplier.Get(u => u.Id == id && !u.isDeleted);
         if (data == null)
         {
           strMessage = "Nhà cung cấp không tồn tại";
@@ -171,7 +171,7 @@ namespace ICHI_API.Service
         data.ModifiedDate = DateTime.Now;
         _unitOfWork.Supplier.Update(data);
         _unitOfWork.Save();
-        strMessage = "Xóa thành công";
+        strMessage = "Xóa nhà cung cấp thành công";
         return true;
       }
       catch (Exception ex)

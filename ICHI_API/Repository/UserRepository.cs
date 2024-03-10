@@ -37,7 +37,7 @@ namespace ICHI.DataAccess.Repository
     // kiểm tra user có tồn tại không theo username hoặc email
     public User ExistsByUserNameOrEmail(string userName)
     {
-      return dbSet.FirstOrDefault(x => x.UserName.ToLower().Equals(userName) || x.Email.Equals(userName));
+      return dbSet.FirstOrDefault(x => x.Email.Equals(userName));
     }
     // kiểm tra token có hết hạn chưa
     private DateTime GetTokenExpirationTime(string token)
@@ -77,7 +77,7 @@ namespace ICHI.DataAccess.Repository
       var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Name, user.Email),
             };
       var roles = await _db.UserRoles
           .Where(ur => ur.UserId == user.Id)

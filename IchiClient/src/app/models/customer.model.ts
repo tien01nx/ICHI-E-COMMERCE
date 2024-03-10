@@ -1,5 +1,6 @@
 import { Data } from '@angular/router';
 import { MasterEntity } from './master.entity';
+import { UserModel } from './user.model';
 
 export interface CustomerModel extends MasterEntity {
   fullName: string;
@@ -8,4 +9,6 @@ export interface CustomerModel extends MasterEntity {
   gender: string;
   birthday: Date;
   avatar: string;
+  address: string;
+  user: UserModel;
 }

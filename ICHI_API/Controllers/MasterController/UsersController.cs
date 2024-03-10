@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using ICHI_API;
 using ICHI_API.Data;
 using Microsoft.Data.SqlClient;
+using ICHI_API.Model;
+using ICHI_API.Service.IService;
 
 namespace ICHI_CORE.Controllers
 {
@@ -18,7 +20,11 @@ namespace ICHI_CORE.Controllers
   [Route("api/[controller]")]
   public class UsersController : BaseController<User>
   {
-    public UsersController(PcsApiContext context) : base(context) { }
+    private readonly IUserService _userService;
+    public UsersController(PcsApiContext context, IUserService userService) : base(context)
+    {
+      _userService = userService;
+    }
 
     [HttpGet]
     [Route("CheckConnect")]
@@ -44,6 +50,27 @@ namespace ICHI_CORE.Controllers
       {
         NLogger.log.Error(ex.ToString());
         result = new ApiResponse<User>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+      }
+      return result;
+    }
+
+    // update user
+    [HttpPut]
+    [Route("Update-User")]
+    public async Task<ApiResponse<UserDTO>> UpdateUser(UserDTO user)
+    {
+      ApiResponse<UserDTO> result;
+      string strMessage = "";
+      try
+      {
+        var data = _userService.UpdateAccount(user, out strMessage);
+        result = new ApiResponse<UserDTO>(System.Net.HttpStatusCode.OK, strMessage, data);
+      }
+      catch (Exception ex)
+      {
+        NLogger.log.Error(ex.ToString());
+        strMessage = "Có lỗi xảy ra";
+        result = new ApiResponse<UserDTO>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
       }
       return result;
     }

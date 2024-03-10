@@ -139,24 +139,29 @@
                       <label class="form-label">Tên tài khoản</label
                       ><input
                         class="form-control"
-                        id="userName"
-                        type="text"
-                        placeholder="Vui lòng nhập tên tài khoản"
-                        formControlName="userName"
+                        id="email"
+                        type="email"
+                        placeholder="Vui lòng nhập Email của bạn"
+                        formControlName="email"
                       />
                       <small
                         class="text-danger mt-1"
-                        *ngIf="userForm['controls']['userName'].dirty"
+                        *ngIf="userForm['controls']['email'].dirty"
                       >
                         <span
-                          *ngIf="userForm['controls']['userName'].errors?.['required']"
+                          *ngIf="userForm['controls']['email'].errors?.['required']"
                         >
-                          Tên tài khoản không được để trống
+                          Email không được để trống
                         </span>
                         <span
-                          *ngIf="userForm['controls']['userName'].errors?.['maxlength']"
+                          *ngIf="userForm['controls']['email'].errors?.['maxlength']"
                         >
-                          Tên tài khoản không được vượt quá 100 ký tự
+                          Email không được vượt quá 100 ký tự
+                        </span>
+                        <span
+                          *ngIf="userForm['controls']['email'].errors?.['email']"
+                        >
+                          Email không hợp lệ
                         </span>
                       </small>
                     </div>

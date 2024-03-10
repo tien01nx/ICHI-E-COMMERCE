@@ -15,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { CustomerService } from '../../../service/customer.service';
+import { Environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-customer',
@@ -25,13 +26,14 @@ import { CustomerService } from '../../../service/customer.service';
 })
 export class CustomerComponent {
   protected readonly Utils = Utils;
-  // paginationModel!: PaginationDTO<SupplierModel> =
-  //   new PaginationDTO<SupplierModel>();
+  protected readonly Environment = Environment;
   paginationModel: PaginationDTO<CustomerModel> = PaginationDTO.createEmpty();
   searchTemp: any = this.activatedRoute.snapshot.queryParams['Search'] || '';
   selectAll: boolean = false;
   sortDir: string = 'ASC';
   SortBy: string = 'id';
+  file: File | null = null;
+  avatarSrc: string = '';
 
   birthday: Date = new Date();
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
@@ -53,6 +55,9 @@ export class CustomerComponent {
     ]),
     gender: new FormControl('', [Validators.required]),
     birthday: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    address: new FormControl('', [Validators.required]),
+    userId: new FormControl(null),
   });
 
   constructor(
@@ -72,6 +77,35 @@ export class CustomerComponent {
       const sortBy = params['sort-by'] || '';
       this.findAll(pageSize, pageNumber, sortBy, sortDir, search);
     });
+  }
+
+  onFileSelected(event: any) {
+    this.file = event.target.files[0];
+    if (this.file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.avatarSrc = e.target.result;
+      };
+      reader.readAsDataURL(this.file);
+    }
+  }
+
+  update() {
+    this.isDisplayNone = true;
+    this.customerService
+      .UpdateImage(this.customerForm.value, this.file)
+      .subscribe({
+        next: (response: any) => {
+          this.customerForm.reset();
+          this.btnCloseModal.nativeElement.click();
+          this.updateTable();
+          this.toastr.success(response.message, 'Thông báo');
+        },
+        error: (error: any) => {
+          this.errorMessage = error.error;
+          this.isDisplayNone = false;
+        },
+      });
   }
 
   toggleSelectAll() {
@@ -153,12 +187,12 @@ export class CustomerComponent {
     return isMale;
   }
   onSubmit() {
-    debugger;
     if (this.customerForm.invalid) {
       return;
     }
     if (this.customerForm.value.id === null) this.create();
     else this.update();
+    debugger;
   }
 
   create() {
@@ -170,28 +204,11 @@ export class CustomerComponent {
           this.customerForm.reset();
           this.btnCloseModal.nativeElement.click();
           this.updateTable();
-          this.toastr.success('Thêm nhà cung cấp thành công', 'Thông báo');
+          this.toastr.success(response.message, 'Thông báo');
         } else {
           this.errorMessage = response.message;
           this.isDisplayNone = false;
         }
-      },
-      error: (error: any) => {
-        this.errorMessage = error.error;
-        this.isDisplayNone = false;
-      },
-    });
-  }
-
-  update() {
-    this.isDisplayNone = true;
-    debugger;
-    this.customerService.update(this.customerForm.value).subscribe({
-      next: (response: any) => {
-        this.customerForm.reset();
-        this.btnCloseModal.nativeElement.click();
-        this.updateTable();
-        this.toastr.success('Cập nhật nhà cung cấp thành công', 'Thông báo');
       },
       error: (error: any) => {
         this.errorMessage = error.error;
@@ -218,7 +235,7 @@ export class CustomerComponent {
         this.customerService.delete(id).subscribe({
           next: (response: any) => {
             this.updateTable();
-            this.toastr.success('Xóa nhà cung cấp thành công', 'Thông báo');
+            this.toastr.success(response.message, 'Thông báo');
           },
           error: (error: any) => {
             this.toastr.error(error.error, 'Thất bại');
@@ -243,9 +260,12 @@ export class CustomerComponent {
       gender: customer.gender,
       birthday: customer.birthday,
       userId: customer.userId,
+      email: customer.user.email,
+      address: customer.address,
     });
+    this.avatarSrc = Environment.apiBaseRoot + customer.user.avatar;
     this.birthday = customer.birthday;
-    this.titleModal = 'Cập nhật nhà cung cấp';
+    this.titleModal = 'Cập nhật khách hàng';
     this.btnSave = 'Cập nhật';
   }
 

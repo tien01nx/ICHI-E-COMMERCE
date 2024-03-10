@@ -8,4 +8,6 @@ export interface EmployeeModel extends MasterEntity {
   gender: string;
   birthday: Date;
   avatar: string;
+  user: any;
+  address: string;
 }

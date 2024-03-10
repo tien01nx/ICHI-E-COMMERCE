@@ -100,7 +100,7 @@ namespace ICHI_API.Service
               var image = new ProductImages();
               image.ProductDetailId = product.Id;
               image.ImageName = file.FileName;
-              image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id, file);
+              image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id, file, AppSettings.PatchProduct);
               image.IsDefault = false;
               image.IsActive = true;
               image.IsDeleted = false;
@@ -131,7 +131,7 @@ namespace ICHI_API.Service
             image.ProductDetailId = product.Id;
 
             image.ImageName = file.FileName;
-            image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id, file);
+            image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id, file, AppSettings.PatchProduct);
             image.IsDefault = false;
             image.IsActive = true;
             image.IsDeleted = false;

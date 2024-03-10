@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Utils } from '../../../Utils.ts/utils';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { CustomerModel } from '../../../models/customer.model';
 import { PaginationDTO } from '../../../dtos/pagination.dto';
 import {
   FormControl,
@@ -8,30 +8,32 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Utils } from '../../../Utils.ts/utils';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
-import { EmployeeModel } from '../../../models/employee.model';
 import { CommonModule } from '@angular/common';
+import { Environment } from '../../../environment/environment';
 import { EmployeeService } from '../../../service/employee.service';
 
 @Component({
-  selector: 'app-employee',
+  selector: 'app-customer',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './employee.component.html',
   styleUrl: './employee.component.css',
 })
-export class EmployeeComponent implements OnInit {
+export class EmployeeComponent {
   protected readonly Utils = Utils;
-  // paginationModel!: PaginationDTO<SupplierModel> =
-  //   new PaginationDTO<SupplierModel>();
-  paginationModel: PaginationDTO<EmployeeModel> = PaginationDTO.createEmpty();
+  protected readonly Environment = Environment;
+  paginationModel: PaginationDTO<CustomerModel> = PaginationDTO.createEmpty();
   searchTemp: any = this.activatedRoute.snapshot.queryParams['Search'] || '';
   selectAll: boolean = false;
   sortDir: string = 'ASC';
   SortBy: string = 'id';
+  file: File | null = null;
+  avatarSrc: string = '';
 
   birthday: Date = new Date();
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
@@ -53,6 +55,9 @@ export class EmployeeComponent implements OnInit {
     ]),
     gender: new FormControl('', [Validators.required]),
     birthday: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    address: new FormControl('', [Validators.required]),
+    userId: new FormControl(null),
   });
 
   constructor(
@@ -63,7 +68,7 @@ export class EmployeeComponent implements OnInit {
     private toastr: ToastrService
   ) {}
   ngOnInit() {
-    this.title.setTitle('Quản lý thông tin nhân viên');
+    this.title.setTitle('Quản lý thông tin khách hàng');
     this.activatedRoute.queryParams.subscribe((params) => {
       const search = params['search'] || '';
       const pageSize = +params['page-size'] || 10;
@@ -72,6 +77,48 @@ export class EmployeeComponent implements OnInit {
       const sortBy = params['sort-by'] || '';
       this.findAll(pageSize, pageNumber, sortBy, sortDir, search);
     });
+  }
+
+  // avatarSrc: string =
+  //   'https://localhost:7150//images//products//product-47//5b986978-35b8-4c3f-b6cf-b989d816f3f3.png';
+  // onFileSelected(event: any) {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e: any) => {
+  //       this.avatarSrc = e.target.result;
+  //       console.log(this.avatarSrc);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // }
+  onFileSelected(event: any) {
+    this.file = event.target.files[0];
+    if (this.file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.avatarSrc = e.target.result;
+      };
+      reader.readAsDataURL(this.file);
+    }
+  }
+
+  update() {
+    this.isDisplayNone = true;
+    this.employeeService
+      .UpdateImage(this.employeeForm.value, this.file)
+      .subscribe({
+        next: (response: any) => {
+          this.employeeForm.reset();
+          this.btnCloseModal.nativeElement.click();
+          this.updateTable();
+          this.toastr.success(response.message, 'Thông báo');
+        },
+        error: (error: any) => {
+          this.errorMessage = error.error;
+          this.isDisplayNone = false;
+        },
+      });
   }
 
   toggleSelectAll() {
@@ -110,7 +157,7 @@ export class EmployeeComponent implements OnInit {
 
   changePageNumber(pageNumber: number): void {
     this.router
-      .navigate(['/admin/employee'], {
+      .navigate(['/admin/customer'], {
         queryParams: { 'page-number': pageNumber },
         queryParamsHandling: 'merge',
       })
@@ -119,7 +166,7 @@ export class EmployeeComponent implements OnInit {
 
   changePageSize(pageSize: number): void {
     this.router
-      .navigate(['/admin/employee'], {
+      .navigate(['/admin/customer'], {
         queryParams: { 'page-size': pageSize, 'page-number': 1 },
         queryParamsHandling: 'merge',
       })
@@ -128,7 +175,7 @@ export class EmployeeComponent implements OnInit {
 
   sortByField(sortBy: string): void {
     this.router
-      .navigate(['/admin/employee'], {
+      .navigate(['/admin/customer'], {
         queryParams: { 'sort-by': sortBy, 'sort-direction': this.sortDir },
         queryParamsHandling: 'merge',
       })
@@ -139,7 +186,7 @@ export class EmployeeComponent implements OnInit {
 
   search() {
     this.router
-      .navigate(['/admin/employee'], {
+      .navigate(['/admin/customer'], {
         queryParams: { search: this.searchTemp, 'page-number': 1 },
         queryParamsHandling: 'merge',
       })
@@ -153,7 +200,6 @@ export class EmployeeComponent implements OnInit {
     return isMale;
   }
   onSubmit() {
-    debugger;
     if (this.employeeForm.invalid) {
       return;
     }
@@ -170,28 +216,11 @@ export class EmployeeComponent implements OnInit {
           this.employeeForm.reset();
           this.btnCloseModal.nativeElement.click();
           this.updateTable();
-          this.toastr.success('Thêm nhân viên thành công', 'Thông báo');
+          this.toastr.success(response.message, 'Thông báo');
         } else {
           this.errorMessage = response.message;
           this.isDisplayNone = false;
         }
-      },
-      error: (error: any) => {
-        this.errorMessage = error.error;
-        this.isDisplayNone = false;
-      },
-    });
-  }
-
-  update() {
-    this.isDisplayNone = true;
-    debugger;
-    this.employeeService.update(this.employeeForm.value).subscribe({
-      next: (response: any) => {
-        this.employeeForm.reset();
-        this.btnCloseModal.nativeElement.click();
-        this.updateTable();
-        this.toastr.success('Cập nhật nhân viên thành công', 'Thông báo');
       },
       error: (error: any) => {
         this.errorMessage = error.error;
@@ -218,7 +247,7 @@ export class EmployeeComponent implements OnInit {
         this.employeeService.delete(id).subscribe({
           next: (response: any) => {
             this.updateTable();
-            this.toastr.success('Xóa nhà cung cấp thành công', 'Thông báo');
+            this.toastr.success(response.message, 'Thông báo');
           },
           error: (error: any) => {
             this.toastr.error(error.error, 'Thất bại');
@@ -230,22 +259,25 @@ export class EmployeeComponent implements OnInit {
 
   openModalCreate() {
     this.employeeForm.reset();
-    this.titleModal = 'Thêm nhân viên';
+    this.titleModal = 'Thêm khách hàng';
     this.btnSave = 'Thêm mới';
     this.errorMessage = '';
   }
 
-  openModalUpdate(employee: EmployeeModel) {
+  openModalUpdate(customer: CustomerModel) {
     this.employeeForm.patchValue({
-      id: employee.id,
-      fullName: employee.fullName,
-      phoneNumber: employee.phoneNumber,
-      gender: employee.gender,
-      birthday: employee.birthday,
-      userId: employee.userId,
+      id: customer.id,
+      fullName: customer.fullName,
+      phoneNumber: customer.phoneNumber,
+      gender: customer.gender,
+      birthday: customer.birthday,
+      userId: customer.userId,
+      email: customer.user.email,
+      address: customer.address,
     });
-    this.birthday = employee.birthday;
-    this.titleModal = 'Cập nhật nhân viên';
+    this.avatarSrc = Environment.apiBaseRoot + customer.user.avatar;
+    this.birthday = customer.birthday;
+    this.titleModal = 'Cập nhật khách hàng';
     this.btnSave = 'Cập nhật';
   }
 

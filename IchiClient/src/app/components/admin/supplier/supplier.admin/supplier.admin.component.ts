@@ -171,10 +171,11 @@ export class SupplierAdminComponent implements OnInit {
     this.supplierService.create(this.supplierForm.value).subscribe({
       next: (response: any) => {
         if (response.code === 200) {
+          debugger;
           this.supplierForm.reset();
           this.btnCloseModal.nativeElement.click();
           this.updateTable();
-          this.toastr.success('Thêm nhà cung cấp thành công', 'Thông báo');
+          this.toastr.success(response.message, 'Thông báo');
         } else {
           this.errorMessage = response.message;
           this.isDisplayNone = false;
@@ -192,10 +193,11 @@ export class SupplierAdminComponent implements OnInit {
     this.supplierService.update(this.supplierForm.value).subscribe({
       next: (response: any) => {
         console.log(response);
+        debugger;
         this.supplierForm.reset();
         this.btnCloseModal.nativeElement.click();
         this.updateTable();
-        this.toastr.success('Cập nhật nhà cung cấp thành công', 'Thông báo');
+        this.toastr.success(response.message, 'Thông báo');
       },
       error: (error: any) => {
         this.errorMessage = error.error;
@@ -222,7 +224,7 @@ export class SupplierAdminComponent implements OnInit {
         this.supplierService.delete(id).subscribe({
           next: (response: any) => {
             this.updateTable();
-            this.toastr.success('Xóa nhà cung cấp thành công', 'Thông báo');
+            this.toastr.success(response.message, 'Thông báo');
           },
           error: (error: any) => {
             this.toastr.error(error.error, 'Thất bại');

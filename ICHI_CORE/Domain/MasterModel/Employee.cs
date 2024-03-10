@@ -11,8 +11,8 @@ namespace ICHI_CORE.Domain.MasterModel
 {
   public class Employee : MasterEntity
   {
-    public int UserID { get; set; }
-    [ForeignKey("UserID")]
+    public int UserId { get; set; }
+    [ForeignKey("UserId")]
     [ValidateNever]
     public User? User { get; set; }
 

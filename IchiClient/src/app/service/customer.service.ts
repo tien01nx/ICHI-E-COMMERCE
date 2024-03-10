@@ -1,8 +1,9 @@
+import { Environment } from './../environment/environment';
 import { Injectable } from '@angular/core';
 import { ApiServiceService } from './api.service.service';
 import { CustomerModel } from '../models/customer.model';
 import { ApiResponse } from '../models/api.response.model';
-import { HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { InsertCustomerDTO } from '../dtos/insert.customer.dto';
 
@@ -10,8 +11,11 @@ import { InsertCustomerDTO } from '../dtos/insert.customer.dto';
   providedIn: 'root',
 })
 export class CustomerService {
-  constructor(private apiService: ApiServiceService) {}
-
+  constructor(
+    private apiService: ApiServiceService,
+    private http: HttpClient
+  ) {}
+  Environment = Environment;
   findAllByName(
     PageNumber: number,
     PageSize: number,
@@ -43,39 +47,6 @@ export class CustomerService {
     );
   }
 
-  // findAllByName(
-  //   PageNumber: number,
-  //   PageSize: number,
-  //   SortDirection: string,
-  //   SortBy: string,
-  //   Search: string
-  // ): Observable<ApiResponse<CustomerModel>> {
-  //   let params = new HttpParams();
-
-  //   const paramConfig = {
-  //     PageNumber: PageNumber.toString(),
-  //     PageSize: PageSize.toString(),
-  //     SortDirection: SortDirection,
-  //     SortBy: SortBy,
-  //     Search: Search,
-  //   };
-
-  //   // Duyệt qua đối tượng config và chỉ thêm những tham số có giá trị
-  //   Object.entries(paramConfig).forEach(([key, value]) => {
-  //     if (value && value.trim() !== '') {
-  //       params = params.set(key, value);
-  //     }
-  //   });
-  //   const finalUrl = `$${params.toString()}`;
-
-  //   console.log(finalUrl);
-  //   return this.apiService
-  //     .callApi<CustomerModel>('/Supplier/FindAllPaged', 'get', params)
-  //     .pipe(
-  //       tap((data) => console.log('Supplier Data:', data)) // Log ra dữ liệu nhận được
-  //     );
-  // }
-
   findAll() {
     return this.apiService.callApi<CustomerModel>(
       '/Customer/FindAllPaged',
@@ -92,12 +63,12 @@ export class CustomerService {
     );
   }
 
-  update(supplier: CustomerModel) {
+  update(customer: CustomerModel) {
     return this.apiService.callApi<CustomerModel>(
       '/Customer/Update',
       'put',
       null,
-      supplier
+      customer
     );
   }
 
@@ -106,5 +77,28 @@ export class CustomerService {
       '/Customer/' + id,
       'delete'
     );
+  }
+  private apiProductAdminUrl = `${Environment.apiBaseUrl}/Customer`;
+  UpdateImage(customer: CustomerModel, files: File | null) {
+    const formData = new FormData();
+    formData.append('id', customer.id.toString());
+    formData.append('fullname', customer.fullName);
+    formData.append('phoneNumber', customer.phoneNumber.toString());
+    formData.append('gender', customer.gender.toString());
+    formData.append('birthday', customer.birthday.toString());
+    formData.append('address', customer.address);
+    formData.append('userId', customer.userId.toString());
+    if (files) {
+      formData.append('file', files);
+    }
+    debugger;
+    return this.http.put(this.apiProductAdminUrl, formData);
+    // return this.apiService.callApi<CustomerModel>(
+    //   '/Customer', // URL của API
+    //   'put', // Method là 'put'
+    //   null, // Không có params
+    //   formData, // Dữ liệu form data
+    //   'multipart/form-data' // ContentType là 'multipart/form-data'
+    // );
   }
 }

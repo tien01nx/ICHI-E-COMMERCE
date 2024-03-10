@@ -16,15 +16,68 @@ export class ApiServiceService {
     return throwError(error);
   }
 
+  // callApi<T>(
+  //   actionAPI: string,
+  //   method: string,
+  //   params?: any,
+  //   bodyInput?: any
+  // ): Observable<ApiResponse<T>> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.Token}`,
+  //     'Content-Type': 'application/json',
+  //   });
+
+  //   let options = { headers: headers, params: params };
+  //   // Tạo URL hoàn chỉnh để log ra
+  //   const queryParams = params instanceof HttpParams ? params.toString() : '';
+
+  //   // Tạo URL hoàn chỉnh bao gồm cả query parameters
+  //   const fullUrl = `${Environment.apiBaseUrl}${actionAPI}${
+  //     queryParams ? '?' + queryParams : ''
+  //   }`;
+  //   console.log(`API ${method.toUpperCase()}: ${fullUrl}`);
+  //   switch (method.toLowerCase()) {
+  //     case 'get':
+  //       return this.http
+  //         .get<ApiResponse<T>>(`${Environment.apiBaseUrl}${actionAPI}`, options)
+  //         .pipe(catchError(ApiServiceService.handleError));
+  //     case 'post':
+  //       return this.http
+  //         .post<ApiResponse<T>>(
+  //           `${Environment.apiBaseUrl}${actionAPI}`,
+  //           bodyInput,
+  //           options
+  //         )
+  //         .pipe(catchError(ApiServiceService.handleError));
+  //     case 'put':
+  //       return this.http
+  //         .put<ApiResponse<T>>(
+  //           `${Environment.apiBaseUrl}${actionAPI}`,
+  //           bodyInput,
+  //           options
+  //         )
+  //         .pipe(catchError(ApiServiceService.handleError));
+  //     case 'delete':
+  //       return this.http
+  //         .delete<ApiResponse<T>>(
+  //           `${Environment.apiBaseUrl}${actionAPI}`,
+  //           options
+  //         )
+  //         .pipe(catchError(ApiServiceService.handleError));
+  //     default:
+  //       throw new Error(`Unsupported method: ${method}`);
+  //   }
+  // }
   callApi<T>(
     actionAPI: string,
     method: string,
     params?: any,
-    bodyInput?: any
+    bodyInput?: any,
+    contentType: string = 'application/json' // Mặc định là 'application/json'
   ): Observable<ApiResponse<T>> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.Token}`,
-      'Content-Type': 'application/json',
+      'Content-Type': contentType, // Sử dụng contentType được truyền vào
     });
 
     let options = { headers: headers, params: params };
@@ -68,7 +121,6 @@ export class ApiServiceService {
         throw new Error(`Unsupported method: ${method}`);
     }
   }
-
   refreshToken(): Observable<boolean> {
     return new Observable<boolean>((observer) => {
       observer.next(true);

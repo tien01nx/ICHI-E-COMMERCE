@@ -8,6 +8,7 @@ using ICHI_API;
 using ICHI_API.Data;
 using ICHI_API.Service.IService;
 using ICHI_CORE.NlogConfig;
+using ICHI_API.Service;
 namespace ICHI_CORE.Controllers.MasterController
 {
   [ApiController]
@@ -48,6 +49,26 @@ namespace ICHI_CORE.Controllers.MasterController
       return result;
     }
 
+    [HttpPut]
+    public async Task<ActionResult<ApiResponse<Employee>>> Update([FromForm] Employee customer, IFormFile? file)
+    {
+      ApiResponse<Employee> result;
+      string strMessage = "";
+      try
+      {
+        var data = _employeeService.Update(customer, file, out strMessage);
+        result = new ApiResponse<Employee>(
+          System.Net.HttpStatusCode.OK,
+          strMessage, data);
+      }
+      catch (Exception ex)
+      {
+        NLogger.log.Error(ex.ToString());
+        strMessage = "Có lỗi xảy ra";
+        return BadRequest(new ApiResponse<Employee>(System.Net.HttpStatusCode.BadRequest, strMessage, null));
+      }
+      return result;
+    }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult<ApiResponse<Employee>>> Delete(int id)
@@ -66,5 +87,6 @@ namespace ICHI_CORE.Controllers.MasterController
         return BadRequest(new ApiResponse<Employee>(System.Net.HttpStatusCode.BadRequest, strMessage, null));
       }
     }
+
   }
 }

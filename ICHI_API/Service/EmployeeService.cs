@@ -3,8 +3,11 @@ using ICHI_API.Data;
 using ICHI_API.Helpers;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
+using ICHI_CORE.Helpers;
 using ICHI_CORE.NlogConfig;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace ICHI_API.Service
@@ -13,9 +16,11 @@ namespace ICHI_API.Service
   {
     private readonly IUnitOfWork _unitOfWork;
     private PcsApiContext _db;
-    public EmployeeService(IUnitOfWork unitOfWork, IConfiguration configuration, PcsApiContext pcsApiContext)
+    private readonly IWebHostEnvironment _webHostEnvironment;
+    public EmployeeService(IUnitOfWork unitOfWork, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, PcsApiContext pcsApiContext)
     {
       _unitOfWork = unitOfWork;
+      _webHostEnvironment = webHostEnvironment;
       _db = pcsApiContext;
     }
     public Helpers.PagedResult<Employee> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
@@ -23,7 +28,7 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var query = _db.Employees.AsQueryable().Where(u => u.isDeleted == false);
+        var query = _db.Employees.Include(u => u.User).OrderByDescending(u => u.ModifiedDate).AsQueryable().Where(u => u.isDeleted == false);
         if (!string.IsNullOrEmpty(name))
         {
           query = query.Where(e => e.FullName.Contains(name));
@@ -48,7 +53,7 @@ namespace ICHI_API.Service
         var data = _unitOfWork.Employee.Get(u => u.Id == id);
         if (data == null)
         {
-          strMessage = "Nhà cung cấp không tồn tại";
+          strMessage = "Nhân viên không tồn tại";
           return null;
         }
         return data;
@@ -92,33 +97,49 @@ namespace ICHI_API.Service
         return null;
       }
     }
-    public Employee Update(Employee customer, out string strMessage)
+    public Employee Update(Employee customer, IFormFile? file, out string strMessage)
     {
       strMessage = string.Empty;
       try
       {
-        // lấy thông tin nhà cung cấp
+        // lấy thông tin Nhân viên
         var data = _unitOfWork.Employee.Get(u => u.Id == customer.Id);
         if (data == null)
         {
-          strMessage = "Nhà cung cấp không tồn tại";
+          strMessage = "Nhân viên không tồn tại";
           return null;
         }
-        // kiểm tra email nhà cung cấp đã tồn tại chưa
+        // kiểm tra email Nhân viên đã tồn tại chưa
         var checkEmail = _unitOfWork.User.Get(u => u.Email == customer.Email);
         if (checkEmail != null && checkEmail.Id != customer.Id)
         {
           strMessage = "Email đã tồn tại";
           return null;
         }
-        // kiểm tra số điện thoại nhà cung cấp đã tồn tại chưa
+        // kiểm tra số điện thoại Nhân viên đã tồn tại chưa
         var checkPhone = _unitOfWork.Employee.Get(u => u.PhoneNumber == customer.PhoneNumber);
         if (checkPhone != null && checkPhone.Id != customer.Id)
         {
           strMessage = "Số điện thoại đã tồn tại";
           return null;
         }
-        // kiêm tra mã số thueé
+        // nếu có file thì thực hiện lưu file mới và xóa file cũ đi
+        // lấy đường dẫn ảnh file cũ
+        if (file != null)
+        {
+          var user = _unitOfWork.User.Get(x => x.Id == data.UserId);
+          string oldFile = user.Avatar;
+          user.Avatar = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, user.Id, file, AppSettings.PatchUser);
+          user.ModifiedBy = "Admin";
+          user.ModifiedDate = DateTime.Now;
+          _unitOfWork.User.Update(user);
+          _unitOfWork.Save();
+          // xóa file cũ
+          if (oldFile != AppSettings.AvatarDefault)
+          {
+            ImageHelper.DeleteImage(_webHostEnvironment.WebRootPath, oldFile);
+          }
+        }
         customer.ModifiedBy = "Admin";
         _unitOfWork.Employee.Update(customer);
         _unitOfWork.Save();
@@ -137,10 +158,10 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var data = _unitOfWork.Employee.Get(u => u.Id == id && u.isDeleted);
+        var data = _unitOfWork.Employee.Get(u => u.Id == id && !u.isDeleted);
         if (data == null)
         {
-          strMessage = "khách hàng không tồn tại";
+          strMessage = "Nhân viên không tồn tại";
           return false;
         }
         data.isDeleted = true;

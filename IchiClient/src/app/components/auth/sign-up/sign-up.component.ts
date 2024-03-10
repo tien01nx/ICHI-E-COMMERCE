@@ -32,9 +32,10 @@ export class SignUpComponent implements OnInit {
   ) {}
 
   userForm: FormGroup = new FormGroup({
-    userName: new FormControl('', [
+    email: new FormControl('', [
       Validators.required,
       Validators.maxLength(100),
+      Validators.email,
     ]),
     password: new FormControl('', [
       Validators.required,
