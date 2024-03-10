@@ -1,13 +1,6 @@
-import { ToastrService } from 'ngx-toastr';
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { PaginationModel } from '../../../models/pagination.model';
-import { CategoryProduct } from '../../../models/category.product';
+import { PaginationDTO } from './../../../dtos/pagination.dto';
+import { CommonModule } from '@angular/common';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -15,191 +8,96 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { CategoryService } from '../../../service/category-product.service';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import slugify from 'slugify';
+import { ActivatedRoute, Router, Data } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
-import { CommonModule } from '@angular/common';
-import { InsertCategoryDTO } from '../../../dtos/insert.category.dto';
+import { Utils } from '../../../Utils.ts/utils';
+import { CategoryProduct } from '../../../models/category.product';
+import { CategoryService } from '../../../service/category-product.service';
 
 @Component({
-  selector: 'app-category',
+  selector: 'app-supplier.admin',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './category.component.html',
   styleUrl: './category.component.css',
 })
-export class CategoryComponent implements OnInit, OnDestroy {
-  @ViewChild('headerModal') headerModal!: ElementRef;
-  @ViewChild('btnSave') btnSave!: ElementRef;
+export class CategoryComponent implements OnInit {
+  protected readonly Utils = Utils;
+  paginationModel: PaginationDTO<CategoryProduct> = PaginationDTO.createEmpty();
+  searchTemp: any = this.activatedRoute.snapshot.queryParams['Search'] || '';
+  selectAll: boolean = false;
+  sortDir: string = 'ASC';
+  SortBy: string = 'id';
+
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
-  @ViewChild('checkAll') checkAll!: ElementRef;
-
-  paginationModel: PaginationModel;
-  category: any;
-  search: string = '';
-  enabled: string = '';
-  errorName: string = '';
-  errorSlug: string = '';
-  categories: CategoryProduct[] = [];
-
-  totalCategories: number = 0;
-  totalEnabledCategories: number = 0;
-  totalDisabledCategories: number = 0;
-
+  titleModal: string = '';
+  btnSave: string = '';
+  isDisplayNone: boolean = false;
+  errorMessage: string = '';
+  // parentID: number;
+  // categoryLevel: number;
+  // categoryName: string;
+  // notes: string;
+  // isDeleted: boolean;
   categoryForm: FormGroup = new FormGroup({
-    id: new FormControl(null),
+    id: new FormControl('0'),
+    parentID: new FormControl('0'),
+    categoryLevel: new FormControl('0'),
     categoryName: new FormControl('', [
       Validators.required,
-      Validators.minLength(2),
-      Validators.maxLength(30),
+      Validators.maxLength(100),
     ]),
-    notes: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2),
-      Validators.maxLength(50),
-    ]),
-    name: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2),
-      Validators.maxLength(30),
-    ]),
-    slug: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2),
-      Validators.maxLength(50),
-      Validators.pattern('^[a-z0-9]+(?:-[a-z0-9]+)*$'),
-    ]),
-    enabled: new FormControl(true),
+    notes: new FormControl('', [Validators.maxLength(200)]),
   });
 
-  private findAllSubscription: Subscription | undefined;
-
   constructor(
+    private title: Title,
     private categoryService: CategoryService,
-    private toastr: ToastrService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private title: Title
-  ) {
-    this.title.setTitle('Quản lý danh mục');
-    this.paginationModel = new PaginationModel({});
-  }
-
-  ngOnInit(): void {
-    // this.getCategoryTotals();
+    private toastr: ToastrService
+  ) {}
+  ngOnInit() {
+    this.title.setTitle('Quản lý danh mục sản phẩm');
     this.activatedRoute.queryParams.subscribe((params) => {
-      const {
-        Search = '',
-        PageSize = 5,
-        PageNumber = 1,
-        SortDirection: sortDir = 'ASC',
-        SortBy: sortBy = 'id',
-      } = params;
-
-      this.findAll(+PageNumber, +PageSize, sortDir, sortBy, Search);
+      const search = params['search'] || '';
+      const pageSize = +params['page-size'] || 10;
+      const pageNumber = +params['page-number'] || 1;
+      const sortDir = params['sort-direction'] || 'ASC';
+      const sortBy = params['sort-by'] || '';
+      this.findAll(pageSize, pageNumber, sortBy, sortDir, search);
     });
-  }
-
-  ngOnDestroy(): void {
-    if (this.findAllSubscription) {
-      this.findAllSubscription.unsubscribe();
-    }
-  }
-
-  onSubmit(): void {
-    if (this.categoryForm.invalid) {
-      console.log('categoryForm Invalid');
-      return;
-    }
-    this.categories = [];
-    this.categoryForm.value.id ? this.update() : this.create();
   }
 
   toggleSelectAll() {
-    const areAllSelected =
-      this.categories.length === this.paginationModel.content.length;
-
-    if (areAllSelected) {
-      this.categories = [];
-    } else {
-      this.categories = [...this.paginationModel.content];
-    }
+    this.selectAll = !this.selectAll;
   }
-
-  isSelected(category: CategoryProduct): boolean {
-    return this.categories.findIndex((c) => c.id === category.id) !== -1;
-  }
-
-  onCheckboxChange(category: CategoryProduct) {
-    const index = this.categories.findIndex((c) => c.id === category.id);
-
-    if (index === -1) {
-      this.categories.push(category);
-    } else {
-      this.categories.splice(index, 1);
-    }
-  }
-
-  slugify() {
-    this.categoryForm.patchValue({
-      slug: slugify(this.categoryForm.value.name, {
-        lower: true,
-        remove: /[\*+~.,()'"!:@]/g,
-      }),
-    });
-  }
-
-  resetText(): void {
-    this.errorName = '';
-    this.errorSlug = '';
-  }
-
-  // getCategoryTotals() {
-  //   this.categoryService.getCategoryTotals().subscribe({
-  //     next: (response: any) => {
-  //       this.totalCategories = response.totalCategories;
-  //       this.totalEnabledCategories = response.totalEnabledCategories;
-  //       this.totalDisabledCategories = response.totalDisabledCategories;
-  //     },
-  //     error: (error: any) => {
-  //       console.log(error);
-  //     },
-  //   });
-  // }
 
   findAll(
-    PageNumber: number = 1,
-    PageSize: number = this.paginationModel.pageSize,
-    Search: string = 'ASC',
-    SortBy: string = 'id',
-    SortDirection: string = this.search
-  ): void {
-    this.findAllSubscription = this.categoryService
-      .findAll(PageNumber, PageSize, Search, SortBy, SortDirection)
+    pageSize: number,
+    pageNumber: number,
+    sortBy: string,
+    sortDir: string,
+    search: string
+  ) {
+    this.categoryService
+      .findAllByName(pageNumber, pageSize, sortDir, sortBy, search)
       .subscribe({
         next: (response: any) => {
-          this.paginationModel = new PaginationModel({
-            content: response.data,
-            totalPages: response.totalPages,
-            totalElements: response.totalElements,
-            pageNumber: response.number + 1,
-            pageSize: response.size,
-            startNumberItem:
-              response.numberOfElements > 0
-                ? response.number * response.size + 1
-                : 0,
-            endNumberItem:
-              response.number * response.size + response.numberOfElements,
-            pageLast: response.last,
-            pageFirst: response.first,
-          });
-          this.paginationModel.calculatePageNumbers();
-          // this.getCategoryTotals();
-          this.checkAll.nativeElement.checked = false;
           console.log(response);
+          this.paginationModel.content = response.data.items;
+          this.paginationModel.totalPages = response.data.pageCount;
+          this.paginationModel.totalElements = response.data.totalCount;
+          this.paginationModel.numberOfElements = response.numberOfElements;
+          this.paginationModel.pageSize = response.data.pageSize;
+          this.paginationModel.pageNumber = response.data.currentPage;
+          this.paginationModel.firstElementOnPage = response.firstElementOnPage;
+          this.paginationModel.lastElementOnPage = response.lastElementOnPage;
+          this.paginationModel.sortBy = response.sortBy;
+          this.paginationModel.sortDirection = response.sortDirection;
+          console.log(this.paginationModel);
         },
         error: (error: any) => {
           console.log(error);
@@ -207,275 +105,143 @@ export class CategoryComponent implements OnInit, OnDestroy {
       });
   }
 
-  findById(id: number): void {
-    this.categoryService.findById(id).subscribe({
-      next: (response: any) => {
-        this.category = response;
-      },
-      error: (error: any) => {
-        console.log(error);
-      },
-    });
-  }
-
-  findByEnabled(enabled: string): void {
-    this.enabled = enabled;
-    this.handleSuccess();
+  changePageNumber(pageNumber: number): void {
+    this.router
+      .navigate(['/admin/categoryproduct'], {
+        queryParams: { 'page-number': pageNumber },
+        queryParamsHandling: 'merge',
+      })
+      .then((r) => {});
   }
 
   changePageSize(pageSize: number): void {
     this.router
-      .navigate([], {
-        queryParams: { size: pageSize, page: 1 },
+      .navigate(['/admin/categoryproduct'], {
+        queryParams: { 'page-size': pageSize, 'page-number': 1 },
         queryParamsHandling: 'merge',
       })
-      .then(() => {});
-    this.categories = [];
-    this.checkAll.nativeElement.checked = false;
+      .then((r) => {});
   }
-  changePageNumber(pageNumber: number): void {
-    if (pageNumber === this.paginationModel.pageNumber) return;
-    this.categories = [];
-    this.checkAll.nativeElement.checked = false;
+
+  sortByField(sortBy: string): void {
     this.router
-      .navigate([], {
-        queryParams: { page: pageNumber },
+      .navigate(['/admin/categoryproduct'], {
+        queryParams: { 'sort-by': sortBy, 'sort-direction': this.sortDir },
         queryParamsHandling: 'merge',
       })
-      .then(() => {});
+      .then((r) => {});
+    this.sortDir = this.sortDir === 'ASC' ? 'DESC' : 'ASC';
+    this.SortBy = sortBy;
   }
-  searchItem(): void {
+
+  search() {
     this.router
-      .navigate([], {
-        queryParams: { search: this.search, page: 1 },
+      .navigate(['/admin/categoryproduct'], {
+        queryParams: { search: this.searchTemp, 'page-number': 1 },
         queryParamsHandling: 'merge',
       })
-      .then(() => {});
+      .then((r) => {});
   }
-  changeSort(sortBy: string): void {
-    let sortDir = 'ASC';
-    if (
-      this.activatedRoute.snapshot.queryParams['sort-direction'] === sortDir
-    ) {
-      sortDir = sortDir === 'ASC' ? 'DESC' : 'ASC';
+
+  onSubmit() {
+    if (this.categoryForm.invalid) {
+      return;
     }
-    this.router
-      .navigate([], {
-        queryParams: { 'sort-direction': sortDir, 'sort-by': sortBy },
-        queryParamsHandling: 'merge',
-      })
-      .then(() => {});
+    if (this.categoryForm.value.id == null) this.create();
+    else this.update();
   }
 
-  iconClass(sortBy: string): number {
-    const sortBy2 = this.activatedRoute.snapshot.queryParams['sort-by'];
-    const sortDir = this.activatedRoute.snapshot.queryParams['sort-direction'];
-    if (sortDir === 'ASC' && sortBy2 === sortBy) return 1;
-    else if (sortDir === 'DESC' && sortBy2 === sortBy) return 2;
-    else return 0;
-  }
-
-  clearAllParams(): void {
-    //const queryParams = { ...this.router.routerState.snapshot.root.queryParams };
-    // delete queryParams['yourParamName'];
-
-    const navigationExtras: NavigationExtras = {
-      queryParams: {},
-      //queryParamsHandling: 'merge',
-    };
-    this.router.navigate([], navigationExtras);
-    this, this.handleSuccess();
-  }
-
-  create(): void {
-    this.categoryService.UpSertCategory(this.categoryForm.value).subscribe({
+  create() {
+    this.isDisplayNone = true;
+    this.categoryForm.value.id = 0;
+    this.categoryService.create(this.categoryForm.value).subscribe({
       next: (response: any) => {
-        this.findAll();
-        this.router
-          .navigate([], {
-            queryParams: { page: 1 },
-            queryParamsHandling: 'merge',
-          })
-          .then(() => {});
-        this.toastr.success('Thêm thành công!', 'Thông báo');
-        this.btnCloseModal.nativeElement.click();
+        if (response.code === 200) {
+          debugger;
+          this.categoryForm.reset();
+          this.btnCloseModal.nativeElement.click();
+          this.updateTable();
+          this.toastr.success(response.message, 'Thông báo');
+        } else {
+          this.errorMessage = response.message;
+          this.isDisplayNone = false;
+        }
       },
-      error: (error: any) => this.handleError(error),
-    });
-  }
-
-  update(): void {
-    this.categoryService.UpSertCategory(this.categoryForm.value).subscribe({
-      next: (response: any) => {
-        this.handleSuccess();
-        this.toastr.success('Cập nhật thành công!', 'Thông báo');
-        this.btnCloseModal.nativeElement.click();
-      },
-      error: (error: any) => this.handleError(error),
-    });
-  }
-
-  changeSwitch(category: any): void {
-    category.enabled = !category.enabled;
-    this.categoryService.UpSertCategory(category).subscribe({
-      next: () => this.handleSuccess(),
       error: (error: any) => {
-        console.log(error);
+        this.errorMessage = error.error;
+        this.isDisplayNone = false;
       },
     });
   }
 
-  createCategory(): void {
-    this.categoryForm.reset();
-    this.categoryForm.patchValue({ enabled: true });
-    this.btnSave.nativeElement.innerHTML = 'Thêm mới';
-    this.headerModal.nativeElement.innerHTML = 'Thêm danh mục mới';
+  update() {
+    this.isDisplayNone = true;
+    this.categoryService.update(this.categoryForm.value).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        debugger;
+        this.categoryForm.reset();
+        this.btnCloseModal.nativeElement.click();
+        this.updateTable();
+        this.toastr.success(response.message, 'Thông báo');
+      },
+      error: (error: any) => {
+        this.errorMessage = error.error;
+        this.isDisplayNone = false;
+      },
+    });
   }
 
-  editCategory(category: InsertCategoryDTO): void {
-    console.log(category);
-    debugger;
-    this.categoryForm.patchValue(category);
-    this.btnSave.nativeElement.innerHTML = 'Cập nhật';
-    this.headerModal.nativeElement.innerHTML = 'Cập nhật danh mục';
-  }
-
-  deleteCategory(id: number): void {
+  delete(id: number) {
     Swal.fire({
       title: 'Bạn có chắc chắn muốn xóa?',
       text: 'Dữ liệu sẽ không thể phục hồi sau khi xóa!',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Xóa',
+      confirmButtonText: 'Xác nhận',
       cancelButtonText: 'Hủy',
+      buttonsStyling: false,
       customClass: {
-        confirmButton: 'btn btn-sm btn-danger',
-        cancelButton: 'btn btn-sm btn-dark',
+        confirmButton: 'btn btn-danger me-1',
+        cancelButton: 'btn btn-secondary',
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.categoryService.deleteOne(id).subscribe({
+        this.categoryService.delete(id).subscribe({
           next: (response: any) => {
-            this.handleSuccess();
-            this.toastr.success('Xóa danh mục thành công!', 'Thông báo');
+            this.updateTable();
+            this.toastr.success(response.message, 'Thông báo');
           },
           error: (error: any) => {
-            console.log(error);
-            this.toastr.info(
-              'Danh mục này đã có danh mục con không thể xóa!',
-              'Thông báo'
-            );
+            this.toastr.error(error.error, 'Thất bại');
           },
         });
       }
     });
   }
 
-  // updateListStatus(enabled: boolean) {
-  //   if (this.categories.length === 0) {
-  //     this.toastr.info('Bạn chưa chọn danh mục cập nhật!', 'Thông báo');
-  //     return;
-  //   }
-  //   const categoryIds: number[] = this.categories.map(
-  //     (category) => category.id
-  //   );
-  //   this.categoryService.updatesStatus(categoryIds, enabled).subscribe({
-  //     next: (response: any) => {
-  //       this.handleSuccess();
-  //       this.toastr.success('Cập nhật thành công!', 'Thông báo');
-  //     },
-  //     error: (error: any) => console.log(error),
-  //   });
-  // }
-
-  handleSuccess(): void {
-    this.categories = [];
-    this.checkAll.nativeElement.checked = false;
-    const sortDir = this.activatedRoute.snapshot.queryParams['sort-direction'];
-    const sortBy = this.activatedRoute.snapshot.queryParams['sort-by'];
-    this.findAll(
-      this.paginationModel.pageNumber,
-      this.paginationModel.pageSize,
-      sortDir,
-      sortBy,
-      this.search
-    );
+  openModalCreate() {
+    this.categoryForm.reset();
+    this.titleModal = 'Thêm danh mục sàn phẩm';
+    this.btnSave = 'Thêm mới';
+    this.errorMessage = '';
   }
 
-  private handleError(error: any): void {
-    console.log(error);
-    if (error.status === 400 && error.error.message === 'DUPLICATE_NAME') {
-      this.errorName = 'Tên danh mục đã tồn tại!';
-      this.errorSlug = '';
-    } else if (
-      error.status === 400 &&
-      error.error.message === 'DUPLICATE_SLUG'
-    ) {
-      this.errorSlug = 'Slug đã tồn tại!';
-      this.errorName = '';
-    } else {
-      this.toastr.error('Lỗi không xác định.', 'Thông báo');
-    }
+  openModalUpdate(category: CategoryProduct) {
+    this.categoryForm.patchValue({
+      id: category.id,
+      parentID: category.parentID,
+      categoryLevel: category.categoryLevel,
+      categoryName: category.categoryName,
+      notes: category.notes,
+    });
+    this.titleModal = 'Cập nhật ndanh mục sản phẩm';
+    this.btnSave = 'Cập nhật';
   }
 
-  deletes(): void {
-    if (this.categories.length == 0)
-      this.toastr.info('Bạn chưa chọn danh mục để xóa!', 'Thông báo');
-    else {
-      Swal.fire({
-        title: 'Bạn có chắc chắn muốn xóa?',
-        text: 'Dữ liệu sẽ không thể phục hồi sau khi xóa!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Xóa',
-        cancelButtonText: 'Hủy',
-        customClass: {
-          confirmButton: 'btn btn-sm btn-danger',
-          cancelButton: 'btn btn-sm btn-dark',
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          for (let i = 0; i < this.categories.length; i++) {
-            const category = this.categories[i];
-
-            this.categoryService.deleteOne(category.id).subscribe({
-              next: (response: any) => {
-                this.handleSuccess();
-                this.toastr.success(
-                  `Xóa "${category.categoryName}" thành công!`,
-                  'Thông báo'
-                );
-              },
-              error: (error: any) => {
-                console.log(error);
-                if (
-                  error.status === 400 &&
-                  error.error.error === 'DOES_NOT_EXIST'
-                )
-                  this.toastr.info(
-                    `Không tìm thấy "${category.categoryName}" để xóa!`,
-                    'Thông báo'
-                  );
-                else if (
-                  error.status === 400 &&
-                  error.error.error === 'CANNOT_BE_DELETED'
-                )
-                  this.toastr.info(
-                    `Danh mục "${category.categoryName}" đã có sản phẩm không thể xóa!`,
-                    'Thông báo'
-                  );
-                else
-                  this.toastr.info(
-                    `Xóa "${category.categoryName}" thất bại, Lỗi không xác định!`,
-                    'Thông báo'
-                  );
-              },
-            });
-          }
-          this.categories = [];
-          this.checkAll.nativeElement.checked = false;
-        }
-      });
-    }
+  updateTable() {
+    this.isDisplayNone = false;
+    this.errorMessage = '';
+    this.findAll(this.paginationModel.pageSize, 1, '', '', '');
   }
 }

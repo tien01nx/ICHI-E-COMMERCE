@@ -16,6 +16,10 @@ import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { Environment } from '../../../environment/environment';
 import { EmployeeService } from '../../../service/employee.service';
+import { UserService } from '../../../service/user.service';
+import { UserDTO } from '../../../dtos/user.dto';
+import { UpdateUserDTO } from '../../../dtos/update.user.dto';
+import { AuthService } from '../../../service/auth.service';
 
 @Component({
   selector: 'app-customer',
@@ -34,7 +38,7 @@ export class EmployeeComponent {
   SortBy: string = 'id';
   file: File | null = null;
   avatarSrc: string = '';
-
+  showPassword: boolean = true;
   birthday: Date = new Date();
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   titleModal: string = '';
@@ -56,19 +60,28 @@ export class EmployeeComponent {
     gender: new FormControl('', [Validators.required]),
     birthday: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    address: new FormControl('', [Validators.required]),
+    address: new FormControl(
+      ''
+      // [Validators.required]
+    ),
     userId: new FormControl(null),
+    password: new FormControl(
+      ''
+      // [Validators.required]
+    ),
   });
 
   constructor(
     private title: Title,
     private employeeService: EmployeeService,
     private activatedRoute: ActivatedRoute,
+    private authService: AuthService,
+    private userServide: UserService,
     private router: Router,
     private toastr: ToastrService
   ) {}
   ngOnInit() {
-    this.title.setTitle('Quản lý thông tin khách hàng');
+    this.title.setTitle('Quản lý thông tin nhân viên');
     this.activatedRoute.queryParams.subscribe((params) => {
       const search = params['search'] || '';
       const pageSize = +params['page-size'] || 10;
@@ -203,7 +216,7 @@ export class EmployeeComponent {
     if (this.employeeForm.invalid) {
       return;
     }
-    if (this.employeeForm.value.id === null) this.create();
+    if (this.employeeForm.value.id === null) this.createEmployee();
     else this.update();
   }
 
@@ -259,25 +272,54 @@ export class EmployeeComponent {
 
   openModalCreate() {
     this.employeeForm.reset();
-    this.titleModal = 'Thêm khách hàng';
+    this.titleModal = 'Thêm nhân viên';
     this.btnSave = 'Thêm mới';
     this.errorMessage = '';
+    this.showPassword = true;
   }
 
-  openModalUpdate(customer: CustomerModel) {
+  // openModalUpdate(customer: CustomerModel) {
+  //   this.showPassword = false;
+  //   this.employeeForm.patchValue({
+  //     id: customer.id,
+  //     fullName: customer.fullName,
+  //     phoneNumber: customer.phoneNumber,
+  //     gender: customer.gender,
+  //     birthday: customer.birthday,
+  //     userId: customer.userId,
+  //     email: customer.user.email,
+  //     address: customer.address,
+  //   });
+  //   this.avatarSrc = Environment.apiBaseRoot + customer.user.avatar;
+  //   this.birthday = customer.birthday;
+  //   this.titleModal = 'Cập nhật khách hàng';
+  //   this.btnSave = 'Cập nhật';
+  // }
+
+  openModalUpdate(user: any) {
+    debugger;
+    this.showPassword = false;
     this.employeeForm.patchValue({
-      id: customer.id,
-      fullName: customer.fullName,
-      phoneNumber: customer.phoneNumber,
-      gender: customer.gender,
-      birthday: customer.birthday,
-      userId: customer.userId,
-      email: customer.user.email,
-      address: customer.address,
+      id: user.id,
+      email: user.user.email,
+      fullName: user.fullName,
+      birthday: user.birthday,
+      gender: user.gender,
+      userId: user.user.id,
+      address: user.address,
+      phoneNumber: user.phoneNumber,
     });
-    this.avatarSrc = Environment.apiBaseRoot + customer.user.avatar;
-    this.birthday = customer.birthday;
-    this.titleModal = 'Cập nhật khách hàng';
+    // this.employeeForm.value.id = user.user.id;
+    // const selectedRole = this.Environment.roles.find(
+    //   (role) => role.name === user.role
+    // );
+    // if (selectedRole) {
+    //   // this.employeeForm.get('role').setValue(selectedRole.name);
+    //   this.employeeForm.value.role = selectedRole.name;
+    // }
+    // this.avatarSrc = Environment.apiBaseRoot + user.user.avatar;
+    this.birthday = user.birthday;
+    this.titleModal = 'Cập nhật nhân viên';
     this.btnSave = 'Cập nhật';
   }
 
@@ -285,5 +327,66 @@ export class EmployeeComponent {
     this.isDisplayNone = false;
     this.errorMessage = '';
     this.findAll(this.paginationModel.pageSize, 1, '', '', '');
+  }
+
+  lockAccount(id: number, status: boolean) {
+    Swal.fire({
+      title: 'Bạn có chắc chắn muốn xóa?',
+      text: 'Dữ liệu sẽ không thể phục hồi sau khi xóa!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xác nhận',
+      cancelButtonText: 'Hủy',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: 'btn btn-danger me-1',
+        cancelButton: 'btn btn-secondary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        debugger;
+        this.userServide.delete(id, status).subscribe({
+          next: (response: any) => {
+            this.updateTable();
+            this.toastr.success(response.message, 'Thông báo');
+          },
+          error: (error: any) => {
+            this.toastr.error(error.error, 'Thất bại');
+          },
+        });
+      }
+    });
+  }
+
+  createEmployee() {
+    this.isDisplayNone = true;
+    this.employeeForm.value.id = 0;
+    const userdto: UpdateUserDTO = {
+      id: this.employeeForm.value.id,
+      fullName: this.employeeForm.value.fullName,
+      password: this.employeeForm.value.password,
+      email: this.employeeForm.value.email,
+      role: this.employeeForm.value.role,
+      birthday: this.employeeForm.value.birthday,
+      gender: this.employeeForm.value.gender,
+    };
+
+    this.authService.register(userdto).subscribe({
+      next: (response: any) => {
+        if (response.code === 200) {
+          this.employeeForm.reset();
+          this.btnCloseModal.nativeElement.click();
+          this.updateTable();
+          this.toastr.success(response.message, 'Thông báo');
+        } else {
+          this.errorMessage = response.message;
+          this.isDisplayNone = false;
+        }
+      },
+      error: (error: any) => {
+        this.errorMessage = error.error;
+        this.isDisplayNone = false;
+      },
+    });
   }
 }

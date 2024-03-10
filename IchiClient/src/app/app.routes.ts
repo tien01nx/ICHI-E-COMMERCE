@@ -19,6 +19,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SupplierAdminComponent } from './components/admin/supplier/supplier.admin/supplier.admin.component';
 import { EmployeeComponent } from './components/admin/employee/employee.component';
 import { AuthComponent } from './components/admin/auth/auth.component';
+import { TrademarkComponent } from './components/admin/trademark/trademark.component';
 
 export const routes: Routes = [
   {
@@ -34,6 +35,7 @@ export const routes: Routes = [
       { path: 'employee', component: EmployeeComponent },
       { path: 'account_manager', component: AuthComponent },
       { path: 'auth', component: AuthComponent },
+      { path: 'trademark', component: TrademarkComponent },
     ],
   },
   { path: '', component: ClientLayoutComponent },

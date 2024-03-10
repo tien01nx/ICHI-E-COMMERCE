@@ -79,6 +79,8 @@ namespace ICHI_API.Service
               PhoneNumber = userRegister.PhoneNumber,
               FullName = userRegister.FullName,
               UserId = user.Id,
+              Gender = userRegister.Gender,
+              Birthday = userRegister.Birthday,
             };
             _unitOfWork.Customer.Add(customer);
             _unitOfWork.Save();
@@ -91,27 +93,13 @@ namespace ICHI_API.Service
               PhoneNumber = userRegister.PhoneNumber,
               FullName = userRegister.FullName,
               UserId = user.Id,
+              Gender = userRegister.Gender,
+              Birthday = userRegister.Birthday,
+
             };
             _unitOfWork.Employee.Add(employee);
             _unitOfWork.Save();
           }
-          //var Role = _unitOfWork.Role.Get(r => r.RoleName == AppSettings.EMPLOYEE);
-          //UserRole userRole = new UserRole
-          //{
-          //  RoleId = Role.Id,
-          //  UserId = user.Id
-          //};
-          //_unitOfWork.UserRole.Add(userRole);
-          //// insert vào customer
-          //Customer customer = new Customer()
-          //{
-          //  PhoneNumber = userRegister.PhoneNumber,
-          //  FullName = userRegister.FullName,
-          //  UserId = user.Id,
-          //};
-          //_unitOfWork.Customer.Add(customer);
-          //_unitOfWork.Save();
-          // Thực hiện commit transaction
           transaction.Commit();
           strMessage = "Đăng ký thành công";
           var accessToken = GenerateAccessToken(user);

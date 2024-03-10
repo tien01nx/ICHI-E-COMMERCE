@@ -22,7 +22,7 @@ export class SignUpComponent implements OnInit {
   errorMessage: string = '';
   successMessage: string = '';
   isActive: boolean = false;
-
+  birthday: Date = new Date();
   ngOnInit(): void {}
   constructor(
     private authServer: AuthService,
@@ -52,6 +52,8 @@ export class SignUpComponent implements OnInit {
       Validators.minLength(10),
       Validators.pattern('^0[0-9]{9}$'),
     ]),
+    birthday: new FormControl('', [Validators.required]),
+    gender: new FormControl('', [Validators.required]),
   });
 
   userRegister() {

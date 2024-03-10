@@ -1,11 +1,10 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
 import { ApiResponse } from '../models/api.response.model';
-import { CategoryProduct } from '../models/category.product';
+import { Observable, tap } from 'rxjs';
 import { ApiServiceService } from './api.service.service';
-import { InsertCategoryDTO } from '../dtos/insert.category.dto';
-import { PaginationParams } from '../models/PaginationParams';
+import { InsertSupplierDTO } from '../dtos/insert.supplier.dto';
+import { CategoryProduct } from '../models/category.product';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +12,7 @@ import { PaginationParams } from '../models/PaginationParams';
 export class CategoryService {
   constructor(private apiService: ApiServiceService) {}
 
-  findAll(
+  findAllByName(
     PageNumber: number,
     PageSize: number,
     SortDirection: string,
@@ -21,7 +20,6 @@ export class CategoryService {
     Search: string
   ): Observable<ApiResponse<CategoryProduct>> {
     let params = new HttpParams();
-    debugger;
     if (PageNumber && PageNumber.toString().trim() !== '') {
       params = params.set('page-number', PageNumber.toString());
     }
@@ -39,67 +37,42 @@ export class CategoryService {
     }
     console.log(params);
     return this.apiService.callApi<CategoryProduct>(
-      '/Supplier/FindAllPaged',
+      '/CategoryProduct/FindAllPaged',
       'get',
       params
     );
   }
-
-  // findAll(
-  //   PageNumber: number,
-  //   PageSize: number,
-  //   SortDirection: string,
-  //   SortBy: string,
-  //   Search: string
-  // ): Observable<ApiResponse<CategoryProduct[]>> {
-  //   const requestBody = {
-  //     PageNumber: PageNumber,
-  //     PageSize: PageSize,
-  //     Search: Search,
-  //     SortDirection: SortDirection,
-  //     SortBy: SortBy,
-  //   };
-  //   return this.apiService.callApi<CategoryProduct[]>(
-  //     '/CategoryProduct/FindAllPaged',
-  //     'post',
-  //     null,
-  //     requestBody // Đối tượng HttpParams được truyền vào đây
-  //   );
-  // }
-
-  UpSertCategory(
-    categoryData: InsertCategoryDTO
-  ): Observable<ApiResponse<any>> {
-    if (categoryData.id) {
-      return this.apiService.callApi<ApiResponse<any>>(
-        `/CategoryProduct/Update/${categoryData.id}`,
-        'PUT',
-        null,
-        categoryData
-      );
-    } else {
-      return this.apiService.callApi<ApiResponse<any>>(
-        '/CategoryProduct/Create',
-        'POST',
-        null,
-        categoryData
-      );
-    }
-  }
-
-  deleteOne(id: number): Observable<ApiResponse<any>> {
-    return this.apiService.callApi<ApiResponse<any>>(
-      `/CategoryProduct/delete/${id}`,
-      'PUT',
-      null
+  findAll() {
+    return this.apiService.callApi<CategoryProduct>(
+      '/CategoryProduct/FindAllPaged',
+      'get'
     );
   }
 
-  findById(id: number): Observable<ApiResponse<CategoryProduct>> {
+  create(category: InsertSupplierDTO) {
+    debugger;
     return this.apiService.callApi<CategoryProduct>(
-      `/CategoryProduct/${id}`,
-      'GET',
-      null
+      '/CategoryProduct/Create-Category',
+      'post',
+      null,
+      category
+    );
+  }
+
+  update(category: CategoryProduct) {
+    debugger;
+    return this.apiService.callApi<CategoryProduct>(
+      '/CategoryProduct/Update-Category',
+      'post',
+      null,
+      category
+    );
+  }
+
+  delete(id: number) {
+    return this.apiService.callApi<CategoryProduct[]>(
+      '/CategoryProduct/' + id,
+      'delete'
     );
   }
 }

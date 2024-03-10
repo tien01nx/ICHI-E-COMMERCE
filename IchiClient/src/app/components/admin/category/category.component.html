@@ -1,599 +1,550 @@
+<nav class="mb-2" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a href="/admin">Trang chủ</a></li>
+    <li class="breadcrumb-item">Quản lý danh mục</li>
+    <li class="breadcrumb-item active">Nhà cung cấp</li>
+  </ol>
+</nav>
 <div class="mb-9">
-  <div class="row g-2 mb-4">
+  <div class="row g-3 mb-4">
     <div class="col-auto">
-      <h2 class="mb-0">Quản lý danh mục</h2>
+      <h2 class="mb-0">Danh sách nhà cung cấp</h2>
     </div>
   </div>
-  <ul class="nav nav-links mb-3 mb-lg-2 mx-n3">
-    <li class="nav-item">
-      <button
-        class="nav-link"
-        [class.active]="enabled === ''"
-        aria-current="page"
-        (click)="findByEnabled('')"
-      >
-        <span>Tất cả </span>
-        <span class="text-body-tertiary fw-semibold"
-          >({{ totalCategories }})
-          <span [class.d-none]="enabled !== ''"
-            ><i class="fas fa-check"></i
-          ></span>
-        </span>
-      </button>
-    </li>
-    <li class="nav-item">
-      <button
-        class="nav-link"
-        [class.active]="enabled === 'true'"
-        (click)="findByEnabled('true')"
-      >
-        <span>Hiện </span>
-        <span class="text-body-tertiary fw-semibold"
-          >({{ totalEnabledCategories }})
-          <span [class.d-none]="enabled !== 'true'"
-            ><i class="fas fa-check"></i></span
-        ></span>
-      </button>
-    </li>
-    <li class="nav-item">
-      <button
-        class="nav-link"
-        [class.active]="enabled === 'false'"
-        (click)="findByEnabled('false')"
-      >
-        <span>Ẩn </span>
-        <span class="text-body-tertiary fw-semibold"
-          >({{ totalDisabledCategories }})
-          <span [class.d-none]="enabled !== 'false'"
-            ><i class="fas fa-check"></i></span
-        ></span>
-      </button>
-    </li>
-  </ul>
-  <div>
+  <div id="category">
     <div class="mb-4">
       <div class="row g-3">
         <div class="col-auto">
           <div class="search-box">
-            <input
-              class="form-control search-input search"
-              type="search"
-              placeholder="Tìm kiếm danh mục"
-              aria-label="Search"
-              [(ngModel)]="search"
-              (input)="searchItem()"
-              spellcheck="false"
-            />
-            <span class="fas fa-search search-box-icon"></span>
-          </div>
-        </div>
-        <div class="col-auto scrollbar overflow-hidden-y flex-grow-1">
-          <div class="btn-group position-static" role="group">
-            <div
-              *ngIf="categories.length > 0"
-              class="btn-group position-static"
-              role="group"
-            >
-              <button
-                class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3"
-                (click)="handleSuccess()"
-              >
-                <span class="fas fa-times fs-9 me-2"></span>Đã chọn
-                {{ categories.length }} mục
-              </button>
-              <!-- <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="updateListStatus(true)">
-                <span class="fas fa-toggle-on me-2"></span>Hiện</button>
-              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="updateListStatus(false)">
-                <span class="fas fa-toggle-off me-2"></span>Ẩn</button> -->
-              <button
-                class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3"
-                (click)="deletes()"
-              >
-                <span class="fas fa-trash me-2"></span>Xóa
-              </button>
-            </div>
-            <div
-              *ngIf="categories.length <= 0"
-              class="btn-group position-static"
-              role="group"
-            >
-              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3">
-                <span class="fa-solid fa-file-export me-2"></span>Báo cáo
-              </button>
-              <button
-                class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3"
-                (click)="clearAllParams()"
-              >
-                <span class="fas fa-redo me-2"></span>Tải lại trang
-              </button>
-            </div>
+            <form class="position-relative">
+              <input
+                class="form-control search-input search"
+                type="text"
+                placeholder="Tìm kiếm nhà cung cấp"
+                name="searchTemp"
+                (input)="search()"
+                [(ngModel)]="searchTemp"
+              />
+              <span class="fas fa-search search-box-icon"></span>
+            </form>
           </div>
         </div>
         <div class="col-auto ms-auto">
           <button
             class="btn btn-primary"
-            type="button"
+            data-bs-target="#modalcategory"
             data-bs-toggle="modal"
-            data-bs-target="#tooltipModal"
-            (click)="createCategory()"
+            (click)="openModalCreate()"
           >
-            <span class="fas fa-plus me-2"></span>
-            Thêm danh mục
+            <span class="fas fa-plus me-2"></span>Thêm nhà cung cấp
           </button>
         </div>
       </div>
     </div>
     <div
-      class="px-4 px-lg-6 bg-body-emphasis border border-translucent position-relative top-1"
+      class="mx-n4 px-4 mx-lg-n6 px-lg-6 bg-white border-top border-bottom border-200 position-relative top-1"
     >
-      <div class="table-responsive scrollbar-overlay mx-n1 px-1">
-        <table class="table table-sm fs-9 mb-0">
+      <div class="table-responsive scrollbar mx-n1 px-1">
+        <table class="table fs--1 mb-0">
           <thead>
             <tr>
               <th
-                class="white-space-nowrap fs-9 align-middle ps-0"
-                style="width: 10%"
+                class="white-space-nowrap fs--1 align-middle ps-0"
+                style="max-width: 20px; width: 18px"
               >
-                <div class="form-check mb-0 fs-8">
+                <div class="form-check mb-0 fs-0">
                   <input
                     class="form-check-input"
+                    id="checkbox-bulk-products-select"
                     type="checkbox"
-                    (change)="toggleSelectAll()"
-                    #checkAll
+                    (input)="toggleSelectAll()"
                   />
                 </div>
               </th>
               <th
-                class="sort align-middle pe-5 text-start"
+                class="sort white-space-nowrap align-middle ps-4"
                 scope="col"
-                style="width: 30%"
-                (click)="changeSort('name')"
-                nowrap
+                style="width: 250px"
+                (click)="sortByField('categoryName')"
               >
-                TÊN DANH MỤC
-                <span *ngIf="iconClass('name') === 0">
-                  <i class="fas fa-sort fa-xs"></i>
-                </span>
-                <span *ngIf="iconClass('name') === 1">
-                  <i class="fas fa-sort-down fa-xs"></i>
-                </span>
-                <span *ngIf="iconClass('name') === 2">
-                  <i class="fas fa-sort-up fa-xs"></i>
-                </span>
+                Tên danh mục cha
+                <label
+                  [class.d-none]="
+                    SortBy === 'categoryName' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="
+                    SortBy !== 'categoryName' || sortDir !== 'ASC'
+                  "
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="
+                    SortBy !== 'categoryName' || sortDir !== 'DESC'
+                  "
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
               </th>
               <th
-                class="sort align-middle pe-5"
+                class="sort align-middle ps-4"
                 scope="col"
-                style="width: 50%"
-                (click)="changeSort('slug')"
-                nowrap
+                (click)="sortByField('address')"
+              >
+                Cấp độ danh mục
+                <label
+                  [class.d-none]="
+                    SortBy === 'address' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'address' || sortDir !== 'ASC'"
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'address' || sortDir !== 'DESC'"
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <th
+                class="sort align-middle ps-4"
+                scope="col"
+                style="width: 150px"
+                (click)="sortByField('phone')"
+              >
+                Tên danh mục
+                <label
+                  [class.d-none]="
+                    SortBy === 'phone' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label [class.d-none]="SortBy !== 'phone' || sortDir !== 'ASC'">
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'phone' || sortDir !== 'DESC'"
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <th
+                class="sort align-middle ps-4"
+                scope="col"
+                style="width: 150px"
+                (click)="sortByField('TaxCode')"
               >
                 Ghi chú
-                <span *ngIf="iconClass('slug') === 0">
-                  <i class="fas fa-sort fa-xs"></i>
-                </span>
-                <span *ngIf="iconClass('slug') === 1">
-                  <i class="fas fa-sort-down fa-xs"></i>
-                </span>
-                <span *ngIf="iconClass('slug') === 2">
-                  <i class="fas fa-sort-up fa-xs"></i>
-                </span>
+                <label
+                  [class.d-none]="
+                    SortBy === 'TaxCode' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'TaxCode' || sortDir !== 'ASC'"
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'TaxCode' || sortDir !== 'DESC'"
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
               </th>
-              <!-- <th
-                class="sort align-middle pe-5"
+              <th
+                class="sort align-middle ps-4"
                 scope="col"
-                style="width: 20%"
-                nowrap
+                style="width: 150px"
+                (click)="sortByField('UpdateDatetime')"
               >
-                HIỂN THỊ
-              </th> -->
-              <th class="sort text-end align-middle pe-0 ps-4" scope="col"></th>
+                Ngày sửa
+                <label
+                  [class.d-none]="
+                    SortBy === 'UpdateDatetime' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="
+                    SortBy !== 'UpdateDatetime' || sortDir !== 'ASC'
+                  "
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="
+                    SortBy !== 'UpdateDatetime' || sortDir !== 'DESC'
+                  "
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <th
+                class="sort text-end align-middle pe-0 ps-4"
+                scope="col"
+                style="width: 50px"
+              ></th>
             </tr>
           </thead>
-          <tbody class="list" *ngIf="paginationModel.totalElements != 0">
+          <tbody class="list" id="category-table-body">
+            <tr *ngIf="paginationModel.content.length <= 0">
+              <td colspan="7" class="text-center">
+                <span class="fs-7">Không có dữ liệu</span>
+              </td>
+            </tr>
             <tr
-              class="hover-actions-trigger btn-reveal-trigger position-static"
+              class="position-static"
               *ngFor="let category of paginationModel.content"
             >
-              <td class="fs-9 align-middle ps-0 py-3">
-                <div class="form-check mb-0 fs-8">
+              <td class="fs--1 align-middle">
+                <div class="form-check mb-0 fs-0">
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    [checked]="isSelected(category)"
-                    (change)="onCheckboxChange(category)"
+                    [value]="category.id"
+                    [checked]="selectAll"
                   />
                 </div>
               </td>
-              <td class="align-middle white-space-nowrap pe-5">
-                <a
-                  class="d-flex align-items-center"
-                  data-bs-toggle="modal"
-                  data-bs-target="#verticallyCentered"
-                  (click)="findById(category.id)"
-                >
-                  <p class="mb-0 fw-bold text-truncate">
-                    {{ category.categoryName }}
-                  </p>
-                </a>
+              <!-- <td class="align-middle ps-4">{{ category.categoryCode }}</td> -->
+              <td class="align-middle white-space-nowrap text-700 ps-4">
+                {{ category.parentID }}
               </td>
-              <td class="align-middle white-space-nowrap pe-5 text-truncate">
+
+              <td class="align-middle white-space-nowrap text-700 ps-4">
+                {{ category.categoryLevel }}
+              </td>
+              <td class="align-middle white-space-nowrap text-700 ps-4">
+                {{ category.categoryName }}
+              </td>
+              <td class="align-middle white-space-nowrap text-700 ps-4">
                 {{ category.notes }}
               </td>
-              <!-- <td class="align-middle white-space-nowrap pe-5">
-                <div class="form-check form-switch">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    [checked]="category.enabled"
-                    (input)="changeSwitch(category)"
-                  />
-                </div>
+              <!-- <td class="align-middle white-space-nowrap text-600 ps-4">
+                {{ category.createDatetime | date : "dd/MM/yyyy HH:mm:ss" }}
               </td> -->
+              <td class="align-middle white-space-nowrap text-600 ps-3">
+                {{ category.modifiedDate | date : "dd/MM/yyyy" }}
+              </td>
               <td
                 class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger"
               >
-                <span
-                  (click)="editCategory(category)"
-                  data-bs-toggle="modal"
-                  data-bs-target="#tooltipModal"
-                >
-                  <span class="fas fa-edit me-2"></span>
-                </span>
-                <span (click)="deleteCategory(category.id)">
-                  <span class="fas fa-trash"></span>
-                </span>
-              </td>
-            </tr>
-          </tbody>
-          <tbody *ngIf="paginationModel.totalElements == 0">
-            <tr
-              class="hover-actions-trigger btn-reveal-trigger position-static"
-            >
-              <td colspan="8" class="fs-9 align-middle ps-0 py-3 text-center">
-                <span>Chưa có dữ liệu</span>
+                <div class="font-sans-serif btn-reveal-trigger position-static">
+                  <button
+                    class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    data-boundary="window"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    data-bs-reference="parent"
+                  >
+                    <span class="fas fa-ellipsis-h fs--2"></span>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end py-2">
+                    <button
+                      class="dropdown-item"
+                      data-bs-target="#modalcategory"
+                      data-bs-toggle="modal"
+                      (click)="openModalUpdate(category)"
+                    >
+                      Cập nhật
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <button
+                      class="dropdown-item text-danger"
+                      (click)="delete(category.id)"
+                    >
+                      Xóa
+                    </button>
+                  </div>
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div
-        class="row align-items-center justify-content-between py-2 pe-0 fs-9"
-      >
-        <div class="col-auto d-flex mt-1">
-          <div
-            class="d-flex align-items-center justify-content-center justify-content-md-start"
-          >
+      <div class="row align-items-center py-2 pe-0 fs--1">
+        <div class="col-auto d-flex">
+          <label>
             <select
               class="form-select form-select-sm form-select-solid"
-              (change)="changePageSize(paginationModel.pageSize)"
+              name="sizeSelected"
               [(ngModel)]="paginationModel.pageSize"
+              (change)="changePageSize(paginationModel.pageSize)"
             >
-              <option value="5" [selected]="paginationModel.pageSize === 5">
+              <option value="5" [selected]="paginationModel.pageSize == 5">
                 5
               </option>
-              <option value="10" [selected]="paginationModel.pageSize === 10">
+              <option value="10" [selected]="paginationModel.pageSize == 10">
                 10
               </option>
-              <option value="25" [selected]="paginationModel.pageSize === 25">
+              <option value="25" [selected]="paginationModel.pageSize == 25">
                 25
               </option>
-              <option value="50" [selected]="paginationModel.pageSize === 50">
+              <option value="50" [selected]="paginationModel.pageSize == 50">
                 50
               </option>
-              <option value="100" [selected]="paginationModel.pageSize === 100">
+              <option value="100" [selected]="paginationModel.pageSize == 100">
                 100
               </option>
-              <option
-                *ngIf="paginationModel.totalElements > 100"
-                [value]="paginationModel.totalElements"
-                [selected]="
-                  paginationModel.pageSize === paginationModel.totalElements
-                "
-              >
-                Tất cả ({{ paginationModel.totalElements }})
-              </option>
             </select>
-          </div>
-          <div class="col-auto d-flex align-items-center">
-            <p class="mb-0 ms-2 d-none d-sm-block me-3 fw-semibold text-body">
-              Hiển thị {{ paginationModel.startNumberItem }} đến
-              {{ paginationModel.endNumberItem }}
-              <span class="text-body-tertiary"> mục trong tổng số </span
-              >{{ paginationModel.totalElements }} mục
-            </p>
-          </div>
+          </label>
         </div>
-        <div class="col-auto d-flex mt-1">
+        <div class="col-auto d-flex">
+          <p class="mb-0 d-none d-sm-block me-3 fw-semi-bold text-900">
+            Hiển thị {{ paginationModel.firstElementOnPage }} đến
+            {{ paginationModel.lastElementOnPage }}
+            <span class="text-body-tertiary"> của </span
+            >{{ paginationModel.totalElements }} danh mục
+          </p>
+        </div>
+        <div class="col-auto ms-auto d-flex">
           <button
+            type="button"
             class="page-link"
-            [ngClass]="{ disabled: paginationModel.pageFirst }"
             (click)="changePageNumber(1)"
+            [class.disabled]="paginationModel.pageNumber <= 1"
           >
-            <i class="fas fa-angle-double-left"></i>
+            <span class="fas fa-angle-double-left"></span>
+          </button>
+          <button
+            type="button"
+            class="page-link"
+            (click)="changePageNumber(paginationModel.pageNumber - 1)"
+            [class.disabled]="paginationModel.pageNumber <= 1"
+          >
+            <span class="fas fa-angle-left"></span>
           </button>
           <ul class="mb-0 pagination">
             <li
               class="page-item"
-              *ngFor="let page of paginationModel.pageNumbers"
-              [class.active]="page === paginationModel.pageNumber"
+              *ngFor="
+                let i of Utils.getVisiblePages(
+                  paginationModel.pageNumber,
+                  paginationModel.totalPages,
+                  5
+                )
+              "
+              [class.active]="i === paginationModel.pageNumber"
             >
               <button
                 type="button"
                 class="page-link"
-                (click)="changePageNumber(page)"
+                (click)="changePageNumber(i)"
               >
-                {{ page }}
+                {{ i }}
               </button>
             </li>
           </ul>
           <button
-            class="page-link pe-0"
-            [ngClass]="{ disabled: paginationModel.pageLast }"
-            (click)="changePageNumber(paginationModel.totalPages)"
+            type="button"
+            class="page-link"
+            (click)="changePageNumber(paginationModel.pageNumber + 1)"
+            [class.disabled]="
+              paginationModel.pageNumber >= paginationModel.totalPages
+            "
           >
-            <i class="fas fa-angle-double-right"></i>
+            <span class="fas fa-angle-right"></span>
+          </button>
+          <button
+            type="button"
+            class="page-link"
+            (click)="changePageNumber(paginationModel.totalPages)"
+            [class.disabled]="
+              paginationModel.pageNumber >= paginationModel.totalPages
+            "
+          >
+            <span class="fas fa-angle-double-right"></span>
           </button>
         </div>
       </div>
     </div>
   </div>
 </div>
-<div
-  class="modal fade"
-  id="tooltipModal"
-  tabindex="-1"
-  aria-labelledby="tooltipModalLabel"
-  style="display: none"
-  aria-hidden="true"
->
+
+<div class="modal fade" id="modalcategory" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="tooltipModalLabel" #headerModal>
-          Thêm danh mục mới
-        </h5>
+        <h5 class="modal-title" id="modalcategoryLabel">{{ titleModal }}</h5>
         <button
           class="btn p-1"
-          type="button"
           data-bs-dismiss="modal"
           aria-label="Close"
-          (click)="resetText()"
+          #btnCloseModal
         >
           <span class="fas fa-times fs-9"></span>
         </button>
       </div>
-      <form [formGroup]="categoryForm" (submit)="onSubmit()">
+      <form class="form" [formGroup]="categoryForm" (submit)="onSubmit()">
         <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label" for="exampleFormControlInput"
+          <div class="row px-3" *ngIf="errorMessage != ''">
+            <label
+              class="col-sm-12 col-form-label fs-9 alert alert-subtle-danger p-2"
+              role="alert"
+            >
+              {{ errorMessage }}
+            </label>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="parentID"
               >Tên danh mục</label
-            ><span class="text-danger"> *</span>
-            <input
-              (input)="slugify()"
-              spellcheck="false"
-              class="form-control"
-              id="exampleFormControlInput"
-              type="text"
-              placeholder="Tên danh mục"
-              [ngClass]="{'border-danger': errorName !== ''
-              || (categoryForm.get('categoryName')?.hasError('minlength')
-              || categoryForm.get('categoryName')?.hasError('maxlength')
-              || categoryForm['controls']['categoryName'].errors?.['required']) && categoryForm['controls']['categoryName'].dirty}"
-              formControlName="categoryName"
-            />
-            <small class="label-error mt-1" *ngIf="errorName !== ''">{{
-              errorName
-            }}</small>
-            <div
-              class="label-error mt-1"
-              *ngIf="categoryForm['controls']['categoryName'].dirty"
             >
-              <div
-                *ngIf="categoryForm.get('categoryName')?.hasError('required')"
-                class="text-danger"
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="parentID"
+                type="text"
+                formControlName="parentID"
+                placeholder="Tên danh mục"
+              />
+              <!-- <small
+                class="text-danger mt-1"
+                *ngIf="categoryForm['controls']['parentID'].dirty"
               >
-                <small>Tên là trường bắt buộc.</small>
-              </div>
-              <div
-                *ngIf="categoryForm.get('categoryName')?.hasError('minlength')"
-                class="text-danger"
-              >
-                <small>Tên phải có ít nhất 2 ký tự.</small>
-              </div>
-              <div
-                *ngIf="categoryForm.get('categoryName')?.hasError('maxlength')"
-                class="text-danger"
-              >
-                <small>Tên không được vượt quá 30 ký tự.</small>
-              </div>
-            </div>
-          </div>
-          <div class="mb-3">
-            <label class="form-label" for="exampleFormControlInput"
-              >Slugify</label
-            ><span class="text-danger"> *</span>
-            <input
-              class="form-control"
-              id="exampleFormControlInput"
-              spellcheck="false"
-              type="text"
-              placeholder="ten-danh-muc"
-              [ngClass]="{'border-danger': errorSlug !== '' 
-              || (categoryForm.get('notes')?.hasError('minlength')
-              || categoryForm.get('notes')?.hasError('maxlength')
-              || categoryForm['controls']['notes'].errors?.['required']
-              || categoryForm['controls']['notes'].errors?.['pattern']) && categoryForm['controls']['notes'].dirty}"
-              formControlName="notes"
-            />
-            <small class="label-error mt-1" *ngIf="errorSlug !== ''">{{
-              errorSlug
-            }}</small>
-            <div
-              class="label-error mt-1"
-              *ngIf="categoryForm['controls']['notes'].dirty"
-            >
-              <span
-                *ngIf="categoryForm['controls']['notes'].errors?.['required']"
-              >
-                <small>Slug là trường bắt buộc.</small>
-              </span>
-              <div
-                *ngIf="categoryForm.get('notes')?.hasError('minlength')"
-                class="text-danger"
-              >
-                <small>Slug phải có ít nhất 2 ký tự.</small>
-              </div>
-              <div
-                *ngIf="categoryForm.get('notes')?.hasError('maxlength')"
-                class="text-danger"
-              >
-                <small>Slug không được vượt quá 50 ký tự.</small>
-              </div>
-              <div
-                *ngIf="categoryForm.get('notes')?.hasError('pattern')"
-                class="text-danger"
-              >
-                <small
-                  >Slug chỉ nhận ký tự thường a-z, ký tự số 0-9 và dấu -</small
+                <span
+                  *ngIf="categoryForm['controls']['parentID'].errors?.['required']"
                 >
-              </div>
+                  Tên danh mục không được để trống
+                </span>
+                <span
+                  *ngIf="categoryForm['controls']['parentID'].errors?.['maxlength']"
+                >
+                  Tên danh mục không được vượt quá 50 ký tự
+                </span>
+              </small> -->
             </div>
           </div>
-          <!-- <div class="form-check form-switch">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              formControlName="enabled"
-            />
-            <label class="form-check-label">Cho phép hiển thị</label>
-          </div> -->
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="categoryLevel"
+              >Tên danh mục</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="categoryLevel"
+                type="text"
+                formControlName="categoryLevel"
+                placeholder="Tên danh mục"
+              />
+              <!-- <small
+                class="text-danger mt-1"
+                *ngIf="categoryForm['controls']['categoryLevel'].dirty"
+              >
+                <span
+                  *ngIf="categoryForm['controls']['categoryLevel'].errors?.['required']"
+                >
+                  Tên danh mục không được để trống
+                </span>
+                <span
+                  *ngIf="categoryForm['controls']['categoryLevel'].errors?.['maxlength']"
+                >
+                  Tên danh mục không được vượt quá 50 ký tự
+                </span>
+              </small> -->
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="categoryName"
+              >Tên danh mục</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="categoryName"
+                type="text"
+                formControlName="categoryName"
+                placeholder="Tên danh mục"
+              />
+              <small
+                class="text-danger mt-1"
+                *ngIf="categoryForm['controls']['categoryName'].dirty"
+              >
+                <span
+                  *ngIf="categoryForm['controls']['categoryName'].errors?.['required']"
+                >
+                  Tên danh mục không được để trống
+                </span>
+                <span
+                  *ngIf="categoryForm['controls']['categoryName'].errors?.['maxlength']"
+                >
+                  Tên danh mục không được vượt quá 50 ký tự
+                </span>
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="notes"
+              >Ghi chú</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="notes"
+                type="text"
+                formControlName="notes"
+                placeholder="Ghi chú"
+              />
+              <!-- <small
+                class="text-danger mt-1"
+                *ngIf="categoryForm['controls']['notes'].dirty"
+              >
+                <span
+                  *ngIf="categoryForm['controls']['notes'].errors?.['required']"
+                >
+                  Tên danh mục không được để trống
+                </span>
+                <span
+                  *ngIf="categoryForm['controls']['notes'].errors?.['maxlength']"
+                >
+                  Tên danh mục không được vượt quá 50 ký tự
+                </span>
+              </small> -->
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button
             class="btn btn-primary"
             type="submit"
             [disabled]="categoryForm.invalid"
-            #btnSave
           >
-            Lưu
+            <span [class.d-none]="isDisplayNone">{{ btnSave }}</span>
+            <span class="indicator-progress" [class.d-none]="!isDisplayNone">
+              Vui lòng chờ...
+              <span
+                class="spinner-border spinner-border-sm align-middle ms-2"
+              ></span>
+            </span>
           </button>
+
           <button
             class="btn btn-outline-primary"
             type="button"
             data-bs-dismiss="modal"
-            #btnCloseModal
-            (click)="resetText()"
           >
-            Hủy
+            Quay lại
           </button>
         </div>
       </form>
-    </div>
-  </div>
-</div>
-<div
-  class="modal fade"
-  id="verticallyCentered"
-  tabindex="-1"
-  aria-labelledby="verticallyCenteredModalLabel"
-  style="display: none"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="verticallyCenteredModalLabel">
-          Thông tin chi tiết
-        </h5>
-        <button
-          class="btn p-1"
-          type="button"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        >
-          <span class="fas fa-times fs-9"></span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <table class="table table-sm fs-9 mb-0">
-          <tr>
-            <td style="width: 30%" nowrap>
-              <label class="form-label">ID:</label>
-            </td>
-            <td class="text-end">{{ category?.id }}</td>
-          </tr>
-          <tr>
-            <td class="align-top" style="width: 30%" nowrap>
-              <label class="form-label">Tên danh mục:</label>
-            </td>
-            <td class="text-end">{{ category?.categoryName }}</td>
-          </tr>
-          <tr>
-            <td class="align-top" style="width: 30%" nowrap>
-              <label class="form-label">Slugify:</label>
-            </td>
-            <td class="text-end">{{ category?.notes }}</td>
-          </tr>
-          <tr>
-            <td class="align-top" style="width: 30%" nowrap>
-              <label class="form-label">Tạo bởi:</label>
-            </td>
-            <td class="text-end">...</td>
-          </tr>
-          <tr>
-            <td class="align-top" style="width: 30%" nowrap>
-              <label class="form-label">Tạo lúc:</label>
-            </td>
-            <td class="text-end">...</td>
-          </tr>
-          <tr>
-            <td class="align-top" style="width: 30%" nowrap>
-              <label class="form-label">Cập nhật cuối bởi:</label>
-            </td>
-            <td class="text-end">...</td>
-          </tr>
-          <tr>
-            <td class="align-top" style="width: 30%" nowrap>
-              <label class="form-label">Cập nhật cuối lúc:</label>
-            </td>
-            <td class="text-end">...</td>
-          </tr>
-          <tr>
-            <td style="width: 30%" nowrap>
-              <label class="form-label">Cho phép hiển thị:</label>
-            </td>
-            <td class="d-flex justify-content-end m-0 p-0">
-              <div class="form-check form-switch m-0 p-0">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  [checked]="category?.enabled"
-                  (input)="changeSwitch(category)"
-                />
-              </div>
-            </td>
-          </tr>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button
-          class="btn btn-primary"
-          type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#tooltipModal"
-          (click)="editCategory(category)"
-        >
-          Chỉnh sửa
-        </button>
-        <button
-          class="btn btn-outline-primary"
-          type="button"
-          data-bs-dismiss="modal"
-        >
-          Thoát
-        </button>
-      </div>
     </div>
   </div>
 </div>

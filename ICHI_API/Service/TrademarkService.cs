@@ -70,10 +70,11 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var checkPhone = _unitOfWork.Trademark.Get(u => u.TrademarkName == trademark.TrademarkName);
+
+        var checkPhone = _unitOfWork.Trademark.Get(u => u.TrademarkName == trademark.TrademarkName.Trim());
         if (checkPhone != null)
         {
-          strMessage = "Số điện thoại đã tồn tại";
+          strMessage = "Tên thương hiệu đã tồn tại";
           return null;
         }
         trademark.CreateBy = "Admin";
@@ -103,10 +104,10 @@ namespace ICHI_API.Service
           return null;
         }
         // kiểm tra số điện thoại thương hiệu đã tồn tại chưa
-        var trademarkName = _unitOfWork.Trademark.Get(u => u.TrademarkName == trademark.TrademarkName);
+        var trademarkName = _unitOfWork.Trademark.Get(u => u.TrademarkName == trademark.TrademarkName.Trim());
         if (trademarkName != null && trademarkName.Id != trademark.Id)
         {
-          strMessage = "Số điện thoại đã tồn tại";
+          strMessage = "Tên thương hiệu đã tồn tại";
           return null;
         }
         // kiêm tra mã số thueé

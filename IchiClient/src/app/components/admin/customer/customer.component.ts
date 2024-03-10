@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { CustomerService } from '../../../service/customer.service';
 import { Environment } from '../../../environment/environment';
+import { UserService } from '../../../service/user.service';
 
 @Component({
   selector: 'app-customer',
@@ -63,6 +64,7 @@ export class CustomerComponent {
   constructor(
     private title: Title,
     private customerService: CustomerService,
+    private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private toastr: ToastrService
@@ -253,6 +255,7 @@ export class CustomerComponent {
   }
 
   openModalUpdate(customer: CustomerModel) {
+    debugger;
     this.customerForm.patchValue({
       id: customer.id,
       fullName: customer.fullName,
@@ -273,5 +276,33 @@ export class CustomerComponent {
     this.isDisplayNone = false;
     this.errorMessage = '';
     this.findAll(this.paginationModel.pageSize, 1, '', '', '');
+  }
+  lockAccount(id: number, status: boolean) {
+    Swal.fire({
+      title: 'Bạn có chắc chắn muốn xóa?',
+      text: 'Dữ liệu sẽ không thể phục hồi sau khi xóa!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xác nhận',
+      cancelButtonText: 'Hủy',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: 'btn btn-danger me-1',
+        cancelButton: 'btn btn-secondary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        debugger;
+        this.userService.delete(id, status).subscribe({
+          next: (response: any) => {
+            this.updateTable();
+            this.toastr.success(response.message, 'Thông báo');
+          },
+          error: (error: any) => {
+            this.toastr.error(error.error, 'Thất bại');
+          },
+        });
+      }
+    });
   }
 }

@@ -165,39 +165,6 @@
                         </span>
                       </small>
                     </div>
-
-                    <div class="mb-3 text-start">
-                      <label class="form-label">Số điện thoại</label
-                      ><input
-                        class="form-control"
-                        type="text"
-                        placeholder="Vui lòng nhâp số điện thoại"
-                        formControlName="phoneNumber"
-                      />
-                      <small
-                        class="text-danger mt-1"
-                        *ngIf="userForm['controls']['phoneNumber'].dirty"
-                      >
-                        <span
-                          *ngIf="userForm['controls']['phoneNumber'].errors?.['required']"
-                        >
-                          Số điện thoại không được để trống
-                        </span>
-                        <span
-                          *ngIf="userForm['controls']['phoneNumber'].errors?.['maxlength']
-                            || userForm['controls']['phoneNumber'].errors?.['minlength']"
-                        >
-                          Số điện thoại phải đủ 10 số
-                        </span>
-                        <span
-                          *ngIf="!(userForm['controls']['phoneNumber'].errors?.['maxlength']
-                              || userForm['controls']['phoneNumber'].errors?.['minlength'])
-                              && userForm['controls']['phoneNumber'].errors?.['pattern']"
-                        >
-                          Số điện thoại không hợp lệ
-                        </span>
-                      </small>
-                    </div>
                     <div class="row g-3 mb-3">
                       <div class="col-xl-6">
                         <label class="form-label" for="password">Mật khẩu</label
@@ -246,6 +213,80 @@
                         </small>
                       </div>
                     </div>
+                    <div class="row g-3 mb-3">
+                      <div class="col-xl-6">
+                        <label class="form-label" for="password"
+                          >Giới tính</label
+                        >
+                        <select
+                          class="form-select"
+                          id="basic-form-gender"
+                          aria-label="Default select example"
+                          formControlName="gender"
+                        >
+                          <option selected="selected">Chọn giới tính</option>
+                          <option value="Nam">Nam</option>
+                          <option value="Nữ">Nữ</option>
+                        </select>
+                      </div>
+                      <div class="col-xl-6">
+                        <label class="form-label" for="confirmPassword"
+                          >Ngày sinh</label
+                        >
+                        <input
+                          class="form-control"
+                          id="birthday"
+                          rows="3"
+                          placeholder="Ngày sinh"
+                          formControlName="birthday"
+                          type="date"
+                          value="{{ birthday | date : 'yyyy-MM-dd' }}"
+                        />
+                        <small
+                          class="text-danger mt-1"
+                          *ngIf="userForm['controls']['birthday'].dirty"
+                        >
+                          <span
+                            *ngIf="userForm['controls']['birthday'].errors?.['required']"
+                          >
+                            Ngày sinh không được để trống
+                          </span>
+                        </small>
+                      </div>
+                    </div>
+                    <div class="mb-3 text-start">
+                      <label class="form-label">Số điện thoại</label
+                      ><input
+                        class="form-control"
+                        type="text"
+                        placeholder="Vui lòng nhâp số điện thoại"
+                        formControlName="phoneNumber"
+                      />
+                      <small
+                        class="text-danger mt-1"
+                        *ngIf="userForm['controls']['phoneNumber'].dirty"
+                      >
+                        <span
+                          *ngIf="userForm['controls']['phoneNumber'].errors?.['required']"
+                        >
+                          Số điện thoại không được để trống
+                        </span>
+                        <span
+                          *ngIf="userForm['controls']['phoneNumber'].errors?.['maxlength']
+                            || userForm['controls']['phoneNumber'].errors?.['minlength']"
+                        >
+                          Số điện thoại phải đủ 10 số
+                        </span>
+                        <span
+                          *ngIf="!(userForm['controls']['phoneNumber'].errors?.['maxlength']
+                              || userForm['controls']['phoneNumber'].errors?.['minlength'])
+                              && userForm['controls']['phoneNumber'].errors?.['pattern']"
+                        >
+                          Số điện thoại không hợp lệ
+                        </span>
+                      </small>
+                    </div>
+
                     <div class="form-check mb-3">
                       <input
                         class="form-check-input"
