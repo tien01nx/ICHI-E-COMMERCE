@@ -23,6 +23,8 @@ export class SignUpComponent implements OnInit {
   successMessage: string = '';
   isActive: boolean = false;
   birthday: Date = new Date();
+  passwordPattern =
+    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
   ngOnInit(): void {}
   constructor(
     private authServer: AuthService,
@@ -40,6 +42,7 @@ export class SignUpComponent implements OnInit {
     password: new FormControl('', [
       Validators.required,
       Validators.maxLength(100),
+      Validators.pattern(this.passwordPattern),
     ]),
     confirmPassword: new FormControl('', [Validators.required]),
     fullname: new FormControl('', [

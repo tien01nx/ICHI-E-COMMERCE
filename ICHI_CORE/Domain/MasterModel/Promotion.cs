@@ -9,7 +9,9 @@ namespace ICHI_CORE.Domain.MasterModel
 {
   public class Promotion : MasterEntity
   {
-
+    [Required]
+    [StringLength(50)]
+    public string PromotionCode { get; set; } = string.Empty;
     [Required]
     [StringLength(255)]
     public string PromotionName { get; set; } = string.Empty;

@@ -189,6 +189,13 @@
                           >
                             Mật khẩu không được vượt quá 100 ký tự
                           </span>
+                          <span
+                            *ngIf="userForm['controls']['password'].errors?.['pattern']"
+                          >
+                            Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm ít nhất
+                            một chữ hoa, một chữ thường, một ký tự đặc biệt và
+                            một số
+                          </span>
                         </small>
                       </div>
                       <div class="col-xl-6">
