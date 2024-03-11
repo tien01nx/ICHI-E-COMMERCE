@@ -42,6 +42,7 @@ namespace ICHI_CORE.Extension
       services.AddScoped<IEmployeeService, EmployeeService>();
       services.AddScoped<ITrademarkService, TrademarkService>();
       services.AddScoped<ICategoryProductService, CategoryProductService>();
+      services.AddScoped<IPromotionService, PromotionService>();
       return services;
     }
   }
