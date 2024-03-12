@@ -15,9 +15,16 @@ namespace ICHI_CORE.Domain.MasterModel
     [Required]
     [StringLength(255)]
     public string PromotionName { get; set; } = string.Empty;
+    [Required]
     public DateTime StartTime { get; set; }
+    [Required]
     public DateTime EndTime { get; set; }
+    [Required]
     public int Quantity { get; set; }
+    [Required]
+    public int Discount { get; set; }
+    [Required]
+    public decimal MinimumPrice { get; set; }
     public bool isActive { get; set; } = false;
     public bool isDeleted { get; set; } = false;
 

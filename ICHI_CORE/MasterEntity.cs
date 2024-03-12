@@ -16,11 +16,9 @@ namespace ICHI_CORE.Domain
     [StringLength(100)]
     public string CreateBy { get; set; } = "Admin";
 
-    [Required]
-    public DateTime ModifiedDate { get; set; } = System.DateTime.Now;
+    public DateTime? ModifiedDate { get; set; } = System.DateTime.Now;
 
-    [Required]
     [StringLength(100)]
-    public string ModifiedBy { get; set; } = "Admin";
+    public string? ModifiedBy { get; set; } = "Admin";
   }
 }

@@ -1,0 +1,216 @@
+<nav class="mb-2" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a href="#!">Trang 1</a></li>
+    <li class="breadcrumb-item"><a href="#!">Trang 2</a></li>
+    <li class="breadcrumb-item active">Mặc định</li>
+  </ol>
+</nav>
+<form
+  class="mb-9"
+  [formGroup]="productForm"
+  enctype="multipart/form-data"
+  (submit)="onSubmit()"
+>
+  <div class="row g-3 flex-between-end mb-5">
+    <div class="col-auto">
+      <h2 class="mb-2">Thêm một sản phẩm</h2>
+      <h5 class="text-body-tertiary fw-semibold">
+        Đơn đặt hàng được đặt trên cửa hàng của bạn
+      </h5>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0" type="button">
+        Loại bỏ</button
+      ><button class="btn btn-phoenix-primary me-2 mb-2 mb-sm-0" type="button">
+        Lưu bản nháp</button
+      ><button class="btn btn-primary mb-2 mb-sm-0" type="submit">
+        Xuất bản sản phẩm
+      </button>
+    </div>
+  </div>
+  <div class="row g-5">
+    <div class="col-12 col-xl-8">
+      <h4 class="mb-3">
+        Tên sản phẩm
+        <sup class="text-danger">*</sup>
+      </h4>
+      <input
+        class="form-control mb-5"
+        type="text"
+        placeholder="Hãy nhập tên sản phẩm"
+        formControlName="productName"
+      />
+      <small
+        class="text-danger mt-1"
+        *ngIf="productForm['controls']['productName'].dirty"
+      >
+        <span
+          *ngIf="productForm['controls']['productName'].errors?.['required']"
+        >
+          Tên sản phẩm không được để trống
+        </span>
+        <span
+          *ngIf="productForm['controls']['productName'].errors?.['maxlength']"
+        >
+          Tên sản phẩm không được vượt quá 500 ký tự
+        </span>
+      </small>
+      <div class="mb-6">
+        <h4 class="mb-3">Mô tả Sản phẩm</h4>
+        <editor
+          formControlName="description"
+          apiKey="gj95nksg3ionftnqn5uftwoqunmga9lfr7pi9zzpgv3egm95"
+          [init]="{
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+          }"
+        ></editor>
+      </div>
+      <h4 class="mb-3">Hiển thị hình ảnh</h4>
+
+      <div class="d-inline-flex" *ngIf="selectedImageProductUrl.length != 0">
+        <div
+          class="position-relative d-inline-block d-flex justify-content-center mb-2 border rounded-1 me-2"
+          style="width: 100px; height: 100px"
+          *ngFor="let image of selectedImageProductUrl"
+        >
+          <img
+            class="w-100 h-auto rounded-1 object-fit-contain"
+            src="{{ Environment.apiBaseUrl }}/images/"
+            alt=""
+          />
+          <a
+            href="javascript:void(0);"
+            class="position-absolute w-100 d-flex justify-content-end pe-2 pt-2 fs-9"
+            (click)="deleteImageProduct(image)"
+          >
+            <span class="text-body-tertiary fa-solid fa-x"></span>
+          </a>
+        </div>
+      </div>
+
+      <ngx-dropzone (change)="onSelect($event)">
+        <ngx-dropzone-label
+          >Kéo ảnh của bạn vào đây hoặc Duyệt từ thiết bị</ngx-dropzone-label
+        >
+        <ngx-dropzone-image-preview
+          ngProjectAs="ngx-dropzone-preview"
+          *ngFor="let f of selectedImageProductFiles"
+          [file]="f"
+          [removable]="true"
+          (removed)="onRemove(f)"
+        />
+      </ngx-dropzone>
+    </div>
+    <div class="col-12 col-xl-4">
+      <div class="row g-2">
+        <div class="col-12 col-xl-12">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h4 class="card-title mb-4">Thông tin</h4>
+              <div class="row gx-3">
+                <div class="col-12 col-sm-6 col-xl-12">
+                  <div class="mb-4">
+                    <div class="d-flex flex-wrap mb-2">
+                      <h5 class="mb-0 text-body-highlight me-2">Loại</h5>
+                      <a class="fw-bold fs-9" href="/admin/categories"
+                        >Thêm danh mục mới</a
+                      >
+                    </div>
+                    <ng-select
+                      [items]="category"
+                      bindValue="id"
+                      bindLabel="categoryName"
+                    ></ng-select>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-12">
+                  <div class="mb-4">
+                    <div class="d-flex flex-wrap mb-2">
+                      <h5 class="mb-0 text-body-highlight me-2">Thương hiệu</h5>
+                      <a class="fw-bold fs-9" href="/admin/trademark"
+                        >Thêm mới thương hiệu</a
+                      >
+                    </div>
+                    <ng-select
+                      [items]="trademark"
+                      bindValue="id"
+                      bindLabel="trademarkName"
+                    ></ng-select>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-12">
+                  <div class="mb-4">
+                    <h5 class="mb-2 text-body-highlight">Màu sắc</h5>
+                    <!-- <input
+                      class="form-control mb-xl-3"
+                      type="text"
+                      placeholder="Collection"
+                    /> -->
+                    <ng-select
+                      [items]="color"
+                      bindValue="name"
+                      bindLabel="name"
+                    ></ng-select>
+                  </div>
+                </div>
+                <!-- thứ tự hiện thị sản phẩm -->
+                <div class="col-12 col -sm-6 col-xl-12">
+                  <div class="mb-4">
+                    <h5 class="mb-2 text-body-highlight">Thứ tự hiển thị</h5>
+                    <input
+                      class="form-control mb-xl-3"
+                      type="number"
+                      placeholder="Thứ tự hiển thị"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-xl-12">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title mb-4">Thông tin sản phẩm chi tiết</h4>
+              <div class="row g-3">
+                <div class="col-12 col-sm-6 col-xl-12">
+                  <div
+                    class="border-bottom viền-đường viền mờ-đường viền nét đứt-sm-0 border-bottom-xl pb-4"
+                  >
+                    <div class="d-flex flex-wrap mb-2">
+                      <h5 class="text-body-highlight me-2">Giá</h5>
+                    </div>
+
+                    <div class="input-group">
+                      <span class="input-group-text">₫</span>
+                      <input
+                        class="form-control"
+                        type="text"
+                        placeholder="0"
+                        formControlName="price"
+                      />
+                    </div>
+
+                    <div class="d-flex flex-wrap mb-2 mt-2">
+                      <h5 class="text-body-highlight me-2">Số lượng tồn</h5>
+                    </div>
+                    <div class="input-group">
+                      <input
+                        class="form-control"
+                        type="text"
+                        placeholder="0"
+                        formControlName="price"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<footer class="footer position-absolute"></footer>

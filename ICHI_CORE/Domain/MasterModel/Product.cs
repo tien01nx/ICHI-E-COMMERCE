@@ -13,17 +13,19 @@ namespace ICHI_CORE.Domain.MasterModel
 {
   public class Product : MasterEntity
   {
-    public int TrademarkID { get; set; }
-    [ForeignKey("TrademarkID")]
+    public int TrademarkId { get; set; }
+    [ForeignKey("TrademarkId")]
     [ValidateNever]
     public Trademark? Trademark { get; set; }
     [Required]
-    public int CategoryID { get; set; }
-    [ForeignKey("CategoryID")]
+    public int CategoryId { get; set; }
+    [ForeignKey("CategoryId")]
     [ValidateNever]
     public Category? Category { get; set; }
     [Required]
     [StringLength(255)]
+
+    public string Color { get; set; } = string.Empty;
     public string ProductName { get; set; } = string.Empty;
     [Required]
     public string Description { get; set; } = string.Empty;

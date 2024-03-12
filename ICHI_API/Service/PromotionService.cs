@@ -23,7 +23,8 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var query = _db.Promotions.AsQueryable().Where(u => u.isDeleted == false);
+        //var query = _db.Promotions.AsQueryable().Where(u => u.isDeleted == false);
+        var query = _unitOfWork.Promotion.GetAll(u => u.isDeleted == false).AsQueryable();
         if (!string.IsNullOrEmpty(name))
         {
           query = query.Where(e => e.PromotionName.Contains(name));

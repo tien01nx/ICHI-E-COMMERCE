@@ -29,7 +29,8 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var query = _db.Products.Include(u => u.Category).AsQueryable().Where(u => u.isDeleted == false);
+        var query = _unitOfWork.Product.GetAll(u => u.isDeleted == false, "Category,Trademark").AsQueryable();
+        //var query = _db.Products.Include(u => u.Category).AsQueryable().Where(u => u.isDeleted == false);
         if (!string.IsNullOrEmpty(name))
         {
           query = query.Where(e => e.ProductName.Contains(name));
