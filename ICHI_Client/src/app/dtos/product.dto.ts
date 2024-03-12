@@ -8,18 +8,19 @@ import {
   IsNumber,
 } from 'class-validator';
 import { MasterEntityDTO } from './master.entity.dto';
+import { ProductImage } from '../models/product.image';
 
 export class ProductDTO {
   product: ProductModel;
-  category: CategoryProduct;
-  ProductImages: any;
+  categoryProduct: CategoryProduct;
+  productImages: ProductImage[];
   constructor(
     product: ProductModel,
     category: CategoryProduct,
-    ProductImages: any
+    ProductImages: ProductImage[]
   ) {
     this.product = product;
-    this.category = category;
-    this.ProductImages = ProductImages;
+    this.categoryProduct = category;
+    this.productImages = ProductImages;
   }
 }

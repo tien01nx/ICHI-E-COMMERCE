@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ApiServiceService } from './api.service.service';
 import { ApiResponse } from '../models/api.response.model';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { ProductModel } from '../models/product.model';
-import { HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { InsertProductDTO } from '../dtos/insert.product.dto';
 import { ProductDTO } from '../dtos/product.dto';
 
@@ -11,7 +11,10 @@ import { ProductDTO } from '../dtos/product.dto';
   providedIn: 'root',
 })
 export class ProductsService {
-  constructor(private apiService: ApiServiceService) {}
+  constructor(
+    private apiService: ApiServiceService,
+    private http: HttpClient
+  ) {}
 
   findAllByName(
     PageNumber: number,
@@ -58,22 +61,54 @@ export class ProductsService {
     );
   }
 
+  //   public int TrademarkId { get; set; }
+  // [ForeignKey("TrademarkId")]
+  // [ValidateNever]
+  // public Trademark? Trademark { get; set; }
+  // [Required]
+  // public int CategoryId { get; set; }
+  // [ForeignKey("CategoryId")]
+  // [ValidateNever]
+  // public Category? Category { get; set; }
+  // [Required]
+  // [StringLength(255)]
+
+  // public string Color { get; set; } = string.Empty;
+  // public string ProductName { get; set; } = string.Empty;
+  // [Required]
+  // public string Description { get; set; } = string.Empty;
+  // [Required]
+  // public decimal Price { get; set; } = 0;
+  // public string Image { get; set; } = string.Empty;
+  // public int PriorityLevel { get; set; } = 0;
+  // public string Notes { get; set; } = string.Empty;
+  // public bool isActive { get; set; } = false;
+  // public bool isDeleted { get; set; } = false;
+
   create(product: InsertProductDTO, files: File[]) {
     const formData = new FormData();
+    formData.append('Id', product.id.toString());
+    formData.append('TrademarkId', product.trademarkId.toString());
+    formData.append('CategoryId', product.categoryId.toString());
+    formData.append('Color', product.color);
     formData.append('ProductName', product.productName);
     formData.append('Description', product.description);
-    formData.append('CategoryProductID', product.categoryProductID.toString());
-    formData.append('SuggestedPrice', product.suggestedPrice.toString());
-    formData.append('SellingPrice', product.sellingPrice.toString());
-    formData.append('Notes', product.notes.toString());
+    formData.append('Price', product.price.toString());
+    formData.append('PriorityLevel', product.priorityLevel.toString());
+    if (
+      product.notes != null &&
+      product.notes != undefined &&
+      product.notes != ''
+    ) {
+      formData.append('Notes', product.notes);
+    }
 
     for (let i = 0; i < files.length; i++) {
       formData.append('files', files[i]);
     }
     console.log(product, files);
-    return this.apiService.callApi<ProductModel>(
-      '/Product/Create-Product',
-      'post',
+    return this.http.post(
+      'https://localhost:7150/api/Product/Upsert/Product',
       formData
     );
   }

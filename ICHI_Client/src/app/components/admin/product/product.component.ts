@@ -17,6 +17,7 @@ import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { ProductModel } from '../../../models/product.model';
 import { ProductsService } from '../../../service/products.service';
+import { ProductDTO } from '../../../dtos/product.dto';
 
 @Component({
   selector: 'app-product',
@@ -36,7 +37,7 @@ export class ProductComponent implements OnInit {
   Environment = Environment;
   // paginationModel!: PaginationDTO<ProductModel> =
   //   new PaginationDTO<ProductModel>();
-  paginationModel: PaginationDTO<ProductModel> = PaginationDTO.createEmpty();
+  paginationModel: PaginationDTO<ProductDTO> = PaginationDTO.createEmpty();
   searchTemp: any = this.activatedRoute.snapshot.queryParams['Search'] || '';
   selectAll: boolean = false;
   sortDir: string = 'ASC';
@@ -187,5 +188,8 @@ export class ProductComponent implements OnInit {
   }
   insertProduct() {
     this.router.navigate(['/admin/product/insert']);
+  }
+  insertProductDetail(id: number) {
+    this.router.navigate(['/admin/product/insert/' + id]);
   }
 }

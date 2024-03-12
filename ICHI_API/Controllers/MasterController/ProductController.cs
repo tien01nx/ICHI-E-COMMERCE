@@ -30,19 +30,19 @@ namespace ICHI_CORE.Controllers.MasterController
     }
 
     [HttpGet("FindAllPaged")]
-    public async Task<ActionResult<ApiResponse<ICHI_API.Helpers.PagedResult<Product>>>> GetAll(
+    public async Task<ActionResult<ApiResponse<ICHI_API.Helpers.PagedResult<ProductDTO>>>> GetAll(
             [FromQuery(Name = "search")] string name = "",
             [FromQuery(Name = "page-size")] int pageSize = 10,
             [FromQuery(Name = "page-number")] int pageNumber = 1,
             [FromQuery(Name = "sort-direction")] string sortDir = "desc",
             [FromQuery(Name = "sort-by")] string sortBy = "Id")
     {
-      ApiResponse<ICHI_API.Helpers.PagedResult<Product>> result;
+      ApiResponse<ICHI_API.Helpers.PagedResult<ProductDTO>> result;
       string strMessage = "";
       try
       {
         var data = _productService.GetAll(name, pageSize, pageNumber, sortDir, sortBy, out strMessage);
-        result = new ApiResponse<ICHI_API.Helpers.PagedResult<Product>>(
+        result = new ApiResponse<ICHI_API.Helpers.PagedResult<ProductDTO>>(
                       System.Net.HttpStatusCode.OK,
                                  strMessage,
                                               data);
@@ -51,7 +51,7 @@ namespace ICHI_CORE.Controllers.MasterController
       {
         strMessage = "Có lỗi xảy ra";
         NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<ICHI_API.Helpers.PagedResult<Product>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        result = new ApiResponse<ICHI_API.Helpers.PagedResult<ProductDTO>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
       }
       return result;
     }
@@ -83,7 +83,7 @@ namespace ICHI_CORE.Controllers.MasterController
       try
       {
         var data = _productService.Create(product, files, out strMessage);
-        result = new ApiResponse<Product>(System.Net.HttpStatusCode.OK, "Created successfully", data);
+        result = new ApiResponse<Product>(System.Net.HttpStatusCode.OK, strMessage, data);
       }
       catch (Exception ex)
       {

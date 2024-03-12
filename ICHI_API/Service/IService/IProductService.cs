@@ -9,7 +9,7 @@ namespace ICHI_API.Service.IService
 {
   public interface IProductService
   {
-    PagedResult<Product> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage);
+    PagedResult<ProductDTO> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage);
     Product Create(Product product, List<IFormFile>? files, out string strMessage);
     ProductDTO FindById(int id, out string strMessage);
     bool Delete(int id, out string strMessage);

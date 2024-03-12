@@ -42,12 +42,12 @@ namespace ICHI_API.Service
         using (var transaction = _db.Database.BeginTransaction())
         {
           // kiểm tra người dùng có hợp lệ không
-          if (ExistsByPhoneNumber(userRegister.PhoneNumber))
+          if (ExistsByPhoneNumber(userRegister.PhoneNumber.Trim()))
           {
             strMessage = "Số điện thoại đã tồn tại";
             return null;
           }
-          if (ExistsByUserNameOrEmail(userRegister.Email) != null)
+          if (ExistsByUserNameOrEmail(userRegister.Email.Trim()) != null)
           {
             strMessage = "User đã tồn tại";
             return null;
@@ -62,7 +62,7 @@ namespace ICHI_API.Service
           User user = new User();
           MapperHelper.Map<UserRegister, User>(userRegister, user);
           string salt = BCrypt.Net.BCrypt.GenerateSalt();
-          string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userRegister.Password, salt);
+          string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userRegister.Password.Trim(), salt);
           user.Password = hashedPassword;
           user.IsLocked = false;
           user.Avatar = AppSettings.AvatarDefault;

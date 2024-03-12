@@ -5,10 +5,10 @@ namespace ICHI_CORE.Domain.MasterModel
 {
   public class ProductImages : MasterEntity
   {
-    public int ProductDetailId { get; set; }
-    [ForeignKey("ProductDetailId")]
+    public int ProductId { get; set; }
+    [ForeignKey("ProductId")]
     [ValidateNever]
-    public ProductDetail ProductDetail { get; set; }
+    public Product? Product { get; set; }
     public string ImageName { get; set; } = string.Empty;
     public string ImagePath { get; set; } = string.Empty;
     public bool IsDefault { get; set; }

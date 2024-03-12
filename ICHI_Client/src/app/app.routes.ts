@@ -30,6 +30,7 @@ export const routes: Routes = [
       { path: '', component: AdminHomeComponent },
       { path: 'products', component: ProductComponent },
       { path: 'product/insert', component: InsertAdminProductComponent },
+      { path: 'product/insert/:id', component: InsertAdminProductComponent },
       { path: 'categories', component: CategoryComponent },
       { path: 'supplier', component: SupplierAdminComponent },
       { path: 'customer', component: CustomerComponent },

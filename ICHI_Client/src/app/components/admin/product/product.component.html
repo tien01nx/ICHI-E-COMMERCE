@@ -300,7 +300,7 @@
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    [value]="product.id"
+                    [value]="product.product.id"
                     [checked]="selectAll"
                   />
                 </div>
@@ -313,21 +313,23 @@
                   <div class="avatar avatar-m">
                     <img
                       class="rounded-circle"
-                      src="{{ Environment.apiBaseRoot }}{{ product.image }}"
+                      src="{{ Environment.apiBaseRoot }}{{
+                        product.productImages[0].imagePath
+                      }}"
                       alt=""
                     />
                   </div>
 
                   <h6 class="mb-0 ms-3 fw-semibold">
-                    {{ product.productName }}
+                    {{ product.product.productName }}
                   </h6>
                 </a>
               </td>
               <td class="align-middle text-600 ps-4">
-                {{ product.category.categoryName }}
+                {{ product.categoryProduct.categoryName }}
               </td>
               <td class="align-middle text-600 ps-4">
-                {{ product.color }}
+                {{ product.product.color }}
               </td>
               <!-- <td class="align-middle text-600 ps-4">
                 {{ product.birthday | date : "dd/MM/yyyy" }}
@@ -336,17 +338,17 @@
                 {{ product.address }}
               </td> -->
               <td class="align-middle text-600 ps-4">
-                {{ product.price | number : "1.0-0" }}
+                {{ product.product.price | number : "1.0-0" }}
               </td>
               <td class="align-middle ps-4">
                 <span
                   class="badge badge-phoenix"
                   [ngClass]="{
-                    'fs-10 badge-phoenix-success': product.isActive,
-                    'fs-10 badge-phoenix-danger': !product.isActive
+                    'fs-10 badge-phoenix-success': product.product.isActive,
+                    'fs-10 badge-phoenix-danger': !product.product.isActive
                   }"
                 >
-                  {{ product.isActive ? "Có" : "Không" }}
+                  {{ product.product.isActive ? "Đang bán" : "Ngừng bán" }}
                 </span>
               </td>
 
@@ -396,6 +398,7 @@
                       class="btn btn-sm btn-phoenix-secondary me-1 fs-10"
                       data-bs-target="#modalproduct"
                       data-bs-toggle="modal"
+                      (click)="insertProductDetail(product.product.id)"
                     >
                       <!-- (click)="openModalUpdate(product)" -->
                       <svg
@@ -415,7 +418,7 @@
                         ></path>
                       </svg>
                     </button>
-                    <ng-container *ngIf="product.isDeleted; else unlocked">
+                    <ng-container *ngIf="product.product.isDeleted; else unlocked">
                       <button class="btn btn-sm btn-phoenix-secondary fs-10">
                         <!-- (click)="lockAccount(product.user.id, false)" -->
                         <svg

@@ -19,12 +19,14 @@
       </h5>
     </div>
     <div class="col-auto">
-      <button class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0" type="button">
-        Loại bỏ</button
-      ><button class="btn btn-phoenix-primary me-2 mb-2 mb-sm-0" type="button">
-        Lưu bản nháp</button
-      ><button class="btn btn-primary mb-2 mb-sm-0" type="submit">
-        Xuất bản sản phẩm
+      <span
+        class="btn btn-danger mb-2 mb-sm-0 me-8"
+        (click)="deleteProduct(productForm.value.id)"
+      >
+        Xóa
+      </span>
+      <button class="btn btn-primary mb-2 mb-sm-0 me-8" type="submit">
+        Thêm
       </button>
     </div>
   </div>
@@ -56,7 +58,8 @@
         </span>
       </small>
       <div class="mb-6">
-        <h4 class="mb-3">Mô tả Sản phẩm</h4>
+        <h4 class="mb-3">Mô tả Sản phẩm <sup class="text-danger">*</sup></h4>
+
         <editor
           formControlName="description"
           apiKey="gj95nksg3ionftnqn5uftwoqunmga9lfr7pi9zzpgv3egm95"
@@ -67,7 +70,7 @@
         ></editor>
       </div>
       <h4 class="mb-3">Hiển thị hình ảnh</h4>
-
+      <sup class="text-danger">*</sup>
       <div class="d-inline-flex" *ngIf="selectedImageProductUrl.length != 0">
         <div
           class="position-relative d-inline-block d-flex justify-content-center mb-2 border rounded-1 me-2"
@@ -76,7 +79,7 @@
         >
           <img
             class="w-100 h-auto rounded-1 object-fit-contain"
-            src="{{ Environment.apiBaseUrl }}/images/"
+            src="{{ Environment.apiBaseRoot }}/{{ image }}"
             alt=""
           />
           <a
@@ -112,36 +115,56 @@
                 <div class="col-12 col-sm-6 col-xl-12">
                   <div class="mb-4">
                     <div class="d-flex flex-wrap mb-2">
-                      <h5 class="mb-0 text-body-highlight me-2">Loại</h5>
+                      <h5 class="mb-0 text-body-highlight me-2">
+                        Loại <sup class="text-danger">*</sup>
+                      </h5>
                       <a class="fw-bold fs-9" href="/admin/categories"
                         >Thêm danh mục mới</a
                       >
                     </div>
+
                     <ng-select
-                      [items]="category"
-                      bindValue="id"
-                      bindLabel="categoryName"
-                    ></ng-select>
+                      formControlName="categoryId"
+                      placeholder="Chọn danh mục"
+                    >
+                      <ng-option
+                        *ngFor="let category of categories"
+                        [value]="category.id"
+                      >
+                        {{ category.categoryName }}
+                      </ng-option>
+                    </ng-select>
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 col-xl-12">
                   <div class="mb-4">
                     <div class="d-flex flex-wrap mb-2">
-                      <h5 class="mb-0 text-body-highlight me-2">Thương hiệu</h5>
+                      <h5 class="mb-0 text-body-highlight me-2">
+                        Thương hiệu <sup class="text-danger">*</sup>
+                      </h5>
                       <a class="fw-bold fs-9" href="/admin/trademark"
                         >Thêm mới thương hiệu</a
                       >
                     </div>
+
                     <ng-select
-                      [items]="trademark"
-                      bindValue="id"
-                      bindLabel="trademarkName"
-                    ></ng-select>
+                      formControlName="trademarkId"
+                      placeholder="Chọn thương hiệu"
+                    >
+                      <ng-option
+                        *ngFor="let trademark of trademarks"
+                        [value]="trademark.id"
+                      >
+                        {{ trademark.trademarkName }}
+                      </ng-option>
+                    </ng-select>
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 col-xl-12">
                   <div class="mb-4">
-                    <h5 class="mb-2 text-body-highlight">Màu sắc</h5>
+                    <h5 class="mb-2 text-body-highlight">
+                      Màu sắc <sup class="text-danger">*</sup>
+                    </h5>
                     <!-- <input
                       class="form-control mb-xl-3"
                       type="text"
@@ -151,18 +174,61 @@
                       [items]="color"
                       bindValue="name"
                       bindLabel="name"
+                      formControlName="color"
                     ></ng-select>
                   </div>
                 </div>
                 <!-- thứ tự hiện thị sản phẩm -->
-                <div class="col-12 col -sm-6 col-xl-12">
+                <div class="col-6 col -sm-6 col-xl-6">
                   <div class="mb-4">
                     <h5 class="mb-2 text-body-highlight">Thứ tự hiển thị</h5>
                     <input
                       class="form-control mb-xl-3"
                       type="number"
                       placeholder="Thứ tự hiển thị"
+                      formControlName="priorityLevel"
                     />
+                  </div>
+                </div>
+                <div class="col-6 col -sm-6 col-xl-6">
+                  <div class="mb-4">
+                    <h5 class="mb-2 text-body-highlight">
+                      Trình trạng bán sản phẩm
+                    </h5>
+
+                    <!-- combobox -->
+                    <select
+                      class="form-control mb-xl-3"
+                      formControlName="isActive"
+                    >
+                      <option [value]="true">Đang bán</option>
+                      <option [value]="false">Ngừng bán</option>
+                    </select>
+
+                    <!-- <input
+                      class="form-control mb-xl-3"
+                      type="number"
+                      placeholder="Trình trạng bán sản phẩm"
+                      formControlName="isActive"
+                    /> -->
+                  </div>
+                </div>
+                <div class="col-12 col -sm-6 col-xl-12">
+                  <div class="mb-4">
+                    <h5 class="mb-2 text-body-highlight">Ghi chú</h5>
+                    <!-- <input
+                      class="form-control mb-xl-3"
+                      type="number"
+                      placeholder="Ghi chú"
+                      formControlName="notes"
+                    /> -->
+                    <textarea
+                      class="form-control"
+                      placeholder="Ghi chú"
+                      formControlName="notes"
+                      style="height: 100px"
+                    >
+                    </textarea>
                   </div>
                 </div>
               </div>
@@ -179,17 +245,19 @@
                     class="border-bottom viền-đường viền mờ-đường viền nét đứt-sm-0 border-bottom-xl pb-4"
                   >
                     <div class="d-flex flex-wrap mb-2">
-                      <h5 class="text-body-highlight me-2">Giá</h5>
+                      <h5 class="text-body-highlight me-2">
+                        Giá <sup class="text-danger">*</sup>
+                      </h5>
                     </div>
 
                     <div class="input-group">
-                      <span class="input-group-text">₫</span>
                       <input
                         class="form-control"
-                        type="text"
+                        type="number"
                         placeholder="0"
                         formControlName="price"
                       />
+                      <span class="input-group-text">vnđ</span>
                     </div>
 
                     <div class="d-flex flex-wrap mb-2 mt-2">
@@ -201,6 +269,7 @@
                         type="text"
                         placeholder="0"
                         formControlName="price"
+                        readonly
                       />
                     </div>
                   </div>

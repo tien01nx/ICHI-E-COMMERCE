@@ -22,22 +22,31 @@ namespace ICHI_API.Service
     public ProductService(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment, PcsApiContext pcsApiContext)
     {
       _unitOfWork = unitOfWork;
+      _webHostEnvironment = webHostEnvironment;
       _db = pcsApiContext;
     }
-    public Helpers.PagedResult<Product> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
+    public Helpers.PagedResult<ProductDTO> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
     {
       strMessage = string.Empty;
       try
       {
         var query = _unitOfWork.Product.GetAll(u => u.isDeleted == false, "Category,Trademark").AsQueryable();
-        //var query = _db.Products.Include(u => u.Category).AsQueryable().Where(u => u.isDeleted == false);
+
         if (!string.IsNullOrEmpty(name))
         {
           query = query.Where(e => e.ProductName.Contains(name));
         }
+
         var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
         query = query.OrderBy(orderBy);
-        var pagedResult = Helpers.PagedResult<Product>.CreatePagedResult(query, pageNumber, pageSize);
+
+        // Project query results to ProductDTO
+        var pagedResult = Helpers.PagedResult<ProductDTO>.CreatePagedResult(query.Select(p => new ProductDTO
+        {
+          Product = p,
+          ProductImages = _unitOfWork.ProductImages.GetAll(u => u.ProductId == p.Id, null),
+          CategoryProduct = p.Category
+        }), pageNumber, pageSize); ;
         return pagedResult;
       }
       catch (Exception ex)
@@ -54,8 +63,8 @@ namespace ICHI_API.Service
       {
         ProductDTO productDTO = new ProductDTO
         {
-          Product = _unitOfWork.Product.Get(u => u.Id == id),
-          ProductImages = _unitOfWork.ProductImages.GetAll(u => u.ProductDetailId == id).ToList(),
+          Product = _unitOfWork.Product.Get(u => u.Id == id && u.isDeleted == false),
+          ProductImages = _unitOfWork.ProductImages.GetAll(u => u.ProductId == id).ToList(),
           CategoryProduct = _unitOfWork.Category.Get(u => u.Id == id)
         };
         if (productDTO == null)
@@ -87,6 +96,7 @@ namespace ICHI_API.Service
           if (checkProduct != null)
           {
             strMessage = "Sản phẩm đã tồn tại";
+            return null;
           }
 
           product.CreateBy = "Admin";
@@ -99,7 +109,7 @@ namespace ICHI_API.Service
             foreach (var file in files)
             {
               var image = new ProductImages();
-              image.ProductDetailId = product.Id;
+              image.ProductId = product.Id;
               image.ImageName = file.FileName;
               image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id, file, AppSettings.PatchProduct);
               image.IsDefault = false;
@@ -117,7 +127,7 @@ namespace ICHI_API.Service
         _unitOfWork.Product.Update(product);
         _unitOfWork.Save();
 
-        var productImages = _unitOfWork.ProductImages.GetAll(x => x.ProductDetailId == product.Id);
+        var productImages = _unitOfWork.ProductImages.GetAll(x => x.ProductId == product.Id);
         // thực hiện xóa ảnh cũ
         foreach (var item in productImages)
         {
@@ -129,7 +139,7 @@ namespace ICHI_API.Service
           foreach (var file in files)
           {
             var image = new ProductImages();
-            image.ProductDetailId = product.Id;
+            image.ProductId = product.Id;
 
             image.ImageName = file.FileName;
             image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id, file, AppSettings.PatchProduct);
@@ -202,7 +212,7 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var productImage = _unitOfWork.ProductImages.Get(x => x.ProductDetailId == productId && x.ImageName == imageName);
+        var productImage = _unitOfWork.ProductImages.Get(x => x.ProductId == productId && x.ImageName == imageName);
         if (productImage == null)
         {
           strMessage = "Hình ảnh sản phẩm không tồn tại!";

@@ -1,3 +1,4 @@
+import { CategoryProduct } from './../../../../models/category.product';
 import { Utils } from './../../../../Utils.ts/utils';
 import { Component, OnInit } from '@angular/core';
 import { EditorModule } from '@tinymce/tinymce-angular';
@@ -19,6 +20,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TrademarkService } from '../../../../service/trademark.service';
+import { ProductModel } from '../../../../models/product.model';
+import { ApiResponse } from '../../../../models/api.response.model';
+import { ProductDTO } from '../../../../dtos/product.dto';
+import { TrademarkModel } from '../../../../models/trademark.model';
+import { ProductImage } from '../../../../models/product.image';
 
 @Component({
   selector: 'app-insert-admin-product',
@@ -36,61 +42,40 @@ import { TrademarkService } from '../../../../service/trademark.service';
 export class InsertAdminProductComponent implements OnInit {
   protected readonly Environment = Environment;
   protected readonly Utils = Utils;
-
+  product: ProductModel | undefined = undefined;
   titleString: string = '';
   selectedImageUrl: string = '';
   selectedImageFile: File = new File([''], 'filename');
   selectedImageProductUrl: string[] = [];
   selectedImageProductFiles: File[] = [];
-  // categories: CategoryDto[] = [];
-  // origins: OriginDto[] = [];
-  // brands: BrandDto[] = [];
-  // shapes: ShapeDto[] = [];
-  // materials: MaterialDto[] = [];
+  categories: CategoryProduct[] = [];
+  trademarks: TrademarkModel[] = [];
 
-  category: any;
-  trademark: any;
   color: any;
-
   selectedItem: any; // Biến để lưu trữ giá trị được chọn
 
   isDisplayNone: boolean = false;
   btnSave: string = '';
-
   productForm: FormGroup = new FormGroup({
-    id: new FormControl(null),
+    id: new FormControl(0),
+    trademarkId: new FormControl(null, [Validators.required]),
+    categoryId: new FormControl(null, [Validators.required]),
     productName: new FormControl('', [
       Validators.required,
       Validators.maxLength(50),
     ]),
-    sellingPrice: new FormControl('', [
-      Validators.required,
-      Validators.min(1),
-      Validators.pattern(/^-?\d+\.?\d*$/),
-    ]),
-    suggestedPrice: new FormControl('', [
-      Validators.required,
-      Validators.min(1),
-      Validators.pattern(/^-?\d+\.?\d*$/),
-    ]),
     description: new FormControl('', [Validators.required]),
+    price: new FormControl('', [
+      Validators.required,
+      Validators.min(1),
+      Validators.pattern(/^-?\d+\.?\d*$/),
+    ]),
     imageProductFiles: new FormControl(null, [Validators.required]),
-    status: new FormControl('false', [Validators.required]),
-    categoryId: new FormControl(null, [Validators.required]),
-    // materialId: new FormControl(null, [Validators.required]),
-    // originId: new FormControl(null, [Validators.required]),
-    // shapeId: new FormControl(null, [Validators.required]),
-    // brandId: new FormControl(null, [Validators.required]),
-    productDetails: new FormArray(
-      [
-        new FormGroup({
-          id: new FormControl(null),
-          color: new FormControl('', [Validators.required]),
-          quantity: new FormControl(0),
-        }),
-      ],
-      Validators.required
-    ),
+    color: new FormControl('', [Validators.required]),
+    priorityLevel: new FormControl(0, [Validators.required]),
+    notes: new FormControl('', [Validators.maxLength(200)]),
+    isActive: new FormControl(true, [Validators.required]),
+    // isActive: new FormControl('false', [Validators.required]),
   });
 
   get productDetails() {
@@ -136,11 +121,11 @@ export class InsertAdminProductComponent implements OnInit {
 
   getDatacombobox() {
     this.categoryService.findAll().subscribe((data: any) => {
-      this.category = data.data.items;
+      this.categories = data.data.items;
       console.log(data.data.items);
     });
     this.trademarkService.findAll().subscribe((data: any) => {
-      this.trademark = data.data.items;
+      this.trademarks = data.data.items;
       console.log(data.data.items);
     });
     this.color = Utils.createColorList();
@@ -227,11 +212,12 @@ export class InsertAdminProductComponent implements OnInit {
     if (this.productForm.invalid) {
       return;
     }
-    if (this.activatedRoute.snapshot.params['id'] === undefined) {
-      this.createProduct();
-    } else {
-      this.updateProduct();
-    }
+    this.createProduct();
+    // if (this.activatedRoute.snapshot.params['id'] === undefined) {
+    //   this.createProduct();
+    // } else {
+    //   this.updateProduct();
+    // }
   }
 
   findAllCategory() {
@@ -268,31 +254,38 @@ export class InsertAdminProductComponent implements OnInit {
 
   findProductById(id: number) {
     this.productService.findById(id).subscribe({
-      next: (data: any) => {
-        this.productForm.patchValue(data);
-        this.selectedImageUrl =
-          Environment.apiBaseUrl + '/images/' + data.thumbnail;
-        this.selectedImageFile = new File([''], 'filename');
-        this.selectedImageProductFiles = [];
-        this.selectedImageProductUrl = data.images.map((image: string) => {
-          return image;
-        });
+      next: (respon: any) => {
+        this.productForm.get('id')?.setValue(respon.data.product.id);
         this.productForm
-          .get('imageProductFiles')
-          ?.setValue(this.selectedImageProductFiles);
-        this.productForm.get('status')?.setValue(data.status.toString());
-        this.productForm.setControl('productDetails', new FormArray([]));
-        data.productDetails.forEach((productDetail: any) => {
-          this.productDetails.push(
-            new FormGroup({
-              id: new FormControl(productDetail.id),
-              color: new FormControl(productDetail.color, [
-                Validators.required,
-              ]),
-              quantity: new FormControl(productDetail.quantity),
-            })
-          );
+          .get('productName')
+          ?.setValue(respon.data.product.productName);
+        this.productForm
+          .get('description')
+          ?.setValue(respon.data.product.description);
+        this.productForm.get('price')?.setValue(respon.data.product.price);
+        this.productForm
+          .get('priorityLevel')
+          ?.setValue(respon.data.product.priorityLevel);
+        this.productForm.get('notes')?.setValue(respon.data.product.notes);
+        this.productForm.get('color')?.setValue(respon.data.product.color);
+        this.productForm
+          .get('categoryId')
+          ?.setValue(respon.data.product.categoryId);
+        this.productForm
+          .get('trademarkId')
+          ?.setValue(respon.data.product.trademarkId);
+
+        this.productForm
+          .get('isActive')
+          ?.setValue(respon.data.product.isActive);
+
+        this.selectedImageUrl =
+          Environment.apiBaseUrl + '/images/' + respon.data.product.thumbnail;
+        this.selectedImageFile = new File([''], 'filename');
+        respon.data.productImages.forEach((productImage: ProductImage) => {
+          this.selectedImageProductUrl.push(productImage.imagePath);
         });
+        console.log(this.selectedImageProductUrl);
       },
       error: (err: any) => {
         this.toastr.error(err.error, 'Thất bại');
@@ -301,12 +294,13 @@ export class InsertAdminProductComponent implements OnInit {
   }
 
   createProduct() {
+    // this.productForm.value.id = 0;
     this.productService
       .create(this.productForm.value, this.selectedImageProductFiles)
       .subscribe({
-        next: () => {
-          this.toastr.success('Thêm sản phẩm thành công');
-          this.router.navigateByUrl('/admin/product');
+        next: (respon: any) => {
+          this.toastr.success(respon.message, 'Thành công');
+          this.router.navigateByUrl('/admin/products');
         },
         error: (err: any) => {
           this.toastr.error(err.error, 'Thất bại');
@@ -315,6 +309,7 @@ export class InsertAdminProductComponent implements OnInit {
   }
 
   updateProduct() {
+    // this.productForm.value.id = 0;
     this.productService
       .update(this.productForm.value, this.selectedImageProductFiles)
       .subscribe({
@@ -364,6 +359,34 @@ export class InsertAdminProductComponent implements OnInit {
               this.toastr.error(err.error, 'Thất bại');
             },
           });
+      }
+    });
+  }
+
+  deleteProduct(id: number) {
+    Swal.fire({
+      title: 'Bạn có chắc chắn muốn xóa?',
+      text: 'Dữ liệu sẽ không thể phục hồi sau khi xóa!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xác nhận',
+      cancelButtonText: 'Hủy',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: 'btn btn-danger me-1',
+        cancelButton: 'btn btn-secondary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productService.deleteProductDetails(id).subscribe({
+          next: () => {
+            this.toastr.success('Xóa sản phẩm thành công');
+            this.router.navigateByUrl('/admin/products');
+          },
+          error: (err: any) => {
+            this.toastr.error(err.error, 'Thất bại');
+          },
+        });
       }
     });
   }

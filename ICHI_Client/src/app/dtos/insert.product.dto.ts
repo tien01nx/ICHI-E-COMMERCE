@@ -11,13 +11,23 @@ export class InsertProductDTO extends MasterEntityDTO {
   description: string;
   @IsNumber()
   @IsNotEmpty()
-  categoryProductID: number;
+  categoryId: number;
+
   @IsString()
+  @IsNotEmpty()
+  color: string;
+
   @IsNumber()
-  suggestedPrice: number;
-  @IsString()
+  @IsNotEmpty()
+  price: number;
+
   @IsNumber()
-  sellingPrice: number;
+  @IsNotEmpty()
+  priorityLevel: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  trademarkId: number;
   @IsString()
   notes: string;
   @IsBoolean()
@@ -36,8 +46,10 @@ export class InsertProductDTO extends MasterEntityDTO {
     productName: string,
     description: string,
     categoryProductID: number,
-    suggestedPrice: number,
-    sellingPrice: number,
+    priorityLevel: number,
+    price: number,
+    trademarkId: number,
+    color: string,
     notes: string,
     isActive: boolean,
     isDeleted: boolean,
@@ -46,9 +58,11 @@ export class InsertProductDTO extends MasterEntityDTO {
     super(id, createDatetime, createUserId, updateDatetime, updateUserId);
     this.productName = productName;
     this.description = description;
-    this.categoryProductID = categoryProductID;
-    this.suggestedPrice = suggestedPrice;
-    this.sellingPrice = sellingPrice;
+    this.categoryId = categoryProductID;
+    this.color = color;
+    this.price = price;
+    this.priorityLevel = priorityLevel;
+    this.trademarkId = trademarkId;
     this.notes = notes;
     this.isActive = isActive;
     this.isDeleted = isDeleted;

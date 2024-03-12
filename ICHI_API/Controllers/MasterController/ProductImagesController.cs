@@ -31,7 +31,7 @@ namespace ICHI_CORE.Controllers.MasterController
 
         foreach (var item in productImages)
         {
-          var product = _context.Products.Where(x => x.Id == item.ProductDetailId).FirstOrDefault();
+          var product = _context.Products.Where(x => x.Id == item.ProductId).FirstOrDefault();
           if (product == null)
           {
             result = new ApiResponse<string>(System.Net.HttpStatusCode.Forbidden, "Product does not exist! ", null);
@@ -42,7 +42,7 @@ namespace ICHI_CORE.Controllers.MasterController
             imageData = System.IO.File.ReadAllBytes(item.ImagePath);
             base64ImageData = Convert.ToBase64String(imageData);
             // kiểm tra trong productimages đã có hình ảnh này chưa nếu có thì xóa đi
-            var productImage = _context.ProductImages.Where(x => x.ProductDetailId == item.ProductDetailId && x.ImageName == Path.GetFileName(item.ImagePath)).FirstOrDefault();
+            var productImage = _context.ProductImages.Where(x => x.ProductId == item.ProductId && x.ImageName == Path.GetFileName(item.ImagePath)).FirstOrDefault();
 
             if (productImage != null)
             {
@@ -77,7 +77,7 @@ namespace ICHI_CORE.Controllers.MasterController
       ApiResponse<List<ProductImages>> result;
       try
       {
-        var productImages = _context.ProductImages.Where(x => x.ProductDetailId == productId).ToList();
+        var productImages = _context.ProductImages.Where(x => x.ProductId == productId).ToList();
         if (productImages == null)
         {
           result = new ApiResponse<List<ProductImages>>(System.Net.HttpStatusCode.Forbidden, "Product does not exist! ", null);
