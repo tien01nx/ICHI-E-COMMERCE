@@ -145,6 +145,7 @@ namespace ICHI_API.Service
           _unitOfWork.Save();
           return null;
         }
+        strMessage = "Đăng nhập thành công";
         var accessToken = GenerateAccessToken(loginUser);
         SetJWTCookie(accessToken);
         return accessToken;
@@ -185,6 +186,7 @@ namespace ICHI_API.Service
         string url = "Mật khẩu mới của bạn là: " + randomString;
         string body = "Click vào link sau để đổi mật khẩu: " + url;
         emailService.SendEmail(email, "Reset password", url);
+        strMessage = "Gửi email thành công";
         return "Gửi email thành công";
       }
       catch (Exception ex)

@@ -41,9 +41,16 @@ export class ForgotPasswordComponent {
       next: (response: any) => {
         if (response.code === 200) {
           this.userForm.reset();
-          this.toastr.success(response.message, 'Thông báo');
-        } else {
-          this.errorMessage = response.message;
+          debugger; // tslint:disable-line
+          console.log(response.message);
+
+          // nếu message trả về là "Gửi email thành công" thì hiển thị thông báo thành công
+          if (response.message === 'Gửi email thành công') {
+            this.router.navigate(['/login']);
+            this.toastr.success(response.message, 'Thông báo');
+          } else {
+            this.toastr.error(response.message, 'Thông báo');
+          }
         }
       },
       error: (error: any) => {
@@ -55,5 +62,8 @@ export class ForgotPasswordComponent {
 
   signUp() {
     this.router.navigate(['/register']);
+  }
+  login() {
+    this.router.navigate(['/login']);
   }
 }

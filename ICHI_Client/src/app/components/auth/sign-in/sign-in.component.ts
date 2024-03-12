@@ -46,9 +46,14 @@ export class SignInComponent implements OnInit {
     this.authServer.login(this.userForm.value).subscribe({
       next: (response: any) => {
         if (response.code === 200) {
-          this.userForm.reset();
-          // this.toastr.success('Đăng nhập thành công', 'Thông báo');
-          this.router.navigate(['/']);
+          // Đăng nhập thành công
+          if (response.message === 'Đăng nhập thành công') {
+            this.userForm.reset();
+            this.toastr.success(response.message, 'Thông báo');
+            this.router.navigate(['/']);
+          } else {
+            this.errorMessage = response.message;
+          }
         } else {
           this.errorMessage = response.message;
           // this.isDisplayNone = false;
