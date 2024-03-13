@@ -167,7 +167,7 @@ namespace ICHI_API.Service
         User loginUser = ExistsByUserNameOrEmail(email);
         if (loginUser == null)
         {
-          strMessage = "Tài khoản không tồn tại";
+          strMessage = "Quên mật khẩu thất bại";
           return null;
         }
         var emailService = new EmailService(_configuration);

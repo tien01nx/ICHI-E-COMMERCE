@@ -76,7 +76,7 @@ namespace ICHI_API.Service
         category.ModifiedBy = "Admin";
         _unitOfWork.Category.Add(category);
         _unitOfWork.Save();
-        strMessage = "Tạo mới thành công";
+        strMessage = "Tạo mới danh mục thành công";
         return category;
       }
       catch (Exception ex)

@@ -81,7 +81,7 @@ namespace ICHI_API.Service
         trademark.ModifiedBy = "Admin";
         _unitOfWork.Trademark.Add(trademark);
         _unitOfWork.Save();
-        strMessage = "Tạo mới thành công";
+        strMessage = "Tạo mới thương hiệu thành công";
         return trademark;
       }
       catch (Exception ex)
@@ -100,7 +100,7 @@ namespace ICHI_API.Service
         var data = _unitOfWork.Trademark.Get(u => u.Id == trademark.Id);
         if (data == null)
         {
-          strMessage = "thương hiệu không tồn tại";
+          strMessage = "Thương hiệu không tồn tại";
           return null;
         }
         // kiểm tra số điện thoại thương hiệu đã tồn tại chưa
