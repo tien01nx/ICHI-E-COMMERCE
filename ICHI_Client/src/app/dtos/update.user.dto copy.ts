@@ -1,25 +1,38 @@
-// import { UserModel } from '../models/user.model';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-// export class UpdateUserDTO {
-//   id: number;
-//   fullName: string;
-//   role: string;
-//   email: string;
-//   birthday: Date;
-//   gender: string;
-//   constructor(
-//     id: number,
-//     fullName: string,
-//     role: string,
-//     email: string,
-//     birthday: Date,
-//     gender: string
-//   ) {
-//     this.id = id;
-//     this.fullName = fullName;
-//     this.role = role;
-//     this.email = email;
-//     this.birthday = birthday;
-//     this.gender = gender;
-//   }
-// }
+export class UpdatePromotionDTO {
+  @IsString()
+  @IsNotEmpty()
+  promotionCode: string;
+  @IsString()
+  @IsNotEmpty()
+  promotionName: string;
+  @IsString()
+  @IsNotEmpty()
+  startTime: string;
+  @IsString()
+  @IsNotEmpty()
+  endTime: string;
+  @IsString()
+  @IsNotEmpty()
+  quantity: string;
+  @IsNumber()
+  @IsNotEmpty()
+  discount: string;
+  @IsNumber()
+  minimumPrice: string;
+  isActive: string;
+  isDeleted: string;
+
+  constructor(data: any) {
+    this.promotionCode = data.promotionCode;
+    this.promotionName = data.promotionName;
+    this.startTime = data.startTime;
+    this.endTime = data.endTime;
+    this.quantity = data.quantity;
+    this.discount = data.discount;
+    this.minimumPrice = data.minimumPrice;
+    this.isActive = data.isActive;
+    this.isDeleted = data.isDeleted;
+  }
+}

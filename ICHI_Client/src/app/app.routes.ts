@@ -21,6 +21,7 @@ import { EmployeeComponent } from './components/admin/employee/employee.componen
 import { AuthComponent } from './components/admin/auth/auth.component';
 import { TrademarkComponent } from './components/admin/trademark/trademark.component';
 import { PromotionComponent } from './components/admin/promotion/promotion.component';
+import { PromotiondemoComponent } from './components/admin/promotiondemo/promotiondemo.component';
 
 export const routes: Routes = [
   {
@@ -39,6 +40,7 @@ export const routes: Routes = [
       { path: 'auth', component: AuthComponent },
       { path: 'trademark', component: TrademarkComponent },
       { path: 'promotion', component: PromotionComponent },
+      { path: 'promotiondemo', component: PromotiondemoComponent },
     ],
   },
   { path: '', component: ClientLayoutComponent },

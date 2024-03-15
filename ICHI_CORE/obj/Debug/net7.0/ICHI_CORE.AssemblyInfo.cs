@@ -14,11 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ICHI_CORE")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< Updated upstream
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+823f2688a032867f9ea63433b4634426b24dd254")]
->>>>>>> Stashed changes
 [assembly: System.Reflection.AssemblyProductAttribute("ICHI_CORE")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ICHI_CORE")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

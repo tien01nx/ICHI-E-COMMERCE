@@ -461,6 +461,7 @@ C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Human
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Design.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Mono.TextTemplating.dll
 C:\Users\tien0\source\repos\Code\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\System.CodeDom.dll
+<<<<<<< Updated upstream
 D:\Angular\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\Nlog.config
 D:\Angular\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\appsettings.Development.json
 D:\Angular\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\appsettings.json
@@ -562,3 +563,13 @@ D:\Angular\ICHI-E-COMMERCE\ICHI_API\obj\Debug\net7.0\refint\ICHI_API.dll
 D:\Angular\ICHI-E-COMMERCE\ICHI_API\obj\Debug\net7.0\ICHI_API.pdb
 D:\Angular\ICHI-E-COMMERCE\ICHI_API\obj\Debug\net7.0\ICHI_API.genruntimeconfig.cache
 D:\Angular\ICHI-E-COMMERCE\ICHI_API\obj\Debug\net7.0\ref\ICHI_API.dll
+=======
+D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\BouncyCastle.Cryptography.dll
+D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\MailKit.dll
+D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\MimeKit.dll
+D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\System.Formats.Asn1.dll
+D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\System.Security.Cryptography.Pkcs.dll
+D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\System.Text.Encoding.CodePages.dll
+D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
+D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Text.Encoding.CodePages.dll
+>>>>>>> Stashed changes
