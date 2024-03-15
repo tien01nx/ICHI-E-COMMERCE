@@ -4,6 +4,7 @@
   {
     public static string ConnectionString = "";
     public static String ADMIN = "ADMIN";
+    public static String ACCOUNT_ADMIN = "admin@gmail.com";
     public static String USER = "USER";
     public static String EMPLOYEE = "EMPLOYEE";
     public static String FolderImage = @"/Uploads/";

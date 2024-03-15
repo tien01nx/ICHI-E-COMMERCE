@@ -59,7 +59,8 @@ namespace ICHI_API.Service
             strMessage = "Mật khẩu phải có ít nhất 8 kí tự, 1 chữ hoa, 1 chữ thường, 1 kí tự đặc biệt";
             return null;
           }
-          User user = new User();
+        //userRegister.Role= AppSettings.EMPLOYEE;
+        User user = new User();
           MapperHelper.Map<UserRegister, User>(userRegister, user);
           string salt = BCrypt.Net.BCrypt.GenerateSalt();
           string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userRegister.Password.Trim(), salt);
@@ -84,7 +85,14 @@ namespace ICHI_API.Service
             };
             _unitOfWork.Customer.Add(customer);
             _unitOfWork.Save();
-          }
+            UserRole userRole = new UserRole()
+            {
+                RoleId = _unitOfWork.Role.Get(r => r.RoleName == AppSettings.USER).Id,
+                UserId = user.Id,
+            };
+            _unitOfWork.UserRole.Add(userRole);
+            _unitOfWork.Save();
+        }
           else
           {
             // insert vào employee
@@ -99,7 +107,14 @@ namespace ICHI_API.Service
             };
             _unitOfWork.Employee.Add(employee);
             _unitOfWork.Save();
-          }
+            UserRole userRole = new UserRole()
+            {
+                RoleId = _unitOfWork.Role.Get(r => r.RoleName == AppSettings.EMPLOYEE).Id,
+                UserId = user.Id,
+            };
+            _unitOfWork.UserRole.Add(userRole);
+            _unitOfWork.Save();
+                    }
           transaction.Commit();
           strMessage = "Đăng ký thành công";
           var accessToken = GenerateAccessToken(user);

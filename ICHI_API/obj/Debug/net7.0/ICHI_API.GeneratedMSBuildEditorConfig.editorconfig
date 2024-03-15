@@ -9,11 +9,19 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = ICHI_API
 build_property.RootNamespace = ICHI_API
+<<<<<<< Updated upstream
 build_property.ProjectDir = D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API\
+=======
+build_property.ProjectDir = D:\Angular\ICHI-E-COMMERCE\ICHI_API\
+>>>>>>> Stashed changes
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 7.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+<<<<<<< Updated upstream
 build_property.MSBuildProjectDirectory = D:\DoAn\ICHI\ICHI-E-COMMERCE\ICHI_API
+=======
+build_property.MSBuildProjectDirectory = D:\Angular\ICHI-E-COMMERCE\ICHI_API
+>>>>>>> Stashed changes
 build_property._RazorSourceGeneratorDebug = 

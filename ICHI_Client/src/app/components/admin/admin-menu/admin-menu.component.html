@@ -103,9 +103,10 @@
               <div class="dropdown-indicator-icon">
                 <span class="fas fa-caret-right"></span>
               </div>
-              <span class="nav-link-icon"
+              <!-- <span class="nav-link-icon"
                 ><span data-feather="shopping-cart"></span></span
-              ><span class="nav-link-text">E commerce</span>
+              > -->
+              <span class="nav-link-text">Quản lý danh mục</span>
             </div>
           </a>
           <div class="parent-wrapper label-1">
@@ -114,269 +115,109 @@
               data-bs-parent="#navbarVerticalCollapse"
               id="nv-e-commerce"
             >
+              <hr class="navbar-vertical-line" />
+              <!-- parent pages-->
+              <div class="nav-item-wrapper">
+                <a
+                  class="nav-link label-1"
+                  [routerLink]="['/admin/categories']"
+                  routerLinkActive="active"
+                >
+                  <div class="d-flex align-items-center">
+                    <!-- <span class="nav-link-icon">
+                      <span data-feather="user"></span></span
+                    > -->
+                    <span class="nav-link-text-wrapper">
+                      <span class="nav-link-text">Danh mục</span>
+                    </span>
+                  </div>
+                </a>
+                <a class="nav-link label-1" routerLink="products">
+                  <div class="d-flex align-items-center">
+                    <!-- <span class="nav-link-icon">
+                      <span data-feather="users"></span></span
+                    > -->
+                    <span class="nav-link-text-wrapper">
+                      <span class="nav-link-text">Sản phẩm</span>
+                    </span>
+                  </div>
+                </a>
+                <a
+                  class="nav-link label-1"
+                  [routerLink]="['/admin/trademark']"
+                  routerLinkActive="active"
+                >
+                  <div class="d-flex align-items-center">
+                    <!-- <span class="nav-link-icon">
+                      <span data-feather="users"></span></span
+                    > -->
+                    <span class="nav-link-text-wrapper">
+                      <span class="nav-link-text">Thương hiệu</span>
+                    </span>
+                  </div>
+                </a>
+              </div>
               <li class="collapsed-nav-item-title d-none">E commerce</li>
-              <li class="nav-item">
-                <a
-                  class="nav-link dropdown-indicator"
-                  href="#nv-admin"
-                  data-bs-toggle="collapse"
-                  aria-expanded="true"
-                  aria-controls="nv-admin"
-                >
-                  <div class="d-flex align-items-center">
-                    <div class="dropdown-indicator-icon">
-                      <span class="fas fa-caret-right"></span>
-                    </div>
-                    <span class="nav-link-text">Products</span>
-                  </div> </a
-                ><!-- more inner pages-->
-                <div class="parent-wrapper">
-                  <ul
-                    class="nav collapse parent show"
-                    data-bs-parent="#e-commerce"
-                    id="nv-admin"
-                  >
-                    <li class="nav-item">
-                      <a
-                        class="nav-link"
-                        routerLink="/admin/products"
-                        data-bs-toggle=""
-                        aria-expanded="false"
-                      >
-                        <div class="d-flex align-items-center">
-                          <span class="nav-link-text">Products</span>
-                        </div> </a
-                      ><!-- more inner pages-->
-                    </li>
-                    <li class="nav-item">
-                      <a
-                        class="nav-link"
-                        routerLink="/admin/product_insert"
-                        data-bs-toggle=""
-                        aria-expanded="false"
-                      >
-                        <div class="d-flex align-items-center">
-                          <span class="nav-link-text">Insert Product</span>
-                        </div> </a
-                      ><!-- more inner pages-->
-                    </li>
-                  </ul>
-                </div>
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link dropdown-indicator"
-                  href="#nv-customer"
-                  data-bs-toggle="collapse"
-                  aria-expanded="true"
-                  aria-controls="nv-customer"
-                >
-                  <div class="d-flex align-items-center">
-                    <div class="dropdown-indicator-icon">
-                      <span class="fas fa-caret-right"></span>
-                    </div>
-                    <span class="nav-link-text">Categories</span>
-                  </div> </a
-                ><!-- more inner pages-->
-                <div class="parent-wrapper">
-                  <ul
-                    class="nav collapse parent show"
-                    data-bs-parent="#e-commerce"
-                    id="nv-customer"
-                  >
-                    <li class="nav-item">
-                      <a
-                        class="nav-link"
-                        routerLink="/admin/categories"
-                        data-bs-toggle=""
-                        aria-expanded="false"
-                      >
-                        <div class="d-flex align-items-center">
-                          <span class="nav-link-text">Categories</span>
-                        </div> </a
-                      ><!-- more inner pages-->
-                    </li>
-                    <li class="nav-item">
-                      <a
-                        class="nav-link"
-                        data-bs-toggle=""
-                        aria-expanded="false"
-                        routerLink="/admin/supplier"
-                      >
-                        <div class="d-flex align-items-center">
-                          <span class="nav-link-text">Supplier</span>
-                        </div> </a
-                      ><!-- more inner pages-->
-                    </li>
-
-                    <li class="nav-item">
-                      <a
-                        class="nav-link"
-                        data-bs-toggle=""
-                        aria-expanded="false"
-                        routerLink="/admin/trademark"
-                      >
-                        <div class="d-flex align-items-center">
-                          <span class="nav-link-text">Trademark</span>
-                        </div> </a
-                      ><!-- more inner pages-->
-                    </li>
-
-                    <li class="nav-item">
-                      <a
-                        class="nav-link"
-                        data-bs-toggle=""
-                        aria-expanded="false"
-                        routerLink="/admin/promotion"
-                      >
-                        <div class="d-flex align-items-center">
-                          <span class="nav-link-text">Trademark</span>
-                        </div> </a
-                      ><!-- more inner pages-->
-                    </li>
-                  </ul>
-                </div>
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link dropdown-indicator"
-                  href="#nv-customer"
-                  data-bs-toggle="collapse"
-                  aria-expanded="true"
-                  aria-controls="nv-customer"
-                >
-                  <div class="d-flex align-items-center">
-                    <div class="dropdown-indicator-icon">
-                      <span class="fas fa-caret-right"></span>
-                    </div>
-                    <span class="nav-link-text">Customer</span>
-                  </div> </a
-                ><!-- more inner pages-->
-                <div class="parent-wrapper">
-                  <ul
-                    class="nav collapse parent show"
-                    data-bs-parent="#e-commerce"
-                    id="nv-customer"
-                  >
-                    <li class="nav-item">
-                      <a
-                        class="nav-link"
-                        routerLink="/admin/customer"
-                        data-bs-toggle=""
-                        aria-expanded="false"
-                      >
-                        <div class="d-flex align-items-center">
-                          <span class="nav-link-text"> Customer </span>
-                        </div> </a
-                      ><!-- more inner pages-->
-                    </li>
-                    <li class="nav-item">
-                      <a
-                        class="nav-link"
-                        data-bs-toggle=""
-                        aria-expanded="false"
-                        routerLink="/admin/employee"
-                      >
-                        <div class="d-flex align-items-center">
-                          <span class="nav-link-text">Employee</span>
-                        </div> </a
-                      ><!-- more inner pages-->
-                    </li>
-                    <li class="nav-item">
-                      <a
-                        class="nav-link"
-                        data-bs-toggle=""
-                        aria-expanded="false"
-                        routerLink="/admin/auth"
-                      >
-                        <div class="d-flex align-items-center">
-                          <span class="nav-link-text">Account Manaager</span>
-                        </div> </a
-                      ><!-- more inner pages-->
-                    </li>
-                  </ul>
-                </div>
-              </li>
             </ul>
           </div>
         </div>
-        <!-- parent pages-->
         <div class="nav-item-wrapper">
           <a
             class="nav-link dropdown-indicator label-1"
-            href="#nv-CRM"
+            href="#nv-e-commerce"
             role="button"
             data-bs-toggle="collapse"
             aria-expanded="false"
-            aria-controls="nv-CRM"
+            aria-controls="nv-e-commerce"
           >
             <div class="d-flex align-items-center">
               <div class="dropdown-indicator-icon">
                 <span class="fas fa-caret-right"></span>
               </div>
-              <span class="nav-link-icon"
-                ><span data-feather="phone"></span></span
-              ><span class="nav-link-text">CRM</span
-              ><span
-                class="fa-solid fa-circle text-info ms-1 new-page-indicator"
-                style="font-size: 6px"
-              ></span>
+              <!-- <span class="nav-link-icon"
+                ><span data-feather="shopping-cart"></span></span
+              > -->
+              <span class="nav-link-text">Quản lý hệ thống</span>
             </div>
           </a>
           <div class="parent-wrapper label-1">
             <ul
               class="nav collapse parent"
               data-bs-parent="#navbarVerticalCollapse"
-              id="nv-CRM"
+              id="nv-e-commerce"
             >
-              <li class="collapsed-nav-item-title d-none">CRM</li>
-              <li class="nav-item">
+              <hr class="navbar-vertical-line" />
+              <!-- parent pages-->
+              <div class="nav-item-wrapper">
                 <a
-                  class="nav-link"
-                  href="../apps/crm/analytics.html"
-                  data-bs-toggle=""
-                  aria-expanded="false"
+                  class="nav-link label-1"
+                  [routerLink]="['/admin/employee']"
+                  routerLinkActive="active"
                 >
                   <div class="d-flex align-items-center">
-                    <span class="nav-link-text">Analytics</span>
-                  </div> </a
-                ><!-- more inner pages-->
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  href="../apps/crm/deals.html"
-                  data-bs-toggle=""
-                  aria-expanded="false"
-                >
+                    <!-- <span class="nav-link-icon">
+                      <span data-feather="user"></span></span
+                    > -->
+                    <span class="nav-link-text-wrapper">
+                      <span class="nav-link-text">Nhân viên</span>
+                    </span>
+                  </div>
+                </a>
+                <a class="nav-link label-1" routerLink="customer">
                   <div class="d-flex align-items-center">
-                    <span class="nav-link-text">Deals</span
-                    ><span
-                      class="badge ms-2 badge badge-phoenix badge-phoenix-info"
-                      >New</span
-                    >
-                  </div> </a
-                ><!-- more inner pages-->
-              </li>
+                    <!-- <span class="nav-link-icon">
+                      <span data-feather="users"></span></span
+                    > -->
+                    <span class="nav-link-text-wrapper">
+                      <span class="nav-link-text">Khách hàng</span>
+                    </span>
+                  </div>
+                </a>
+              </div>
             </ul>
           </div>
         </div>
-
-        <a
-          class="nav-link label-1"
-          href="../apps/calendar.html"
-          role="button"
-          data-bs-toggle=""
-          aria-expanded="false"
-        >
-          <div class="d-flex align-items-center">
-            <span class="nav-link-icon"
-              ><span data-feather="calendar"></span></span
-            ><span class="nav-link-text-wrapper"
-              ><span class="nav-link-text">Calendar</span></span
-            >
-          </div>
-        </a>
+        <!-- parent pages-->
       </li>
     </ul>
   </div>

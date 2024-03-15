@@ -381,8 +381,13 @@ namespace ICHI_API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryID")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("CreateBy")
                         .IsRequired()
@@ -396,10 +401,6 @@ namespace ICHI_API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ModifiedBy")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -408,21 +409,19 @@ namespace ICHI_API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("PriorityLevel")
+                    b.Property<int?>("PriorityLevel")
                         .HasColumnType("int");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TrademarkID")
+                    b.Property<int>("TrademarkId")
                         .HasColumnType("int");
 
                     b.Property<bool>("isActive")
@@ -433,9 +432,9 @@ namespace ICHI_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryID");
+                    b.HasIndex("CategoryId");
 
-                    b.HasIndex("TrademarkID");
+                    b.HasIndex("TrademarkId");
 
                     b.ToTable("Products");
                 });
@@ -522,12 +521,12 @@ namespace ICHI_API.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ProductDetailId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductDetailId");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductImages");
                 });
@@ -1112,13 +1111,13 @@ namespace ICHI_API.Migrations
                 {
                     b.HasOne("ICHI_CORE.Domain.MasterModel.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryID")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ICHI_CORE.Domain.MasterModel.Trademark", "Trademark")
                         .WithMany()
-                        .HasForeignKey("TrademarkID")
+                        .HasForeignKey("TrademarkId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1140,13 +1139,13 @@ namespace ICHI_API.Migrations
 
             modelBuilder.Entity("ICHI_CORE.Domain.MasterModel.ProductImages", b =>
                 {
-                    b.HasOne("ICHI_CORE.Domain.MasterModel.ProductDetail", "ProductDetail")
+                    b.HasOne("ICHI_CORE.Domain.MasterModel.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductDetailId")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ProductDetail");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("ICHI_CORE.Domain.MasterModel.ProductReturn", b =>
