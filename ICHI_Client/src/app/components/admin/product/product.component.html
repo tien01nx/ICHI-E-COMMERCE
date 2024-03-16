@@ -308,7 +308,7 @@
               <td class="product align-middle white-space-nowrap">
                 <a
                   class="d-flex align-items-center text-body text-hover-1000"
-                  href="#!"
+                  routerLink="/admin/product/insert/{{ product.product.id }}"
                 >
                   <div class="avatar avatar-m">
                     <img
@@ -418,10 +418,12 @@
                         ></path>
                       </svg>
                     </button>
-                    <ng-container *ngIf="product.product.isDeleted; else unlocked">
+                    <ng-container
+                      *ngIf="product.product.isDeleted; else unlocked"
+                    >
                       <button class="btn btn-sm btn-phoenix-secondary fs-10">
                         <!-- (click)="lockAccount(product.user.id, false)" -->
-                        <svg
+                        <!-- <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="16px"
                           height="16px"
@@ -447,41 +449,31 @@
                           class="text-danger"
                           data-feather="unlock"
                           style="height: 70px; width: 70px"
-                        ></span>
+                        ></span> -->
+                        <span class="fas fa-edit"></span>
                       </button>
                     </ng-container>
                     <ng-template #unlocked>
                       <button class="btn btn-sm btn-phoenix-secondary fs-10">
                         <!-- (click)="lockAccount(product.isDeleted, true)" -->
 
-                        <svg
+                        <!-- <svg
+                          class="svg-inline--fa fa-trash text-body fs-5"
+                          aria-hidden="true"
+                          focusable="false"
+                          data-prefix="fas"
+                          data-icon="trash"
+                          role="img"
                           xmlns="http://www.w3.org/2000/svg"
-                          width="16px"
-                          height="16px"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="feather feather-lock text-body fs-5"
+                          viewBox="0 0 448 512"
+                          data-fa-i2svg=""
                         >
-                          <rect
-                            x="3"
-                            y="11"
-                            width="18"
-                            height="11"
-                            rx="2"
-                            ry="2"
-                          ></rect>
-                          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                        </svg>
-
-                        <span
-                          class="text-danger"
-                          data-feather="lock"
-                          style="height: 70px; width: 70px"
-                        ></span>
+                          <path
+                            fill="currentColor"
+                            d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM394.8 466.1C393.2 492.3 372.3 512 346.9 512H101.1C75.75 512 54.77 492.3 53.19 466.1L31.1 128H416L394.8 466.1z"
+                          ></path>
+                        </svg> -->
+                        <span class="fas fa-trash-alt"></span>
                       </button>
                     </ng-template>
                   </div>
@@ -510,8 +502,9 @@
                       <path
                         fill="currentColor"
                         d="M120 256C120 286.9 94.93 312 64 312C33.07 312 8 286.9 8 256C8 225.1 33.07 200 64 200C94.93 200 120 225.1 120 256zM280 256C280 286.9 254.9 312 224 312C193.1 312 168 286.9 168 256C168 225.1 193.1 200 224 200C254.9 200 280 225.1 280 256zM328 256C328 225.1 353.1 200 384 200C414.9 200 440 225.1 440 256C440 286.9 414.9 312 384 312C353.1 312 328 286.9 328 256z"
-                      ></path></svg
-                    ><!-- <span class="fas fa-ellipsis-h fs-10"></span> Font Awesome fontawesome.com -->
+                      ></path>
+                    </svg>
+                    <!-- <span class="fas fa-ellipsis-h fs-10"></span> Font Awesome fontawesome.com -->
                   </button>
                   <div class="dropdown-menu dropdown-menu-end py-2">
                     <a class="dropdown-item" href="#!">View</a

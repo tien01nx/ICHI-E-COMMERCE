@@ -1,24 +1,25 @@
-﻿using ICHI.DataAccess.Repository.IRepository;
-using ICHI_API.Data;
-using ICHI_API.Helpers;
-using ICHI_API.Model;
-using ICHI_API.Service.IService;
-using ICHI_CORE.Domain.MasterModel;
-using ICHI_CORE.Helpers;
-using ICHI_CORE.Model;
-using ICHI_CORE.NlogConfig;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Dynamic.Core;
-
-
-namespace ICHI_API.Service
+﻿namespace ICHI_API.Service
 {
+  using System.Linq.Dynamic.Core;
+  using ICHI.DataAccess.Repository.IRepository;
+  using ICHI_API.Data;
+  using ICHI_API.Helpers;
+  using ICHI_API.Model;
+  using ICHI_API.Service.IService;
+  using ICHI_CORE.Domain.MasterModel;
+  using ICHI_CORE.Helpers;
+  using ICHI_CORE.Model;
+  using ICHI_CORE.NlogConfig;
+  using Microsoft.AspNetCore.Hosting;
+  using Microsoft.EntityFrameworkCore;
+
   public class ProductService : IProductService
   {
+
     private readonly IUnitOfWork _unitOfWork;
     private PcsApiContext _db;
     private readonly IWebHostEnvironment _webHostEnvironment;
+
     public ProductService(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment, PcsApiContext pcsApiContext)
     {
       _unitOfWork = unitOfWork;
@@ -87,9 +88,10 @@ namespace ICHI_API.Service
     public Product Create(Product product, List<IFormFile>? files, out string strMessage)
     {
       strMessage = string.Empty;
+      _unitOfWork.BeginTransaction(); // Bắt đầu giao dịch  
+
       try
       {
-
         if (product.Id == 0)
         {
           var checkProduct = _unitOfWork.Product.Get(x => x.ProductName == product.ProductName);
@@ -104,6 +106,7 @@ namespace ICHI_API.Service
 
           _unitOfWork.Product.Add(product);
           _unitOfWork.Save();
+
           if (files != null && files.Count > 0)
           {
             foreach (var file in files)
@@ -121,26 +124,38 @@ namespace ICHI_API.Service
             }
             _unitOfWork.Save();
           }
+
           strMessage = "Tạo mới thành công";
+          _unitOfWork.Commit(); // Commit giao dịch
           return product;
         }
+
         _unitOfWork.Product.Update(product);
         _unitOfWork.Save();
-
-        var productImages = _unitOfWork.ProductImages.GetAll(x => x.ProductId == product.Id);
-        // thực hiện xóa ảnh cũ
-        foreach (var item in productImages)
+        if (files.Count > 0)
         {
-          ImageHelper.DeleteImage(_webHostEnvironment.WebRootPath, item.ImagePath);
-          _unitOfWork.ProductImages.Remove(item);
+          var productImages = _unitOfWork.ProductImages.GetAll(x => x.ProductId == product.Id);
+
+          foreach (var item in productImages)
+          {
+            ImageHelper.DeleteImage(_webHostEnvironment.WebRootPath, item.ImagePath);
+            _unitOfWork.ProductImages.Remove(item);
+          }
         }
+
         if (files != null)
         {
           foreach (var file in files)
           {
+            if (!ImageHelper.CheckImage(file))
+            {
+              strMessage = "File không đúng định dạng hoặc dung lượng lớn hơn 10MB";
+              _unitOfWork.Rollback();
+              return null;
+            }
+
             var image = new ProductImages();
             image.ProductId = product.Id;
-
             image.ImageName = file.FileName;
             image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id, file, AppSettings.PatchProduct);
             image.IsDefault = false;
@@ -151,17 +166,21 @@ namespace ICHI_API.Service
             _unitOfWork.ProductImages.Add(image);
           }
         }
+
         _unitOfWork.Save();
         strMessage = "Cập nhật sản phẩm thành công";
+        _unitOfWork.Commit();
         return product;
       }
       catch (Exception ex)
       {
         NLogger.log.Error(ex.ToString());
         strMessage = ex.ToString();
+        _unitOfWork.Rollback();
         return null;
       }
     }
+
     public Product Update(Product customer, out string strMessage)
     {
       strMessage = string.Empty;

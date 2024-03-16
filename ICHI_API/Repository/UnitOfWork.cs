@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ICHI.DataAccess.Repository
 {
@@ -13,6 +14,7 @@ namespace ICHI.DataAccess.Repository
     private readonly IConfiguration _configuration;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private PcsApiContext _db;
+    private IDbContextTransaction _transaction;
     public ICategoryRepository Category { get; private set; }
     public IProductRepository Product { get; private set; }
     public ICustomerRepository Customer { get; private set; }
@@ -59,10 +61,37 @@ namespace ICHI.DataAccess.Repository
 
     }
 
+    public void BeginTransaction()
+    {
+      _transaction = _db.Database.BeginTransaction();
+    }
+    public void Commit()
+    {
+      try
+      {
+        _transaction.Commit();
+      }
+      catch
+      {
+        Rollback();
+        throw;
+      }
+    }
+    public void Rollback()
+    {
+      _transaction.Rollback();
+    }
 
     public void Save()
     {
       _db.SaveChanges();
+    }
+
+    public void Dispose()
+    {
+      // Dispose transaction if it's active
+      _transaction?.Dispose();
+      _db.Dispose();
     }
   }
 }

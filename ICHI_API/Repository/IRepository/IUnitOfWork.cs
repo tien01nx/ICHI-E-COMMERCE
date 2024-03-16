@@ -28,6 +28,10 @@ namespace ICHI.DataAccess.Repository.IRepository
     ITransactionDetailRepository TransactionDetail { get; }
     ITrxTransactionRepository TrxTransaction { get; }
 
+    void Dispose();
+    void BeginTransaction();
+    void Commit();
+    void Rollback();
     void Save();
   }
 }

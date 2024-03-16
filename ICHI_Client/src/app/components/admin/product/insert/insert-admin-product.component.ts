@@ -50,6 +50,7 @@ export class InsertAdminProductComponent implements OnInit {
   selectedImageProductFiles: File[] = [];
   categories: CategoryProduct[] = [];
   trademarks: TrademarkModel[] = [];
+  productImage: ProductImage[] = [];
 
   color: any;
   selectedItem: any; // Biến để lưu trữ giá trị được chọn
@@ -75,6 +76,7 @@ export class InsertAdminProductComponent implements OnInit {
     priorityLevel: new FormControl(0, [Validators.required]),
     notes: new FormControl('', [Validators.maxLength(200)]),
     isActive: new FormControl(true, [Validators.required]),
+    quantity: new FormControl(0, [Validators.required]),
     // isActive: new FormControl('false', [Validators.required]),
   });
 
@@ -269,6 +271,9 @@ export class InsertAdminProductComponent implements OnInit {
         this.productForm.get('notes')?.setValue(respon.data.product.notes);
         this.productForm.get('color')?.setValue(respon.data.product.color);
         this.productForm
+          .get('quantity')
+          ?.setValue(respon.data.product.quantity);
+        this.productForm
           .get('categoryId')
           ?.setValue(respon.data.product.categoryId);
         this.productForm
@@ -278,6 +283,8 @@ export class InsertAdminProductComponent implements OnInit {
         this.productForm
           .get('isActive')
           ?.setValue(respon.data.product.isActive);
+        this.productImage = respon.data.productImages;
+        console.log('image', this.productImage);
 
         this.selectedImageUrl =
           Environment.apiBaseUrl + '/images/' + respon.data.product.thumbnail;
@@ -294,7 +301,15 @@ export class InsertAdminProductComponent implements OnInit {
   }
 
   createProduct() {
-    // this.productForm.value.id = 0;
+    debugger;
+    if (
+      this.selectedImageProductFiles.length === 0 &&
+      this.productImage.length === 0
+    ) {
+      this.toastr.error('Chưa chọn ảnh sản phẩm', 'Thất bại');
+      return;
+    }
+
     this.productService
       .create(this.productForm.value, this.selectedImageProductFiles)
       .subscribe({
@@ -309,7 +324,12 @@ export class InsertAdminProductComponent implements OnInit {
   }
 
   updateProduct() {
+    debugger;
     // this.productForm.value.id = 0;
+    if (this.productForm.value.productImages === null) {
+      this.toastr.error('Chưa chọn ảnh sản phẩm', 'Thất bại');
+      return;
+    }
     this.productService
       .update(this.productForm.value, this.selectedImageProductFiles)
       .subscribe({
@@ -338,22 +358,16 @@ export class InsertAdminProductComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
+        debugger;
         this.productService
           .deleteImage(this.activatedRoute.snapshot.params['id'], imageName)
           .subscribe({
             next: () => {
-              this.toastr.success('Xóa ảnh thành công');
-              if (this.selectedImageProductUrl.length === 0) {
-                const imageProductFilesControl =
-                  this.productForm.get('imageProductFiles');
-                imageProductFilesControl?.setValidators([Validators.required]);
-                imageProductFilesControl?.updateValueAndValidity();
-              }
+              this.productImage = this.productImage.filter(
+                (image) => image.imageName !== imageName
+              );
 
-              this.selectedImageProductUrl =
-                this.selectedImageProductUrl.filter((image: string) => {
-                  return image !== imageName;
-                });
+              this.toastr.success('Xóa ảnh thành công');
             },
             error: (err: any) => {
               this.toastr.error(err.error, 'Thất bại');

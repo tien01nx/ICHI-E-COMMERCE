@@ -59,6 +59,7 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       return result;
     }
+
     // đăng ký tài khoản
     [HttpPost]
     [AllowAnonymous]

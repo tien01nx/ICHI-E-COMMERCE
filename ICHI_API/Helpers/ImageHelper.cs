@@ -14,6 +14,28 @@ namespace ICHI_CORE.Helpers
   public class ImageHelper
   {
 
+    // file không đúng định dạng png , jpg, jpeg và lớn hơn 20MB thì không cho thêm
+
+    public static bool CheckImage(IFormFile file)
+    {
+      try
+      {
+        // thực hiện kiểm tra file truyền vào
+        if (file.Length > 20971520)
+        {
+          return false;
+        }
+        if (file.ContentType != "image/png" && file.ContentType != "image/jpg" && file.ContentType != "image/jpeg")
+        {
+          return false;
+        }
+        return true;
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+    }
 
     /// <summary>
     /// Lưu ảnh lên server

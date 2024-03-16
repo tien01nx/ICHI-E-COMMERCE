@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../../service/auth.service';
+import { TokenService } from '../../../service/token.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -28,7 +29,8 @@ export class SignInComponent implements OnInit {
     private authServer: AuthService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private tokenService: TokenService
   ) {}
 
   userForm: FormGroup = new FormGroup({
@@ -48,9 +50,20 @@ export class SignInComponent implements OnInit {
         if (response.code === 200) {
           // Đăng nhập thành công
           if (response.message === 'Đăng nhập thành công') {
-            this.userForm.reset();
-            this.toastr.success(response.message, 'Thông báo');
-            this.router.navigate(['/']);
+            debugger;
+            this.tokenService.setToken(response.data);
+            const roles = this.tokenService.getUserRoles();
+            const requiredRole = ['ADMIN', 'USER', 'EMPLOYEE'];
+            this.toastr.success('Đăng nhập thành công');
+            if (roles.some((role: string) => requiredRole.includes(role))) {
+              window.location.href = '/admin';
+            } else {
+              window.location.href = '/';
+            }
+
+            // this.userForm.reset();
+            // this.toastr.success(response.message, 'Thông báo');
+            // this.router.navigate(['/']);
           } else {
             this.errorMessage = response.message;
           }

@@ -32,6 +32,7 @@ namespace ICHI_CORE.Domain.MasterModel
     [Required]
     public decimal Price { get; set; } = 0;
     public int? PriorityLevel { get; set; } = 0;
+    public double Quantity { get; set; } = 0;
     public string? Notes { get; set; } = string.Empty;
     public bool isActive { get; set; } = false;
     public bool isDeleted { get; set; } = false;

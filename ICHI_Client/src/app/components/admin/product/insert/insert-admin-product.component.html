@@ -71,21 +71,21 @@
       </div>
       <h4 class="mb-3">Hiển thị hình ảnh</h4>
       <sup class="text-danger">*</sup>
-      <div class="d-inline-flex" *ngIf="selectedImageProductUrl.length != 0">
+      <div class="d-inline-flex" *ngIf="productImage.length != 0">
         <div
           class="position-relative d-inline-block d-flex justify-content-center mb-2 border rounded-1 me-2"
           style="width: 100px; height: 100px"
-          *ngFor="let image of selectedImageProductUrl"
+          *ngFor="let image of productImage"
         >
           <img
             class="w-100 h-auto rounded-1 object-fit-contain"
-            src="{{ Environment.apiBaseRoot }}/{{ image }}"
+            src="{{ Environment.apiBaseRoot }}/{{ image.imagePath }}"
             alt=""
           />
           <a
             href="javascript:void(0);"
             class="position-absolute w-100 d-flex justify-content-end pe-2 pt-2 fs-9"
-            (click)="deleteImageProduct(image)"
+            (click)="deleteImageProduct(image.imageName)"
           >
             <span class="text-body-tertiary fa-solid fa-x"></span>
           </a>
@@ -122,7 +122,6 @@
                         >Thêm danh mục mới</a
                       >
                     </div>
-
                     <ng-select
                       formControlName="categoryId"
                       placeholder="Chọn danh mục"
@@ -134,6 +133,20 @@
                         {{ category.categoryName }}
                       </ng-option>
                     </ng-select>
+                    <small
+                      class="text-danger mt-1"
+                      *ngIf="
+                        productForm.get('categoryId')?.invalid &&
+                        (productForm.get('categoryId')?.dirty ||
+                          productForm.get('categoryId')?.touched)
+                      "
+                    >
+                      <span
+                        *ngIf="productForm.get('categoryId')?.errors?.['required']"
+                      >
+                        Danh mục không được để trống
+                      </span>
+                    </small>
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 col-xl-12">
@@ -158,6 +171,16 @@
                         {{ trademark.trademarkName }}
                       </ng-option>
                     </ng-select>
+                    <small
+                      class="text-danger mt-1"
+                      *ngIf="productForm['controls']['trademarkId'].dirty"
+                    >
+                      <span
+                        *ngIf="productForm['controls']['trademarkId'].errors?.['required']"
+                      >
+                        Thương hiệu không được để trống
+                      </span>
+                    </small>
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 col-xl-12">
@@ -176,6 +199,16 @@
                       bindLabel="name"
                       formControlName="color"
                     ></ng-select>
+                    <small
+                      class="text-danger mt-1"
+                      *ngIf="productForm['controls']['color'].dirty"
+                    >
+                      <span
+                        *ngIf="productForm['controls']['color'].errors?.['required']"
+                      >
+                        Màu sắc không được để trống
+                      </span>
+                    </small>
                   </div>
                 </div>
                 <!-- thứ tự hiện thị sản phẩm -->
@@ -268,7 +301,7 @@
                         class="form-control"
                         type="text"
                         placeholder="0"
-                        formControlName="price"
+                        formControlName="quantity"
                         readonly
                       />
                     </div>

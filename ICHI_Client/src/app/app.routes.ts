@@ -22,6 +22,7 @@ import { AuthComponent } from './components/admin/auth/auth.component';
 import { TrademarkComponent } from './components/admin/trademark/trademark.component';
 import { PromotionComponent } from './components/admin/promotion/promotion.component';
 import { PromotiondemoComponent } from './components/admin/promotiondemo/promotiondemo.component';
+import { AdminGuard } from './guard/admin.guard';
 
 export const routes: Routes = [
   {
@@ -42,9 +43,10 @@ export const routes: Routes = [
       { path: 'promotion', component: PromotionComponent },
       { path: 'promotiondemo', component: PromotiondemoComponent },
     ],
+    canActivate: [AdminGuard], // Thêm guard vào đây
   },
   { path: '', component: ClientLayoutComponent },
-  { path: 'product_detail', component: DetailProductComponent },
+  { path: 'product_detail/:id', component: DetailProductComponent },
   { path: 'product_filter', component: ProductsFilterComponent },
   { path: 'cart', component: CartComponent },
   { path: 'checkout', component: CheckoutComponent },

@@ -95,6 +95,8 @@ export class ProductsService {
     formData.append('Description', product.description);
     formData.append('Price', product.price.toString());
     formData.append('PriorityLevel', product.priorityLevel.toString());
+    formData.append('Quantity', product.quantity.toString());
+    formData.append('isActive', product.isActive.toString());
     if (
       product.notes != null &&
       product.notes != undefined &&

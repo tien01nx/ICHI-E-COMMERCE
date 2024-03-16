@@ -37,6 +37,7 @@ export class InsertProductDTO extends MasterEntityDTO {
   @IsString()
   productImages: any;
 
+  quantity: number;
   constructor(
     id: number,
     createDatetime: Date,
@@ -53,7 +54,8 @@ export class InsertProductDTO extends MasterEntityDTO {
     notes: string,
     isActive: boolean,
     isDeleted: boolean,
-    productImages: any
+    productImages: any,
+    quantity: number
   ) {
     super(id, createDatetime, createUserId, updateDatetime, updateUserId);
     this.productName = productName;
@@ -67,5 +69,6 @@ export class InsertProductDTO extends MasterEntityDTO {
     this.isActive = isActive;
     this.isDeleted = isDeleted;
     this.productImages = productImages;
+    this.quantity = quantity;
   }
 }
