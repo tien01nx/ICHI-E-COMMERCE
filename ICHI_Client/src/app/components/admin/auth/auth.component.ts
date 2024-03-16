@@ -22,8 +22,6 @@ import { AuthService } from '../../../service/auth.service';
 
 @Component({
   selector: 'app-auth',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })

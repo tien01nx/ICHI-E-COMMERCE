@@ -18,8 +18,6 @@ import { PromotionService } from '../../../service/promotion.service';
 
 @Component({
   selector: 'app-promotion.admin',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './promotion.component.html',
   styleUrl: './promotion.component.css',
 })

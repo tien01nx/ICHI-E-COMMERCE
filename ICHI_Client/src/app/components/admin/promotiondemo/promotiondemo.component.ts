@@ -7,8 +7,6 @@ import { PaginationDTO } from '../../../dtos/pagination.dto';
 
 @Component({
   selector: 'app-promotiondemo',
-  standalone: true,
-  imports: [],
   templateUrl: './promotiondemo.component.html',
   styleUrl: './promotiondemo.component.css',
 })

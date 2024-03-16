@@ -20,15 +20,6 @@ import { SwiperContainer } from 'swiper/element/swiper-element';
 
 @Component({
   selector: 'app-home',
-  standalone: true,
-  imports: [
-    EditorModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CommonModule,
-    RouterLink,
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })

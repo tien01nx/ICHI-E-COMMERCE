@@ -28,14 +28,6 @@ import { ProductImage } from '../../../../models/product.image';
 
 @Component({
   selector: 'app-insert-admin-product',
-  standalone: true,
-  imports: [
-    EditorModule,
-    NgxDropzoneModule,
-    CommonModule,
-    ReactiveFormsModule,
-    NgSelectModule,
-  ],
   templateUrl: './insert-admin-product.component.html',
   styleUrl: './insert-admin-product.component.css',
 })

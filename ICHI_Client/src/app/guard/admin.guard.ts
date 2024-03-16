@@ -36,7 +36,7 @@ export class AdminGuard {
       // nếu token hết hạn, chuyển hướng đến trang đăng nhập
       this.toastr.error('Phiên làm việc hết hạn, vui lòng đăng nhập lại');
       return this.router.createUrlTree(['/login']);
-    } else if (roles.some((role: string) => requiredRole.includes(role))) {
+    } else if (requiredRole.includes(roles)) {
       // Nếu người dùng có ít nhất một quyền nằm trong danh sách quyền yêu cầu
       return true; // Người dùng có quyền truy cập
     } else {

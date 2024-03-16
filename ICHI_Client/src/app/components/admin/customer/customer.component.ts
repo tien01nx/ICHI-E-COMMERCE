@@ -20,8 +20,6 @@ import { UserService } from '../../../service/user.service';
 
 @Component({
   selector: 'app-customer',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './customer.component.html',
   styleUrl: './customer.component.css',
 })

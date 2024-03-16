@@ -18,8 +18,6 @@ import { Utils } from '../../../../Utils.ts/utils';
 
 @Component({
   selector: 'app-supplier.admin',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './supplier.admin.component.html',
   styleUrl: './supplier.admin.component.css',
 })

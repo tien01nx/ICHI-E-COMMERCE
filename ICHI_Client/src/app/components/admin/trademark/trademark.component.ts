@@ -18,8 +18,6 @@ import { TrademarkService } from '../../../service/trademark.service';
 
 @Component({
   selector: 'app-trademark',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './trademark.component.html',
   styleUrl: './trademark.component.css',
 })

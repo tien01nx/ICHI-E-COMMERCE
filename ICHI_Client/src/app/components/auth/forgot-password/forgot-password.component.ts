@@ -13,8 +13,6 @@ import { AuthService } from '../../../service/auth.service';
 
 @Component({
   selector: 'app-forget-password',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.css',
 })

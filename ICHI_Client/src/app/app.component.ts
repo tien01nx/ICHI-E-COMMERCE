@@ -11,22 +11,9 @@ import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
-  imports: [
-    CommonModule,
-    RouterOutlet,
-    ClientLayoutComponent,
-    ClientHeaderComponent,
-    ClientMenuComponent,
-    NgxDropzoneModule,
-    NgSelectModule,
-    JwtModule,
-  ],
-  providers: [JwtHelperService],
 })
-  
 export class AppComponent {
   title = 'IchiClient';
 }

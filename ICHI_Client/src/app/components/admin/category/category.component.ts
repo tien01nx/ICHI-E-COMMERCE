@@ -18,8 +18,6 @@ import { CategoryService } from '../../../service/category-product.service';
 
 @Component({
   selector: 'app-supplier.admin',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './category.component.html',
   styleUrl: './category.component.css',
 })

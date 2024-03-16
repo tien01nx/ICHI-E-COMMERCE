@@ -8,16 +8,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-admin-layout',
-  standalone: true,
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.css',
-  imports: [
-    AdminMenuComponent,
-    AdminHomeComponent,
-    AdminHeaderComponent,
-    AdminFooterComponent,
-    RouterOutlet,
-    CommonModule,
-  ],
 })
 export class AdminLayoutComponent {}

@@ -13,16 +13,8 @@ import { NgxDropzoneModule } from 'ngx-dropzone';
 
 @Component({
   selector: 'app-detail-product',
-  standalone: true,
   templateUrl: './detail-product.component.html',
   styleUrl: './detail-product.component.css',
-  imports: [
-    ClientFooterComponent,
-    ClientMenuComponent,
-    ClientHeaderComponent,
-    CommonModule,
-    NgxDropzoneModule,
-  ],
 })
 export class DetailProductComponent implements OnInit, AfterViewInit {
   protected readonly Environment = Environment;

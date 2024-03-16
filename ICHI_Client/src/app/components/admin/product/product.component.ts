@@ -21,14 +21,6 @@ import { ProductDTO } from '../../../dtos/product.dto';
 
 @Component({
   selector: 'app-product',
-  standalone: true,
-  imports: [
-    EditorModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CommonModule,
-    RouterLink,
-  ],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css',
 })

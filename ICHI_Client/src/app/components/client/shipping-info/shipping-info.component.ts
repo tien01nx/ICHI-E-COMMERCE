@@ -5,10 +5,8 @@ import { ClientFooterComponent } from "../client-footer/client-footer.component"
 
 @Component({
     selector: 'app-shipping-info',
-    standalone: true,
     templateUrl: './shipping-info.component.html',
     styleUrl: './shipping-info.component.css',
-    imports: [ClientHeaderComponent, ClientMenuComponent, ClientFooterComponent]
 })
 export class ShippingInfoComponent {
 

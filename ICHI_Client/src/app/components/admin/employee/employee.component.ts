@@ -23,8 +23,6 @@ import { AuthService } from '../../../service/auth.service';
 
 @Component({
   selector: 'app-customer',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './employee.component.html',
   styleUrl: './employee.component.css',
 })

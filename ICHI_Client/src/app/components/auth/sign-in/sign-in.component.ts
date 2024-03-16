@@ -14,8 +14,6 @@ import { TokenService } from '../../../service/token.service';
 
 @Component({
   selector: 'app-sign-in',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.css',
 })
@@ -53,17 +51,15 @@ export class SignInComponent implements OnInit {
             debugger;
             this.tokenService.setToken(response.data);
             const roles = this.tokenService.getUserRoles();
-            const requiredRole = ['ADMIN', 'USER', 'EMPLOYEE'];
-            this.toastr.success('Đăng nhập thành công');
-            if (roles.some((role: string) => requiredRole.includes(role))) {
+            const requiredRole = ['ADMIN', 'EMPLOYEE'];
+            if (requiredRole.includes(roles)) {
               window.location.href = '/admin';
             } else {
               window.location.href = '/';
             }
-
-            // this.userForm.reset();
-            // this.toastr.success(response.message, 'Thông báo');
-            // this.router.navigate(['/']);
+            this.userForm.reset();
+            this.toastr.success(response.message, 'Thông báo');
+            this.router.navigate(['/']);
           } else {
             this.errorMessage = response.message;
           }
