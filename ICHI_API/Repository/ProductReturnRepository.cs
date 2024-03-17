@@ -5,22 +5,23 @@ using System.Linq.Expressions;
 
 namespace ICHI.DataAccess.Repository
 {
-  public class ProductReturnRepository : Repository<ProductReturn>, IProductReturnRepository
-  {
-    private PcsApiContext _db;
-    public ProductReturnRepository(PcsApiContext db) : base(db)
+    public class ProductReturnRepository : Repository<ProductReturn>, IProductReturnRepository
     {
-      _db = db;
-    }
+        private PcsApiContext _db;
 
-    public bool ExistsBy(Expression<Func<ProductReturn, bool>> filter)
-    {
-      return dbSet.Any(filter);
-    }
+        public ProductReturnRepository(PcsApiContext db) : base(db)
+        {
+            _db = db;
+        }
 
-    public void Update(ProductReturn obj)
-    {
-      _db.ProductReturns.Update(obj);
+        public bool ExistsBy(Expression<Func<ProductReturn, bool>> filter)
+        {
+            return dbSet.Any(filter);
+        }
+
+        public void Update(ProductReturn obj)
+        {
+            _db.ProductReturns.Update(obj);
+        }
     }
-  }
 }

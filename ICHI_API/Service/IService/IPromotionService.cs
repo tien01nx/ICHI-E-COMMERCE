@@ -7,13 +7,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ICHI_API.Service.IService
 {
-  public interface IPromotionService
-  {
-    PagedResult<Promotion> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage);
-    Promotion Create(Promotion Promotion, out string strMessage);
-    Promotion Update(Promotion Promotion, out string strMessage);
-    Promotion FindById(int id, out string strMessage);
-    bool Delete(int id, out string strMessage);
+    public interface IPromotionService
+    {
+        PagedResult<Promotion> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage);
 
-  }
+        Promotion Create(Promotion Promotion, out string strMessage);
+
+        Promotion Update(Promotion Promotion, out string strMessage);
+
+        Promotion FindById(int id, out string strMessage);
+
+        bool Delete(int id, out string strMessage);
+
+    }
 }

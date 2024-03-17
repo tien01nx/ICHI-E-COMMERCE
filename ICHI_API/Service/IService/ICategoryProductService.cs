@@ -7,13 +7,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ICHI_API.Service.IService
 {
-  public interface ICategoryProductService
-  {
-    PagedResult<Category> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage);
-    Category Create(Category supplier, out string strMessage);
-    Category Update(Category supplier, out string strMessage);
-    Category FindById(int id, out string strMessage);
-    bool Delete(int id, out string strMessage);
+    public interface ICategoryProductService
+    {
+        PagedResult<Category> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage);
 
-  }
+        Category Create(Category supplier, out string strMessage);
+
+        Category Update(Category supplier, out string strMessage);
+
+        Category FindById(int id, out string strMessage);
+
+        bool Delete(int id, out string strMessage);
+
+    }
 }
