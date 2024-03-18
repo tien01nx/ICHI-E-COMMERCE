@@ -55,7 +55,7 @@ export class EmployeeService {
 
   create(Employee: any) {
     return this.apiService.callApi<EmployeeModel>(
-      '/Employee/Create-Employee',
+      '/Employee/Create',
       'post',
       null,
       Employee
@@ -73,7 +73,7 @@ export class EmployeeService {
 
   delete(id: number) {
     return this.apiService.callApi<EmployeeModel[]>(
-      '/Employee/' + id,
+      '/Employee/Delete?id=' + id,
       'delete'
     );
   }

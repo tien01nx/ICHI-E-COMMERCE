@@ -71,4 +71,5 @@ export class InsertProductDTO extends MasterEntityDTO {
     this.productImages = productImages;
     this.quantity = quantity;
   }
+
 }

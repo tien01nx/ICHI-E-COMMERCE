@@ -11,114 +11,117 @@ using ICHI_API.Data;
 using ICHI_API.Service.IService;
 namespace ICHI_CORE.Controllers.MasterController
 {
-  [ApiController]
-  [Route("api/[controller]")]
-  public class CategoryProductController : BaseController<Category>
-  {
-    private readonly ICategoryProductService _categoryproductService;
-    public CategoryProductController(PcsApiContext context, ICategoryProductService categoryProductService) : base(context)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class CategoryProductController : ControllerBase
     {
-      _categoryproductService = categoryProductService;
-    }
+        private readonly ICategoryProductService _categoryproductService;
 
-    [HttpGet("FindAllPaged")]
-    public async Task<ActionResult<ApiResponse<ICHI_API.Helpers.PagedResult<Category>>>> GetAll(
-                    [FromQuery(Name = "search")] string name = "",
-                    [FromQuery(Name = "page-size")] int pageSize = 10,
-                    [FromQuery(Name = "page-number")] int pageNumber = 1,
-                    [FromQuery(Name = "sort-direction")] string sortDir = "desc",
-                    [FromQuery(Name = "sort-by")] string sortBy = "Id")
-    {
-      ApiResponse<ICHI_API.Helpers.PagedResult<Category>> result;
-      string strMessage = "";
-      try
-      {
-        var data = _categoryproductService.GetAll(name, pageSize, pageNumber, sortDir, sortBy, out strMessage);
-        result = new ApiResponse<ICHI_API.Helpers.PagedResult<Category>>(
-             System.Net.HttpStatusCode.OK,
-             "Retrieved successfully",
-             data
-         );
+        public CategoryProductController(PcsApiContext context, ICategoryProductService categoryProductService)
+        {
+            _categoryproductService = categoryProductService;
+        }
 
-      }
-      catch (Exception ex)
-      {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<ICHI_API.Helpers.PagedResult<Category>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
-      }
-      return result;
-    }
+        [HttpGet("FindAllPaged")]
+        public async Task<ActionResult<ApiResponse<ICHI_API.Helpers.PagedResult<Category>>>> GetAll(
+                        [FromQuery(Name = "search")] string name = "",
+                        [FromQuery(Name = "page-size")] int pageSize = 10,
+                        [FromQuery(Name = "page-number")] int pageNumber = 1,
+                        [FromQuery(Name = "sort-direction")] string sortDir = "desc",
+                        [FromQuery(Name = "sort-by")] string sortBy = "Id")
+        {
+            ApiResponse<ICHI_API.Helpers.PagedResult<Category>> result;
+            string strMessage = "";
+            try
+            {
+                var data = _categoryproductService.GetAll(name, pageSize, pageNumber, sortDir, sortBy, out strMessage);
+                result = new ApiResponse<ICHI_API.Helpers.PagedResult<Category>>(
+                     System.Net.HttpStatusCode.OK,
+                     "Retrieved successfully",
+                     data
+                 );
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<ApiResponse<Category>>> FindById(int id)
-    {
-      ApiResponse<Category> result;
-      string strMessage = "";
-      try
-      {
-        var data = _categoryproductService.FindById(id, out strMessage);
-        result = new ApiResponse<Category>(System.Net.HttpStatusCode.OK, strMessage, data);
-      }
-      catch (Exception ex)
-      {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<Category>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
-      }
-      return result;
-    }
+            }
+            catch (Exception ex)
+            {
+                strMessage = "Có lỗi xảy ra";
+                NLogger.log.Error(ex.ToString());
+                result = new ApiResponse<ICHI_API.Helpers.PagedResult<Category>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+            }
+            return result;
+        }
 
-    [HttpPost("Create-Category")]
-    public async Task<ApiResponse<Category>> CreateSupplỉer([FromBody] Category supplier)
-    {
-      ApiResponse<Category> result;
-      string strMessage = "";
-      try
-      {
-        var data = _categoryproductService.Create(supplier, out strMessage);
-        result = new ApiResponse<Category>(System.Net.HttpStatusCode.OK, strMessage, data);
-      }
-      catch (Exception ex)
-      {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<Category>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
-      }
-      return result;
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ApiResponse<Category>>> FindById(int id)
+        {
+            ApiResponse<Category> result;
+            string strMessage = "";
+            try
+            {
+                var data = _categoryproductService.FindById(id, out strMessage);
+                result = new ApiResponse<Category>(System.Net.HttpStatusCode.OK, strMessage, data);
+            }
+            catch (Exception ex)
+            {
+                NLogger.log.Error(ex.ToString());
+                strMessage = "Có lỗi xảy ra";
+                result = new ApiResponse<Category>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+            }
+            return result;
+        }
+
+        [HttpPost("Create")]
+        public async Task<ApiResponse<Category>> CreateSupplỉer([FromBody] Category supplier)
+        {
+            ApiResponse<Category> result;
+            string strMessage = "";
+            try
+            {
+                var data = _categoryproductService.Create(supplier, out strMessage);
+                result = new ApiResponse<Category>(System.Net.HttpStatusCode.OK, strMessage, data);
+            }
+            catch (Exception ex)
+            {
+                NLogger.log.Error(ex.ToString());
+                strMessage = "Có lỗi xảy ra";
+                result = new ApiResponse<Category>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+            }
+            return result;
+        }
+
+        [HttpPut("Update")]
+        public async Task<ApiResponse<Category>> UpdateSupplỉer([FromBody] Category supplier)
+        {
+            ApiResponse<Category> result;
+            string strMessage = "";
+            try
+            {
+                var data = _categoryproductService.Update(supplier, out strMessage);
+                result = new ApiResponse<Category>(System.Net.HttpStatusCode.OK, strMessage, data);
+            }
+            catch (Exception ex)
+            {
+                result = new ApiResponse<Category>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+            }
+            return result;
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ApiResponse<Category>>> Delete(int id)
+        {
+            string strMessage = "";
+            try
+            {
+                var data = _categoryproductService.Delete(id, out strMessage);
+                var result = new ApiResponse<Category>(System.Net.HttpStatusCode.OK, strMessage, null);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                NLogger.log.Error(ex.ToString());
+                strMessage = "Có lỗi xảy ra";
+                return BadRequest(new ApiResponse<Category>(System.Net.HttpStatusCode.BadRequest, strMessage, null));
+            }
+        }
     }
-    [HttpPost("Update-Category")]
-    public async Task<ApiResponse<Category>> UpdateSupplỉer([FromBody] Category supplier)
-    {
-      ApiResponse<Category> result;
-      string strMessage = "";
-      try
-      {
-        var data = _categoryproductService.Update(supplier, out strMessage);
-        result = new ApiResponse<Category>(System.Net.HttpStatusCode.OK, strMessage, data);
-      }
-      catch (Exception ex)
-      {
-        result = new ApiResponse<Category>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
-      }
-      return result;
-    }
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<ApiResponse<Category>>> Delete(int id)
-    {
-      string strMessage = "";
-      try
-      {
-        var data = _categoryproductService.Delete(id, out strMessage);
-        var result = new ApiResponse<Category>(System.Net.HttpStatusCode.OK, strMessage, null);
-        return Ok(result);
-      }
-      catch (Exception ex)
-      {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        return BadRequest(new ApiResponse<Category>(System.Net.HttpStatusCode.BadRequest, strMessage, null));
-      }
-    }
-  }
 }

@@ -15,7 +15,7 @@ namespace ICHI_API.Service.IService
 
         string ChangePassword(UserChangePassword user, out string strMessage);
 
-        string LockAccount(int id, bool status, out string strMessage);
+        string LockAccount(string id, bool status, out string strMessage);
 
         string RefreshToken(UserRefreshToken user, out string strMessage);
 

@@ -109,7 +109,7 @@ export class TrademarkService {
   create(Trademark: InsertTrademarkDTO) {
     debugger;
     return this.apiService.callApi<TrademarkModel>(
-      '/Trademark/Create-Trademark',
+      '/Trademark/Create',
       'post',
       null,
       Trademark
@@ -119,8 +119,8 @@ export class TrademarkService {
   update(Trademark: TrademarkModel) {
     debugger;
     return this.apiService.callApi<TrademarkModel>(
-      '/Trademark/Update-Trademark',
-      'post',
+      '/Trademark/Update',
+      'put',
       null,
       Trademark
     );
@@ -128,7 +128,7 @@ export class TrademarkService {
 
   delete(id: number) {
     return this.apiService.callApi<TrademarkModel[]>(
-      '/Trademark/' + id,
+      '/Trademark/Delete?id' + id,
       'delete'
     );
   }

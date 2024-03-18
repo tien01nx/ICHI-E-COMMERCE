@@ -1,34 +1,23 @@
 ﻿using API.Model;
-using ICHI_API;
-using ICHI.DataAccess.Repository.IRepository;
-using ICHI_API.Extension;
-using ICHI_CORE.Controllers.BaseController;
-using ICHI_CORE.Domain;
 using ICHI_CORE.Domain.MasterModel;
-using ICHI_CORE.Helpers;
 using ICHI_CORE.Model;
 using ICHI_CORE.NlogConfig;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using ICHI_API.Data;
 using ICHI_API.Service.IService;
 using ICHI_API.Model;
-using ICHI_API.Service;
 namespace ICHI_CORE.Controllers.MasterController
 {
+
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : BaseController<User>
+    public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
 
-        public AuthController(PcsApiContext context, IAuthService authService, IUserService userService, IConfiguration configuration = null) : base(context)
+        public AuthController(PcsApiContext context, IAuthService authService, IUserService userService, IConfiguration configuration = null)
         {
             _authService = authService;
             _userService = userService;
@@ -173,9 +162,8 @@ namespace ICHI_CORE.Controllers.MasterController
             return result;
         }
 
-
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ApiResponse<Employee>>> Delete(int id, bool status)
+        public async Task<ActionResult<ApiResponse<Employee>>> Delete(string id, bool status)
         {
             string strMessage = "";
             try

@@ -52,7 +52,7 @@ export class CategoryService {
   create(category: InsertSupplierDTO) {
     debugger;
     return this.apiService.callApi<CategoryProduct>(
-      '/CategoryProduct/Create-Category',
+      '/CategoryProduct/Category',
       'post',
       null,
       category
@@ -62,8 +62,8 @@ export class CategoryService {
   update(category: CategoryProduct) {
     debugger;
     return this.apiService.callApi<CategoryProduct>(
-      '/CategoryProduct/Update-Category',
-      'post',
+      '/CategoryProduct/Update',
+      'put',
       null,
       category
     );

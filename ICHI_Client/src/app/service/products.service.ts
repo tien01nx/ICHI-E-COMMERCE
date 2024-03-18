@@ -110,7 +110,7 @@ export class ProductsService {
     }
     console.log(product, files);
     return this.http.post(
-      'https://localhost:7150/api/Product/Upsert/Product',
+      'https://localhost:7150/api/Product/Upsert',
       formData
     );
   }
@@ -129,7 +129,7 @@ export class ProductsService {
 
   deleteImage(id: number, imageName: string) {
     return this.apiService.callApi<string>(
-      '/Product/Delete-Image/' + id + '/' + imageName,
+      'Product/Delete-Image?productId=' + id + '&imageName=' + imageName,
       'delete'
     );
   }

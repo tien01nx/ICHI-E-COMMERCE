@@ -1,8 +1,10 @@
 ﻿using ICHI.DataAccess.Repository.IRepository;
 using ICHI_API.Data;
 using ICHI_API.Helpers;
+using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
+using ICHI_CORE.Helpers;
 using ICHI_CORE.NlogConfig;
 using System.Linq.Dynamic.Core;
 
@@ -20,125 +22,40 @@ namespace ICHI_API.Service
             _db = pcsApiContext;
         }
 
-        public Helpers.PagedResult<TrxTransaction> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
+        public TrxTransactionDTO InsertTxTransaction(TrxTransactionDTO trxTransactionDTO, out string strMessage)
         {
             strMessage = string.Empty;
             try
             {
-                var query = _db.TrxTransactions.AsQueryable();
-                var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
-                query = query.OrderBy(orderBy);
-                var pagedResult = Helpers.PagedResult<TrxTransaction>.CreatePagedResult(query, pageNumber, pageSize);
-                return pagedResult;
-            }
-            catch (Exception ex)
-            {
-                NLogger.log.Error(ex.ToString());
-                strMessage = ex.ToString();
-                return null;
-            }
-        }
-
-        public TrxTransaction FindById(int id, out string strMessage)
-        {
-            strMessage = string.Empty;
-            try
-            {
-                var data = _unitOfWork.TrxTransaction.Get(u => u.Id == id);
-                if (data == null)
+                var cart = _unitOfWork.Cart.GetAll(u => u.UserId == trxTransactionDTO.UserId);
+                TrxTransaction trxTransaction = new TrxTransaction();
+                trxTransaction.UserId = trxTransactionDTO.UserId;
+                trxTransaction.FullName = trxTransactionDTO.FullName;
+                trxTransaction.PhoneNumber = trxTransactionDTO.PhoneNumber;
+                trxTransaction.Address = trxTransactionDTO.Address;
+                trxTransaction.OrderDate = DateTime.Now;
+                trxTransaction.OrderStatus = AppSettings.StatusApproved;
+                trxTransaction.PaymentStatus = AppSettings.PaymentStatusDelayedPayment;
+                trxTransaction.OrderTotal = cart.Sum(u => u.Price * u.Quantity);
+                _unitOfWork.TrxTransaction.Add(trxTransaction);
+                _unitOfWork.Save();
+                // lấy thông tin đơn hàng theo userid từ cart
+                foreach (var item in cart)
                 {
-                    strMessage = "Nhà cung cấp không tồn tại";
-                    return null;
+                    TransactionDetail trxTransactionDetail = new TransactionDetail();
+                    trxTransactionDetail.ProductId = item.ProductId;
+                    trxTransactionDetail.Total = item.Quantity;
+                    trxTransactionDetail.Price = item.Price;
+                    trxTransactionDetail.TrxTransactionId = trxTransaction.Id;
+                    _unitOfWork.TransactionDetail.Add(trxTransactionDetail);
+                    _unitOfWork.Save();
                 }
-                return data;
+                return trxTransactionDTO;
             }
             catch (Exception ex)
             {
+                strMessage = ex.Message;
                 NLogger.log.Error(ex.ToString());
-                strMessage = ex.ToString();
-                return null;
-            }
-        }
-
-        public TrxTransaction Create(TrxTransaction category, out string strMessage)
-        {
-            strMessage = string.Empty;
-            try
-            {
-                category.CreateBy = "Admin";
-                category.ModifiedBy = "Admin";
-                _unitOfWork.TrxTransaction.Add(category);
-                _unitOfWork.Save();
-                strMessage = "Tạo mới danh mục thành công";
-                return category;
-            }
-            catch (Exception ex)
-            {
-                NLogger.log.Error(ex.ToString());
-                strMessage = ex.ToString();
-                return null;
-            }
-        }
-
-        public TrxTransaction Update(TrxTransaction category, out string strMessage)
-        {
-            strMessage = string.Empty;
-            try
-            {
-                // lấy thông tin nhà cung cấp
-                var data = _unitOfWork.TrxTransaction.Get(u => u.Id == category.Id);
-                if (data == null)
-                {
-                    strMessage = "Danh mục sản phẩm không tồn tại";
-                    return null;
-                }
-
-                category.ModifiedBy = "Admin";
-                _unitOfWork.TrxTransaction.Update(category);
-                _unitOfWork.Save();
-                strMessage = "Cập nhật nhà cung cấp thành công";
-                return category;
-            }
-            catch (Exception ex)
-            {
-                NLogger.log.Error(ex.ToString());
-                strMessage = ex.ToString();
-                return null;
-            }
-        }
-
-        public bool Delete(int id, out string strMessage)
-        {
-            strMessage = string.Empty;
-            try
-            {
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                NLogger.log.Error(ex.ToString());
-                strMessage = ex.ToString();
-                return false;
-            }
-        }
-
-        public Cart InsertCart(Cart cart, out string strMessage)
-        {
-            // thục hiện thêm dữ liệu userId và productId vào bảng Cart
-            strMessage = string.Empty;
-
-            try
-            {
-                _unitOfWork.Cart.Add(cart);
-                _unitOfWork.Save();
-                strMessage = "Thêm sản phẩm vào giỏ hàng thành công";
-                return cart;
-            }
-            catch (Exception ex)
-            {
-                NLogger.log.Error(ex.ToString());
-                strMessage = ex.ToString();
                 return null;
             }
         }

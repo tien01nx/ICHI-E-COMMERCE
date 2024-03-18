@@ -116,7 +116,7 @@ namespace ICHI_API.Service
                 }
                 // kiểm tra email Nhân viên đã tồn tại chưa
                 var checkEmail = _unitOfWork.User.Get(u => u.Email == customer.Email);
-                if (checkEmail != null && checkEmail.Id != customer.Id)
+                if (checkEmail != null && checkEmail.Email != customer.Email)
                 {
                     strMessage = "Email đã tồn tại";
                     return null;
@@ -132,9 +132,9 @@ namespace ICHI_API.Service
                 // lấy đường dẫn ảnh file cũ
                 if (file != null)
                 {
-                    var user = _unitOfWork.User.Get(x => x.Id == data.UserId);
+                    var user = _unitOfWork.User.Get(x => x.Email == data.Email);
                     string oldFile = user.Avatar;
-                    user.Avatar = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, user.Id, file, AppSettings.PatchUser);
+                    user.Avatar = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, user.Email, file, AppSettings.PatchUser);
                     user.ModifiedBy = "Admin";
                     user.ModifiedDate = DateTime.Now;
                     _unitOfWork.User.Update(user);

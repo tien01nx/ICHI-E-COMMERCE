@@ -11,17 +11,17 @@ using System.Threading.Tasks;
 
 namespace ICHI_CORE.Domain.MasterModel
 {
-  public class UserRole
-  {
-    public int Id { get; set; } = 0;
-    public int RoleId { get; set; } = 0;
-    [ForeignKey("RoleId")]
-    [ValidateNever]
-    public Role? Role { get; set; }
+    public class UserRole
+    {
+        public int Id { get; set; } = 0;
+        public int RoleId { get; set; } = 0;
+        [ForeignKey("RoleId")]
+        [ValidateNever]
+        public Role? Role { get; set; }
 
-    public int UserId { get; set; } = 0;
-    [ForeignKey("UserId")]
-    [ValidateNever]
-    public User? User { get; set; }
-  }
+        public string UserId { get; set; } = string.Empty;
+        [ForeignKey("UserId")]
+        [ValidateNever]
+        public User? User { get; set; }
+    }
 }

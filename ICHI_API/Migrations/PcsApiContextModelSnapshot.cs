@@ -49,18 +49,20 @@ namespace ICHI_API.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProductDetailId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductDetailId");
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("UserId");
 
@@ -120,7 +122,7 @@ namespace ICHI_API.Migrations
                             CategoryLevel = 1,
                             CategoryName = "Dụng cụ viết",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3904),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2937),
                             IsDeleted = false,
                             Notes = "Mô tả về dụng cụ viết",
                             ParentID = 0
@@ -131,7 +133,7 @@ namespace ICHI_API.Migrations
                             CategoryLevel = 1,
                             CategoryName = "Giấy và sổ tay",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3907),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2941),
                             IsDeleted = false,
                             Notes = "Mô tả về giấy và sổ tay",
                             ParentID = 0
@@ -142,7 +144,7 @@ namespace ICHI_API.Migrations
                             CategoryLevel = 2,
                             CategoryName = "Bút bi",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3910),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2944),
                             IsDeleted = false,
                             Notes = "Mô tả về bút bi",
                             ParentID = 1
@@ -153,7 +155,7 @@ namespace ICHI_API.Migrations
                             CategoryLevel = 2,
                             CategoryName = "Bút mực",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3912),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2948),
                             IsDeleted = false,
                             Notes = "Mô tả về bút mực",
                             ParentID = 1
@@ -164,7 +166,7 @@ namespace ICHI_API.Migrations
                             CategoryLevel = 2,
                             CategoryName = "Bút chì",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3914),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2951),
                             IsDeleted = false,
                             Notes = "Mô tả về bút chì",
                             ParentID = 1
@@ -175,7 +177,7 @@ namespace ICHI_API.Migrations
                             CategoryLevel = 2,
                             CategoryName = "Giấy in",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3917),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2953),
                             IsDeleted = false,
                             Notes = "Mô tả về giấy in",
                             ParentID = 2
@@ -186,7 +188,7 @@ namespace ICHI_API.Migrations
                             CategoryLevel = 2,
                             CategoryName = "Sổ tay",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3920),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2956),
                             IsDeleted = false,
                             Notes = "Mô tả về sổ tay",
                             ParentID = 2
@@ -197,7 +199,7 @@ namespace ICHI_API.Migrations
                             CategoryLevel = 2,
                             CategoryName = "Sổ bìa cứng",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3922),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2959),
                             IsDeleted = false,
                             Notes = "Mô tả về sổ bìa cứng",
                             ParentID = 2
@@ -208,7 +210,7 @@ namespace ICHI_API.Migrations
                             CategoryLevel = 2,
                             CategoryName = "Sổ bìa mềm",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3924),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2963),
                             IsDeleted = false,
                             Notes = "Mô tả về sổ bìa mềm",
                             ParentID = 2
@@ -271,8 +273,9 @@ namespace ICHI_API.Migrations
                         .HasMaxLength(12)
                         .HasColumnType("nvarchar(12)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("isActive")
                         .HasColumnType("bit");
@@ -292,14 +295,14 @@ namespace ICHI_API.Migrations
                             Id = 1,
                             Address = "123 Đường ABC, Quận XYZ, Thành phố HCM",
                             Avatar = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2F717761877848073%2F&psig=AOvVaw",
-                            Birthday = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3842),
+                            Birthday = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2845),
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3844),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2848),
                             Email = "kh03@gmail.com",
                             FullName = "Khách hàng A",
                             Gender = "Nam",
                             PhoneNumber = "0123456789",
-                            UserId = 3,
+                            UserId = "s2family2001bn@gmail.com",
                             isActive = true,
                             isDeleted = false
                         });
@@ -361,8 +364,9 @@ namespace ICHI_API.Migrations
                         .HasMaxLength(12)
                         .HasColumnType("nvarchar(12)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("isActive")
                         .HasColumnType("bit");
@@ -382,14 +386,14 @@ namespace ICHI_API.Migrations
                             Id = 1,
                             Address = "123 Đường ABC, Quận XYZ, Thành",
                             Avatar = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2F717761877848073%2F&psig=AOvVaw",
-                            Birthday = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3862),
+                            Birthday = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2875),
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3863),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2876),
                             Email = "nhanvien@gmail.com",
                             FullName = "Nhân viên A",
                             Gender = "Nam",
                             PhoneNumber = "0123456789",
-                            UserId = 2,
+                            UserId = "diuthanh88@gmail.com",
                             isActive = true,
                             isDeleted = false
                         });
@@ -585,10 +589,10 @@ namespace ICHI_API.Migrations
                             CategoryId = 9,
                             Color = "Trắng",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4037),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3099),
                             Description = "<p><img src=\"https://salt.tikicdn.com/ts/tmp/42/36/fa/73fa41041422e798678760b2150701c4.jpg\" alt=\"Bản Đồ\"></p>\r\n<p>H&atilde;y kh&aacute;m ph&aacute; thế giới c&ugrave;ng cuốn bản đồ khổng lồ đầu ti&ecirc;n ở Việt Nam! S&aacute;ch gồm 52 tấm bản đồ minh họa sinh động c&aacute;c đặc điểm địa l&yacute; v&agrave; bi&ecirc;n giới ch&iacute;nh trị, giới thiệu những địa điểm nổi tiếng, những n&eacute;t đặc trưng, về động vật v&agrave; thực vật bản địa, về con người địa phương, c&aacute;c sự kiện văn h&oacute;a c&ugrave;ng nhiều th&ocirc;ng tin hấp dẫn kh&aacute;c.<br><br>Đến với cuốn Bản đồ khổng lồ (27x37cm) gồm 52 tấm bản đồ đầy m&agrave;u sắc sống động n&agrave;y, c&aacute;c bạn nhỏ sẽ được thỏa sức kh&aacute;m ph&aacute; thế giới. C&oacute; tất cả 6 tấm bản đồ lục địa v&agrave; 42 bản đồ quốc gia. Ch&acirc;u u c&oacute; g&igrave;, ch&acirc;u &Aacute; nổi tiếng v&igrave; điều chi, kh&iacute; hậu ở ch&acirc;u Phi như thế n&agrave;o? Tất cả những chi tiết nổi bật của từng v&ugrave;ng miền, từng đất nước, như địa danh, trang phục, ẩm thực, lễ hội tập tục truyền thống, v&hellip;v&hellip; đều được liệt k&ecirc; bằng những h&igrave;nh vẽ ngộ nghĩnh đ&aacute;ng y&ecirc;u. Mỗi bản đồ c&oacute; thống k&ecirc; sơ bộ về diện t&iacute;ch, d&acirc;n số, ng&ocirc;n ngữ&hellip; để c&aacute;c bạn nhỏ nắm được th&ocirc;ng tin tổng qu&aacute;t của từng đất nước, ch&acirc;u lục. Mỗi nước đều được ph&acirc;n chia th&agrave;nh c&aacute;c v&ugrave;ng địa l&yacute; cụ thể với t&ecirc;n v&ugrave;ng được viết mờ, c&aacute;c th&agrave;nh phố lớn trong từng nước được viết bằng m&agrave;u đỏ nổi bật với chấm đỏ b&ecirc;n cạnh.<br><br>Cuốn s&aacute;ch n&agrave;y hứa hẹn sẽ l&agrave; tấm v&eacute; đưa độc giả nhỏ du lịch khắp mọi miền tr&ecirc;n thế giới. C&aacute;c bậc phụ huynh cũng c&oacute; thể đồng h&agrave;nh c&ugrave;ng con em m&igrave;nh, c&ugrave;ng ng&acirc;m cứu từng chi tiết tr&ecirc;n mỗi tấm bản đồ, t&igrave;m hiểu v&agrave; b&agrave;n luận về c&aacute;c địa phương. Th&ocirc;ng qua việc chỉ dẫn, diễn giải cho c&aacute;c con về những th&ocirc;ng tin tr&ecirc;n bản đồ, đ&acirc;y sẽ l&agrave; cuốn s&aacute;ch tương t&aacute;c tốt để bố mẹ kết nối v&agrave; gần gũi với con m&igrave;nh hơn.<br><br><strong>CUỐN S&Aacute;CH N&Agrave;Y C&Oacute; G&Igrave; ĐẶC BIỆT?</strong><br><br>Cuốn s&aacute;ch Bản đồ đ&atilde; được xuất bản tại hơn 30 quốc gia, b&aacute;n được hơn 3 triệu bản in, l&agrave; một trong những cuốn bản đồ ăn kh&aacute;ch nhất thế giới. Bản đồ của hai t&aacute;c giả Aleksandra Mizielińska v&agrave; Daniel Mizieliński đ&atilde; gi&agrave;nh được nhiều giải thưởng lớn, nổi bật nhất l&agrave; giải Prix Sorci&egrave;res của Ph&aacute;p v&agrave; giải Premio Andersen của &Yacute; &ndash; hai giải thưởng danh gi&aacute; cho d&ograve;ng s&aacute;ch thiếu nhi.<br><br>C&aacute;c quốc gia đ&atilde; xuất bản &ldquo;Bản đồ&rdquo;: &Uacute;c, &Aacute;o, Bỉ, Brazil, Canada, Chile, Trung Quốc, Croatia, S&eacute;c, Ecuador, Ai Cập, Fiji, Phần Land, Ph&aacute;p, Đức, Ghana, Hy Lạp, Iceland, Ấn Độ, &Yacute;, Nhật Bản, Jordan, Madagascar, Ma Rốc, Mexico, M&ocirc;ng Cổ, Namibia, Nepal, H&agrave; Lan, New Zealand, Peru, Ba Lan, Nam Phi, Romania, Nga, T&acirc;y Ban Nha, Thụy Điển, Thụy Sĩ, Tanzania, Th&aacute;i Lan, Anh, Mỹ.<br><br>ĐẶC BIỆT: Phi&ecirc;n bản \"Bản đồ\" Việt Nam đặc biệt được t&aacute;c giả vẽ ri&ecirc;ng đất nước Việt Nam.<br><br>Để thực hiện cuốn s&aacute;ch đồ sộ n&agrave;y, hai t&aacute;c giả trẻ đ&atilde; phải mất hơn 3 năm trời. Sau khi nghi&ecirc;n cứu v&agrave; t&igrave;m hiểu kỹ lưỡng, họ lập một danh s&aacute;ch c&aacute;c th&ocirc;ng tin hấp dẫn v&agrave; th&uacute; vị với trẻ em, chọn lọc ra những chi tiết đặc sắc nhất của mỗi nước để vẽ v&agrave;o bản đồ. C&aacute;c tấm bản đồ đều được vẽ theo tỉ lệ chuẩn x&aacute;c dựa tr&ecirc;n c&aacute;c bản đồ địa l&yacute; đ&atilde; được ph&aacute;t h&agrave;nh. Hai t&aacute;c giả kh&ocirc;ng chỉ vẽ tay tất cả c&aacute;c chi tiết h&igrave;nh ảnh m&agrave; c&ograve;n d&agrave;y c&ocirc;ng thiết kế tất cả c&aacute;c ph&ocirc;ng chữ được d&ugrave;ng trong s&aacute;ch.</p>\r\n<p>Gi&aacute; sản phẩm tr&ecirc;n Tiki đ&atilde; bao gồm thuế theo luật hiện h&agrave;nh. B&ecirc;n cạnh đ&oacute;, tuỳ v&agrave;o loại sản phẩm, h&igrave;nh thức v&agrave; địa chỉ giao h&agrave;ng m&agrave; c&oacute; thể ph&aacute;t sinh th&ecirc;m chi ph&iacute; kh&aacute;c như ph&iacute; vận chuyển, phụ ph&iacute; h&agrave;ng cồng kềnh, thuế nhập khẩu (đối với đơn h&agrave;ng giao từ nước ngo&agrave;i c&oacute; gi&aacute; trị tr&ecirc;n 1 triệu đồng).....</p>",
                             ModifiedBy = "Admin",
-                            ModifiedDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4027),
+                            ModifiedDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3088),
                             Notes = "",
                             Price = 50000m,
                             PriorityLevel = 0,
@@ -604,10 +608,10 @@ namespace ICHI_API.Migrations
                             CategoryId = 5,
                             Color = "Trắng",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4041),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3103),
                             Description = "<p>Kh&ocirc;ng c&oacute; g&igrave; l&agrave; ngẫu nhi&ecirc;n.<br>Mọi chuyện đều l&agrave; tất nhi&ecirc;n.<br>Một cuốn s&aacute;ch t&acirc;m linh gi&uacute;p bạn giải quyết những vấn đề trong cuộc sống, c&ocirc;ng việc, t&igrave;nh cảm&hellip; Nếu bạn đang ph&acirc;n v&acirc;n trước những lựa chọn, nếu bạn đang thiếu quyết định, nếu bạn kh&ocirc;ng biết tiếp theo n&ecirc;n l&agrave;m g&igrave;: h&atilde;y đặt một c&acirc;u hỏi.<br>V&agrave; h&atilde;y để những vị thần quyết định thay bạn.</p>",
                             ModifiedBy = "Admin",
-                            ModifiedDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4038),
+                            ModifiedDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3100),
                             Notes = "",
                             Price = 45000m,
                             PriorityLevel = 0,
@@ -623,10 +627,10 @@ namespace ICHI_API.Migrations
                             CategoryId = 7,
                             Color = "Trắng",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4044),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3107),
                             Description = "<p class=\"MsoNormal\"><strong><img src=\"https://vcdn.tikicdn.com/ts/tmp/a1/dd/30/0d1aa4020c3f5ece81362f1849e56a5e.jpg\" alt=\"\" width=\"750\" height=\"972\"></strong></p>\r\n<p class=\"MsoNormal\"><strong>Hiểu Về Tr&aacute;i Tim &ndash; Cuốn S&aacute;ch Mở Cửa Thề Giới Cảm X&uacute;c Của Mỗi Người</strong></p>\r\n<p class=\"MsoNormal\">Xuất bản lần đầu ti&ecirc;n v&agrave;o năm 2011, Hiểu Về Tr&aacute;i Tim tr&igrave;nh l&agrave;ng cũng l&uacute;c với kỷ lục: cuốn s&aacute;ch c&oacute; số lượng in lần đầu lớn nhất: 100.000 bản. Trung t&acirc;m s&aacute;ch kỷ lục Việt Nam c&ocirc;ng nhận kỳ t&iacute;ch ấy nhưng đến nay, con số ph&aacute;t h&agrave;nh của Hiểu về tr&aacute;i tim vẫn chưa c&oacute; dấu hiệu chậm lại.</p>\r\n<p class=\"MsoNormal\">L&agrave; t&aacute;c phẩm đầu tay của nh&agrave; sư Minh Niệm, người s&aacute;ng lập d&ograve;ng thiền hiểu biết (Understanding Meditation), kết hợp giữa tư tưởng Phật gi&aacute;o Đại thừa v&agrave; Thiền nguy&ecirc;n thủy Vipassana, nhưng Hiểu Về Tr&aacute;i Tim kh&ocirc;ng phải t&aacute;c phẩm thuyết gi&aacute;o về Phật ph&aacute;p. Cuốn s&aacute;ch rất &ldquo;đời&rdquo; với những ưu tư của một người tu nh&igrave;n về c&otilde;i thế. Ở đ&oacute;, c&oacute; hạnh ph&uacute;c, c&oacute; đau khổ, c&oacute; t&igrave;nh y&ecirc;u, c&oacute; c&ocirc; đơn, c&oacute; tuyệt vọng, c&oacute; lười biếng, c&oacute; yếu đuối, c&oacute; bu&ocirc;ng xả&hellip; Nhưng, tất cả những hỉ nộ &aacute;i ố ấy đều được kho&aacute;c l&ecirc;n tấm &aacute;o mới, một tấm &aacute;o tinh khiết v&agrave; xuy&ecirc;n suốt, khiến người đọc khi nh&igrave;n v&agrave;o, đều thấy mọi sự như nhẹ nh&agrave;ng hơn&hellip;</p>\r\n<p class=\"MsoNormal\"><img src=\"https://vcdn.tikicdn.com/ts/product/0c/e1/06/06a3b9bfbbd775345370ff6629eadb4e.jpg\" alt=\"\" width=\"750\" height=\"971\"></p>\r\n<p class=\"MsoNormal\">Sinh tại Ch&acirc;u Th&agrave;nh, Tiền Giang, xuất gia tại Phật Học Viện Huệ Nghi&ecirc;m &ndash; S&agrave;i G&ograve;n, Minh Niệm từng thọ gi&aacute;o thiền sư Th&iacute;ch Nhất Hạnh tại Ph&aacute;p v&agrave; thiền sư Tejaniya tại Mỹ. Kết quả sau qu&aacute; tr&igrave;nh tu tập, lĩnh hội kiến thức&hellip; &Ocirc;ng quyết định chọn con đường hướng dẫn thiền v&agrave; khai triển t&acirc;m l&yacute; trị liệu cho giới trẻ l&agrave;m Phật sự của m&igrave;nh. Tiếp cận với nhiều người trẻ, lắng nghe thế giới quan của họ v&agrave; quan s&aacute;t những đổi thay trong đời sống hiện đại, &ocirc;ng ph&aacute;t hiện c&oacute; rất nhiều vấn đề của cuộc sống. Nhưng, tất cả, chỉ xuất ph&aacute;t từ một nguy&ecirc;n nh&acirc;n: Ch&uacute;ng ta chưa hiểu, v&agrave; chưa hiểu đ&uacute;ng về tr&aacute;i tim m&igrave;nh l&agrave; chưa cơ chế vận động của những hỉ, nộ, &aacute;i, ố trong mỗi con người. &ldquo;T&ocirc;i đ&atilde; từng quyết l&ograve;ng ra đi t&igrave;m hạnh ph&uacute;c ch&acirc;n thật. D&ugrave; thời điểm ấy, &yacute; niệm về hạnh ph&uacute;c ch&acirc;n thật trong t&ocirc;i rất mơ hồ nhưng t&ocirc;i vẫn tin rằng n&oacute; c&oacute; thật v&agrave; lu&ocirc;n hiện hữu trong thực tại. Hơn mười năm sau, t&ocirc;i mới thấy con đường. V&agrave; cũng chừng ấy năm nữa, t&ocirc;i mới tự tin đặt b&uacute;t viết về những điều m&igrave;nh đ&atilde; kh&aacute;m ph&aacute; v&agrave; trải nghiệm&hellip;&rdquo;, t&aacute;c giả chia sẻ.</p>\r\n<p class=\"MsoNormal\"><img src=\"https://vcdn.tikicdn.com/ts/tmp/5a/92/d0/fbf3268e4f18030feeff2f22f2583d90.jpg\" alt=\"\" width=\"750\" height=\"976\"></p>\r\n<p class=\"MsoNormal\">Gần 500 trang s&aacute;ch, Hiểu Về Tr&aacute;i Tim l&agrave; những ph&aacute;c thảo r&otilde; n&eacute;t về bức tranh đời sống cảm x&uacute;c của tất cả mọi người. Người đọc sẽ t&igrave;m thấy căn nguy&ecirc;n th&agrave;nh h&igrave;nh của những x&uacute;c cảm, thấy cả việc ch&uacute;ng chi phối thế n&agrave;o đến h&agrave;nh xử thường ng&agrave;y v&agrave; quan trọng hơn cả l&agrave; c&aacute;ch thức để điều khiển ch&uacute;ng thế n&agrave;o. Kh&ocirc;ng c&oacute; c&acirc;u trả lời cuối c&ugrave;ng của việc đ&uacute;ng &ndash; sai trong từng t&igrave;nh huống nhưng Hiểu Về Tr&aacute;i Tim c&oacute; chứa trong n&oacute; ch&igrave;a kh&oacute;a để mở ra một c&aacute;nh cửa đến với thế giới mới, thế giới an lạc từ trong t&acirc;m mỗi người. Bởi, suy cho c&ugrave;ng, mỗi tr&aacute;i tim - cơ quan ch&uacute;ng ta thường gắn cho nhiệm vụ điều khiển tr&iacute; tuệ cảm x&uacute;c của con người, đều c&oacute; những nỗi niềm ri&ecirc;ng. Chỉ cần hiểu c&acirc;u chuyện của tr&aacute;i tim, tự khắc, mỗi người sẽ quyết định được c&acirc;u chuyện của ch&iacute;nh m&igrave;nh. B&iacute; quyết của sự chuyển h&oacute;a l&agrave; kh&ocirc;ng n&ecirc;n d&ugrave;ng &yacute; ch&iacute; để &aacute;p đặt hay nhồi nặn t&acirc;m m&igrave;nh trở th&agrave;nh một kiểu mẫu tốt đẹp n&agrave;o đ&oacute;. Chỉ cẩn quan s&aacute;t v&agrave; thấu hiểu ch&uacute;ng l&agrave; đủ. T&aacute;c giả nhận định: &ldquo;Việc đưa t&acirc;m thức vượt l&ecirc;n những cung bậc cao hơn để nh&igrave;n đ&uacute;ng đắn hơn về th&acirc;n phận của m&igrave;nh v&agrave; bản chất cuộc sống l&agrave; điều ho&agrave;n to&agrave;n c&oacute; thể l&agrave;m được&rdquo;.</p>\r\n<p class=\"MsoNormal\"><img src=\"https://vcdn.tikicdn.com/ts/product/12/79/74/175d52e69c01d68030aac2eb7e3d33eb.jpg\" alt=\"\" width=\"750\" height=\"974\"></p>\r\n<p class=\"MsoNormal\">L&uacute;c sinh thời cố Gi&aacute;o sư, Tiến sĩ Trần Văn Khu&ecirc;, c&oacute; dịp tiếp cận với Hiểu Về Tr&aacute;i Tim. &Ocirc;ng nhận x&eacute;t, như một cuốn s&aacute;ch đầu ti&ecirc;n thuộc chủ đề Hạt Giống T&acirc;m Hồn do một t&aacute;c giả Việt Nam viết, cuốn s&aacute;ch sẽ gi&uacute;p người đọc hiểu được cảm x&uacute;c của t&acirc;m hồn, tr&aacute;i tim của ch&iacute;nh m&igrave;nh v&agrave; của người kh&aacute;c. Để, tận c&ugrave;ng l&agrave; loại bỏ nỗi buồn, tổn thương v&agrave; t&igrave;m được hạnh ph&uacute;c trong cuộc sống. C&oacute; lẽ, v&igrave; điều n&agrave;y m&agrave; gần 10 năm qua, Hiểu về tr&aacute;i tim vẫn l&agrave; cuốn s&aacute;ch li&ecirc;n tục được t&aacute;i bản v&agrave; chưa c&oacute; dấu hiệu &ldquo;hạ nhiệt&rdquo;. Đ&aacute;ng qu&yacute; hơn, t&ograve;an bộ lợi nhuận thu được từ việc ph&aacute;t h&agrave;nh cuốn s&aacute;ch n&agrave;y đều được chuyển về quỹ từ thiện c&ugrave;ng t&ecirc;n để gi&uacute;p đỡ trẻ em c&oacute; ho&agrave;n cảnh kh&oacute; khăn, bất hạnh tại Việt Nam.</p>\r\n<p>Gi&aacute; sản phẩm tr&ecirc;n Tiki đ&atilde; bao gồm thuế theo luật hiện h&agrave;nh. B&ecirc;n cạnh đ&oacute;, tuỳ v&agrave;o loại sản phẩm, h&igrave;nh thức v&agrave; địa chỉ giao h&agrave;ng m&agrave; c&oacute; thể ph&aacute;t sinh th&ecirc;m chi ph&iacute; kh&aacute;c như ph&iacute; vận chuyển, phụ ph&iacute; h&agrave;ng cồng kềnh, thuế nhập khẩu (đối với đơn h&agrave;ng giao từ nước ngo&agrave;i c&oacute; gi&aacute; trị tr&ecirc;n 1 triệu đồng).....</p>",
                             ModifiedBy = "Admin",
-                            ModifiedDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4042),
+                            ModifiedDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3105),
                             Notes = "",
                             Price = 60000m,
                             PriorityLevel = 0,
@@ -734,70 +738,70 @@ namespace ICHI_API.Migrations
                         {
                             Id = 2,
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4068),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3203),
                             ImageName = "574854f032ae36fc0d0a57b61f588965.jpg",
                             ImagePath = "\\images\\products\\product-2\\66df2941-a432-4b5f-a1ef-4f07eec2e608.jpg",
                             IsActive = true,
                             IsDefault = false,
                             IsDeleted = false,
                             ModifiedBy = "Admin",
-                            ModifiedDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4069),
+                            ModifiedDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3204),
                             ProductId = 2
                         },
                         new
                         {
                             Id = 3,
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4071),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3208),
                             ImageName = "5cb2991cc6a258b7c1cc07105bccaa29.jpg",
                             ImagePath = "\\images\\products\\product-3\\04be0986-90ea-41b4-ac17-153d52f3fe74.jpg",
                             IsActive = true,
                             IsDefault = false,
                             IsDeleted = false,
                             ModifiedBy = "Admin",
-                            ModifiedDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4072),
+                            ModifiedDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3209),
                             ProductId = 3
                         },
                         new
                         {
                             Id = 4,
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4074),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3212),
                             ImageName = "3f23c30055381c7e58af80a62ce28fa5.jpg",
                             ImagePath = "\\images\\products\\product-4\\0016eca6-2e6e-44d2-874f-b2deefb97893.jpg",
                             IsActive = true,
                             IsDefault = false,
                             IsDeleted = false,
                             ModifiedBy = "Admin",
-                            ModifiedDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4075),
+                            ModifiedDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3212),
                             ProductId = 4
                         },
                         new
                         {
                             Id = 5,
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4077),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3216),
                             ImageName = "Screenshot_3.png",
                             ImagePath = "\\images\\products\\product-5\\ff69973a-bad5-4757-be92-6792b6d4ff9e.png",
                             IsActive = true,
                             IsDefault = false,
                             IsDeleted = false,
                             ModifiedBy = "Admin",
-                            ModifiedDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4077),
+                            ModifiedDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3217),
                             ProductId = 4
                         },
                         new
                         {
                             Id = 6,
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4080),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3220),
                             ImageName = "Screenshot_7.png",
                             ImagePath = "\\images\\products\\product-6\\0c3182bd-e13f-4303-b7d7-c69c0616b6b8.png",
                             IsActive = true,
                             IsDefault = false,
                             IsDeleted = false,
                             ModifiedBy = "Admin",
-                            ModifiedDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4080),
+                            ModifiedDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3221),
                             ProductId = 4
                         });
                 });
@@ -826,15 +830,16 @@ namespace ICHI_API.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("isActive")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("ProductReturns");
                 });
@@ -1021,7 +1026,7 @@ namespace ICHI_API.Migrations
                         {
                             Id = 1,
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3653),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2437),
                             Description = "Quản trị viên",
                             RoleName = "ADMIN"
                         },
@@ -1029,7 +1034,7 @@ namespace ICHI_API.Migrations
                         {
                             Id = 2,
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3656),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2444),
                             Description = "Nhân viên",
                             RoleName = "EMPLOYEE"
                         },
@@ -1037,7 +1042,7 @@ namespace ICHI_API.Migrations
                         {
                             Id = 3,
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3659),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2447),
                             Description = "Người dùng",
                             RoleName = "USER"
                         });
@@ -1124,7 +1129,7 @@ namespace ICHI_API.Migrations
                             BankAccount = "0123456789",
                             BankName = "Ngân hàng ABC, Chi nhánh XYZ",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3948),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3004),
                             Email = "info@supplierA.com",
                             Notes = "Thông tin chi tiết về nhà cung cấp A",
                             PhoneNumber = "0123456789",
@@ -1140,7 +1145,7 @@ namespace ICHI_API.Migrations
                             BankAccount = "9876543210",
                             BankName = "Ngân hàng XYZ, Chi nhánh ABC",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3952),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3009),
                             Email = "info2@supplier.com",
                             Notes = "Thông tin chi tiết về nhà cung cấp B",
                             PhoneNumber = "0987654321",
@@ -1156,10 +1161,10 @@ namespace ICHI_API.Migrations
                             BankAccount = "7412589630",
                             BankName = "Ngân hàng LMN, Chi nhánh PQR",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3955),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3013),
                             Email = "info3@gmail.com",
                             ModifiedBy = "Admin",
-                            ModifiedDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3953),
+                            ModifiedDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3010),
                             Notes = "Thông tin chi tiết về nhà cung cấp C",
                             PhoneNumber = "0369852147",
                             SupplierName = "Nhà cung cấp C",
@@ -1174,10 +1179,10 @@ namespace ICHI_API.Migrations
                             BankAccount = "7412589630",
                             BankName = "Ngân hàng LMN, Chi nhánh PQR",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3970),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3016),
                             Email = "demo2@gmail.com",
                             ModifiedBy = "Admin",
-                            ModifiedDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3969),
+                            ModifiedDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3014),
                             Notes = "Thông tin chi tiết về nhà cung cấp D",
                             PhoneNumber = "0369852147",
                             SupplierName = "Nhà cung cấp D",
@@ -1192,10 +1197,10 @@ namespace ICHI_API.Migrations
                             BankAccount = "7412589630",
                             BankName = "Ngân hàng LMN, Chi nhánh PQR",
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3974),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3020),
                             Email = "demo2@gmail.com",
                             ModifiedBy = "Admin",
-                            ModifiedDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3972),
+                            ModifiedDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3018),
                             Notes = "Thông tin chi tiết về nhà cung cấp E",
                             PhoneNumber = "0369852147",
                             SupplierName = "Nhà cung cấp E",
@@ -1243,56 +1248,56 @@ namespace ICHI_API.Migrations
                         {
                             Id = 1,
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3994),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3045),
                             TrademarkName = "Thương hiệu A"
                         },
                         new
                         {
                             Id = 2,
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3996),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3048),
                             TrademarkName = "Thương hiệu B"
                         },
                         new
                         {
                             Id = 3,
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3998),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3050),
                             TrademarkName = "Thương hiệu C"
                         },
                         new
                         {
                             Id = 4,
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4000),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3052),
                             TrademarkName = "Thương hiệu D"
                         },
                         new
                         {
                             Id = 5,
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4002),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3055),
                             TrademarkName = "Thương hiệu E"
                         },
                         new
                         {
                             Id = 6,
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4003),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3057),
                             TrademarkName = "Thương hiệu F"
                         },
                         new
                         {
                             Id = 7,
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4005),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3060),
                             TrademarkName = "Thương hiệu G"
                         },
                         new
                         {
                             Id = 8,
                             CreateBy = "Admin",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(4007),
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(3062),
                             TrademarkName = "Thương hiệu H"
                         });
                 });
@@ -1398,12 +1403,13 @@ namespace ICHI_API.Migrations
                     b.Property<DateTime>("ShoppingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("TrxTransactions");
                 });
@@ -1419,8 +1425,9 @@ namespace ICHI_API.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -1435,29 +1442,27 @@ namespace ICHI_API.Migrations
                         {
                             Id = 1,
                             RoleId = 1,
-                            UserId = 1
+                            UserId = "tien01nx@gmail.com"
                         },
                         new
                         {
                             Id = 2,
                             RoleId = 2,
-                            UserId = 2
+                            UserId = "diuthanh88@gmail.com"
                         },
                         new
                         {
                             Id = 3,
                             RoleId = 3,
-                            UserId = 3
+                            UserId = "s2family2001bn@gmail.com"
                         });
                 });
 
             modelBuilder.Entity("ICHI_CORE.Domain.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Avatar")
                         .IsRequired()
@@ -1470,11 +1475,6 @@ namespace ICHI_API.Migrations
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("FailedPassAttemptCount")
                         .HasColumnType("int");
@@ -1494,57 +1494,54 @@ namespace ICHI_API.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Email");
 
                     b.ToTable("Users");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            Avatar = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2F717761877848073%2F&psig=AOvVaw",
-                            CreateBy = "ADMIN",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3810),
                             Email = "tien01nx@gmail.com",
+                            Avatar = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2F717761877848073%2F&psig=AOvVaw",
+                            CreateBy = "ADMIN",
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2803),
                             FailedPassAttemptCount = 0,
                             IsLocked = false,
                             ModifiedBy = "ADMIN",
-                            ModifiedDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3811),
+                            ModifiedDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2804),
                             Password = "$2a$11$iIcGb07Q8qC2x3bT2kXe4.7815/izsL8vF9tCLyKrtaCD06.HYF7."
                         },
                         new
                         {
-                            Id = 2,
-                            Avatar = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2F717761877848073%2F&psig=AOvVaw",
-                            CreateBy = "ADMIN",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3814),
                             Email = "diuthanh88@gmail.com",
+                            Avatar = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2F717761877848073%2F&psig=AOvVaw",
+                            CreateBy = "ADMIN",
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2808),
                             FailedPassAttemptCount = 0,
                             IsLocked = false,
                             ModifiedBy = "ADMIN",
-                            ModifiedDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3815),
+                            ModifiedDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2808),
                             Password = "$2a$11$iIcGb07Q8qC2x3bT2kXe4.7815/izsL8vF9tCLyKrtaCD06.HYF7."
                         },
                         new
                         {
-                            Id = 3,
+                            Email = "s2family2001bn@gmail.com",
                             Avatar = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2F717761877848073%2F&psig=AOvVaw",
                             CreateBy = "ADMIN",
-                            CreateDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3817),
-                            Email = "s2family2001bn@gmail.com",
+                            CreateDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2811),
                             FailedPassAttemptCount = 0,
                             IsLocked = false,
                             ModifiedBy = "ADMIN",
-                            ModifiedDate = new DateTime(2024, 3, 15, 21, 34, 13, 146, DateTimeKind.Local).AddTicks(3818),
+                            ModifiedDate = new DateTime(2024, 3, 17, 21, 59, 53, 415, DateTimeKind.Local).AddTicks(2812),
                             Password = "$2a$11$iIcGb07Q8qC2x3bT2kXe4.7815/izsL8vF9tCLyKrtaCD06.HYF7."
                         });
                 });
 
             modelBuilder.Entity("ICHI_CORE.Domain.MasterModel.Cart", b =>
                 {
-                    b.HasOne("ICHI_CORE.Domain.MasterModel.ProductDetail", "ProductDetail")
+                    b.HasOne("ICHI_CORE.Domain.MasterModel.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductDetailId")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1554,7 +1551,7 @@ namespace ICHI_API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ProductDetail");
+                    b.Navigation("Product");
 
                     b.Navigation("User");
                 });
@@ -1656,7 +1653,7 @@ namespace ICHI_API.Migrations
                 {
                     b.HasOne("ICHI_CORE.Domain.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1716,7 +1713,7 @@ namespace ICHI_API.Migrations
                 {
                     b.HasOne("ICHI_CORE.Domain.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

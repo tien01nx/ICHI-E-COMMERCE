@@ -74,7 +74,7 @@ export class CustomerService {
 
   delete(id: number) {
     return this.apiService.callApi<CustomerModel[]>(
-      '/Customer/' + id,
+      '/Customer/delete?=' + id,
       'delete'
     );
   }

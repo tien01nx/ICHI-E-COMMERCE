@@ -111,7 +111,7 @@
                             var image = new ProductImages();
                             image.ProductId = product.Id;
                             image.ImageName = file.FileName;
-                            image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id, file, AppSettings.PatchProduct);
+                            image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id.ToString(), file, AppSettings.PatchProduct);
                             image.IsDefault = false;
                             image.IsActive = true;
                             image.IsDeleted = false;
@@ -154,7 +154,7 @@
                         var image = new ProductImages();
                         image.ProductId = product.Id;
                         image.ImageName = file.FileName;
-                        image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id, file, AppSettings.PatchProduct);
+                        image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id.ToString(), file, AppSettings.PatchProduct);
                         image.IsDefault = false;
                         image.IsActive = true;
                         image.IsDeleted = false;

@@ -51,8 +51,11 @@ export class SignInComponent implements OnInit {
             debugger;
             this.tokenService.setToken(response.data);
             const roles = this.tokenService.getUserRoles();
+            const userId = this.tokenService.getUserEmail();
+
             const requiredRole = ['ADMIN', 'EMPLOYEE'];
             if (requiredRole.includes(roles)) {
+              // xóa lịch sử trước đó
               window.location.href = '/admin';
             } else {
               window.location.href = '/';

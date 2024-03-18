@@ -9,16 +9,6 @@ namespace ICHI_API.Service.IService
 {
     public interface ITrxTransactionService
     {
-        PagedResult<TrxTransaction> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage);
-
-        TrxTransaction Create(TrxTransaction supplier, out string strMessage);
-
-        TrxTransaction Update(TrxTransaction supplier, out string strMessage);
-
-        TrxTransaction FindById(int id, out string strMessage);
-
-        bool Delete(int id, out string strMessage);
-
-        Cart InsertCart(Cart cart, out string strMessage);
+        TrxTransactionDTO InsertTxTransaction(TrxTransactionDTO trxTransactionDTO, out string strMessage);
     }
 }

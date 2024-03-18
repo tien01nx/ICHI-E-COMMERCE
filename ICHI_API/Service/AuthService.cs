@@ -233,7 +233,7 @@ namespace ICHI_API.Service
                         {
                             PhoneNumber = userRegister.PhoneNumber,
                             FullName = userRegister.FullName,
-                            UserId = user.Id,
+                            UserId = user.Email,
                             Gender = userRegister.Gender,
                             Birthday = userRegister.Birthday,
                         };
@@ -242,7 +242,7 @@ namespace ICHI_API.Service
                         UserRole userRole = new UserRole()
                         {
                             RoleId = _unitOfWork.Role.Get(r => r.RoleName == AppSettings.USER).Id,
-                            UserId = user.Id,
+                            UserId = user.Email,
                         };
                         _unitOfWork.UserRole.Add(userRole);
                         _unitOfWork.Save();
@@ -254,7 +254,7 @@ namespace ICHI_API.Service
                         {
                             PhoneNumber = userRegister.PhoneNumber,
                             FullName = userRegister.FullName,
-                            UserId = user.Id,
+                            UserId = user.Email,
                             Gender = userRegister.Gender,
                             Birthday = userRegister.Birthday,
 
@@ -264,7 +264,7 @@ namespace ICHI_API.Service
                         UserRole userRole = new UserRole()
                         {
                             RoleId = _unitOfWork.Role.Get(r => r.RoleName == AppSettings.EMPLOYEE).Id,
-                            UserId = user.Id,
+                            UserId = user.Email,
                         };
                         _unitOfWork.UserRole.Add(userRole);
                         _unitOfWork.Save();
@@ -284,12 +284,12 @@ namespace ICHI_API.Service
             }
         }
 
-        public string LockAccount(int id, bool status, out string strMessage)
+        public string LockAccount(string id, bool status, out string strMessage)
         {
             strMessage = string.Empty;
             try
             {
-                var data = _unitOfWork.User.Get(u => u.Id == id);
+                var data = _unitOfWork.User.Get(u => u.Email == id);
                 if (data == null)
                 {
                     strMessage = "Tài khoản không tồn tại";
@@ -350,14 +350,15 @@ namespace ICHI_API.Service
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Email),
+                new Claim("sub",user.Email.ToString())
             };
-            var roles = _unitOfWork.UserRole.GetAll(ur => ur.UserId == user.Id, includeProperties: "Role").Select(ur => ur.Role.RoleName).ToList();
+            var roles = _unitOfWork.UserRole.GetAll(ur => ur.UserId == user.Email, includeProperties: "Role").Select(ur => ur.Role.RoleName).ToList();
 
             roles.ForEach(role => claims.Add(new Claim("roles", role)));
 
             var accessToken = GenerateWebToken(claims.ToList());
+
             return accessToken;
         }
 

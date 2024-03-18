@@ -1,22 +1,18 @@
-﻿#pragma warning disable SA1633 // File should have header
-#pragma warning disable SA1200 // Using directives should be placed correctly
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-#pragma warning restore SA1200 // Using directives should be placed correctly
-#pragma warning restore SA1633 // File should have header
-#pragma warning disable SA1200 // Using directives should be placed correctly
-using System.ComponentModel.DataAnnotations.Schema;
-#pragma warning restore SA1200 // Using directives should be placed correctly
-#pragma warning disable SA1200, SA1600
-
-namespace ICHI_CORE.Domain.MasterModel
+﻿namespace ICHI_CORE.Domain.MasterModel
 {
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
     public class Cart : MasterEntity
     {
-        public int UserId { get; set; }
+        [StringLength(100)]
+        public string UserId { get; set; }
 
         [ForeignKey("UserId")]
         [ValidateNever]
         public User? User { get; set; }
+
 
         public int ProductId { get; set; }
 
@@ -27,6 +23,21 @@ namespace ICHI_CORE.Domain.MasterModel
         public decimal Price { get; set; } = 0;
 
         public int Quantity { get; set; } = 0;
+
+        [NotMapped]
+        public string? ProductImage { get; set; }
+
+        [NotMapped]
+        public Customer? Customer { get; set; }
+
+        public void SetProductImage(string imagePath)
+        {
+            ProductImage = imagePath;
+        }
+
+        public void SetCustomer(Customer customer)
+        {
+            Customer = customer;
+        }
     }
 }
-#pragma warning restore SA1200 // Using directives should be placed correctly

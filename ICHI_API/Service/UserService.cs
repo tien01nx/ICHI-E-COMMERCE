@@ -47,7 +47,7 @@ namespace ICHI_API.Service
                 {
                     if (userDTO.Role == AppSettings.USER)
                     {
-                        var customer = _unitOfWork.Customer.Get(c => c.UserId == userDTO.User.Id);
+                        var customer = _unitOfWork.Customer.Get(c => c.UserId == userDTO.User.Email);
                         if (customer == null)
                         {
                             continue;
@@ -58,7 +58,7 @@ namespace ICHI_API.Service
                     }
                     else if (userDTO.Role == AppSettings.EMPLOYEE)
                     {
-                        var employee = _unitOfWork.Employee.Get(e => e.UserId == userDTO.User.Id);
+                        var employee = _unitOfWork.Employee.Get(e => e.UserId == userDTO.User.Email);
                         if (employee == null)
                         {
                             continue;
@@ -93,8 +93,8 @@ namespace ICHI_API.Service
             strMessage = string.Empty;
             try
             {
-                var userRole = _unitOfWork.UserRole.Get(ur => ur.UserId == userDTO.Id, "User");
-                var userRoleCu = _unitOfWork.UserRole.Get(ur => ur.UserId == userDTO.Id, "User,Role");
+                var userRole = _unitOfWork.UserRole.Get(ur => ur.UserId == userDTO.Email, "User");
+                var userRoleCu = _unitOfWork.UserRole.Get(ur => ur.UserId == userDTO.Email, "User,Role");
                 if (userRole == null)
                 {
                     strMessage = "Tài khoản không tồn tại";
@@ -114,10 +114,10 @@ namespace ICHI_API.Service
                     _unitOfWork.Save();
                 }
                 // kiểm tra userId tồn tại ở bảng nào thì update vào bảng đó là customner hoặc employee kiểm trả về là bool để xem ở bảng nào
-                var isCustomer = _unitOfWork.Customer.Get(c => c.UserId == userDTO.Id) != null;
+                var isCustomer = _unitOfWork.Customer.Get(c => c.UserId == userDTO.Email) != null;
                 if (isCustomer)
                 {
-                    var customer = _unitOfWork.Customer.Get(c => c.UserId == userDTO.Id);
+                    var customer = _unitOfWork.Customer.Get(c => c.UserId == userDTO.Email);
                     if (customer == null)
                     {
                         strMessage = "Khách hàng không tồn tại";
@@ -128,10 +128,10 @@ namespace ICHI_API.Service
                     customer.Birthday = userDTO.Birthday;
                     _unitOfWork.Customer.Update(customer);
                 }
-                var isEmployee = _unitOfWork.Employee.Get(e => e.UserId == userDTO.Id) != null;
+                var isEmployee = _unitOfWork.Employee.Get(e => e.UserId == userDTO.Email) != null;
                 if (isEmployee)
                 {
-                    var employee = _unitOfWork.Employee.Get(e => e.UserId == userDTO.Id);
+                    var employee = _unitOfWork.Employee.Get(e => e.UserId == userDTO.Email);
                     if (employee == null)
                     {
                         strMessage = "Nhân viên không tồn tại";
@@ -145,9 +145,9 @@ namespace ICHI_API.Service
                 // update user khi thay đổi email
                 if (!userRoleCu.User.Email.ToLower().Equals(userDTO.Email))
                 {
-                    var userdb = _unitOfWork.User.Get(u => u.Id == userRoleCu.UserId);
+                    var userdb = _unitOfWork.User.Get(u => u.Email == userRoleCu.UserId);
                     // kiểm tra email có tồn tại không
-                    var user = _unitOfWork.User.Get(u => u.Email.ToLower().Equals(userDTO.Email) && u.Id != userRoleCu.User.Id);
+                    var user = _unitOfWork.User.Get(u => u.Email.ToLower().Equals(userDTO.Email) && u.Email != userRoleCu.User.Email);
                     if (user != null)
                     {
                         strMessage = "Email đã tồn tại";

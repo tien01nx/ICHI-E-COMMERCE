@@ -107,16 +107,10 @@ namespace ICHI_API.Service
             strMessage = string.Empty;
             try
             {
-                // lấy thông tin khách hàng
-                var data = _unitOfWork.Customer.Get(u => u.Id == customer.Id);
-                if (data == null)
-                {
-                    strMessage = "khách hàng không tồn tại";
-                    return null;
-                }
+
                 // kiểm tra email khách hàng đã tồn tại chưa
                 var checkEmail = _unitOfWork.User.Get(u => u.Email == customer.Email);
-                if (checkEmail != null && checkEmail.Id != customer.Id)
+                if (checkEmail != null && checkEmail.Email != customer.Email)
                 {
                     strMessage = "Email đã tồn tại";
                     return null;
@@ -137,9 +131,9 @@ namespace ICHI_API.Service
                     //data.Avatar = FileHelper.SaveFile(file, _webHostEnvironment, "Customer");
                     //// xóa file cũ
                     //FileHelper.DeleteFile(oldFile, _webHostEnvironment);
-                    var user = _unitOfWork.User.Get(x => x.Id == data.UserId);
+                    var user = _unitOfWork.User.Get(x => x.Email == checkEmail.Email);
                     string oldFile = user.Avatar;
-                    user.Avatar = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, user.Id, file, AppSettings.PatchUser);
+                    user.Avatar = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, user.Email, file, AppSettings.PatchUser);
                     user.ModifiedBy = "Admin";
                     user.ModifiedDate = DateTime.Now;
                     _unitOfWork.User.Update(user);

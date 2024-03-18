@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace ICHI_CORE.Domain.MasterModel
 {
-  public class ProductReturn : MasterEntity
-  {
-    public int UserID { get; set; }
-    [ForeignKey("UserID")]
-    [ValidateNever]
-    public User? User { get; set; }
-    public bool isActive { get; set; } = false;
-  }
+    public class ProductReturn : MasterEntity
+    {
+        public string UserId { get; set; }
+        [ForeignKey("UserId")]
+        [ValidateNever]
+        public User? User { get; set; }
+        public bool isActive { get; set; } = false;
+    }
 }
