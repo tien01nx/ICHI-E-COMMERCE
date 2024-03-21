@@ -6,9 +6,10 @@ import { ClientHeaderComponent } from '../client-header/client-header.component'
 import { TrxTransactionService } from '../../../service/trx-transaction.service';
 import { ToastrService } from 'ngx-toastr';
 import { TokenService } from '../../../service/token.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ShoppingCartDTO } from '../../../dtos/shopping.cart.dto.';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { TrxTransactionDTO } from '../../../dtos/trxtransaction.dto';
 
 @Component({
   selector: 'app-checkout',
@@ -18,6 +19,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class CheckoutComponent implements OnInit {
   shoppingcartdto!: ShoppingCartDTO;
   Environment = Environment;
+  trxTransactionDTO!: TrxTransactionDTO;
   trxTransacForm = new FormGroup({
     userId: new FormControl(''),
     fullName: new FormControl('', [
@@ -37,10 +39,15 @@ export class CheckoutComponent implements OnInit {
     private cartService: TrxTransactionService,
     private toastr: ToastrService,
     private tokenService: TokenService,
+    private activatedRoute: ActivatedRoute,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    // if (this.activatedRoute.snapshot.params['id'] === undefined) {
+    // } else {
+    //   this.findProductById(this.activatedRoute.snapshot.params['id']);
+    // }
     this.getInitData();
   }
 
@@ -71,10 +78,22 @@ export class CheckoutComponent implements OnInit {
     }, 0);
   }
   submit() {
-    this.cartService.AddTrxTransaction(this.trxTransacForm.value).subscribe({
+    const trxTransactionDTO = new TrxTransactionDTO(
+      0,
+      this.tokenService.getUserEmail(),
+      this.trxTransacForm.value?.fullName || '',
+      this.trxTransacForm.value?.phoneNumber || '',
+      this.trxTransacForm.value?.address || '',
+      this.getTotalPrice()
+    );
+    this.cartService.PaymentExecute(trxTransactionDTO).subscribe({
       next: (response: any) => {
+        debugger;
+        console.log('response', response.data);
+        //chuyển trang sau khi đặt hàng thành công
+        window.location.href = response.data;
         this.toastr.success('Đặt hàng thành công', 'Thông báo');
-        this.router.navigate(['/client/home']);
+        // this.router.navigate(['/client/home']);
       },
       error: (error: any) => {
         this.toastr.error('Lỗi đặt hàng', 'Thông báo');

@@ -46,6 +46,7 @@ namespace ICHI_CORE.Extension
             services.AddScoped<ITrxTransactionService, TrxTransactionService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IVnPayService, VnPayService>();
 
             return services;
         }

@@ -35,10 +35,12 @@ namespace ICHI_API.Service
                 trxTransaction.Address = trxTransactionDTO.Address;
                 trxTransaction.OrderDate = DateTime.Now;
                 trxTransaction.OrderStatus = AppSettings.StatusApproved;
-                trxTransaction.PaymentStatus = AppSettings.PaymentStatusDelayedPayment;
+                trxTransaction.PaymentStatus = AppSettings.PaymentStatusPending;
                 trxTransaction.OrderTotal = cart.Sum(u => u.Price * u.Quantity);
                 _unitOfWork.TrxTransaction.Add(trxTransaction);
                 _unitOfWork.Save();
+                trxTransactionDTO.TrxTransactionId = trxTransaction.Id;
+                trxTransactionDTO.Amount = trxTransaction.OrderTotal;
                 // lấy thông tin đơn hàng theo userid từ cart
                 foreach (var item in cart)
                 {

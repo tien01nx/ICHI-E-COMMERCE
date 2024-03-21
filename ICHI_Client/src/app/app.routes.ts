@@ -50,6 +50,7 @@ export const routes: Routes = [
   { path: 'product_filter', component: ProductsFilterComponent },
   { path: 'cart', component: CartComponent },
   { path: 'checkout', component: CheckoutComponent },
+  { path: 'checkout/:id', component: CheckoutComponent },
   { path: 'shipping_info', component: ShippingInfoComponent },
   { path: 'login', component: SignInComponent },
   { path: 'register', component: SignUpComponent },
