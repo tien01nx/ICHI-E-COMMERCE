@@ -10,5 +10,7 @@ namespace ICHI_API.Service.IService
     public interface ITrxTransactionService
     {
         TrxTransactionDTO InsertTxTransaction(TrxTransactionDTO trxTransactionDTO, out string strMessage);
+        ShoppingCartVM GetTrxTransactionFindById(int id, out string strMessage);
+
     }
 }

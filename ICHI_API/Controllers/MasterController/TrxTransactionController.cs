@@ -43,6 +43,25 @@
             return result;
         }
 
+        [HttpPost("GetTrxTransactionFindById")]
+        public async Task<ApiResponse<ShoppingCartVM>> GetTrxTransactionFindById([FromBody] int id)
+        {
+            ApiResponse<ShoppingCartVM> result;
+            string strMessage = string.Empty;
+            try
+            {
+                var data = _trxTransactionService.GetTrxTransactionFindById(id, out strMessage);
+                return new ApiResponse<ShoppingCartVM>(System.Net.HttpStatusCode.OK, strMessage, data);
+            }
+            catch (Exception ex)
+            {
+                strMessage = "Có lỗi xảy ra";
+                NLogger.log.Error(ex.ToString());
+                result = new ApiResponse<ShoppingCartVM>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+            }
+            return result;
+        }
+
         [HttpPost("CreatePaymentUrl")]
         public async Task<ApiResponse<string>> CreatePaymentUrl([FromBody] VnPaymentRequestModel model)
         {
@@ -100,7 +119,31 @@
             }
             return result;
         }
+        // viết url khi thanh toán thành công
+        [HttpGet("CheckPayment")]
+        public async Task<IActionResult> CheckPayment()
+        {
+            string strMessage = string.Empty;
+            var request = _httpContextAccessor.HttpContext.Request;
+            var data = _vnPayService.PaymentCallBack(request, out strMessage);
+            return Redirect($"http://localhost:4200/checkout/{data.OrderId}");
+        }
 
 
+        [HttpPost("Demo")]
+        public async Task<IActionResult> CreatePaymentUrl(OrderInfoModel model)
+        {
+            var response = await _vnPayService.CreatePaymentAsync(model);
+            return Redirect(response.PayUrl);
+        }
+
+        [HttpPost("PaymentCallBack")]
+
+        [HttpGet]
+        public IActionResult PaymentCallBack()
+        {
+            var response = _vnPayService.PaymentExecuteAsync(HttpContext.Request.Query);
+            return View(response);
+        }
     }
 }

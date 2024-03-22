@@ -29,7 +29,12 @@ namespace ICHI_CORE.Domain.MasterModel
         [Required]
         public int Total { get; set; } = 0;
 
+        [NotMapped]
+        public string? ProductImage { get; set; }
 
-
+        public void SetProductImage(string imagePath)
+        {
+            ProductImage = imagePath;
+        }
     }
 }

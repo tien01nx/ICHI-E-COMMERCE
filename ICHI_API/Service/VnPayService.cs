@@ -6,6 +6,12 @@ using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Helpers;
 using ICHI_CORE.Model;
 using ICHI_CORE.NlogConfig;
+using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Crmf;
+using System.Net.Http.Headers;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace ICHI_API.Service
 {
@@ -84,7 +90,7 @@ namespace ICHI_API.Service
             };
         }
 
-        public bool PaymentCallBack(HttpRequest request, out string strMessage)
+        public VnPaymentResponseModel PaymentCallBack(HttpRequest request, out string strMessage)
         {
             strMessage = string.Empty;
             try
@@ -93,14 +99,14 @@ namespace ICHI_API.Service
                 if (respon == null || respon.VnPayResponseCode != "00")
                 {
                     strMessage = "Thanh toán không thành công";
-                    return false;
+                    return respon;
                 }
                 // cập nhật trạng thái thanh toán của đơn hàng
                 var trxTransaction = _unitOfWork.TrxTransaction.Get(u => u.Id == Convert.ToInt32(respon.OrderId));
                 if (trxTransaction == null)
                 {
                     strMessage = "Không tìm thấy đơn hàng";
-                    return false;
+                    return respon;
                 }
                 trxTransaction.PaymentStatus = AppSettings.PaymentStatusApproved;
                 trxTransaction.PaymentDate = DateTime.Now;
@@ -108,13 +114,13 @@ namespace ICHI_API.Service
                 _unitOfWork.Save();
 
                 strMessage = "Thanh toán thành công";
-                return true;
+                return respon;
             }
             catch (Exception ex)
             {
                 strMessage = "Có lỗi xảy ra";
                 NLogger.log.Error(ex.ToString());
-                return false;
+                return null;
             }
 
         }

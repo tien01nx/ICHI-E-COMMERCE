@@ -106,6 +106,8 @@ namespace ICHI_API.Service
             }
         }
 
+
+
         public Cart InsertCard(Cart cart, out string strMessage)
         {
             strMessage = string.Empty;

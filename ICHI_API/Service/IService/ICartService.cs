@@ -16,5 +16,6 @@ namespace ICHI_API.Service.IService
 
         ShoppingCartVM GetShoppingCart(string email, out string strMessage);
 
+
     }
 }

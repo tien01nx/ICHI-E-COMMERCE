@@ -5,7 +5,9 @@ using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Helpers;
+using ICHI_CORE.Model;
 using ICHI_CORE.NlogConfig;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq.Dynamic.Core;
 
 
@@ -61,5 +63,35 @@ namespace ICHI_API.Service
                 return null;
             }
         }
+
+        public ShoppingCartVM GetTrxTransactionFindById(int id, out string strMessage)
+        {
+            strMessage = string.Empty;
+            try
+            {
+                ShoppingCartVM cartVM = new ShoppingCartVM();
+                cartVM.TrxTransaction = _unitOfWork.TrxTransaction.Get(u => u.Id == id);
+                if (cartVM.TrxTransaction == null)
+                {
+                    strMessage = "Không tìm thấy đơn hàng";
+                    return null;
+                }
+                cartVM.Customer = _unitOfWork.Customer.Get(u => u.UserId == cartVM.TrxTransaction.UserId);
+                cartVM.TransactionDetail = _unitOfWork.TransactionDetail.GetAll(u => u.TrxTransactionId == id, "Product");
+                foreach (var item in cartVM.TransactionDetail)
+                {
+                    item.ProductImage = _unitOfWork.ProductImages.Get(u => u.ProductId == item.ProductId).ImagePath;
+                }
+
+                return cartVM;
+            }
+            catch (Exception ex)
+            {
+                NLogger.log.Error(ex.ToString());
+                strMessage = ex.ToString();
+                return null;
+            }
+        }
+
     }
 }

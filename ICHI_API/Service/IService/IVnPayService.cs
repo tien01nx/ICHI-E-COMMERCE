@@ -6,6 +6,6 @@ namespace ICHI_API.Service.IService
     {
         string CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model);
         VnPaymentResponseModel PaymentExecute(IQueryCollection collections);
-        bool PaymentCallBack(HttpRequest request, out string strMessage);
+        VnPaymentResponseModel PaymentCallBack(HttpRequest request, out string strMessage);
     }
 }
