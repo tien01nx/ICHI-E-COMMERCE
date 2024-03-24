@@ -1,3 +1,4 @@
+import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { Router, RouterModule } from '@angular/router';
@@ -48,6 +49,7 @@ import { AppComponent } from './app.component';
 import { InventoryReceiptsComponent } from './components/admin/inventory.receipts/inventory.receipts.component';
 import { InsertInventoryReceiptsComponent } from './components/admin/inventory.receipts/insert.inventory.receipts/insert.inventory.receipts.component';
 import { CurrencyFormatPipe } from './pipe/currency-format.pipe';
+import { AccessForbiddenComponent } from './components/auth/errors/access-forbidden/access-forbidden.component';
 
 register();
 
@@ -85,6 +87,8 @@ register();
     InventoryReceiptsComponent,
     InsertInventoryReceiptsComponent,
     CurrencyFormatPipe,
+    AccessForbiddenComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),

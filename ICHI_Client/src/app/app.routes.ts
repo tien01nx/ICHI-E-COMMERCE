@@ -25,6 +25,9 @@ import { PromotiondemoComponent } from './components/admin/promotiondemo/promoti
 import { AdminGuard } from './guard/admin.guard';
 import { InventoryReceiptsComponent } from './components/admin/inventory.receipts/inventory.receipts.component';
 import { InsertInventoryReceiptsComponent } from './components/admin/inventory.receipts/insert.inventory.receipts/insert.inventory.receipts.component';
+import { AccessForbiddenComponent } from './components/auth/errors/access-forbidden/access-forbidden.component';
+import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
+import { UserGuard } from './guard/user.guard';
 
 export const routes: Routes = [
   {
@@ -68,6 +71,12 @@ export const routes: Routes = [
   { path: 'register', component: SignUpComponent },
   { path: 'forgot_password', component: ForgotPasswordComponent },
   { path: 'verify_email', component: VerificationCodeComponent },
+  { path: 'access-denied', component: AccessForbiddenComponent },
+  {
+    path: 'reset-password',
+    component: ResetPasswordComponent,
+    canActivate: [UserGuard],
+  },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

@@ -40,10 +40,10 @@ namespace ICHI_API.Service
       try
       {
         var userExist = ExistsByUserNameOrEmail(user.UserName);
-        if (userExist != null && BCrypt.Net.BCrypt.Verify(user.Password, userExist.Password))
+        if (userExist != null && BCrypt.Net.BCrypt.Verify(user.oldPassword, userExist.Password))
         {
           string salt = BCrypt.Net.BCrypt.GenerateSalt();
-          string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.NewPassword, salt);
+          string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password, salt);
           userExist.Password = hashedPassword;
           userExist.ModifiedBy = user.UserName;
           userExist.ModifiedDate = DateTime.Now;
