@@ -22,6 +22,10 @@ export class TrxTransactionService {
     return this.http.post(this.baseUrl + '/Cart/AddtoCart', model);
   }
 
+  UpdateQuantityCart(model: InsertCartDTO) {
+    return this.http.put(this.baseUrl + '/Cart/UpdateCart', model);
+  }
+
   DeleteItemCart(model: InsertCartDTO) {
     const options = {
       headers: new HttpHeaders({

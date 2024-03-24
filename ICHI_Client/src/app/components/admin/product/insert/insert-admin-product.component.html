@@ -68,6 +68,16 @@
             toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
           }"
         ></editor>
+        <small
+          class="text-danger mt-1"
+          *ngIf="productForm['controls']['description'].dirty"
+        >
+          <span
+            *ngIf="productForm['controls']['description'].errors?.['required']"
+          >
+            Mô tả sản phẩm không được để trống
+          </span>
+        </small>
       </div>
       <h4 class="mb-3">Hiển thị hình ảnh</h4>
       <sup class="text-danger">*</sup>

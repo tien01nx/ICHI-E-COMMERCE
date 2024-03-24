@@ -60,4 +60,31 @@ export class CartComponent implements OnInit {
   checkout() {
     this.router.navigate(['/checkout']);
   }
+
+  updateQuantity(cart: CartModel, change: number) {
+    const newQuantity = cart.quantity + change;
+    if (newQuantity > 0) {
+      cart.quantity = newQuantity;
+      this.cartService.UpdateQuantityCart(cart).subscribe({
+        next: (response: any) => {
+          if (response.code === 200) {
+            this.getCartByUserId();
+          } else {
+            this.toastr.error(response.message, 'Thông báo');
+          }
+        },
+        error: (error: any) => {
+          this.toastr.error('Lỗi cập nhật số lượng sản phẩm', 'Thông báo');
+        },
+      });
+    }
+  }
+
+  increaseQuantity(cart: CartModel) {
+    this.updateQuantity(cart, 1);
+  }
+
+  decreaseQuantity(cart: CartModel) {
+    this.updateQuantity(cart, -1);
+  }
 }

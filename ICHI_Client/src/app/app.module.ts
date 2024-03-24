@@ -45,6 +45,9 @@ import { ProductsFilterComponent } from './components/client/products-filter/pro
 import { ShippingInfoComponent } from './components/client/shipping-info/shipping-info.component';
 import { AppRoutingModule, routes } from './app.routes';
 import { AppComponent } from './app.component';
+import { InventoryReceiptsComponent } from './components/admin/inventory.receipts/inventory.receipts.component';
+import { InsertInventoryReceiptsComponent } from './components/admin/inventory.receipts/insert.inventory.receipts/insert.inventory.receipts.component';
+import { CurrencyFormatPipe } from './pipe/currency-format.pipe';
 
 register();
 
@@ -79,6 +82,9 @@ register();
     CartComponent,
     ProductsFilterComponent,
     ShippingInfoComponent,
+    InventoryReceiptsComponent,
+    InsertInventoryReceiptsComponent,
+    CurrencyFormatPipe,
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -120,10 +126,10 @@ register();
       useClass: TokenInterceptor,
       multi: true,
     },
-    {
-      provide: TINYMCE_SCRIPT_SRC,
-      useValue: 'tinymce/tinymce.min.js',
-    },
+    // {
+    //   provide: TINYMCE_SCRIPT_SRC,
+    //   useValue: 'tinymce/tinymce.min.js',
+    // },
     DatePipe,
   ],
   bootstrap: [AppComponent], // Remove AppComponent from the bootstrap array

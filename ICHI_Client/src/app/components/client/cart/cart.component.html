@@ -101,7 +101,11 @@
                       class="input-group input-group-sm flex-nowrap"
                       data-quantity="data-quantity"
                     >
-                      <button class="btn btn-sm px-2" data-type="minus">
+                      <button
+                        class="btn btn-sm px-2"
+                        data-type="minus"
+                        (click)="decreaseQuantity(item)"
+                      >
                         -</button
                       ><input
                         class="form-control text-center input-spin-none bg-transparent border-0 px-0"
@@ -110,7 +114,11 @@
                         value="2"
                         [value]="item.quantity"
                         aria-label="Amount (to the nearest dollar)"
-                      /><button class="btn btn-sm px-2" data-type="plus">
+                      /><button
+                        class="btn btn-sm px-2"
+                        data-type="plus"
+                        (click)="increaseQuantity(item)"
+                      >
                         +
                       </button>
                     </div>

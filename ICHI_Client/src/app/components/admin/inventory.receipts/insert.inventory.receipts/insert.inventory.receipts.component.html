@@ -1,0 +1,258 @@
+<nav class="mb-2" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a href="#!">Trang 1</a></li>
+    <li class="breadcrumb-item"><a href="#!">Trang 2</a></li>
+    <li class="breadcrumb-item active">Mặc định</li>
+  </ol>
+</nav>
+<form
+  class="mb-9"
+  [formGroup]="receiptForm"
+  enctype="multipart/form-data"
+  (submit)="onSubmit()"
+>
+  <div class="row g-3 flex-between-end">
+    <div class="col-auto">
+      <h2 class="mb-2">Tạo đơn nhập hàng</h2>
+    </div>
+    <div class="col-auto">
+      <span
+        class="btn btn-danger mb-2 mb-sm-0 me-8"
+        (click)="deleteProduct(receiptForm.value.id)"
+      >
+        Xóa
+      </span>
+      <button class="btn btn-primary mb-2 mb-sm-0 me-8" type="submit">
+        Thêm
+      </button>
+    </div>
+  </div>
+  <div class="row g-5">
+    <div class="col-12 col-xl-4">
+      <!-- <div class="col-4 col-xl-4"> -->
+      <h4 class="mb-3">
+        Tên nhà cung cấp
+        <sup class="text-danger">*</sup>
+      </h4>
+      <ng-select formControlName="supplierId" placeholder="Nhà cung cấp">
+        <ng-option *ngFor="let supplier of suppliers" [value]="supplier.id">
+          {{ supplier.supplierName }}
+        </ng-option>
+      </ng-select>
+      <small
+        class="text-danger mt-1"
+        *ngIf="receiptForm['controls']['supplierId'].dirty"
+      >
+        <span
+          *ngIf="receiptForm['controls']['supplierId'].errors?.['required']"
+        >
+          Nhà cung cấp được để trống
+        </span>
+        <span
+          *ngIf="receiptForm['controls']['supplierId'].errors?.['maxlength']"
+        >
+          Nhà cung cấp được vượt quá 500 ký tự
+        </span>
+      </small>
+      <!-- </div> -->
+
+      <!-- <div class="mb-6 mt-3 col-4 col-xl-4"> -->
+      <h4 class="mt-3">Ghi chú <sup class="text-danger">*</sup></h4>
+
+      <editor
+        formControlName="notes"
+        apiKey="gj95nksg3ionftnqn5uftwoqunmga9lfr7pi9zzpgv3egm95"
+        [init]="{
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+          }"
+      ></editor>
+      <small
+        class="text-danger mt-1"
+        *ngIf="receiptForm['controls']['notes'].dirty"
+      >
+        <span *ngIf="receiptForm['controls']['notes'].errors?.['required']">
+          Mô tả sản phẩm không được để trống
+        </span>
+      </small>
+      <!-- </div> -->
+    </div>
+    <div class="col-8 col-xl-8">
+      <h4 class="mb-3">
+        Thông tin sản phẩm nhập hàng
+        <sup class="text-danger">*</sup>
+      </h4>
+      <div
+        class="px-4 bg-body-emphasis border border-translucent position-relative top-1"
+      >
+        <div class="table-responsive-x scrollbar-overlay mx-n1 px-1">
+          <table class="table table-sm fs-9 mb-0">
+            <thead>
+              <tr>
+                <th
+                  class="sort align-middle pe-5 text-start pb-3 pt-3"
+                  scope="col"
+                  style="width: 40%; max-width: 40%; min-width: 40%"
+                >
+                  Sản phẩm <span class="text-danger">*</span>
+                </th>
+                <th
+                  class="sort align-middle pe-5 text-start pb-3 pt-3"
+                  scope="col"
+                  style="width: 15%; max-width: 15%; min-width: 15%"
+                >
+                  Đơn giá <span class="text-danger">*</span>
+                </th>
+                <th
+                  class="sort align-middle pe-5 text-start pb-3 pt-3"
+                  scope="col"
+                  style="width: 15%; max-width: 15%; min-width: 15%"
+                >
+                  Số lượng <span class="text-danger">*</span>
+                </th>
+                <th
+                  class="sort align-middle pe-5 text-start pb-3 pt-3"
+                  scope="col"
+                  style="width: 15%; max-width: 15%; min-width: 15%"
+                >
+                  Thành tiền
+                </th>
+                <th
+                  class="sort align-middle pe-5 text-center pb-3 pt-3"
+                  scope="col"
+                  style="width: 15%; max-width: 15%; min-width: 15%"
+                ></th>
+                <th>
+                  <p class="mb-0 text-truncate fs-8 text-start">Tổng tiền:</p>
+                </th>
+              </tr>
+            </thead>
+            <tbody formArrayName="inventoryReceiptDetails">
+              <tr
+                *ngFor="
+                  let receiptDetails of inventoryReceiptDetails.controls;
+                  let i = index
+                "
+                [formGroupName]="i"
+              >
+                <td class="pt-2 pb-2">
+                  <ng-select
+                    appendTo="body"
+                    placeholder="Sản phẩm"
+                    formControlName="productId"
+                    required
+                  >
+                    <ng-option
+                      *ngFor="let item of products"
+                      [value]="item.product.id"
+                    >
+                      {{ item.product.productName }}
+                    </ng-option>
+                  </ng-select>
+                </td>
+
+                <td class="pt-2 pb-2">
+                  <input
+                    class="form-control"
+                    type="number"
+                    placeholder="Đơn giá"
+                    formControlName="price"
+                    required
+                  />
+                  <div
+                    class="label-error mt-1"
+                    *ngIf="receiptDetails.get('price')?.dirty"
+                  >
+                    <span
+                      *ngIf="receiptDetails.get('price')?.hasError('required')"
+                    >
+                      <small>Đơn giá là trường bắt buộc.</small>
+                    </span>
+                    <span
+                      *ngIf="
+                        receiptDetails.get('price')?.hasError('max') ||
+                        receiptDetails.get('price')?.hasError('min')
+                      "
+                    >
+                      <small>Đơn giá phải từ 0 đến 1 tỷ.</small>
+                    </span>
+                  </div>
+                </td>
+                <td class="pt-2 pb-2">
+                  <input
+                    class="form-control"
+                    type="number"
+                    placeholder="Số lượng"
+                    formControlName="total"
+                    required
+                  />
+                  <div
+                    class="label-error mt-1"
+                    *ngIf="receiptDetails.get('total')?.dirty"
+                  >
+                    <span
+                      *ngIf="receiptDetails.get('total')?.hasError('required')"
+                    >
+                      <small>Số lượng là trường bắt buộc.</small>
+                    </span>
+                    <span
+                      *ngIf="
+                        receiptDetails.get('total')?.hasError('max') ||
+                        receiptDetails.get('total')?.hasError('min')
+                      "
+                    >
+                      <small>Số lượng phải từ 1 đến 1000.</small>
+                    </span>
+                  </div>
+                </td>
+                <td class="pt-2 pb-2">
+                  <div class="form-control">
+                    {{ getTotalPrice()[i] | currencyFormat }}
+                  </div>
+                </td>
+                <td class="pt-2 pb-2">
+                  <button
+                    class="fw-bold fs-9 btn btn-phoenix-primary"
+                    href="javascript:void(0);"
+                    (click)="removeProduct(i)"
+                  >
+                    <!-- [disabled]="count <= 1" -->
+                    Xóa
+                  </button>
+                </td>
+                <td class="pt-2 pb-2"></td>
+              </tr>
+              <tr>
+                <td
+                  class="align-middle white-space-nowrap pe-5 text-end fw-bold pb-3 pt-3"
+                >
+                  <p class="mb-0 text-truncate fs-8 text-start">Tổng tiền:</p>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td
+                  class="align-middle white-space-nowrap pe-1 text-end fw-bold text-success pb-3 pt-3"
+                  style="width: 10%"
+                >
+                  <p class="mb-0 text-truncate fs-8">
+                    {{ totalMoney | currencyFormat }}
+                  </p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <button
+        class="btn btn-phoenix-primary w-100 mt-3"
+        type="button"
+        (click)="addProduct()"
+      >
+        Thêm sản phẩm
+      </button>
+    </div>
+  </div>
+</form>
+<footer class="footer position-absolute"></footer>

@@ -7,15 +7,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ICHI_API.Service.IService
 {
-    public interface ICartService
-    {
-        Cart InsertCard(Cart cart, out string strMessage);
-        IEnumerable<Cart> GetCarts(string email, out string strMessage);
+  public interface ICartService
+  {
+    Cart InsertCard(Cart cart, out string strMessage);
+    IEnumerable<Cart> GetCarts(string email, out string strMessage);
 
-        Cart DeleteCart(Cart cart, out string strMessage);
+    Cart DeleteCart(Cart cart, out string strMessage);
 
-        ShoppingCartVM GetShoppingCart(string email, out string strMessage);
+    ShoppingCartVM GetShoppingCart(string email, out string strMessage);
+
+    Cart UpdateCart(Cart cart, out string strMessage);
 
 
-    }
+  }
 }

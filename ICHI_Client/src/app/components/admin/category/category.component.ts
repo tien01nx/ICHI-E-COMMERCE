@@ -34,11 +34,6 @@ export class CategoryComponent implements OnInit {
   btnSave: string = '';
   isDisplayNone: boolean = false;
   errorMessage: string = '';
-  // parentID: number;
-  // categoryLevel: number;
-  // categoryName: string;
-  // notes: string;
-  // isDeleted: boolean;
   categoryForm: FormGroup = new FormGroup({
     id: new FormControl('0'),
     parentID: new FormControl('0'),

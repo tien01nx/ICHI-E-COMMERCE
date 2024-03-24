@@ -23,6 +23,8 @@ import { TrademarkComponent } from './components/admin/trademark/trademark.compo
 import { PromotionComponent } from './components/admin/promotion/promotion.component';
 import { PromotiondemoComponent } from './components/admin/promotiondemo/promotiondemo.component';
 import { AdminGuard } from './guard/admin.guard';
+import { InventoryReceiptsComponent } from './components/admin/inventory.receipts/inventory.receipts.component';
+import { InsertInventoryReceiptsComponent } from './components/admin/inventory.receipts/insert.inventory.receipts/insert.inventory.receipts.component';
 
 export const routes: Routes = [
   {
@@ -32,6 +34,7 @@ export const routes: Routes = [
       { path: '', component: AdminHomeComponent },
       { path: 'products', component: ProductComponent },
       { path: 'product/insert', component: InsertAdminProductComponent },
+
       { path: 'product/insert/:id', component: InsertAdminProductComponent },
       { path: 'categories', component: CategoryComponent },
       { path: 'supplier', component: SupplierAdminComponent },
@@ -42,6 +45,15 @@ export const routes: Routes = [
       { path: 'trademark', component: TrademarkComponent },
       { path: 'promotion', component: PromotionComponent },
       { path: 'promotiondemo', component: PromotiondemoComponent },
+      { path: 'inventory_receipts', component: InventoryReceiptsComponent },
+      {
+        path: 'insert_inventory_receipts',
+        component: InsertInventoryReceiptsComponent,
+      },
+      {
+        path: 'insert_inventory_receipts/:id',
+        component: InsertInventoryReceiptsComponent,
+      },
     ],
     canActivate: [AdminGuard], // Thêm guard vào đây
   },

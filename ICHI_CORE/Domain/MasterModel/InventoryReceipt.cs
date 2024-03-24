@@ -10,10 +10,20 @@ namespace ICHI_CORE.Domain.MasterModel
 {
   public class InventoryReceipt : MasterEntity
   {
-    public int SupplierID { get; set; }
-    [ForeignKey("SupplierID")]
+    public int EmployeeId { get; set; }
+
+    [ForeignKey("EmployeeId")]
+    [ValidateNever]
+    public Employee? Employee { get; set; }
+
+    public int SupplierId { get; set; }
+
+    [ForeignKey("SupplierId")]
     [ValidateNever]
     public Supplier? Supplier { get; set; }
+
+    public string? Notes { get; set; } = string.Empty;
+
     public bool isAvtive { get; set; } = false;
   }
 }

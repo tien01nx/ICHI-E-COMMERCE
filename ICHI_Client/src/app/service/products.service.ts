@@ -47,12 +47,12 @@ export class ProductsService {
     );
   }
 
-  // findAll() {
-  //   return this.apiService.callApi<ProductModel>(
-  //     '/Product/FindAllPaged',
-  //     'get'
-  //   );
-  // }
+  findAll() {
+    return this.apiService.callApi<ProductModel>(
+      '/Product/FindAllPaged',
+      'get'
+    );
+  }
 
   findById(id: number) {
     return this.apiService.callApi<ProductDTO>(
