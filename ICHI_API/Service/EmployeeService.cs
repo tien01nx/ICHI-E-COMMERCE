@@ -1,11 +1,14 @@
-﻿using ICHI.DataAccess.Repository.IRepository;
+﻿using ICHI.DataAccess.Repository;
+using ICHI.DataAccess.Repository.IRepository;
 using ICHI_API.Data;
 using ICHI_API.Helpers;
 using ICHI_API.Service.IService;
+using ICHI_CORE.Domain;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Helpers;
 using ICHI_CORE.NlogConfig;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Linq.Dynamic.Core;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -18,10 +21,16 @@ namespace ICHI_API.Service
     private PcsApiContext _db;
     private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public EmployeeService(IUnitOfWork unitOfWork, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, PcsApiContext pcsApiContext)
+    public EmployeeService(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment, PcsApiContext pcsApiContext)
     {
       _unitOfWork = unitOfWork;
       _webHostEnvironment = webHostEnvironment;
+      _db = pcsApiContext;
+    }
+
+    public EmployeeService(IUnitOfWork unitOfWork, PcsApiContext pcsApiContext)
+    {
+      _unitOfWork = unitOfWork;
       _db = pcsApiContext;
     }
 
@@ -30,7 +39,10 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var query = _db.Employees.Include(u => u.User).OrderByDescending(u => u.ModifiedDate).AsQueryable().Where(u => u.isDeleted == false);
+        //var query = _db.Employees.Include(u => u.User).OrderByDescending(u => u.ModifiedDate).AsQueryable().Where(u => u.isDeleted == false);
+        var query = _unitOfWork.Employee.GetAll(u => !u.isDeleted).OrderByDescending(u => u.ModifiedDate).AsQueryable();
+
+
         if (!string.IsNullOrEmpty(name))
         {
           query = query.Where(e => e.FullName.Contains(name) || e.PhoneNumber.Contains(name));
@@ -91,7 +103,7 @@ namespace ICHI_API.Service
         customer.ModifiedBy = "Admin";
         _unitOfWork.Employee.Add(customer);
         _unitOfWork.Save();
-        strMessage = "Tạo mới thành công";
+        strMessage = "Tạo mới nhân viên thành công";
         return customer;
       }
       catch (Exception ex)
@@ -102,69 +114,74 @@ namespace ICHI_API.Service
       }
     }
 
-    public Employee Update(Employee customer, IFormFile? file, out string strMessage)
+    public Employee Update(Employee employee, IFormFile? file, out string strMessage)
     {
       strMessage = string.Empty;
       try
       {
-        // lấy thông tin Nhân viên
-        var data = _unitOfWork.Employee.Get(u => u.Id == customer.Id);
-        if (data == null)
+        _unitOfWork.BeginTransaction();
+
+        var existingEmployee = _unitOfWork.Employee.Get(u => u.Id == employee.Id, tracked: false);
+        if (existingEmployee == null)
         {
           strMessage = "Nhân viên không tồn tại";
           return null;
         }
-        // kiểm tra email Nhân viên đã tồn tại chưa
-        var checkEmail = _unitOfWork.User.Get(u => u.Email == customer.Email);
-        if (checkEmail != null && checkEmail.Email != customer.Email)
-        {
-          strMessage = "Email đã tồn tại";
-          return null;
-        }
-        // kiểm tra số điện thoại Nhân viên đã tồn tại chưa
-        var checkPhone = _unitOfWork.Employee.Get(u => u.PhoneNumber == customer.PhoneNumber);
-        if (checkPhone != null && checkPhone.Id != customer.Id)
+
+        var checkPhone = _unitOfWork.Employee.Get(u => u.PhoneNumber == employee.PhoneNumber, tracked: false);
+        if (checkPhone != null)
         {
           strMessage = "Số điện thoại đã tồn tại";
           return null;
         }
-        // nếu có file thì thực hiện lưu file mới và xóa file cũ đi
-        // lấy đường dẫn ảnh file cũ
+
         if (file != null)
         {
-          var user = _unitOfWork.User.Get(x => x.Email == data.Email);
+          var user = _unitOfWork.User.Get(x => x.Email == existingEmployee.UserId, tracked: true);
           string oldFile = user.Avatar;
-          user.Avatar = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, user.Email, file, AppSettings.PatchUser);
           user.ModifiedBy = "Admin";
           user.ModifiedDate = DateTime.Now;
           _unitOfWork.User.Update(user);
           _unitOfWork.Save();
-          // xóa file cũ
           if (oldFile != AppSettings.AvatarDefault)
           {
-            ImageHelper.DeleteImage(_webHostEnvironment.WebRootPath, oldFile);
+            //ImageHelper.DeleteImage(_webHostEnvironment.WebRootPath, oldFile);
           }
         }
-        customer.ModifiedBy = "Admin";
-        _unitOfWork.Employee.Update(customer);
+
+        existingEmployee.Address = employee.Address;
+        existingEmployee.Avatar = employee.Avatar;
+        existingEmployee.Birthday = employee.Birthday;
+        existingEmployee.FullName = employee.FullName;
+        existingEmployee.PhoneNumber = employee.PhoneNumber;
+        existingEmployee.ModifiedBy = "Admin";
+        existingEmployee.ModifiedDate = DateTime.Now;
+
+        _unitOfWork.Employee.Update(existingEmployee);
         _unitOfWork.Save();
-        strMessage = "Cập nhật thành công";
-        return customer;
+
+        _unitOfWork.Commit();
+
+        strMessage = "Cập nhật nhân viên thành công";
+        return existingEmployee;
       }
       catch (Exception ex)
       {
         NLogger.log.Error(ex.ToString());
         strMessage = ex.ToString();
+        _unitOfWork.Rollback();
         return null;
       }
     }
+
+
 
     public bool Delete(int id, out string strMessage)
     {
       strMessage = string.Empty;
       try
       {
-        var data = _unitOfWork.Employee.Get(u => u.Id == id && !u.isDeleted);
+        var data = _unitOfWork.Employee.Get(u => u.Id == id && !u.isDeleted, tracked: true);
         if (data == null)
         {
           strMessage = "Nhân viên không tồn tại";
@@ -175,7 +192,7 @@ namespace ICHI_API.Service
         data.ModifiedDate = DateTime.Now;
         _unitOfWork.Employee.Update(data);
         _unitOfWork.Save();
-        strMessage = "Xóa thành công";
+        strMessage = "Xóa nhân viên thành công";
         return true;
       }
       catch (Exception ex)

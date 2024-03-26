@@ -21,14 +21,12 @@ namespace ICHI.DataAccess.Repository
     {
       _db = db;
       this.dbSet = _db.Set<T>();
-      _db.Products.Include(u => u.Category).Include(u => u.Id);
     }
-
-    public void Add(T entity)
+    public T Add(T entity)
     {
-      dbSet.Add(entity);
+      var data = dbSet.Add(entity);
+      return data.Entity;
     }
-
     /// <summary>
     /// ví dụ: FindByCondition(new Dictionary<string, string> { { "Id", "1" }, { "Name", "Product 1" } });
     /// </summary>
@@ -48,8 +46,6 @@ namespace ICHI.DataAccess.Repository
       }
       return data;
     }
-
-
     /// <summary>
     /// ví dụ: FindBySQLRaw("SELECT * FROM Products WHERE Id=1");
     /// </summary>
@@ -60,7 +56,6 @@ namespace ICHI.DataAccess.Repository
       var data = _db.Set<T>().FromSqlRaw(sqlRaw);
       return data;
     }
-
     /// <summary>
     /// ví dụ: GetDataTableFromSQL("SELECT * FROM Products WHERE Id=1");
     /// có thể sử dụng cho các câu lệnh SQL phức tạp hoặc store procedure như: exec sp_GetAllProducts
@@ -84,7 +79,6 @@ namespace ICHI.DataAccess.Repository
         }
       }
     }
-
     /// <summary>
     /// Get data by filter and include properties
     /// Vd: Get(u=>u.Id==1,"Category,ProductImage")
@@ -93,11 +87,8 @@ namespace ICHI.DataAccess.Repository
     /// <param name="includeProperties"></param>
     /// <param name="tracked"></param>
     /// <returns></returns>
-
     public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
     {
-
-
       IQueryable<T> query = tracked ? dbSet : dbSet.AsNoTracking();
       query = query.Where(filter);
 
@@ -112,7 +103,6 @@ namespace ICHI.DataAccess.Repository
       return query.FirstOrDefault();
 
     }
-
     /// <summary>
     /// GetAll data by filter and include properties List
     /// Vd: GetAll(u=>u.Id==1,"Category,ProductImage")
@@ -138,8 +128,6 @@ namespace ICHI.DataAccess.Repository
       }
       return query.ToList();
     }
-
-
     /// <summary>
     /// Delete entity
     /// </summary>
@@ -148,7 +136,6 @@ namespace ICHI.DataAccess.Repository
     {
       dbSet.Remove(entity);
     }
-
     /// <summary>
     /// Delete  list entity
     /// </summary>
@@ -157,7 +144,6 @@ namespace ICHI.DataAccess.Repository
     {
       dbSet.RemoveRange(entity);
     }
-
     /// <summary>
     /// hàm này thực hiện lấy dữ liệu theo key
     /// </summary>
@@ -187,7 +173,6 @@ namespace ICHI.DataAccess.Repository
       var objectByKey = await _db.Set<T>().FindAsync(arrKeyValue);
       return objectByKey;
     }
-
     /// <summary>
     /// hàm này thực hiện update nhiều bản ghi
     /// </summary>
@@ -227,7 +212,11 @@ namespace ICHI.DataAccess.Repository
 
       return entities.Take(updateSuccess).ToList();
     }
-
+    /// <summary>
+    /// Hàm này thực hiện tạo mới nhiều bản ghi
+    /// </summary>
+    /// <param name="entitys"></param>
+    /// <returns></returns>
     public async Task<List<T>> CreateBatch(List<T> entitys)
     {
       int insertSuccess = 0;

@@ -37,7 +37,6 @@ namespace ICHI_CORE.Domain.MasterModel
     public bool isActive { get; set; } = false;
     public bool isDeleted { get; set; } = false;
 
-    //[ValidateNever]
-    //public List<ProductImages> ProductImages { get; set; }
+
   }
 }

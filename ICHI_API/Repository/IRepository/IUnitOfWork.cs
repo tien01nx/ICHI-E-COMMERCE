@@ -6,56 +6,56 @@ using System.Threading.Tasks;
 
 namespace ICHI.DataAccess.Repository.IRepository
 {
-    public interface IUnitOfWork
-    {
-        ICategoryRepository Category { get; }
+  public interface IUnitOfWork
+  {
+    ICategoryRepository Category { get; }
 
-        ICustomerRepository Customer { get; }
+    ICustomerRepository Customer { get; }
 
-        IEmployeeRepository Employee { get; }
+    IEmployeeRepository Employee { get; }
 
-        IInventoryReceiptDetailRepository InventoryReceiptDetail { get; }
+    IInventoryReceiptDetailRepository InventoryReceiptDetail { get; }
 
-        IInventoryReceiptRepository InventoryReceipt { get; }
+    IInventoryReceiptRepository InventoryReceipt { get; }
 
-        IProductRepository Product { get; }
+    IProductRepository Product { get; }
 
-        IProductDetailRepository ProductDetail { get; }
+    IProductDetailRepository ProductDetail { get; }
 
-        IProductReturnRepository ProductReturn { get; }
+    IProductReturnRepository ProductReturn { get; }
 
-        IProductReturnDetailRepository ProductReturnDetail { get; }
+    IProductReturnDetailRepository ProductReturnDetail { get; }
 
-        IProductImagesRepository ProductImages { get; }
+    IProductImagesRepository ProductImages { get; }
 
-        IPromotionRepository Promotion { get; }
+    IPromotionRepository Promotion { get; }
 
-        IPromotionDetailRepository PromotionDetail { get; }
+    IPromotionDetailRepository PromotionDetail { get; }
 
-        IUserRoleRepository UserRole { get; }
+    IUserRoleRepository UserRole { get; }
 
-        IUserRepository User { get; }
+    IUserRepository User { get; }
 
-        IRoleRepository Role { get; }
+    IRoleRepository Role { get; }
 
-        ISupplierRepository Supplier { get; }
+    ISupplierRepository Supplier { get; }
 
-        ITrademarkRepository Trademark { get; }
+    ITrademarkRepository Trademark { get; }
 
-        ITransactionDetailRepository TransactionDetail { get; }
+    ITransactionDetailRepository TransactionDetail { get; }
 
-        ITrxTransactionRepository TrxTransaction { get; }
+    ITrxTransactionRepository TrxTransaction { get; }
 
-        ICartRepository Cart { get; }
+    ICartRepository Cart { get; }
 
-        void Dispose();
+    void Dispose();
 
-        void BeginTransaction();
+    void BeginTransaction();
 
-        void Commit();
+    void Commit();
 
-        void Rollback();
+    void Rollback();
 
-        void Save();
-    }
+    void Save();
+  }
 }

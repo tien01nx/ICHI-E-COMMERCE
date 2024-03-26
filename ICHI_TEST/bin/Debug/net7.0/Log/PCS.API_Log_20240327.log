@@ -1,0 +1,24 @@
+-- 2024-03-27 00:06:54.4378 INFO[31] | ICHI_TEST.ContextGenerator.GeneratorDb. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-03-27 00:06:54.4633 ERROR[32] | ICHI_TEST.ContextGenerator.GeneratorDb. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:
+-- 2024-03-27 00:06:56.0123 INFO[31] | ICHI_TEST.ContextGenerator.GeneratorDb. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-03-27 00:06:56.0123 ERROR[32] | ICHI_TEST.ContextGenerator.GeneratorDb. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:
+-- 2024-03-27 00:06:56.0691 INFO[31] | ICHI_TEST.ContextGenerator.GeneratorDb. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-03-27 00:06:56.0691 ERROR[32] | ICHI_TEST.ContextGenerator.GeneratorDb. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:
+-- 2024-03-27 00:06:56.0903 INFO[31] | ICHI_TEST.ContextGenerator.GeneratorDb. 
+      MSG_CONTENT:Get data from appSettings success.
+      EXXCEPTION:  | MESSAGE:
+-- 2024-03-27 00:06:56.0903 ERROR[32] | ICHI_TEST.ContextGenerator.GeneratorDb. 
+      MSG_CONTENT:Test log error
+      EXXCEPTION:  | MESSAGE:

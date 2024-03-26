@@ -16,7 +16,7 @@ namespace ICHI.DataAccess.Repository.IRepository
     IEnumerable<T> FindByCondition(Dictionary<string, string> _params);
     IEnumerable<T> FindBySQLRaw(string sqlRaw);
     DataTable GetDataTableFromSQL(string sqlQuery);
-    void Add(T entity);
+    T Add(T entity);
     Task<List<T>> CreateBatch(List<T> entitys);
     Task<List<T>> UpdateBatch(List<T> entities);
     void Remove(T entity);

@@ -14,7 +14,7 @@ namespace ICHI_API.Service
     private readonly IUnitOfWork _unitOfWork;
     private PcsApiContext _db;
 
-    public SupplierService(IUnitOfWork unitOfWork, IConfiguration configuration, PcsApiContext pcsApiContext)
+    public SupplierService(IUnitOfWork unitOfWork, PcsApiContext pcsApiContext)
     {
       _unitOfWork = unitOfWork;
       _db = pcsApiContext;
@@ -68,25 +68,25 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var checkSupplier = _unitOfWork.Supplier.Get(u => u.SupplierName == supplier.SupplierName);
+        var checkSupplier = _unitOfWork.Supplier.Get(u => u.SupplierName == supplier.SupplierName, tracked: true);
         if (checkSupplier != null)
         {
-          strMessage = "Mã nhà cung cấp đã tồn tại";
+          strMessage = "Tên nhà cung cấp đã tồn tại";
           return null;
         }
-        var checkEmail = _unitOfWork.Supplier.Get(u => u.Email == supplier.Email);
+        var checkEmail = _unitOfWork.Supplier.Get(u => u.Email == supplier.Email, tracked: true);
         if (checkEmail != null)
         {
-          strMessage = "Email đã tồn tại";
+          strMessage = "Email nhà cung cấp đã tồn tại";
           return null;
         }
-        var checkPhone = _unitOfWork.Supplier.Get(u => u.PhoneNumber == supplier.PhoneNumber);
+        var checkPhone = _unitOfWork.Supplier.Get(u => u.PhoneNumber == supplier.PhoneNumber, tracked: true);
         if (checkPhone != null)
         {
           strMessage = "Số điện thoại đã tồn tại";
           return null;
         }
-        var checkTaxCode = _unitOfWork.Supplier.Get(u => u.TaxCode == supplier.TaxCode);
+        var checkTaxCode = _unitOfWork.Supplier.Get(u => u.TaxCode == supplier.TaxCode, tracked: true);
         if (checkTaxCode != null)
         {
           strMessage = "Mã số thuế đã tồn tại";
@@ -96,7 +96,7 @@ namespace ICHI_API.Service
         supplier.ModifiedBy = "Admin";
         _unitOfWork.Supplier.Add(supplier);
         _unitOfWork.Save();
-        strMessage = "Tạo mới thành công";
+        strMessage = "Tạo mới nhà cung cấp thành công";
         return supplier;
       }
       catch (Exception ex)
@@ -112,45 +112,52 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        // lấy thông tin nhà cung cấp
-        var data = _unitOfWork.Supplier.Get(u => u.Id == supplier.Id);
-        if (data == null)
-        {
-          strMessage = "Nhà cung cấp không tồn tại";
-          return null;
-        }
+        var existingSupplier = _unitOfWork.Supplier.Get(u => u.Id == supplier.Id, tracked: true);
         // kiểm tra xem mã nhà cung cấp đã tồn tại chưa
-        var checkSupplier = _unitOfWork.Supplier.Get(u => u.SupplierName == supplier.SupplierName);
+        var checkSupplier = _unitOfWork.Supplier.Get(u => u.SupplierName == supplier.SupplierName, tracked: true);
         if (checkSupplier != null && checkSupplier.Id != supplier.Id)
         {
-          strMessage = "Mã nhà cung cấp đã tồn tại";
+          strMessage = "Tên nhà cung cấp đã tồn tại";
           return null;
         }
         // kiểm tra email nhà cung cấp đã tồn tại chưa
-        var checkEmail = _unitOfWork.Supplier.Get(u => u.Email == supplier.Email);
+        var checkEmail = _unitOfWork.Supplier.Get(u => u.Email == supplier.Email, tracked: true);
         if (checkEmail != null && checkEmail.Id != supplier.Id)
         {
-          strMessage = "Email đã tồn tại";
+          strMessage = "Email nhà cung cấp đã tồn tại";
           return null;
         }
         // kiểm tra số điện thoại nhà cung cấp đã tồn tại chưa
-        var checkPhone = _unitOfWork.Supplier.Get(u => u.PhoneNumber == supplier.PhoneNumber);
+        var checkPhone = _unitOfWork.Supplier.Get(u => u.PhoneNumber == supplier.PhoneNumber, tracked: true);
         if (checkPhone != null && checkPhone.Id != supplier.Id)
         {
           strMessage = "Số điện thoại đã tồn tại";
           return null;
         }
         // kiêm tra mã số thueé
-        var checkTaxCode = _unitOfWork.Supplier.Get(u => u.TaxCode == supplier.TaxCode);
+        var checkTaxCode = _unitOfWork.Supplier.Get(u => u.TaxCode == supplier.TaxCode, tracked: true);
         if (checkTaxCode != null && checkTaxCode.Id != supplier.Id)
         {
           strMessage = "Mã số thuế đã tồn tại";
           return null;
         }
-        supplier.ModifiedBy = "Admin";
-        _unitOfWork.Supplier.Update(supplier);
+
+        existingSupplier.SupplierName = supplier.SupplierName;
+        existingSupplier.TaxCode = supplier.TaxCode;
+        existingSupplier.Address = supplier.Address;
+        existingSupplier.PhoneNumber = supplier.PhoneNumber;
+        existingSupplier.Email = supplier.Email;
+        existingSupplier.BankAccount = supplier.BankAccount;
+        existingSupplier.BankName = supplier.BankName;
+        existingSupplier.Notes = supplier.Notes;
+        existingSupplier.ModifiedBy = "Admin";
+
+        // Cập nhật đối tượng trong cơ sở dữ liệu
+        _unitOfWork.Supplier.Update(existingSupplier);
         _unitOfWork.Save();
         strMessage = "Cập nhật nhà cung cấp thành công";
+        var dateess = _unitOfWork.Supplier.GetAll();
+
         return supplier;
       }
       catch (Exception ex)
@@ -166,7 +173,7 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var data = _unitOfWork.Supplier.Get(u => u.Id == id && !u.isDeleted);
+        var data = _unitOfWork.Supplier.Get(u => u.Id == id && !u.isDeleted, tracked: true);
         if (data == null)
         {
           strMessage = "Nhà cung cấp không tồn tại";

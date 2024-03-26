@@ -1,4 +1,5 @@
-﻿using MailKit.Net.Smtp;
+﻿using ICHI_CORE.Helpers;
+using MailKit.Net.Smtp;
 using MimeKit;
 
 namespace ICHI_API.Extension
@@ -7,10 +8,10 @@ namespace ICHI_API.Extension
   {
     public string Email { get; set; }
     public string Password { get; set; }
-    public EmailService(IConfiguration _config)
+    public EmailService()
     {
-      Email = _config.GetValue<string>("GmailSMTP:Email");
-      Password = _config.GetValue<string>("GmailSMTP:Password");
+      Email = AppSettings.GmailEmail;
+      Password = AppSettings.GmailPassword;
     }
     public void SendEmail(string toEmail, string subject, string body)
     {
