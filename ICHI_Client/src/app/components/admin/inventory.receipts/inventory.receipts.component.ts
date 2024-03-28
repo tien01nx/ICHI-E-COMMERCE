@@ -173,6 +173,6 @@ export class InventoryReceiptsComponent implements OnInit {
     this.router.navigate(['/admin/insert_inventory_receipts']);
   }
   insertinventoryDetail(id: number) {
-    this.router.navigate(['/admin/inventory_receipts/' + id]);
+    this.router.navigate(['/admin/insert_inventory_receipts/' + id]);
   }
 }

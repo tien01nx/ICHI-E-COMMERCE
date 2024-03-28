@@ -350,7 +350,6 @@ export class InsertAdminProductComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        debugger;
         this.productService
           .deleteImage(this.activatedRoute.snapshot.params['id'], imageName)
           .subscribe({

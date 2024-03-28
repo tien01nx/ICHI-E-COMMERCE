@@ -6,11 +6,13 @@ import { ProductModel } from '../models/product.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { InsertProductDTO } from '../dtos/insert.product.dto';
 import { ProductDTO } from '../dtos/product.dto';
+import { Environment } from '../environment/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductsService {
+  baseUrl = Environment.apiBaseUrl;
   constructor(
     private apiService: ApiServiceService,
     private http: HttpClient
@@ -47,6 +49,34 @@ export class ProductsService {
     );
   }
 
+  findProductToCategory(
+    PageNumber: number,
+    PageSize: number,
+    SortDirection: string,
+    SortBy: string,
+    Search: string
+  ) {
+    let params = new HttpParams();
+    if (PageNumber && PageNumber.toString().trim() !== '') {
+      params = params.set('page-number', PageNumber.toString());
+    }
+    if (PageSize && PageSize.toString().trim() !== '') {
+      params = params.set('page-size', PageSize.toString());
+    }
+    if (SortDirection && SortDirection.trim() !== '') {
+      params = params.set('sort-direction', SortDirection);
+    }
+    if (SortBy && SortBy.trim() !== '') {
+      params = params.set('sort-by', SortBy);
+    }
+    if (Search && Search.trim() !== '') {
+      params = params.set('category-name', Search);
+    }
+
+    return this.http.get(this.baseUrl + '/Product/GetProductInCategory', {
+      params: params,
+    });
+  }
   findAll() {
     return this.apiService.callApi<ProductModel>(
       '/Product/FindAllPaged',
@@ -60,30 +90,6 @@ export class ProductsService {
       'get'
     );
   }
-
-  //   public int TrademarkId { get; set; }
-  // [ForeignKey("TrademarkId")]
-  // [ValidateNever]
-  // public Trademark? Trademark { get; set; }
-  // [Required]
-  // public int CategoryId { get; set; }
-  // [ForeignKey("CategoryId")]
-  // [ValidateNever]
-  // public Category? Category { get; set; }
-  // [Required]
-  // [StringLength(255)]
-
-  // public string Color { get; set; } = string.Empty;
-  // public string ProductName { get; set; } = string.Empty;
-  // [Required]
-  // public string Description { get; set; } = string.Empty;
-  // [Required]
-  // public decimal Price { get; set; } = 0;
-  // public string Image { get; set; } = string.Empty;
-  // public int PriorityLevel { get; set; } = 0;
-  // public string Notes { get; set; } = string.Empty;
-  // public bool isActive { get; set; } = false;
-  // public bool isDeleted { get; set; } = false;
 
   create(product: InsertProductDTO, files: File[]) {
     const formData = new FormData();
@@ -124,13 +130,16 @@ export class ProductsService {
   }
 
   deleteProductDetails(id: number) {
-    return this.apiService.callApi<ProductModel[]>('/Product/' + id, 'delete');
+    return this.http.delete(this.baseUrl + '/Product/' + id);
   }
 
   deleteImage(id: number, imageName: string) {
-    return this.apiService.callApi<string>(
-      'Product/Delete-Image?productId=' + id + '&imageName=' + imageName,
-      'delete'
+    return this.http.delete(
+      this.baseUrl +
+        '/Product/Delete-Image?productId=' +
+        id +
+        '&imageName=' +
+        imageName
     );
   }
 }

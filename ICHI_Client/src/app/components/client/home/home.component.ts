@@ -1,3 +1,4 @@
+import { CategoryProduct } from './../../../models/category.product';
 import { Environment } from './../../../environment/environment';
 import {
   AfterViewInit,
@@ -17,6 +18,7 @@ import { CommonModule } from '@angular/common';
 import { SwiperConfigInterface } from 'ngx-swiper-wrapper';
 import { SwiperOptions } from 'swiper/types/swiper-options';
 import { SwiperContainer } from 'swiper/element/swiper-element';
+import { CategoryService } from '../../../service/category-product.service';
 
 @Component({
   selector: 'app-home',
@@ -27,9 +29,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
   Environment = Environment;
   ngOnInit(): void {
     this.getDataProduct();
+    this.getCategoryProduct();
   }
   products: ProductDTO[] = [];
-  constructor(private productService: ProductsService) {}
+  CategoryProduct: CategoryProduct[] = [];
+  constructor(
+    private productService: ProductsService,
+    private categortService: CategoryService
+  ) {}
 
   @ViewChild('swiper') swiper!: ElementRef<SwiperContainer>;
 
@@ -62,6 +69,23 @@ export class HomeComponent implements OnInit, AfterViewInit {
       next: (response: any) => {
         this.products = response.data.items;
         console.log(this.products);
+      },
+      error: (error: any) => {
+        console.log(error);
+      },
+    });
+  }
+
+  getCategoryProduct() {
+    this.categortService.findAll().subscribe({
+      next: (response: any) => {
+        console.log(response.data.items);
+        // lấy dữ liệu từ response và gán vào mảng CategoryProduct với điều kiện là response.data.items.CategoryLevel ===1
+
+        this.CategoryProduct = response.data.items.filter(
+          (item: any) => item.categoryLevel === 1
+        );
+        console.log(this.CategoryProduct);
       },
       error: (error: any) => {
         console.log(error);

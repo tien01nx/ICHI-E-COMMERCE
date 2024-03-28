@@ -23,7 +23,7 @@
               <span class="uil uil-times fs-8"></span>
             </button>
           </div>
-          <a
+          <!-- <a
             class="btn px-0 d-block collapse-indicator"
             data-bs-toggle="collapse"
             href="#collapseAvailability"
@@ -34,13 +34,13 @@
             <div
               class="d-flex align-items-center justify-content-between w-100"
             >
-              <div class="fs-8 text-body-highlight">Availability</div>
+              <div class="fs-8 text-body-highlight">Khả dụng</div>
               <span
                 class="fa-solid fa-angle-down toggle-icon text-body-quaternary"
               ></span>
             </div>
-          </a>
-          <div class="collapse show" id="collapseAvailability">
+          </a> -->
+          <!-- <div class="collapse show" id="collapseAvailability">
             <div class="mb-2">
               <div class="form-check mb-0">
                 <input
@@ -80,7 +80,7 @@
                 >
               </div>
             </div>
-          </div>
+          </div> -->
           <a
             class="btn px-0 d-block collapse-indicator"
             data-bs-toggle="collapse"
@@ -92,7 +92,7 @@
             <div
               class="d-flex align-items-center justify-content-between w-100"
             >
-              <div class="fs-8 text-body-highlight">Color family</div>
+              <div class="fs-8 text-body-highlight">Màu sắc</div>
               <span
                 class="fa-solid fa-angle-down toggle-icon text-body-quaternary"
               ></span>
@@ -100,41 +100,20 @@
           </a>
           <div class="collapse show" id="collapseColorFamily">
             <div class="mb-2">
-              <div class="form-check mb-0">
+              <div
+                class="form-check mb-0"
+                *ngFor="let item of colors.slice(0, 6); let i = index"
+              >
                 <input
                   class="form-check-input mt-0"
-                  id="flexCheckBlack"
+                  id="flexCheck{{ i }}"
                   type="checkbox"
                   name="color"
-                  checked
-                /><label
+                />
+                <label
                   class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="flexCheckBlack"
-                  >Black</label
-                >
-              </div>
-              <div class="form-check mb-0">
-                <input
-                  class="form-check-input mt-0"
-                  id="flexCheckBlue"
-                  type="checkbox"
-                  name="color"
-                /><label
-                  class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="flexCheckBlue"
-                  >Blue</label
-                >
-              </div>
-              <div class="form-check mb-0">
-                <input
-                  class="form-check-input mt-0"
-                  id="flexCheckRed"
-                  type="checkbox"
-                  name="color"
-                /><label
-                  class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="flexCheckRed"
-                  >Red</label
+                  [for]="'flexCheck' + i"
+                  >{{ item.name }}</label
                 >
               </div>
             </div>
@@ -150,7 +129,7 @@
             <div
               class="d-flex align-items-center justify-content-between w-100"
             >
-              <div class="fs-8 text-body-highlight">Brands</div>
+              <div class="fs-8 text-body-highlight">Thương hiệu</div>
               <span
                 class="fa-solid fa-angle-down toggle-icon text-body-quaternary"
               ></span>
@@ -158,65 +137,16 @@
           </a>
           <div class="collapse show" id="collapseBrands">
             <div class="mb-2">
-              <div class="form-check mb-0">
+              <div class="form-check mb-0" *ngFor="let item of trademarks">
                 <input
                   class="form-check-input mt-0"
                   id="flexCheckBlackberry"
                   type="checkbox"
                   name="brands"
-                  checked
                 /><label
                   class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
                   for="flexCheckBlackberry"
-                  >Blackberry
-                </label>
-              </div>
-              <div class="form-check mb-0">
-                <input
-                  class="form-check-input mt-0"
-                  id="flexCheckApple"
-                  type="checkbox"
-                  name="brands"
-                /><label
-                  class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="flexCheckApple"
-                  >Apple
-                </label>
-              </div>
-              <div class="form-check mb-0">
-                <input
-                  class="form-check-input mt-0"
-                  id="flexCheckNokia"
-                  type="checkbox"
-                  name="brands"
-                /><label
-                  class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="flexCheckNokia"
-                  >Nokia
-                </label>
-              </div>
-              <div class="form-check mb-0">
-                <input
-                  class="form-check-input mt-0"
-                  id="flexCheckSony"
-                  type="checkbox"
-                  name="brands"
-                /><label
-                  class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="flexCheckSony"
-                  >Sony
-                </label>
-              </div>
-              <div class="form-check mb-0">
-                <input
-                  class="form-check-input mt-0"
-                  id="flexCheckLG"
-                  type="checkbox"
-                  name="brands"
-                /><label
-                  class="form-check-label d-block lh-sm fs-8 text-body mb-0 fw-normal"
-                  for="flexCheckLG"
-                  >LG
+                  >{{ item.trademarkName }}
                 </label>
               </div>
             </div>

@@ -42,6 +42,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
   totalMoney: number = 0;
   isDisplayNone: boolean = false;
   btnSave: string = '';
+  employeeName: string = '';
   receiptForm: FormGroup = new FormGroup({
     id: new FormControl(6),
     notes: new FormControl('', [Validators.required]),
@@ -203,6 +204,8 @@ export class InsertInventoryReceiptsComponent implements OnInit {
           this.toastr.error('Không tìm thấy sản phẩm', 'Thất bại');
           this.router.navigate(['/admin/inventory_receipts']);
         }
+        this.isDisplayNone = true;
+        this.employeeName = data.fullName;
         // Set values for top-level controls
         this.receiptForm.get('id')?.setValue(data.id);
         this.receiptForm.get('notes')?.setValue(data.notes);
@@ -243,10 +246,22 @@ export class InsertInventoryReceiptsComponent implements OnInit {
       ],
       total: [
         null,
-        [Validators.required, Validators.min(1), Validators.max(1000)],
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(1000),
+          this.customTotalValidator.bind(this),
+        ],
       ],
       productId: [null],
     });
+  }
+
+  customTotalValidator(control: any) {
+    if (control.value > 1000) {
+      return { maxExceeded: true };
+    }
+    return null;
   }
 
   addProduct() {
@@ -407,5 +422,26 @@ export class InsertInventoryReceiptsComponent implements OnInit {
   updateOriginalProducts() {
     this.originalProducts = this.products.map((item) => ({ ...item }));
     console.log(this.originalProducts);
+  }
+
+  onKeyDown(event: any, type: boolean) {
+    const input = event.target as HTMLInputElement;
+    const isBackspaceOrDelete =
+      event.key === 'Backspace' || event.key === 'Delete';
+    const hasSelection = input.selectionStart !== input.selectionEnd;
+
+    if (type) {
+      // Kiểm tra nếu số lượng ký tự vượt quá maxLength
+      if (input.value.length >= 9 && !isBackspaceOrDelete && !hasSelection) {
+        // Ngăn chặn sự kiện và không cho phép nhập
+        event.preventDefault();
+      }
+    } else {
+      // Kiểm tra nếu số lượng ký tự vượt quá maxLength
+      if (input.value.length >= 3 && !isBackspaceOrDelete && !hasSelection) {
+        // Ngăn chặn sự kiện và không cho phép nhập
+        event.preventDefault();
+      }
+    }
   }
 }
