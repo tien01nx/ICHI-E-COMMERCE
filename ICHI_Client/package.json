@@ -24,6 +24,7 @@
     "angular-code-input": "^2.0.0",
     "angular-slugify": "^1.0.3",
     "class-validator": "^0.14.1",
+    "immutable": "^5.0.0-beta.5",
     "jquery": "^3.7.1",
     "ngx-dropzone": "^3.1.0",
     "ngx-swiper-wrapper": "^10.0.0",

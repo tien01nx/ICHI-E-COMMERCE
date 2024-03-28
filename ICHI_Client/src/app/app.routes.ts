@@ -62,7 +62,7 @@ export const routes: Routes = [
   },
   { path: '', component: ClientLayoutComponent },
   { path: 'product_detail/:id', component: DetailProductComponent },
-  { path: 'product_filter', component: ProductsFilterComponent },
+  { path: 'product_filter/:categoryName', component: ProductsFilterComponent },
   { path: 'cart', component: CartComponent },
   { path: 'checkout', component: CheckoutComponent },
   { path: 'checkout/:id', component: CheckoutComponent },

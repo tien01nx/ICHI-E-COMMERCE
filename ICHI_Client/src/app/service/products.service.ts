@@ -50,30 +50,39 @@ export class ProductsService {
   }
 
   findProductToCategory(
-    PageNumber: number,
-    PageSize: number,
-    SortDirection: string,
-    SortBy: string,
-    Search: string
+    categoryName: string,
+    colors: string[],
+    trademarks: string[],
+    priceMin: number,
+    priceMax: number,
+    pageSize: number,
+    pageNumber: number
   ) {
     let params = new HttpParams();
-    if (PageNumber && PageNumber.toString().trim() !== '') {
-      params = params.set('page-number', PageNumber.toString());
+    if (categoryName && categoryName.trim() !== '') {
+      params = params.set('category-name', categoryName);
     }
-    if (PageSize && PageSize.toString().trim() !== '') {
-      params = params.set('page-size', PageSize.toString());
+    if (colors && colors.length > 0) {
+      params = params.set('colors', colors.join(','));
     }
-    if (SortDirection && SortDirection.trim() !== '') {
-      params = params.set('sort-direction', SortDirection);
+    if (trademarks && trademarks.length > 0) {
+      params = params.set('trademark-name', trademarks.join(','));
     }
-    if (SortBy && SortBy.trim() !== '') {
-      params = params.set('sort-by', SortBy);
+    if (priceMin && priceMin.toString().trim() !== '') {
+      params = params.set('price-min', priceMin.toString());
     }
-    if (Search && Search.trim() !== '') {
-      params = params.set('category-name', Search);
+    if (priceMax && priceMax.toString().trim() !== '') {
+      params = params.set('price-max', priceMax.toString());
     }
+    if (pageSize && pageSize.toString().trim() !== '') {
+      params = params.set('page-size', pageSize.toString());
+    }
+    if (pageNumber && pageNumber.toString().trim() !== '') {
+      params = params.set('page-number', pageNumber.toString());
+    }
+    console.log(params);
 
-    return this.http.get(this.baseUrl + '/Product/GetProductInCategory', {
+    return this.http.get(this.baseUrl + '/Product/FindProductInCategoryName', {
       params: params,
     });
   }

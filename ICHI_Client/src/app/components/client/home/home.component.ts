@@ -13,7 +13,7 @@ import { ProductDTO } from '../../../dtos/product.dto';
 import { ProductModel } from '../../../models/product.model';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SwiperConfigInterface } from 'ngx-swiper-wrapper';
 import { SwiperOptions } from 'swiper/types/swiper-options';
@@ -35,7 +35,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   CategoryProduct: CategoryProduct[] = [];
   constructor(
     private productService: ProductsService,
-    private categortService: CategoryService
+    private categortService: CategoryService,
+    private router: Router
   ) {}
 
   @ViewChild('swiper') swiper!: ElementRef<SwiperContainer>;
@@ -101,4 +102,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       clickable: true,
     },
   };
+
+  productFilter(categoryName: string) {
+    this.router.navigate(['/product_filter/' + categoryName]);
+  }
 }

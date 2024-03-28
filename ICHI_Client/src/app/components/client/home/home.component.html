@@ -5,8 +5,11 @@
     <div class="scrollbar">
       <div class="d-flex justify-content-between">
         <div *ngFor="let item of CategoryProduct">
-          <a class="icon-nav-item" routerLink="product_filter">
-            <div class="icon-container mb-2">
+          <a class="icon-nav-item">
+            <div
+              class="icon-container mb-2"
+              (click)="productFilter(item.categoryName)"
+            >
               <!-- <span class="fs-4 uil uil-star text-warning"></span> -->
               <img
                 class="w-100 rounded-3"

@@ -106,13 +106,15 @@
               >
                 <input
                   class="form-check-input mt-0"
-                  id="flexCheck{{ i }}"
+                  id="flexCheckColor{{ i }}"
                   type="checkbox"
                   name="color"
+                  [value]="item.name"
+                  (change)="filter('colors', $event)"
                 />
                 <label
                   class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  [for]="'flexCheck' + i"
+                  [for]="'flexCheckColor' + i"
                   >{{ item.name }}</label
                 >
               </div>
@@ -136,19 +138,23 @@
             </div>
           </a>
           <div class="collapse show" id="collapseBrands">
-            <div class="mb-2">
-              <div class="form-check mb-0" *ngFor="let item of trademarks">
-                <input
-                  class="form-check-input mt-0"
-                  id="flexCheckBlackberry"
-                  type="checkbox"
-                  name="brands"
-                /><label
-                  class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="flexCheckBlackberry"
-                  >{{ item.trademarkName }}
-                </label>
-              </div>
+            <div
+              class="form-check mb-0"
+              *ngFor="let item of trademarks; let i = index"
+            >
+              <input
+                class="form-check-input mt-0"
+                id="flexCheckTrademark{{ i }}"
+                type="checkbox"
+                name="trademark"
+                [value]="item.trademarkName"
+                (change)="filter('trademark', $event)"
+              />
+              <label
+                class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
+                [for]="'flexCheckTrademark' + i"
+                >{{ item.trademarkName }}</label
+              >
             </div>
           </div>
           <a
@@ -162,7 +168,7 @@
             <div
               class="d-flex align-items-center justify-content-between w-100"
             >
-              <div class="fs-8 text-body-highlight">Price range</div>
+              <div class="fs-8 text-body-highlight">Giá</div>
               <span
                 class="fa-solid fa-angle-down toggle-icon text-body-quaternary"
               ></span>
@@ -173,18 +179,26 @@
               <div class="input-group me-2">
                 <input
                   class="form-control"
-                  type="text"
-                  aria-label="First name"
-                  placeholder="Min"
+                  type="number"
+                  placeholder="Nhỏ nhất"
+                  name="valueFilterPriceMin"
+                  [(ngModel)]="valueFilterPriceMin"
+                  appOnlyNumberFloatDirective
                 /><input
                   class="form-control"
-                  type="text"
-                  aria-label="Last name"
-                  placeholder="Max"
+                  type="number"
+                  placeholder="Lớn nhất"
+                  name="valueFilterPriceMax"
+                  [(ngModel)]="valueFilterPriceMax"
+                  appOnlyNumberFloatDirective
                 />
               </div>
-              <button class="btn btn-phoenix-primary px-3" type="button">
-                Go
+              <button
+                class="btn btn-phoenix-primary px-3"
+                type="button"
+                (click)="filterPrice()"
+              >
+                Tìm kiếm
               </button>
             </div>
           </div>
@@ -196,7 +210,10 @@
       </div>
       <div class="col-lg-9 col-xxl-10">
         <div class="row gx-3 gy-6 mb-8">
-          <div class="col-12 col-sm-6 col-md-4 col-xxl-2">
+          <div
+            class="col-12 col-sm-6 col-md-4 col-xxl-2"
+            *ngFor="let item of paginationDTO.content"
+          >
             <div class="product-card-container h-100">
               <div
                 class="position-relative text-decoration-none product-card h-100"
@@ -216,16 +233,23 @@
                         ><span class="far fa-heart d-none-hover"></span></button
                       ><img
                         class="img-fluid"
-                        src="../../../assets/img/products/6.png"
+                        src="{{
+                          Environment.apiBaseRoot +
+                            '/' +
+                            item.productImages[0].imagePath
+                        }}"
                         alt=""
                       />
                     </div>
-                    <a class="stretched-link" href="product-details.html">
+                    <a
+                      class="stretched-link"
+                      (click)="productDetail(item.product.id)"
+                    >
                       <h6 class="mb-2 lh-sm line-clamp-3 product-name">
-                        PlayStation 5 DualSense Wireless Controller
+                        {{ item.product.productName }}
                       </h6>
                     </a>
-                    <p class="fs-9">
+                    <!-- <p class="fs-9">
                       <span class="fa fa-star text-warning"></span
                       ><span class="fa fa-star text-warning"></span
                       ><span class="fa fa-star text-warning"></span
@@ -234,23 +258,25 @@
                       ><span class="text-body-quaternary fw-semibold ms-1"
                         >(67 people rated)</span
                       >
-                    </p>
+                    </p> -->
                   </div>
                   <div>
-                    <p class="fs-9 text-body-tertiary mb-2">
+                    <!-- <p class="fs-9 text-body-tertiary mb-2">
                       dbrand skin available
-                    </p>
+                    </p> -->
                     <div class="d-flex align-items-center mb-1">
-                      <p
+                      <!-- <p
                         class="me-2 text-body text-decoration-line-through mb-0"
                       >
                         $125.00
-                      </p>
-                      <h3 class="text-body-emphasis mb-0">$89.00</h3>
+                      </p> -->
+                      <h4 class="text-body-emphasis mb-0">
+                        {{ item.product.price | currencyFormat }}
+                      </h4>
                     </div>
-                    <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">
+                    <!-- <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">
                       2 colors
-                    </p>
+                    </p> -->
                   </div>
                 </div>
               </div>
