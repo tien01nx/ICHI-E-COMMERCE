@@ -225,7 +225,7 @@
               </td>
               <!-- <td class="align-middle ps-4">{{ category.categoryCode }}</td> -->
               <td class="align-middle white-space-nowrap text-700 ps-4">
-                {{ category.parentID }}
+                {{ category.parentName }}
               </td>
 
               <td class="align-middle white-space-nowrap text-700 ps-4">
@@ -406,16 +406,42 @@
           </div>
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="parentID"
-              >Tên danh mục</label
+              >Tên danh mục cha</label
             >
             <div class="col-sm-8">
-              <input
+              <ng-select
+                formControlName="parentID"
+                placeholder="Chọn danh mục"
+                [formControl]="getDistrictsControl()"
+              >
+                <ng-option
+                  *ngFor="let category of parentIds"
+                  [value]="category.id"
+                >
+                  {{ category.categoryName }}
+                </ng-option>
+              </ng-select>
+              <small
+                class="text-danger mt-1"
+                *ngIf="
+                  categoryForm.get('parentID')?.invalid &&
+                  (categoryForm.get('parentID')?.dirty ||
+                    categoryForm.get('parentID')?.touched)
+                "
+              >
+                <span
+                  *ngIf="categoryForm.get('parentID')?.errors?.['required']"
+                >
+                  Danh mục không được để trống
+                </span>
+              </small>
+              <!-- <input
                 class="form-control"
                 id="parentID"
                 type="text"
                 formControlName="parentID"
                 placeholder="Tên danh mục"
-              />
+              /> -->
               <!-- <small
                 class="text-danger mt-1"
                 *ngIf="categoryForm['controls']['parentID'].dirty"
@@ -435,16 +461,43 @@
           </div>
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="categoryLevel"
-              >Tên danh mục</label
+              >Cấp độ danh mục</label
             >
             <div class="col-sm-8">
-              <input
+              <ng-select
+                formControlName="categoryLevel"
+                placeholder="Chọn danh mục"
+                [formControl]="getDistrictsControl()"
+              >
+                <ng-option
+                  *ngFor="let category of categoriesLevel"
+                  [value]="category.id"
+                >
+                  {{ category.categoryName }}
+                </ng-option>
+              </ng-select>
+              <small
+                class="text-danger mt-1"
+                *ngIf="
+                  categoryForm.get('categoryLevel')?.invalid &&
+                  (categoryForm.get('categoryLevel')?.dirty ||
+                    categoryForm.get('categoryLevel')?.touched)
+                "
+              >
+                <span
+                  *ngIf="categoryForm.get('categoryLevel')?.errors?.['required']"
+                >
+                  Danh mục không được để trống
+                </span>
+              </small>
+
+              <!-- <input
                 class="form-control"
                 id="categoryLevel"
                 type="text"
                 formControlName="categoryLevel"
                 placeholder="Tên danh mục"
-              />
+              /> -->
               <!-- <small
                 class="text-danger mt-1"
                 *ngIf="categoryForm['controls']['categoryLevel'].dirty"

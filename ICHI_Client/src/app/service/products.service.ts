@@ -52,6 +52,7 @@ export class ProductsService {
   findProductToCategory(
     categoryName: string,
     colors: string[],
+    categories: string[],
     trademarks: string[],
     priceMin: number,
     priceMax: number,
@@ -65,6 +66,10 @@ export class ProductsService {
     if (colors && colors.length > 0) {
       params = params.set('colors', colors.join(','));
     }
+    if (categories && categories.length > 0) {
+      params = params.set('category-parent', categories.join(','));
+    }
+
     if (trademarks && trademarks.length > 0) {
       params = params.set('trademark-name', trademarks.join(','));
     }

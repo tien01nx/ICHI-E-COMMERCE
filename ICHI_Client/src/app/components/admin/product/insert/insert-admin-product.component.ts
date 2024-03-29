@@ -115,8 +115,8 @@ export class InsertAdminProductComponent implements OnInit {
 
   getDatacombobox() {
     this.categoryService.findAll().subscribe((data: any) => {
-      this.categories = data.data.items;
-      console.log(data.data.items);
+      this.categories = data.data;
+      console.log(data.data);
     });
     this.trademarkService.findAll().subscribe((data: any) => {
       this.trademarks = data.data.items;

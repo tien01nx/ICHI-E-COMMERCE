@@ -23,64 +23,45 @@
               <span class="uil uil-times fs-8"></span>
             </button>
           </div>
-          <!-- <a
+
+          <a
             class="btn px-0 d-block collapse-indicator"
             data-bs-toggle="collapse"
-            href="#collapseAvailability"
+            href="#collapseBrands"
             role="button"
             aria-expanded="true"
-            aria-controls="collapseAvailability"
+            aria-controls="collapseBrands"
           >
             <div
               class="d-flex align-items-center justify-content-between w-100"
             >
-              <div class="fs-8 text-body-highlight">Khả dụng</div>
+              <div class="fs-8 text-body-highlight">Loại sản phẩm</div>
               <span
                 class="fa-solid fa-angle-down toggle-icon text-body-quaternary"
               ></span>
             </div>
-          </a> -->
-          <!-- <div class="collapse show" id="collapseAvailability">
-            <div class="mb-2">
-              <div class="form-check mb-0">
-                <input
-                  class="form-check-input mt-0"
-                  id="inStockInput"
-                  type="checkbox"
-                  name="color"
-                  checked
-                /><label
-                  class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="inStockInput"
-                  >In stock</label
-                >
-              </div>
-              <div class="form-check mb-0">
-                <input
-                  class="form-check-input mt-0"
-                  id="preBookInput"
-                  type="checkbox"
-                  name="color"
-                /><label
-                  class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="preBookInput"
-                  >Pre-book</label
-                >
-              </div>
-              <div class="form-check mb-0">
-                <input
-                  class="form-check-input mt-0"
-                  id="outOfStockInput"
-                  type="checkbox"
-                  name="color"
-                /><label
-                  class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="outOfStockInput"
-                  >Out of stock</label
-                >
-              </div>
+          </a>
+          <div class="collapse show" id="collapseBrands">
+            <div
+              class="form-check mb-0"
+              *ngFor="let item of categories; let i = index"
+            >
+              <input
+                class="form-check-input mt-0"
+                id="flexCheckCategories{{ i }}"
+                type="checkbox"
+                name="category-parent"
+                [value]="item.categoryName"
+                (change)="filter('category-parent', $event)"
+              />
+              <label
+                class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
+                [for]="'flexCheckCategories' + i"
+                >{{ item.categoryName }}</label
+              >
             </div>
-          </div> -->
+          </div>
+
           <a
             class="btn px-0 d-block collapse-indicator"
             data-bs-toggle="collapse"

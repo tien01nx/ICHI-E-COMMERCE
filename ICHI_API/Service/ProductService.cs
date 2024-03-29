@@ -1,7 +1,9 @@
 ﻿namespace ICHI_API.Service
 {
+    using System.Data;
     using System.Linq;
     using System.Linq.Dynamic.Core;
+    using System.Reflection.Metadata;
     using ICHI.DataAccess.Repository.IRepository;
     using ICHI_API.Data;
     using ICHI_API.Model;
@@ -11,6 +13,8 @@
     using ICHI_CORE.Model;
     using ICHI_CORE.NlogConfig;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http.HttpResults;
+    using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
     public class ProductService : IProductService
     {
@@ -18,12 +22,15 @@
         private readonly IUnitOfWork _unitOfWork;
         private PcsApiContext _db;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ICategoryProductService _categoryProductService;
 
-        public ProductService(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment, PcsApiContext pcsApiContext)
+
+        public ProductService(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment, PcsApiContext pcsApiContext, ICategoryProductService categoryProductService)
         {
             _unitOfWork = unitOfWork;
             _webHostEnvironment = webHostEnvironment;
             _db = pcsApiContext;
+            _categoryProductService = categoryProductService;
         }
 
         public Helpers.PagedResult<ProductDTO> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
@@ -258,15 +265,28 @@
         }
 
 
-        public IQueryable<Product> FilterProducts(IQueryable<Product> query, string categoryName, string color, string trademark, decimal? priceMin, decimal? priceMax)
+        public IQueryable<Product> FilterProducts(IQueryable<Product> query, string categoryName, string category_parent, string color, string trademark, decimal? priceMin, decimal? priceMax)
         {
-            if (!string.IsNullOrEmpty(categoryName))
-                query = query.Where(product => product.Category.CategoryName == categoryName);
-
             query = query.Where(product => !product.isDeleted);
 
-            //if (trademark != null && trademark.Any())
-            //    query = query.Where(product => trademark.Contains(product.Trademark.TrademarkName));
+            if (!string.IsNullOrEmpty(categoryName))
+            {
+                int categoryId = _unitOfWork.Category.Get(u => u.CategoryName == categoryName).Id;
+                if (categoryId == 0)
+                {
+                    return query;
+                }
+                var categories = _categoryProductService.GetCategories(categoryId);
+                List<int> lstID = categories.Select(x => x.Id).ToList();
+                query = query.Where(x => lstID.Any(id => id == x.CategoryId));
+            }
+
+            if (category_parent != null)
+            {
+                string[] categoryNamekArray = category_parent.Split(',');
+                List<string> categories = new List<string>(categoryNamekArray);
+                query = query.Where(product => categories.Contains(product.Category.CategoryName));
+            }
 
             if (trademark != null)
             {
@@ -282,9 +302,6 @@
                 query = query.Where(product => colors.Contains(product.Color));
             }
 
-            //if (color != null && color.Any())
-            //    query = query.Where(product => color.Contains(product.Color));
-
             if (priceMin.HasValue)
                 query = query.Where(product => product.Price >= priceMin.Value);
 
@@ -294,13 +311,13 @@
             return query;
         }
 
-        public Helpers.PagedResult<ProductDTO> GetProductInCategory(string categoryName, string? color, string? trademarkName, decimal? priceMin, decimal? priceMax, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
+        public Helpers.PagedResult<ProductDTO> GetProductInCategory(string categoryName, string? category_parent, string? color, string? trademarkName, decimal? priceMin, decimal? priceMax, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
         {
             strMessage = string.Empty;
             try
             {
                 var query = _unitOfWork.Product.GetAll(includeProperties: "Category,Trademark").AsQueryable();
-                query = FilterProducts(query, categoryName, color, trademarkName, priceMin, priceMax);
+                query = FilterProducts(query, categoryName, category_parent, color, trademarkName, priceMin, priceMax);
                 var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
                 query = query.OrderBy(orderBy);
 
@@ -320,4 +337,5 @@
         }
 
     }
+
 }

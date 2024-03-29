@@ -135,6 +135,7 @@ namespace ICHI_CORE.Controllers.MasterController
         [HttpGet("FindProductInCategoryName")]
         public async Task<ActionResult<ApiResponse<ICHI_API.Helpers.PagedResult<ProductDTO>>>> GetProductInCategoryName(
              [FromQuery(Name = "category-name")] string categoryName = "",
+             [FromQuery(Name = "category-parent")] string? category_parent = null,
              [FromQuery(Name = "colors")] string? colors = null,
              [FromQuery(Name = "trademark-name")] string? trademarkName = null,
              [FromQuery(Name = "price-min")] decimal? priceMin = null,
@@ -149,7 +150,7 @@ namespace ICHI_CORE.Controllers.MasterController
             try
             {
 
-                var data = _productService.GetProductInCategory(categoryName, colors, trademarkName, priceMin, priceMax, pageSize, pageNumber, sortDir, sortBy, out strMessage);
+                var data = _productService.GetProductInCategory(categoryName, category_parent, colors, trademarkName, priceMin, priceMax, pageSize, pageNumber, sortDir, sortBy, out strMessage);
                 result = new ApiResponse<ICHI_API.Helpers.PagedResult<ProductDTO>>(
                               System.Net.HttpStatusCode.OK,
                                          strMessage,

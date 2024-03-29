@@ -29,6 +29,12 @@ export class CategoryComponent implements OnInit {
   sortDir: string = 'ASC';
   SortBy: string = 'id';
 
+  categories: any;
+
+  parentIds: CategoryProduct[] = [];
+
+  categoriesLevel: CategoryProduct[] = [];
+
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   titleModal: string = '';
   btnSave: string = '';
@@ -62,6 +68,10 @@ export class CategoryComponent implements OnInit {
       const sortBy = params['sort-by'] || '';
       this.findAll(pageSize, pageNumber, sortBy, sortDir, search);
     });
+    this.categoryService.findAll().subscribe((data: any) => {
+      this.parentIds = data.data;
+      console.log(data.data);
+    });
   }
 
   toggleSelectAll() {
@@ -80,7 +90,21 @@ export class CategoryComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           console.log(response);
-          this.paginationModel.content = response.data.items;
+          //this.paginationModel.content = response.data.items;
+          this.categories = response.data.items;
+          this.categories.forEach((item: any) => {
+            if (!item.parentName) {
+              item.parentName = this.categories.find(
+                (x: any) => x.id === item.parentID
+              )?.categoryName;
+            }
+          });
+          console.log('demo', this.categories);
+
+          this.paginationModel.content = this.categories;
+
+          // this.paginationModel.content.forEach((item) => { !item.parentName : this.parentIds.find((x) => x.id === item.parentID)?.categoryName;});
+
           this.paginationModel.totalPages = response.data.pageCount;
           this.paginationModel.totalElements = response.data.totalCount;
           this.paginationModel.numberOfElements = response.numberOfElements;
@@ -137,6 +161,7 @@ export class CategoryComponent implements OnInit {
   }
 
   onSubmit() {
+    debugger;
     if (this.categoryForm.invalid) {
       return;
     }
@@ -236,5 +261,46 @@ export class CategoryComponent implements OnInit {
     this.isDisplayNone = false;
     this.errorMessage = '';
     this.findAll(this.paginationModel.pageSize, 1, '', '', '');
+  }
+
+  getCategories(
+    categories: CategoryProduct[],
+    parentID: number
+  ): CategoryProduct[] {
+    const result: CategoryProduct[] = [];
+    if (parentID >= 0) {
+      const parent = categories.find((category) => category.id === parentID);
+      if (parent) {
+        result.push(parent);
+        const children = categories.filter(
+          (category) => !category.isDeleted && category.parentID === parentID
+        );
+        if (children.length > 0) {
+          children.forEach((child) => {
+            const childCategories = this.getCategories(categories, child.id);
+            result.push(...childCategories);
+          });
+        }
+      }
+    }
+    return result;
+  }
+
+  getDistrictsControl(): FormControl {
+    const cityControl = this.categoryForm.get('parentID') as FormControl;
+
+    cityControl.valueChanges.pipe().subscribe((id: any) => {
+      // this.categoriesLevel?.forEach((data: any) => {
+      //   if (data.categoryLevel === id) {
+      //     this.categoriesLevel = data.categoryLevel;
+      //     // this.categoryForm.get('district')?.setValue(this.districts[0]?.name); // Đảm bảo mảng districts không rỗng trước khi gán giá trị
+      //   }
+      // });
+      this.categoriesLevel = this.getCategories(this.parentIds, id);
+      this.categoryForm
+        .get('categoryLevel')
+        ?.setValue(this.categoriesLevel[0]?.id); // Đảm bảo mảng districts không rỗng trước khi gán giá trị
+    });
+    return cityControl;
   }
 }

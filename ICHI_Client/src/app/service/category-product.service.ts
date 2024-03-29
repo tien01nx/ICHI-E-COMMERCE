@@ -5,12 +5,17 @@ import { Observable, tap } from 'rxjs';
 import { ApiServiceService } from './api.service.service';
 import { InsertSupplierDTO } from '../dtos/insert.supplier.dto';
 import { CategoryProduct } from '../models/category.product';
+import { Environment } from '../environment/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
-  constructor(private apiService: ApiServiceService) {}
+  apiBaseUrl = Environment.apiBaseUrl;
+  constructor(
+    private apiService: ApiServiceService,
+    private http: HttpClient
+  ) {}
 
   findAllByName(
     PageNumber: number,
@@ -43,16 +48,25 @@ export class CategoryService {
     );
   }
   findAll() {
+    // return this.http.get(this.apiBaseUrl + '/CategoryProduct/FindAllPaged', {params: });
     return this.apiService.callApi<CategoryProduct>(
-      '/CategoryProduct/FindAllPaged',
+      '/CategoryProduct/FindAll',
       'get'
     );
   }
 
+  // data theo parentId
+  findAllByParentId(categoryName: string) {
+    return this.http.get(
+      this.apiBaseUrl +
+        '/CategoryProduct/GetCategoryByProduct?categoryname=' +
+        categoryName
+    );
+  }
+
   create(category: InsertSupplierDTO) {
-    debugger;
     return this.apiService.callApi<CategoryProduct>(
-      '/CategoryProduct/Category',
+      '/CategoryProduct/Create',
       'post',
       null,
       category
@@ -60,7 +74,6 @@ export class CategoryService {
   }
 
   update(category: CategoryProduct) {
-    debugger;
     return this.apiService.callApi<CategoryProduct>(
       '/CategoryProduct/Update',
       'put',

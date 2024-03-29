@@ -10,6 +10,8 @@ import { Utils } from '../../../Utils.ts/utils';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaginationDTO } from '../../../dtos/pagination.dto';
 import { ProductDTO } from '../../../dtos/product.dto';
+import { CategoryProduct } from '../../../models/category.product';
+import { CategoryService } from '../../../service/category-product.service';
 
 @Component({
   selector: 'app-products-filter',
@@ -20,8 +22,10 @@ export class ProductsFilterComponent implements OnInit {
   paginationDTO: PaginationDTO<ProductDTO> = PaginationDTO.createEmpty();
   Environment = Environment;
   trademarks: TrademarkModel[] = [];
+  categories: CategoryProduct[] = [];
   colors!: { name: string }[];
   valueColors: string[] = [];
+  valueCategories: string[] = [];
   valueTrademarks: string[] = [];
   valueFilterPriceMin: any;
   valueFilterPriceMax: any;
@@ -29,6 +33,7 @@ export class ProductsFilterComponent implements OnInit {
   constructor(
     private traremarkService: TrademarkService,
     private productService: ProductsService,
+    private categoryService: CategoryService,
     private router: Router,
     protected activatedRoute: ActivatedRoute
   ) {}
@@ -42,6 +47,18 @@ export class ProductsFilterComponent implements OnInit {
       console.log(this.trademarks);
     });
 
+    this.categoryService
+      .findAllByParentId(this.activatedRoute.snapshot.params['categoryName'])
+      .subscribe((response: any) => {
+        // this.categories = data.data;
+        // console.log('category', this.categories);
+        this.categories = response.data.filter(
+          (item: CategoryProduct) =>
+            item.categoryName !==
+            this.activatedRoute.snapshot.params['categoryName']
+        );
+      });
+
     this.colors = Utils.createColorList();
     console.log(this.colors);
 
@@ -51,12 +68,18 @@ export class ProductsFilterComponent implements OnInit {
 
       let colors: string[] = [];
       let trademarks: string[] = [];
+      let categories: string[] = [];
 
       params['colors']?.split(',').forEach((color: any) => {
         colors.push(color);
       });
 
       console.log('url', colors);
+
+      params['category-parent']?.split(',').forEach((category: any) => {
+        categories.push(category);
+      });
+
       params['trademark']?.split(',').forEach((trademark: any) => {
         trademarks.push(trademark);
       });
@@ -66,6 +89,7 @@ export class ProductsFilterComponent implements OnInit {
       this.findByProductInCategory(
         this.activatedRoute.snapshot.params['categoryName'],
         colors,
+        categories,
         trademarks,
         priceMin,
         priceMax,
@@ -78,6 +102,7 @@ export class ProductsFilterComponent implements OnInit {
   findByProductInCategory(
     categoryName: string,
     colors: string[],
+    categories: string[],
     trademarks: string[],
     priceMin: any,
     priceMax: any,
@@ -88,6 +113,7 @@ export class ProductsFilterComponent implements OnInit {
       .findProductToCategory(
         categoryName,
         colors,
+        categories,
         trademarks,
         priceMin,
         priceMax,
@@ -115,6 +141,9 @@ export class ProductsFilterComponent implements OnInit {
       if (key === 'colors') {
         this.valueColors.push(event.target.value);
         values = this.valueColors;
+      } else if (key === 'category-parent') {
+        this.valueCategories.push(event.target.value);
+        values = this.valueCategories;
       } else if (key === 'trademark') {
         this.valueTrademarks.push(event.target.value);
         values = this.valueTrademarks;
@@ -125,6 +154,11 @@ export class ProductsFilterComponent implements OnInit {
           (value) => value !== event.target.value
         );
         values = this.valueColors;
+      } else if (key === 'category-parent') {
+        this.valueCategories = this.valueCategories.filter(
+          (value) => value !== event.target.value
+        );
+        values = this.valueCategories;
       } else if (key === 'trademark') {
         this.valueTrademarks = this.valueTrademarks.filter(
           (value) => value !== event.target.value
@@ -132,10 +166,6 @@ export class ProductsFilterComponent implements OnInit {
         values = this.valueTrademarks;
       }
     }
-    console.log('colors', this.valueColors);
-    console.log('trademark', this.valueTrademarks);
-    console.log(this.valueFilterPriceMin);
-    console.log(this.valueFilterPriceMax);
     this.router
       .navigate(
         [

@@ -10,6 +10,7 @@ namespace ICHI_API.Service.IService
     public interface ICategoryProductService
     {
         PagedResult<Category> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage);
+        List<Category> FindAll();
 
         Category Create(Category supplier, out string strMessage);
 
@@ -18,6 +19,10 @@ namespace ICHI_API.Service.IService
         Category FindById(int id, out string strMessage);
 
         bool Delete(int id, out string strMessage);
+
+        List<Category> GetCategories(int parentID);
+
+        List<Category> GetCategoriesByParentID(string categoryName, out string strMessage);
 
     }
 }

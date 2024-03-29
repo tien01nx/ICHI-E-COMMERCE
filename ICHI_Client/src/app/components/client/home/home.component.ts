@@ -80,11 +80,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
   getCategoryProduct() {
     this.categortService.findAll().subscribe({
       next: (response: any) => {
-        console.log(response.data.items);
+        console.log(response.data);
         // lấy dữ liệu từ response và gán vào mảng CategoryProduct với điều kiện là response.data.items.CategoryLevel ===1
 
-        this.CategoryProduct = response.data.items.filter(
-          (item: any) => item.categoryLevel === 1
+        this.CategoryProduct = response.data.filter(
+          (item: any) => item.categoryLevel === 2
         );
         console.log(this.CategoryProduct);
       },

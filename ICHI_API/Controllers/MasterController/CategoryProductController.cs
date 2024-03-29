@@ -51,6 +51,24 @@ namespace ICHI_CORE.Controllers.MasterController
             return result;
         }
 
+        [HttpGet("FindAll")]
+        public async Task<ActionResult<ApiResponse<List<Category>>>> FindAll()
+        {
+            ApiResponse<List<Category>> result;
+            string strMessage = "";
+            try
+            {
+                var data = _categoryproductService.FindAll();
+                result = new ApiResponse<List<Category>>(System.Net.HttpStatusCode.OK, strMessage, data);
+            }
+            catch (Exception ex)
+            {
+                NLogger.log.Error(ex.ToString());
+                strMessage = "Có lỗi xảy ra";
+                result = new ApiResponse<List<Category>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+            }
+            return result;
+        }
         [HttpGet("{id}")]
         public async Task<ActionResult<ApiResponse<Category>>> FindById(int id)
         {
@@ -66,6 +84,25 @@ namespace ICHI_CORE.Controllers.MasterController
                 NLogger.log.Error(ex.ToString());
                 strMessage = "Có lỗi xảy ra";
                 result = new ApiResponse<Category>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+            }
+            return result;
+        }
+
+        [HttpGet("GetCategoryByProduct")]
+        public async Task<ActionResult<ApiResponse<List<Category>>>> GetCategoryByProduct(string categoryname)
+        {
+            ApiResponse<List<Category>> result;
+            string strMessage = "";
+            try
+            {
+                var data = _categoryproductService.GetCategoriesByParentID(categoryname, out strMessage);
+                result = new ApiResponse<List<Category>>(System.Net.HttpStatusCode.OK, strMessage, data);
+            }
+            catch (Exception ex)
+            {
+                NLogger.log.Error(ex.ToString());
+                strMessage = "Có lỗi xảy ra";
+                result = new ApiResponse<List<Category>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
             }
             return result;
         }
@@ -123,5 +160,7 @@ namespace ICHI_CORE.Controllers.MasterController
                 return BadRequest(new ApiResponse<Category>(System.Net.HttpStatusCode.BadRequest, strMessage, null));
             }
         }
+
+
     }
 }

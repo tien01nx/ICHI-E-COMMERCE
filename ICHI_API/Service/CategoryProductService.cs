@@ -5,6 +5,8 @@ using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.NlogConfig;
 using System.Linq.Dynamic.Core;
+using System.Net.WebSockets;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 
 namespace ICHI_API.Service
@@ -141,6 +143,53 @@ namespace ICHI_API.Service
                 NLogger.log.Error(ex.ToString());
                 strMessage = ex.ToString();
                 return false;
+            }
+        }
+
+        public List<Category> GetCategories(int parentID)
+        {
+            List<Category> reuslt = new List<Category>();
+            if (parentID >= 0)
+            {
+                Category parent = _unitOfWork.Category.Get(u => u.Id == parentID && !u.IsDeleted);
+                if (parent != null)
+                {
+                    reuslt.Add(parent);
+                    List<Category> childByParents = _unitOfWork.Category.GetAll(x => !x.IsDeleted && x.ParentID == parentID).ToList();
+                    if (childByParents.Count > 0)
+                    {
+                        foreach (var item in childByParents)
+                        {
+                            List<Category> childs = GetCategories(item.Id);
+                            reuslt.AddRange(childs);
+                        }
+                    }
+                }
+            }
+
+            return reuslt;
+        }
+
+        public List<Category> FindAll()
+        {
+            return _unitOfWork.Category.GetAll(u => !u.IsDeleted).ToList();
+        }
+
+        public List<Category> GetCategoriesByParentID(string categoryName, out string strMessage)
+        {
+            strMessage = string.Empty;
+            try
+            {
+                var model = _unitOfWork.Category.Get(u => u.CategoryName == categoryName && !u.IsDeleted);
+                var data = GetCategories(model.Id);
+                return data;
+
+            }
+            catch (Exception ex)
+            {
+                NLogger.log.Error(ex.ToString());
+                strMessage = ex.ToString();
+                return null;
             }
         }
     }
