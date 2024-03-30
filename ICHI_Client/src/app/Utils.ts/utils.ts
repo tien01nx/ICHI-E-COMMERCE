@@ -31,4 +31,11 @@ export class Utils {
       { name: 'Xanh dương' },
     ];
   }
+
+  static passwordPattern =
+    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+  static textPattern = /^[a-zA-ZÀ-ỹ\s]*$/;
+
+  static phoneNumberPattern = /^[0-9]{10}$/;
 }

@@ -10,6 +10,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Utils } from '../../../Utils.ts/utils';
 
 @Component({
   selector: 'app-sign-up',
@@ -21,8 +22,6 @@ export class SignUpComponent implements OnInit {
   successMessage: string = '';
   isActive: boolean = false;
   birthday: Date = new Date();
-  passwordPattern =
-    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
   ngOnInit(): void {}
   constructor(
     private authServer: AuthService,
@@ -39,19 +38,21 @@ export class SignUpComponent implements OnInit {
     ]),
     password: new FormControl('', [
       Validators.required,
-      Validators.maxLength(100),
-      Validators.pattern(this.passwordPattern),
+      Validators.minLength(8),
+      // Validators.maxLength(100),
+      Validators.pattern(Utils.passwordPattern),
     ]),
     confirmPassword: new FormControl('', [Validators.required]),
     fullname: new FormControl('', [
       Validators.required,
-      Validators.maxLength(100),
+      Validators.maxLength(40),
+      Validators.pattern(Utils.textPattern),
     ]),
     phoneNumber: new FormControl('', [
       Validators.required,
       Validators.maxLength(10),
       Validators.minLength(10),
-      Validators.pattern('^0[0-9]{9}$'),
+      Validators.pattern(Utils.phoneNumberPattern),
     ]),
     birthday: new FormControl('', [Validators.required]),
     gender: new FormControl('', [Validators.required]),

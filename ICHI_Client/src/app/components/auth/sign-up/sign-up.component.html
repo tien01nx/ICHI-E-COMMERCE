@@ -24,26 +24,24 @@
                 <div
                   class="position-relative px-4 px-lg-7 pt-7 pb-7 pb-sm-5 text-center text-md-start pb-lg-7 card-sign-up"
                 >
-                  <h3 class="mb-3 text-body-emphasis fs-7">
-                    Phoenix Authentication
-                  </h3>
+                  <h3 class="mb-3 text-body-emphasis fs-7">Xác thực Phoenix</h3>
                   <p class="text-body-tertiary">
-                    Give yourself some hassle-free development process with the
-                    uniqueness of Phoenix!
+                    Tạo cho mình một số quy trình phát triển không rắc rối với
+                    sự độc đáo của Phoenix!
                   </p>
                   <ul class="list-unstyled mb-0 w-max-content w-md-auto">
                     <li class="d-flex align-items-center">
                       <span
                         class="uil uil-check-circle text-success me-2"
                       ></span
-                      ><span class="text-body-tertiary fw-semibold">Fast</span>
+                      ><span class="text-body-tertiary fw-semibold">Nhanh</span>
                     </li>
                     <li class="d-flex align-items-center">
                       <span
                         class="uil uil-check-circle text-success me-2"
                       ></span
                       ><span class="text-body-tertiary fw-semibold"
-                        >Simple</span
+                        >Đơn giản</span
                       >
                     </li>
                     <li class="d-flex align-items-center">
@@ -51,7 +49,7 @@
                         class="uil uil-check-circle text-success me-2"
                       ></span
                       ><span class="text-body-tertiary fw-semibold"
-                        >Responsive</span
+                        >Phản ứng nhanh nhẹn</span
                       >
                     </li>
                   </ul>
@@ -92,7 +90,7 @@
                       Tạo tài khoản của bạn ngay hôm nay
                     </p>
                   </div>
-                  <button class="btn btn-phoenix-secondary w-100 mb-3">
+                  <!-- <button class="btn btn-phoenix-secondary w-100 mb-3">
                     <span class="fab fa-google text-danger me-2 fs-9"></span
                     >Đăng ký với Google</button
                   ><button class="btn btn-phoenix-secondary w-100">
@@ -104,7 +102,7 @@
                     <div class="divider-content-center bg-body-emphasis">
                       hoặc sử dụng tên tài khoản
                     </div>
-                  </div>
+                  </div> -->
                   <form
                     class="form"
                     [formGroup]="userForm"
@@ -126,12 +124,18 @@
                         <span
                           *ngIf="userForm['controls']['fullname'].errors?.['required']"
                         >
-                          Họ và tên không được để trống
+                          Họ và tên là bắt buộc
                         </span>
                         <span
                           *ngIf="userForm['controls']['fullname'].errors?.['maxlength']"
                         >
-                          Họ và tên không được vượt quá 100 ký tự
+                          Họ và tên không được vượt quá 40 ký tự
+                        </span>
+
+                        <span
+                          *ngIf="userForm['controls']['fullname'].errors?.['pattern']"
+                        >
+                          Họ và tên không đúng định dạng
                         </span>
                       </small>
                     </div>
@@ -151,12 +155,12 @@
                         <span
                           *ngIf="userForm['controls']['email'].errors?.['required']"
                         >
-                          Email không được để trống
+                          Email là bắt buộc
                         </span>
                         <span
                           *ngIf="userForm['controls']['email'].errors?.['maxlength']"
                         >
-                          Email không được vượt quá 100 ký tự
+                          Email không được vượt quá 40 ký tự
                         </span>
                         <span
                           *ngIf="userForm['controls']['email'].errors?.['email']"
@@ -182,19 +186,24 @@
                           <span
                             *ngIf="userForm['controls']['password'].errors?.['required']"
                           >
-                            Mật khẩu không được để trống
+                            Mật khẩu là bắt buộc
                           </span>
+
                           <span
+                            *ngIf="userForm['controls']['password'].errors?.['minlength']"
+                          >
+                            Mật khẩu dài tối thiểu 8 ký tự ></span
+                          >
+
+                          <!-- <span
                             *ngIf="userForm['controls']['password'].errors?.['maxlength']"
                           >
                             Mật khẩu không được vượt quá 100 ký tự
-                          </span>
+                          </span> -->
                           <span
                             *ngIf="userForm['controls']['password'].errors?.['pattern']"
                           >
-                            Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm ít nhất
-                            một chữ hoa, một chữ thường, một ký tự đặc biệt và
-                            một số
+                            Mật khẩu cần có chữ hoa, chữ thường và số
                           </span>
                         </small>
                       </div>
@@ -215,7 +224,7 @@
                           <span
                             *ngIf="userForm['controls']['confirmPassword'].errors?.['required']"
                           >
-                            Mật khẩu không được để trống
+                            Nhập lại mật khẩu là bắt buộc
                           </span>
                         </small>
                       </div>
@@ -265,7 +274,7 @@
                       <label class="form-label">Số điện thoại</label
                       ><input
                         class="form-control"
-                        type="number"
+                        type="tel"
                         placeholder="Vui lòng nhâp số điện thoại"
                         formControlName="phoneNumber"
                       />
@@ -276,7 +285,7 @@
                         <span
                           *ngIf="userForm['controls']['phoneNumber'].errors?.['required']"
                         >
-                          Số điện thoại không được để trống
+                          Số điện thoại là bắt buộc
                         </span>
                         <span
                           *ngIf="userForm['controls']['phoneNumber'].errors?.['maxlength']
