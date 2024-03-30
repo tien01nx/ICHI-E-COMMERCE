@@ -271,7 +271,7 @@ namespace ICHI_API.Service
                         _unitOfWork.Save();
                     }
                     transaction.Commit();
-                    strMessage = "Đăng ký thành công";
+                    strMessage = "Đăng ký tài khoản thành công";
                     var accessToken = GenerateAccessToken(user);
                     SetJWTCookie(accessToken);
                     return accessToken;

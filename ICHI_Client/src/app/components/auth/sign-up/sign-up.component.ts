@@ -58,20 +58,21 @@ export class SignUpComponent implements OnInit {
   });
 
   userRegister() {
-    debugger;
     if (this.userForm.value.password !== this.userForm.value.confirmPassword) {
       this.errorMessage = 'Mật khẩu và xác nhận mật khẩu không khớp.';
       return;
     }
     this.authServer.register(this.userForm.value).subscribe({
       next: (response: any) => {
-        if (response.code === 200) {
+        debugger;
+        if ((response.messsage === 'Đăng ký tài khoản thành công')) {
           this.userForm.reset();
           this.errorMessage = '';
-
-          this.successMessage = 'Đăng ký thành công';
+          this.successMessage = response.message;
+          this.toastr.success(response.message);
         } else {
-          this.errorMessage = response.message;
+          this.toastr.error(response.message);
+          // this.errorMessage = response.message;
           // this.isDisplayNone = false;
         }
       },
