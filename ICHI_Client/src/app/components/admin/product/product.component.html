@@ -2,13 +2,13 @@
   <ol class="breadcrumb mb-0">
     <li class="breadcrumb-item"><a href="/admin">Trang chủ</a></li>
     <li class="breadcrumb-item">Quản lý danh mục</li>
-    <li class="breadcrumb-item active">sảm phẩm</li>
+    <li class="breadcrumb-item active">sản phẩm</li>
   </ol>
 </nav>
 <div class="mb-9">
   <div class="row g-3 mb-4">
     <div class="col-auto">
-      <h2 class="mb-0">Danh sách sảm phẩm</h2>
+      <h2 class="mb-0">Danh sách sản phẩm</h2>
     </div>
   </div>
   <div id="product">
@@ -20,7 +20,7 @@
               <input
                 class="form-control search-input search"
                 type="text"
-                placeholder="Tìm kiếm sảm phẩm"
+                placeholder="Tìm kiếm sản phẩm"
                 name="searchTemp"
                 (input)="search()"
                 [(ngModel)]="searchTemp"
@@ -36,7 +36,7 @@
             data-bs-toggle="modal"
             (click)="insertProduct()"
           >
-            <span class="fas fa-plus me-2"></span>Thêm sảm phẩm
+            <span class="fas fa-plus me-2"></span>Thêm sản phẩm
           </button>
         </div>
       </div>

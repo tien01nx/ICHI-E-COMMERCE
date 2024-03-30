@@ -1,16 +1,21 @@
 import { Injectable } from '@angular/core';
 import { TrademarkModel } from '../models/trademark.model';
 import { ApiResponse } from '../models/api.response.model';
-import { HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiServiceService } from './api.service.service';
 import { InsertTrademarkDTO } from '../dtos/insert.trademark.dto';
+import { Environment } from '../environment/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TrademarkService {
-  constructor(private apiService: ApiServiceService) {}
+  baseUrl = Environment.apiBaseUrl;
+  constructor(
+    private apiService: ApiServiceService,
+    private http: HttpClient
+  ) {}
 
   // truyền đối tượng TrademarkModel
   // findAll(
@@ -127,9 +132,10 @@ export class TrademarkService {
   }
 
   delete(id: number) {
-    return this.apiService.callApi<TrademarkModel[]>(
-      '/Trademark/Delete?id' + id,
-      'delete'
-    );
+    // return this.apiService.callApi<TrademarkModel[]>(
+    //   '/Trademark/Delete?id=' + id,
+    //   'delete'
+    // );
+    return this.http.delete(this.baseUrl + '/Trademark/' + id);
   }
 }

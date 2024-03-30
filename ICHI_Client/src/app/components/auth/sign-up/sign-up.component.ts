@@ -11,6 +11,8 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Utils } from '../../../Utils.ts/utils';
+import { TokenService } from '../../../service/token.service';
+import { ApiResponse } from '../../../models/api.response.model';
 
 @Component({
   selector: 'app-sign-up',
@@ -27,7 +29,8 @@ export class SignUpComponent implements OnInit {
     private authServer: AuthService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private tokenService: TokenService
   ) {}
 
   userForm: FormGroup = new FormGroup({
@@ -39,7 +42,7 @@ export class SignUpComponent implements OnInit {
     password: new FormControl('', [
       Validators.required,
       Validators.minLength(8),
-      // Validators.maxLength(100),
+      Validators.maxLength(40),
       Validators.pattern(Utils.passwordPattern),
     ]),
     confirmPassword: new FormControl('', [Validators.required]),
@@ -64,17 +67,16 @@ export class SignUpComponent implements OnInit {
       return;
     }
     this.authServer.register(this.userForm.value).subscribe({
-      next: (response: any) => {
+      next: (response: ApiResponse<string>) => {
         debugger;
-        if (response.messsage === 'Đăng ký tài khoản thành công') {
+        if (response.message === 'Đăng ký tài khoản thành công') {
           this.userForm.reset();
           this.errorMessage = '';
-          this.successMessage = response.message;
           this.toastr.success(response.message);
+          this.tokenService.setToken(response.data);
+          this.router.navigate(['/']);
         } else {
           this.toastr.error(response.message);
-          // this.errorMessage = response.message;
-          // this.isDisplayNone = false;
         }
       },
       error: (error: any) => {

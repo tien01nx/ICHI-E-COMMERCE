@@ -134,7 +134,9 @@
                           type="password"
                           placeholder="Vui lòng nhập mật khẩu"
                           formControlName="password"
-                        /><span
+                        />
+
+                        <span
                           class="fas fa-key text-body fs-9 form-icon"
                         ></span>
                         <small
@@ -144,12 +146,12 @@
                           <span
                             *ngIf="userForm['controls']['password'].errors?.['required']"
                           >
-                            Mật khẩu không được để trống
+                           Mật khẩu không được để trống
                           </span>
                           <span
                             *ngIf="userForm['controls']['password'].errors?.['maxlength']"
                           >
-                            Mật khẩu không được vượt quá 100 ký tự
+                            Mật khẩu không được vượt quá 40 ký tự
                           </span>
                         </small>
                       </div>

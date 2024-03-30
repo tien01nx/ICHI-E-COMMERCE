@@ -44,18 +44,22 @@ export class CustomerComponent {
     id: new FormControl(null),
     fullName: new FormControl('', [
       Validators.required,
-      Validators.maxLength(50),
+      Validators.maxLength(40),
+      Validators.pattern(Utils.textPattern),
     ]),
     phoneNumber: new FormControl('', [
       Validators.required,
       Validators.maxLength(10),
       Validators.minLength(10),
-      Validators.pattern('^0[0-9]{9}$'),
+      Validators.pattern(Utils.phoneNumberPattern),
     ]),
     gender: new FormControl('', [Validators.required]),
     birthday: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    address: new FormControl('', [Validators.required]),
+    address: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(100),
+    ]),
     userId: new FormControl(null),
   });
 
@@ -293,8 +297,15 @@ export class CustomerComponent {
         debugger;
         this.userService.delete(id, status).subscribe({
           next: (response: any) => {
-            this.updateTable();
-            this.toastr.success(response.message, 'Thông báo');
+            if (response.message === 'Mở khóa tài khoản thành công') {
+              this.updateTable();
+              this.toastr.success(response.message, 'Thông báo');
+            } else if (response.message === 'Khóa tài khoản thành công') {
+              this.updateTable();
+              this.toastr.info(response.message, 'Thông báo');
+            } else {
+              this.toastr.error(response.message, 'Thông báo');
+            }
           },
           error: (error: any) => {
             this.toastr.error(error.error, 'Thất bại');

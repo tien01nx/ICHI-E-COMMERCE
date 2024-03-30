@@ -27,11 +27,7 @@ export class ForgotPasswordComponent {
   ) {}
 
   userForm: FormGroup = new FormGroup({
-    email: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(40),
-      Validators.email,
-    ]),
+    email: new FormControl('', [Validators.required, Validators.email]),
   });
 
   userLogin() {

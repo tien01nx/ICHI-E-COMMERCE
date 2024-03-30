@@ -302,8 +302,15 @@ export class InsertAdminProductComponent implements OnInit {
       .create(this.productForm.value, this.selectedImageProductFiles)
       .subscribe({
         next: (respon: any) => {
-          this.toastr.success(respon.message, 'Thành công');
-          this.router.navigateByUrl('/admin/products');
+          if (
+            respon.message === 'Tạo mới thành công' ||
+            respon.message === 'Cập nhật sản phẩm thành công'
+          ) {
+            this.toastr.success(respon.message, 'Thành công');
+            this.router.navigateByUrl('/admin/products');
+          } else {
+            this.toastr.error(respon.message, 'Thất bại');
+          }
         },
         error: (err: any) => {
           this.toastr.error(err.error, 'Thất bại');

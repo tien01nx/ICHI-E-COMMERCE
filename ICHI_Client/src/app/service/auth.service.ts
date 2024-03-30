@@ -1,3 +1,4 @@
+import { IsString } from 'class-validator';
 import { Injectable } from '@angular/core';
 import { ApiServiceService } from './api.service.service';
 import { UserLogin } from '../models/user.login';
@@ -15,13 +16,7 @@ export class AuthService {
   baseUrl = Environment.apiBaseUrl;
 
   login(userLogin: UserLogin) {
-    debugger;
-    return this.apiService.callApi<UserLogin>(
-      '/Auth/Login',
-      'post',
-      null,
-      userLogin
-    );
+    return this.apiService.callApi<any>('/Auth/Login', 'post', null, userLogin);
   }
 
   register(userRegister: any) {
@@ -42,7 +37,7 @@ export class AuthService {
   }
 
   // đổi mật khẩu
-  changePassword(data: any) {
+  changePassword(data: any)  {
     return this.http.put(this.baseUrl + '/Auth/change-password', data);
   }
 }

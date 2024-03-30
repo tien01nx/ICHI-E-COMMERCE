@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../../service/auth.service';
 import { TokenService } from '../../../service/token.service';
+import { ApiResponse } from '../../../models/api.response.model';
 
 @Component({
   selector: 'app-sign-in',
@@ -38,13 +39,14 @@ export class SignInComponent implements OnInit {
     ]),
     password: new FormControl('', [
       Validators.required,
-      Validators.maxLength(100),
+      Validators.maxLength(40),
     ]),
   });
 
   userLogin() {
+    debugger; // Breakpoint
     this.authServer.login(this.userForm.value).subscribe({
-      next: (response: any) => {
+      next: (response: ApiResponse<string>) => {
         if (response.code === 200) {
           // Đăng nhập thành công
           if (response.message === 'Đăng nhập thành công') {
@@ -56,13 +58,14 @@ export class SignInComponent implements OnInit {
             const requiredRole = ['ADMIN', 'EMPLOYEE'];
             if (requiredRole.includes(roles)) {
               // xóa lịch sử trước đó
-              window.location.href = '/admin';
+              this.router.navigate(['/admin'], { replaceUrl: true });
             } else {
-              window.location.href = '/';
+              // window.location.href = '/';
+              this.router.navigate(['/'], { replaceUrl: true });
             }
             this.userForm.reset();
+            // this.router.navigate(['/']);
             this.toastr.success(response.message, 'Thông báo');
-            this.router.navigate(['/']);
           } else {
             this.errorMessage = response.message;
           }

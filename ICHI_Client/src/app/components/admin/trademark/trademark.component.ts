@@ -40,28 +40,6 @@ export class TrademarkComponent implements OnInit {
       Validators.required,
       Validators.maxLength(50),
     ]),
-    // address: new FormControl('', [Validators.maxLength(200)]),
-    // phoneNumber: new FormControl('', [
-    //   Validators.required,
-    //   Validators.maxLength(10),
-    //   Validators.minLength(10),
-    //   Validators.pattern('^0[0-9]{9}$'),
-    // ]),
-    // email: new FormControl('', [Validators.required, Validators.email]),
-    // taxCode: new FormControl('', [
-    //   Validators.required,
-    //   Validators.maxLength(20),
-    //   Validators.minLength(10),
-    // ]),
-    // bankAccount: new FormControl('', [
-    //   Validators.required,
-    //   Validators.maxLength(20),
-    //   Validators.minLength(5),
-    // ]),
-    // bankName: new FormControl('', [
-    //   Validators.required,
-    //   Validators.maxLength(50),
-    // ]),
   });
 
   constructor(
@@ -168,8 +146,7 @@ export class TrademarkComponent implements OnInit {
     this.trademarkForm.value.id = 0;
     this.trademarkService.create(this.trademarkForm.value).subscribe({
       next: (response: any) => {
-        if (response.code === 200) {
-          debugger;
+        if (response.message === 'Tạo mới thương hiệu thành công') {
           this.trademarkForm.reset();
           this.btnCloseModal.nativeElement.click();
           this.updateTable();
@@ -177,6 +154,7 @@ export class TrademarkComponent implements OnInit {
         } else {
           this.errorMessage = response.message;
           this.isDisplayNone = false;
+          this.toastr.error(response.message, 'Thông báo');
         }
       },
       error: (error: any) => {
@@ -190,12 +168,14 @@ export class TrademarkComponent implements OnInit {
     this.isDisplayNone = true;
     this.trademarkService.update(this.trademarkForm.value).subscribe({
       next: (response: any) => {
-        console.log(response);
-        debugger;
-        this.trademarkForm.reset();
-        this.btnCloseModal.nativeElement.click();
-        this.updateTable();
-        this.toastr.success(response.message, 'Thông báo');
+        if (response.message === 'Cập nhật thành công') {
+          this.trademarkForm.reset();
+          this.btnCloseModal.nativeElement.click();
+          this.updateTable();
+          this.toastr.success(response.message, 'Thông báo');
+        } else {
+          this.toastr.error(response.message, 'Thông báo');
+        }
       },
       error: (error: any) => {
         this.errorMessage = error.error;
@@ -221,8 +201,10 @@ export class TrademarkComponent implements OnInit {
       if (result.isConfirmed) {
         this.trademarkService.delete(id).subscribe({
           next: (response: any) => {
-            this.updateTable();
-            this.toastr.success(response.message, 'Thông báo');
+            if (response.message === 'Xóa thành công') {
+              this.updateTable();
+              this.toastr.success(response.message, 'Thông báo');
+            } else this.toastr.error(response.message, 'Thông báo');
           },
           error: (error: any) => {
             this.toastr.error(error.error, 'Thất bại');

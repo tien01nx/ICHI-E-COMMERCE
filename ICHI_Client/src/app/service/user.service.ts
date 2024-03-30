@@ -12,6 +12,8 @@ import { UpdateUserDTO } from '../dtos/update.user.dto';
   providedIn: 'root',
 })
 export class UserService {
+
+  baseUrl = Environment.apiBaseUrl;
   constructor(
     private apiService: ApiServiceService,
     private http: HttpClient
@@ -71,11 +73,12 @@ export class UserService {
   }
 
   delete(id: number, status: boolean) {
-    return this.apiService.callApi<UserModel[]>(
-      // '/Auth/' + id + '?status=' + status,
-      '/Auth/' + id + '?status=' + status,
-      'delete'
-    );
+    // return this.apiService.callApi<UserModel[]>(
+    //   // '/Auth/' + id + '?status=' + status,
+    //   '/Auth/' + id + '?status=' + status,
+    //   'delete'
+    // );
+    return this.http.delete(this.baseUrl + '/Auth/' + id + '?status=' + status);
   }
   UpdateImage(user: UpdateUserDTO) {
     return this.apiService.callApi<UpdateUserDTO>(

@@ -562,7 +562,7 @@
                 class="text-danger mt-1"
                 *ngIf="supplierForm['controls']['address'].dirty && supplierForm['controls']['address'].errors?.['maxlength']"
               >
-                Địa chỉ không được vượt quá 200 ký tự
+                Địa chỉ không được vượt quá 100 ký tự
               </small>
             </div>
           </div>
@@ -574,7 +574,7 @@
               <input
                 class="form-control"
                 id="phoneNumber"
-                type="text"
+                type="tel"
                 formControlName="phoneNumber"
                 placeholder="Số điện thoại"
               />
@@ -613,7 +613,7 @@
                 class="form-control"
                 id="email"
                 rows="3"
-                placeholder="Địa chỉ"
+                placeholder="Email"
                 formControlName="email"
               ></textarea>
               <small
@@ -642,6 +642,7 @@
                 class="form-control"
                 id="taxCode"
                 rows="3"
+                type="number"
                 placeholder="Mã số thuế"
                 formControlName="taxCode"
               ></textarea>
@@ -672,6 +673,7 @@
                 class="form-control"
                 id="bankAccount"
                 rows="3"
+                type="number"
                 placeholder="Số tài khoản"
                 formControlName="bankAccount"
               ></textarea>

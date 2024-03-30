@@ -5,6 +5,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { TokenService } from '../../../service/token.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { Utils } from '../../../Utils.ts/utils';
 
 @Component({
   selector: 'app-reset-password',
@@ -12,15 +13,15 @@ import { Router } from '@angular/router';
   styleUrl: './reset-password.component.css',
 })
 export class ResetPasswordComponent {
-  passwordPattern =
-    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+  strMessage: string = '';
   userForm: FormGroup = new FormGroup({
     userName: new FormControl(''),
     oldPassword: new FormControl('', [Validators.required]),
     password: new FormControl('', [
       Validators.required,
-      Validators.maxLength(100),
-      Validators.pattern(this.passwordPattern),
+      Validators.minLength(8),
+      Validators.maxLength(40),
+      Validators.pattern(Utils.passwordPattern),
     ]),
     newPassword: new FormControl('', [Validators.required]),
   });
@@ -34,19 +35,29 @@ export class ResetPasswordComponent {
   changePassword() {
     // set username from token
 
+    if (
+      this.userForm.controls['password'].value !==
+      this.userForm.controls['newPassword'].value
+    ) {
+      this.strMessage = 'Mật khẩu xác nhận không khớp';
+      return;
+    }
+
     this.userForm.controls['userName'].setValue(
       this.tokenService.getUserEmail()
     );
     console.log(this.userForm.value);
     this.authService.changePassword(this.userForm.value).subscribe(
       (res: any) => {
-        if (res.message === 'Mật khẩu cũ không đúng') {
-          this.toastr.error('Mật khẩu cũ không đúng', 'Thông báo');
+        debugger;
+        if (res.message === 'Đổi mật khẩu thành công') {
+          this.router.navigate(['/']);
+          this.toastr.success('Đổi mật khẩu thành công', 'Thông báo');
           return;
         }
         // chuyeenr url ddeens trang /login
-        this.router.navigate(['/']);
-        this.toastr.success('Thay đổi mật khẩu thành công', 'Thông báo');
+        this.toastr.error('Mật khẩu cũ không đúng', 'Thông báo');
+        return;
       },
       (error) => {
         alert('Change password failed');

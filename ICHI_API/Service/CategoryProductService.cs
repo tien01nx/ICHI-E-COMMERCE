@@ -109,7 +109,7 @@ namespace ICHI_API.Service
                 category.ModifiedBy = "Admin";
                 _unitOfWork.Category.Update(category);
                 _unitOfWork.Save();
-                strMessage = "Cập nhật nhà cung cấp thành công";
+                strMessage = "Cập nhật danh mục thành công";
                 return category;
             }
             catch (Exception ex)

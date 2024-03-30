@@ -279,7 +279,7 @@
                     </button>
                     <ng-container *ngIf="customer.user.isLocked; else unlocked">
                       <button class="btn btn-sm btn-phoenix-secondary fs-10"
-                        (click)="lockAccount(customer.user.id, false)">
+                        (click)="lockAccount(customer.userId, false)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
                           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                           stroke-linejoin="round" class="feather feather-unlock text-body fs-5">
@@ -291,7 +291,7 @@
                     </ng-container>
                     <ng-template #unlocked>
                       <button class="btn btn-sm btn-phoenix-secondary fs-10"
-                        (click)="lockAccount(customer.user.id, true)">
+                        (click)="lockAccount(customer.userId, true)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
                           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                           stroke-linejoin="round" class="feather feather-lock text-body fs-5">

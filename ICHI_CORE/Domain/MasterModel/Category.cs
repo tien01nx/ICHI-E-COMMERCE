@@ -12,7 +12,6 @@ namespace ICHI_CORE.Domain.MasterModel
         [Required]
         [StringLength(255)]
         public string CategoryName { get; set; } = string.Empty;
-        public string? Notes { get; set; } = string.Empty;
         public bool IsDeleted { get; set; } = false;
     }
 }

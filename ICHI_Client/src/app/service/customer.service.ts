@@ -15,7 +15,7 @@ export class CustomerService {
     private apiService: ApiServiceService,
     private http: HttpClient
   ) {}
-  Environment = Environment;
+  baseUrl = Environment.apiBaseUrl;
   findAllByName(
     PageNumber: number,
     PageSize: number,
@@ -56,7 +56,7 @@ export class CustomerService {
 
   create(customer: any) {
     return this.apiService.callApi<CustomerModel>(
-      '/Customer/Create-Customer',
+      '/Customer/Create',
       'post',
       null,
       customer
@@ -78,7 +78,6 @@ export class CustomerService {
       'delete'
     );
   }
-  private apiProductAdminUrl = `${Environment.apiBaseUrl}/Customer`;
   UpdateImage(customer: CustomerModel, files: File | null) {
     const formData = new FormData();
     formData.append('id', customer.id.toString());
@@ -91,14 +90,6 @@ export class CustomerService {
     if (files) {
       formData.append('file', files);
     }
-    debugger;
-    return this.http.put(this.apiProductAdminUrl, formData);
-    // return this.apiService.callApi<CustomerModel>(
-    //   '/Customer', // URL của API
-    //   'put', // Method là 'put'
-    //   null, // Không có params
-    //   formData, // Dữ liệu form data
-    //   'multipart/form-data' // ContentType là 'multipart/form-data'
-    // );
+    return this.http.put(this.baseUrl + '/Customer/Update', formData);
   }
 }

@@ -49,6 +49,7 @@ namespace ICHI_API.Service
                     userExist.ModifiedDate = DateTime.Now;
                     _unitOfWork.User.Update(userExist);
                     _unitOfWork.Save();
+                    strMessage = "Đổi mật khẩu thành công";
                     return "Đổi mật khẩu thành công";
                 }
                 else
@@ -89,7 +90,7 @@ namespace ICHI_API.Service
                 User loginUser = ExistsByUserNameOrEmail(email);
                 if (loginUser == null)
                 {
-                    strMessage = "Quên mật khẩu thất bại";
+                    strMessage = "Tài khoản email không tồn tại";
                     return null;
                 }
                 var emailService = new EmailService(_configuration);
@@ -301,7 +302,7 @@ namespace ICHI_API.Service
                 data.ModifiedBy = "Admin";
                 _unitOfWork.User.Update(data);
                 _unitOfWork.Save();
-                strMessage = status ? "Mở khóa tài khoản thành công" : "Khóa tài khoản thành công";
+                strMessage = status ? "Khóa tài khoản thành công" : "Mở khóa tài khoản thành công";
                 return null;
             }
             catch (Exception ex)

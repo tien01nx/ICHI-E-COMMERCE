@@ -263,8 +263,16 @@ export class EmployeeComponent {
       if (result.isConfirmed) {
         this.employeeService.delete(id).subscribe({
           next: (response: any) => {
-            this.updateTable();
-            this.toastr.success(response.message, 'Thông báo');
+            debugger;
+            if (response.message === 'Mở khóa tài khoản thành công') {
+              this.updateTable();
+              this.toastr.success(response.message, 'Thông báo');
+            } else if (response.message === 'Khóa tài khoản thành công') {
+              this.updateTable();
+              this.toastr.error(response.message, 'Thông báo');
+            } else {
+              this.toastr.error(response.message, 'Thông báo');
+            }
           },
           error: (error: any) => {
             this.toastr.error(error.error, 'Thất bại');
@@ -335,8 +343,8 @@ export class EmployeeComponent {
 
   lockAccount(id: number, status: boolean) {
     Swal.fire({
-      title: 'Bạn có chắc chắn muốn xóa?',
-      text: 'Dữ liệu sẽ không thể phục hồi sau khi xóa!',
+      title: 'Bạn có chắc chắn muốn thực hiện thao tác này không?',
+      text: 'Khóa tài khoản sẽ thực hiện không đăng nhập vào hệ thống!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Xác nhận',
@@ -351,8 +359,16 @@ export class EmployeeComponent {
         debugger;
         this.userServide.delete(id, status).subscribe({
           next: (response: any) => {
-            this.updateTable();
-            this.toastr.success(response.message, 'Thông báo');
+            debugger;
+            if (response.message === 'Mở khóa tài khoản thành công') {
+              this.updateTable();
+              this.toastr.success(response.message, 'Thông báo');
+            } else if (response.message === 'Khóa tài khoản thành công') {
+              this.updateTable();
+              this.toastr.info(response.message, 'Thông báo');
+            } else {
+              this.toastr.error(response.message, 'Thông báo');
+            }
           },
           error: (error: any) => {
             this.toastr.error(error.error, 'Thất bại');

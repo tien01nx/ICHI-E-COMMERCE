@@ -141,62 +141,7 @@
                   <span class="fas fa-sort-down align-middle fs-9"></span>
                 </label>
               </th>
-              <!-- ngày sinh -->
-              <!-- <th
-                class="sort align-middle ps-4"
-                scope="col"
-                style="width: 150px"
-                (click)="sortByField('Birthday')"
-              >
-                Ngày sinh
-                <label
-                  [class.d-none]="
-                    SortBy === 'Birthday' &&
-                    (sortDir === 'DESC' || sortDir === 'ASC')
-                  "
-                >
-                  <span class="fas fa-sort align-middle fs-9"></span>
-                </label>
-                <label
-                  [class.d-none]="SortBy !== 'Birthday' || sortDir !== 'ASC'"
-                >
-                  <span class="fas fa-sort-up align-middle fs-9"></span>
-                </label>
-                <label
-                  [class.d-none]="SortBy !== 'Birthday' || sortDir !== 'DESC'"
-                >
-                  <span class="fas fa-sort-down align-middle fs-9"></span>
-                </label>
-              </th> -->
-              <!-- địa chỉ -->
-              <!-- <th
-                class="sort align-middle ps-4"
-                scope="col"
-                style="width: 150px"
-                (click)="sortByField('email')"
-              >
-                Địa chỉ
-                <label
-                  [class.d-none]="
-                    SortBy === 'address' &&
-                    (sortDir === 'DESC' || sortDir === 'ASC')
-                  "
-                >
-                  <span class="fas fa-sort align-middle fs-9"></span>
-                </label>
-                <label
-                  [class.d-none]="SortBy !== 'address' || sortDir !== 'ASC'"
-                >
-                  <span class="fas fa-sort-up align-middle fs-9"></span>
-                </label>
-                <label
-                  [class.d-none]="SortBy !== 'address' || sortDir !== 'DESC'"
-                >
-                  <span class="fas fa-sort-down align-middle fs-9"></span>
-                </label>
-              </th> -->
 
-              <!-- email -->
               <th
                 class="sort align-middle ps-4"
                 scope="col"
@@ -333,12 +278,6 @@
               <td class="align-middle text-600 ps-4">
                 {{ customer.gender }}
               </td>
-              <!-- <td class="align-middle text-600 ps-4">
-                {{ customer.birthday | date : "dd/MM/yyyy" }}
-              </td>
-              <td class="align-middle text-600 ps-4">
-                {{ customer.address }}
-              </td> -->
               <td class="align-middle text-600 ps-4">
                 {{ customer.user.email }}
               </td>
@@ -354,44 +293,9 @@
                 </span>
               </td>
 
-              <!-- <td class="align-middle white-space-nowrap text-600 ps-4">
-                {{ customer.createDatetime | date : "dd/MM/yyyy HH:mm:ss" }}
-              </td> -->
               <td class="align-middle white-space-nowrap text-600 ps-3">
                 {{ customer.modifiedDate | date : "dd/MM/yyyy" }}
               </td>
-              <!-- <td class="align-middle white-space-nowrap text-end pe-0">
-                <div class="font-sans-serif btn-reveal-trigger position-static">
-                  <button
-                    class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    data-boundary="window"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                    data-bs-reference="parent"
-                  >
-                    <span class="fas fa-ellipsis-h fs--2"></span>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-end py-2">
-                    <button
-                      class="dropdown-item"
-                      data-bs-target="#modalcustomer"
-                      data-bs-toggle="modal"
-                      (click)="openModalUpdate(customer)"
-                    >
-                      Cập nhật
-                    </button>
-                    <div class="dropdown-divider"></div>
-                    <button
-                      class="dropdown-item text-danger"
-                      (click)="delete(customer.id)"
-                    >
-                      Xóa
-                    </button>
-                  </div>
-                </div>
-              </td> -->
 
               <td class="align-middle white-space-nowrap text-end pe-0">
                 <div class="position-relative">
@@ -422,7 +326,7 @@
                     <ng-container *ngIf="customer.user.isLocked; else unlocked">
                       <button
                         class="btn btn-sm btn-phoenix-secondary fs-10"
-                        (click)="lockAccount(customer.user.id, false)"
+                        (click)="lockAccount(customer.userId, false)"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -456,7 +360,7 @@
                     <ng-template #unlocked>
                       <button
                         class="btn btn-sm btn-phoenix-secondary fs-10"
-                        (click)="lockAccount(customer.user.id, true)"
+                        (click)="lockAccount(customer.userId, true)"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -500,22 +404,7 @@
                     aria-expanded="false"
                     data-bs-reference="parent"
                   >
-                    <svg
-                      class="svg-inline--fa fa-ellipsis fs-10"
-                      aria-hidden="true"
-                      focusable="false"
-                      data-prefix="fas"
-                      data-icon="ellipsis"
-                      role="img"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 448 512"
-                      data-fa-i2svg=""
-                    >
-                      <path
-                        fill="currentColor"
-                        d="M120 256C120 286.9 94.93 312 64 312C33.07 312 8 286.9 8 256C8 225.1 33.07 200 64 200C94.93 200 120 225.1 120 256zM280 256C280 286.9 254.9 312 224 312C193.1 312 168 286.9 168 256C168 225.1 193.1 200 224 200C254.9 200 280 225.1 280 256zM328 256C328 225.1 353.1 200 384 200C414.9 200 440 225.1 440 256C440 286.9 414.9 312 384 312C353.1 312 328 286.9 328 256z"
-                      ></path></svg
-                    ><!-- <span class="fas fa-ellipsis-h fs-10"></span> Font Awesome fontawesome.com -->
+                    <span class="fas fa-ellipsis-h fs-10"></span>
                   </button>
                   <div class="dropdown-menu dropdown-menu-end py-2">
                     <a class="dropdown-item" href="#!">View</a
@@ -701,7 +590,13 @@
                 <span
                   *ngIf="customerForm['controls']['fullName'].errors?.['maxlength']"
                 >
-                  Tên khách hàng không được vượt quá 50 ký tự
+                  Tên khách hàng không được vượt quá 40 ký tự
+                </span>
+
+                <span
+                  *ngIf="customerForm['controls']['fullName'].errors?.['pattern']"
+                >
+                  Tên khách hàng không hợp lệ
                 </span>
               </small>
             </div>
@@ -715,7 +610,7 @@
               <input
                 class="form-control"
                 id="phoneNumber"
-                type="text"
+                type="tel"
                 placeholder="Số điện thoại"
                 formControlName="phoneNumber"
               />
@@ -837,6 +732,11 @@
                   *ngIf="customerForm['controls']['address'].errors?.['required']"
                 >
                   Địa chỉ không được để trống
+                </span>
+                <span
+                  *ngIf="customerForm['controls']['address'].errors?.['maxLength']"
+                >
+                  Địa chỉ tối đa 100 ký tự
                 </span>
               </small>
             </div>

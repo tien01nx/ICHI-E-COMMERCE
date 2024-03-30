@@ -40,12 +40,12 @@ export class SupplierAdminComponent implements OnInit {
       Validators.required,
       Validators.maxLength(50),
     ]),
-    address: new FormControl('', [Validators.maxLength(200)]),
+    address: new FormControl('', [Validators.maxLength(100)]),
     phoneNumber: new FormControl('', [
       Validators.required,
       Validators.maxLength(10),
       Validators.minLength(10),
-      Validators.pattern('^0[0-9]{9}$'),
+      Validators.pattern(Utils.phoneNumberPattern),
     ]),
     email: new FormControl('', [Validators.required, Validators.email]),
     taxCode: new FormControl('', [
@@ -168,8 +168,7 @@ export class SupplierAdminComponent implements OnInit {
     this.supplierForm.value.id = 0;
     this.supplierService.create(this.supplierForm.value).subscribe({
       next: (response: any) => {
-        if (response.code === 200) {
-          debugger;
+        if (response.message === 'Tạo mới thành công') {
           this.supplierForm.reset();
           this.btnCloseModal.nativeElement.click();
           this.updateTable();
@@ -190,12 +189,14 @@ export class SupplierAdminComponent implements OnInit {
     this.isDisplayNone = true;
     this.supplierService.update(this.supplierForm.value).subscribe({
       next: (response: any) => {
-        console.log(response);
-        debugger;
-        this.supplierForm.reset();
-        this.btnCloseModal.nativeElement.click();
-        this.updateTable();
-        this.toastr.success(response.message, 'Thông báo');
+        if (response.message === 'Cập nhật nhà cung cấp thành công') {
+          this.supplierForm.reset();
+          this.btnCloseModal.nativeElement.click();
+          this.updateTable();
+          this.toastr.success(response.message, 'Thông báo');
+        } else {
+          this.toastr.error(response.message, 'Thất bại');
+        }
       },
       error: (error: any) => {
         this.errorMessage = error.error;
@@ -221,8 +222,12 @@ export class SupplierAdminComponent implements OnInit {
       if (result.isConfirmed) {
         this.supplierService.delete(id).subscribe({
           next: (response: any) => {
-            this.updateTable();
-            this.toastr.success(response.message, 'Thông báo');
+            if (response.message === 'Xóa nhà cung cấp thành công') {
+              this.updateTable();
+              this.toastr.success(response.message, 'Thông báo');
+            } else {
+              this.toastr.error(response.message, 'Thất bại');
+            }
           },
           error: (error: any) => {
             this.toastr.error(error.error, 'Thất bại');

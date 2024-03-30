@@ -49,9 +49,9 @@ export class CategoryComponent implements OnInit {
     categoryLevel: new FormControl('0'),
     categoryName: new FormControl('', [
       Validators.required,
-      Validators.maxLength(100),
+      Validators.maxLength(50),
+      Validators.pattern(Utils.textPattern),
     ]),
-    notes: new FormControl('', [Validators.maxLength(200)]),
   });
 
   buildTree(
@@ -208,8 +208,7 @@ export class CategoryComponent implements OnInit {
     this.categoryForm.value.id = 0;
     this.categoryService.create(this.categoryForm.value).subscribe({
       next: (response: any) => {
-        if (response.code === 200) {
-          debugger;
+        if (response.message === 'Tạo mới danh mục thành công') {
           this.categoryForm.reset();
           this.btnCloseModal.nativeElement.click();
           this.updateTable();
@@ -217,6 +216,7 @@ export class CategoryComponent implements OnInit {
         } else {
           this.errorMessage = response.message;
           this.isDisplayNone = false;
+          this.toastr.error(response.message, 'Thông báo');
         }
       },
       error: (error: any) => {
@@ -232,10 +232,14 @@ export class CategoryComponent implements OnInit {
       next: (response: any) => {
         console.log(response);
         debugger;
-        this.categoryForm.reset();
-        this.btnCloseModal.nativeElement.click();
-        this.updateTable();
-        this.toastr.success(response.message, 'Thông báo');
+        if (response.message === 'Cập nhật danh mục thành công') {
+          this.categoryForm.reset();
+          this.btnCloseModal.nativeElement.click();
+          this.updateTable();
+          this.toastr.success(response.message, 'Thông báo');
+        } else {
+          this.toastr.error(response.message, 'Thông báo');
+        }
       },
       error: (error: any) => {
         this.errorMessage = error.error;
@@ -285,7 +289,6 @@ export class CategoryComponent implements OnInit {
       parentID: category.parentID,
       categoryLevel: category.categoryLevel,
       categoryName: category.categoryName,
-      notes: category.notes,
     });
     this.titleModal = 'Cập nhật ndanh mục sản phẩm';
     this.btnSave = 'Cập nhật';
