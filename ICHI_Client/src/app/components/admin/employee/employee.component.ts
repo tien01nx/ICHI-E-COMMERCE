@@ -20,6 +20,7 @@ import { UserService } from '../../../service/user.service';
 import { UserDTO } from '../../../dtos/user.dto';
 import { UpdateUserDTO } from '../../../dtos/update.user.dto';
 import { AuthService } from '../../../service/auth.service';
+import { EmployeeModel } from '../../../models/employee.model';
 
 @Component({
   selector: 'app-customer',
@@ -58,10 +59,7 @@ export class EmployeeComponent {
     gender: new FormControl('', [Validators.required]),
     birthday: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    address: new FormControl(
-      ''
-      // [Validators.required]
-    ),
+    address: new FormControl('', [Validators.required]),
     userId: new FormControl(null),
     password: new FormControl(
       ''
@@ -120,10 +118,14 @@ export class EmployeeComponent {
       .UpdateImage(this.employeeForm.value, this.file)
       .subscribe({
         next: (response: any) => {
-          this.employeeForm.reset();
-          this.btnCloseModal.nativeElement.click();
-          this.updateTable();
-          this.toastr.success(response.message, 'Thông báo');
+          if (response.message === 'Cập nhật nhân viên thành công') {
+            this.employeeForm.reset();
+            this.btnCloseModal.nativeElement.click();
+            this.updateTable();
+            this.toastr.success(response.message, 'Thông báo');
+          }
+
+          this.toastr.error(response.message, 'Thông báo');
         },
         error: (error: any) => {
           this.errorMessage = error.error;
@@ -211,34 +213,38 @@ export class EmployeeComponent {
     return isMale;
   }
   onSubmit() {
+    debugger;
     if (this.employeeForm.invalid) {
       return;
     }
-    if (this.employeeForm.value.id === null) this.createEmployee();
-    else this.update();
+    if (this.employeeForm.value.id === null) {
+      // this.create();
+      this.createEmployee();
+      return;
+    } else this.update();
   }
 
-  create() {
-    this.isDisplayNone = true;
-    this.employeeForm.value.id = 0;
-    this.employeeService.create(this.employeeForm.value).subscribe({
-      next: (response: any) => {
-        if (response.code === 200) {
-          this.employeeForm.reset();
-          this.btnCloseModal.nativeElement.click();
-          this.updateTable();
-          this.toastr.success(response.message, 'Thông báo');
-        } else {
-          this.errorMessage = response.message;
-          this.isDisplayNone = false;
-        }
-      },
-      error: (error: any) => {
-        this.errorMessage = error.error;
-        this.isDisplayNone = false;
-      },
-    });
-  }
+  // create() {
+  //   this.isDisplayNone = true;
+  //   this.employeeForm.value.id = 0;
+  //   this.employeeService.create(this.employeeForm.value).subscribe({
+  //     next: (response: any) => {
+  //       if (response.code === 200) {
+  //         this.employeeForm.reset();
+  //         this.btnCloseModal.nativeElement.click();
+  //         this.updateTable();
+  //         this.toastr.success(response.message, 'Thông báo');
+  //       } else {
+  //         this.errorMessage = response.message;
+  //         this.isDisplayNone = false;
+  //       }
+  //     },
+  //     error: (error: any) => {
+  //       this.errorMessage = error.error;
+  //       this.isDisplayNone = false;
+  //     },
+  //   });
+  // }
 
   delete(id: number) {
     Swal.fire({
@@ -294,7 +300,7 @@ export class EmployeeComponent {
   //   this.btnSave = 'Cập nhật';
   // }
 
-  openModalUpdate(user: any) {
+  openModalUpdate(user: EmployeeModel) {
     debugger;
     this.showPassword = false;
     this.employeeForm.patchValue({
@@ -303,7 +309,7 @@ export class EmployeeComponent {
       fullName: user.fullName,
       birthday: user.birthday,
       gender: user.gender,
-      userId: user.user.id,
+      userId: user.userId,
       address: user.address,
       phoneNumber: user.phoneNumber,
     });
@@ -357,6 +363,7 @@ export class EmployeeComponent {
   }
 
   createEmployee() {
+    debugger;
     this.isDisplayNone = true;
     this.employeeForm.value.id = 0;
     const userdto: UpdateUserDTO = {
@@ -364,9 +371,10 @@ export class EmployeeComponent {
       fullName: this.employeeForm.value.fullName,
       password: this.employeeForm.value.password,
       email: this.employeeForm.value.email,
-      role: this.employeeForm.value.role,
+      role: 'EMPLOYEE',
       birthday: this.employeeForm.value.birthday,
       gender: this.employeeForm.value.gender,
+      phoneNumber: this.employeeForm.value.phoneNumber,
     };
 
     this.authService.register(userdto).subscribe({

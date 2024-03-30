@@ -100,10 +100,11 @@ export class AuthComponent implements OnInit {
       id: this.userForm.value.id,
       fullName: this.userForm.value.fullName,
       email: this.userForm.value.email,
-      role: this.userForm.value.role,
+      role: 'EMPLOYEE',
       birthday: this.userForm.value.birthday,
       gender: this.userForm.value.gender,
       password: this.userForm.value.password,
+      phoneNumber: this.userForm.value.phoneNumber,
     };
 
     this.userService.UpdateImage(userdto).subscribe({
@@ -210,14 +211,16 @@ export class AuthComponent implements OnInit {
   create() {
     this.isDisplayNone = true;
     this.userForm.value.id = 0;
+    debugger;
     const userdto: UpdateUserDTO = {
       id: this.userForm.value.id,
       fullName: this.userForm.value.fullName,
       password: this.userForm.value.password,
       email: this.userForm.value.email,
-      role: this.userForm.value.role,
+      role: 'EMPLOYEE',
       birthday: this.userForm.value.birthday,
       gender: this.userForm.value.gender,
+      phoneNumber: this.userForm.value.phoneNumber,
     };
 
     this.authService.register(userdto).subscribe({
@@ -282,7 +285,7 @@ export class AuthComponent implements OnInit {
       id: user.user.id,
       email: user.email,
       fullName: user.fullName,
-      role: user.role,
+      role: 'EMPLOYEE',
       birthday: user.birthday,
       gender: user.gender,
     });

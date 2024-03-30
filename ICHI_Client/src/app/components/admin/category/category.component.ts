@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
 import { Utils } from '../../../Utils.ts/utils';
 import { CategoryProduct } from '../../../models/category.product';
 import { CategoryService } from '../../../service/category-product.service';
+import { TreeNode } from '../../../models/tree.mode';
 
 @Component({
   selector: 'app-supplier.admin',
@@ -35,6 +36,8 @@ export class CategoryComponent implements OnInit {
 
   categoriesLevel: CategoryProduct[] = [];
 
+  tree: TreeNode[] = [];
+
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   titleModal: string = '';
   btnSave: string = '';
@@ -51,6 +54,31 @@ export class CategoryComponent implements OnInit {
     notes: new FormControl('', [Validators.maxLength(200)]),
   });
 
+  buildTree(
+    categories: CategoryProduct[],
+    parentID: number = 0,
+    level: number = 1
+  ): TreeNode[] {
+    const nodes: TreeNode[] = [];
+
+    categories.forEach((data: CategoryProduct) => {
+      if (data.parentID === parentID) {
+        const newNode: TreeNode = {
+          key: data.id.toString(),
+          label: data.categoryName,
+          data: data,
+          icon: 'pi pi-fw pi-folder', // Assuming default icon for folder
+        };
+        const children = this.buildTree(categories, data.id, level + 1);
+        if (children.length) {
+          newNode.children = children;
+        }
+        nodes.push(newNode);
+      }
+    });
+
+    return nodes;
+  }
   constructor(
     private title: Title,
     private categoryService: CategoryService,
@@ -71,6 +99,12 @@ export class CategoryComponent implements OnInit {
     this.categoryService.findAll().subscribe((data: any) => {
       this.parentIds = data.data;
       console.log(data.data);
+    });
+
+    this.categoryService.findAll().subscribe((categories: any) => {
+      console.log('categories', categories.data);
+      this.tree = this.buildTree(categories.data);
+      console.log('tree', this.tree);
     });
   }
 

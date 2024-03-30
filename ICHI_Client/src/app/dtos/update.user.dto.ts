@@ -8,6 +8,7 @@ export class UpdateUserDTO {
   email: string;
   birthday: Date;
   gender: string;
+  phoneNumber: string;
   constructor(
     id: number,
     fullName: string,
@@ -15,7 +16,8 @@ export class UpdateUserDTO {
     role: string,
     email: string,
     birthday: Date,
-    gender: string
+    gender: string,
+    phoneNumber: string
   ) {
     this.id = id;
     this.fullName = fullName;
@@ -24,5 +26,6 @@ export class UpdateUserDTO {
     this.email = email;
     this.birthday = birthday;
     this.gender = gender;
+    this.phoneNumber = phoneNumber;
   }
 }

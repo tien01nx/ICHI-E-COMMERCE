@@ -11,7 +11,7 @@ namespace ICHI_CORE.Domain.MasterModel
 {
     public class Employee : MasterEntity
     {
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         [ForeignKey("UserId")]
         [ValidateNever]
         public User? User { get; set; }
@@ -30,7 +30,7 @@ namespace ICHI_CORE.Domain.MasterModel
         [StringLength(12)]
         public string PhoneNumber { get; set; } = string.Empty;
         [StringLength(255)]
-        public string Address { get; set; } = string.Empty;
+        public string? Address { get; set; } = string.Empty;
         public bool isActive { get; set; } = false;
         public bool isDeleted { get; set; } = false;
         public string Avatar { get; set; } = string.Empty;

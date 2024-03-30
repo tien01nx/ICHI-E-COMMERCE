@@ -20,7 +20,7 @@
               <input
                 class="form-control search-input search"
                 type="text"
-                placeholder="Tìm kiếm nhà cung cấp"
+                placeholder="Tìm kiếm đơn nhập hàng"
                 name="searchTemp"
                 (input)="search()"
                 [(ngModel)]="searchTemp"
@@ -93,7 +93,7 @@
                 style="width: 200px"
                 (click)="sortByField('SupplierName')"
               >
-                Nhà cung cấp
+                Tên nhà cung cấp
                 <label
                   [class.d-none]="
                     SortBy === 'SupplierName' &&

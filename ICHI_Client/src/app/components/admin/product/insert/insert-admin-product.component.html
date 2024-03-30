@@ -203,20 +203,26 @@
                       type="text"
                       placeholder="Collection"
                     /> -->
-                    <ng-select
+                    <!-- <ng-select
                       [items]="color"
                       bindValue="name"
                       bindLabel="name"
                       formControlName="color"
-                    ></ng-select>
+                    ></ng-select> -->
+                    <input
+                      class="form-control mb-xl-3"
+                      type="text"
+                      placeholder="Màu sắc"
+                      formControlName="color"
+                    />
                     <small
                       class="text-danger mt-1"
                       *ngIf="productForm['controls']['color'].dirty"
                     >
                       <span
-                        *ngIf="productForm['controls']['color'].errors?.['required']"
+                        *ngIf="productForm['controls']['color'].errors?.['maxLength']"
                       >
-                        Màu sắc không được để trống
+                        Màu sắc tối đa 30 kí tự
                       </span>
                     </small>
                   </div>
@@ -228,6 +234,8 @@
                     <input
                       class="form-control mb-xl-3"
                       type="number"
+                      min="0"
+                      max="4"
                       placeholder="Thứ tự hiển thị"
                       formControlName="priorityLevel"
                     />
@@ -289,7 +297,7 @@
                   >
                     <div class="d-flex flex-wrap mb-2">
                       <h5 class="text-body-highlight me-2">
-                        Giá <sup class="text-danger">*</sup>
+                        Giá <sup class="text-danger"></sup>
                       </h5>
                     </div>
 
@@ -300,6 +308,8 @@
                         placeholder="0"
                         formControlName="price"
                       />
+                      
+
                       <span class="input-group-text">vnđ</span>
                     </div>
 

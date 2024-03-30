@@ -49,10 +49,11 @@ export class CategoryService {
   }
   findAll() {
     // return this.http.get(this.apiBaseUrl + '/CategoryProduct/FindAllPaged', {params: });
-    return this.apiService.callApi<CategoryProduct>(
-      '/CategoryProduct/FindAll',
-      'get'
-    );
+    // return this.apiService.callApi<CategoryProduct>(
+    //   '/CategoryProduct/FindAll',
+    //   'get'
+    // );
+    return this.http.get(this.apiBaseUrl + '/CategoryProduct/FindAll');
   }
 
   // data theo parentId

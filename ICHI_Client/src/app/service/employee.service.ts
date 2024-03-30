@@ -77,7 +77,7 @@ export class EmployeeService {
       'delete'
     );
   }
-  private apiProductAdminUrl = `${Environment.apiBaseUrl}/Employee`;
+  private apiProductAdminUrl = `${Environment.apiBaseUrl}/Employee/Update`;
   UpdateImage(Employee: EmployeeModel, files: File | null) {
     const formData = new FormData();
     formData.append('id', Employee.id.toString());
@@ -85,8 +85,12 @@ export class EmployeeService {
     formData.append('phoneNumber', Employee.phoneNumber.toString());
     formData.append('gender', Employee.gender.toString());
     formData.append('birthday', Employee.birthday.toString());
-    formData.append('address', Employee.address);
-    formData.append('userId', Employee.userId.toString());
+    if (Employee.address !== null) {
+      formData.append('address', Employee.address);
+    }
+    if (Employee.userId !== null) {
+      formData.append('userId', Employee.userId.toString());
+    }
     if (files) {
       formData.append('file', files);
     }
