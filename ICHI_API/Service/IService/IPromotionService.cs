@@ -11,9 +11,9 @@ namespace ICHI_API.Service.IService
     {
         PagedResult<Promotion> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage);
 
-        Promotion Create(Promotion Promotion, out string strMessage);
+        PromotionDTO Create(PromotionDTO model, out string strMessage);
 
-        Promotion Update(Promotion Promotion, out string strMessage);
+        PromotionDTO Update(PromotionDTO model, out string strMessage);
 
         Promotion FindById(int id, out string strMessage);
 
