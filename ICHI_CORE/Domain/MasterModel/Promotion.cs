@@ -11,9 +11,6 @@ namespace ICHI_CORE.Domain.MasterModel
     public class Promotion : MasterEntity
     {
         [Required]
-        [StringLength(50)]
-        public string PromotionCode { get; set; } = string.Empty;
-        [Required]
         [StringLength(255)]
         public string PromotionName { get; set; } = string.Empty;
         [Required]
@@ -24,13 +21,7 @@ namespace ICHI_CORE.Domain.MasterModel
         public int Quantity { get; set; }
         [Required]
         public int Discount { get; set; }
-        [Required]
-        public decimal MinimumPrice { get; set; }
         public bool isActive { get; set; } = false;
         public bool isDeleted { get; set; } = false;
-
-        [ValidateNever]
-        public IEnumerable<PromotionDetail> PromotionDetails { get; set; }
-
-    }
+  }
 }

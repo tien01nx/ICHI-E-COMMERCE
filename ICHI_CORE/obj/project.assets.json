@@ -4086,23 +4086,23 @@
   },
   "packageFolders": {
     "C:\\Users\\tien0\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj",
+      "projectUniqueName": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj",
       "projectName": "ICHI_CORE",
-      "projectPath": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj",
+      "projectPath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj",
       "packagesPath": "C:\\Users\\tien0\\.nuget\\packages\\",
-      "outputPath": "D:\\DoAn\\ICHI\\ICHI-E-COMMERCE\\ICHI_CORE\\obj\\",
+      "outputPath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_CORE\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages"
       ],
       "configFilePaths": [
         "C:\\Users\\tien0\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.2.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4110,6 +4110,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\DevExpress 22.2\\Components\\System\\Components\\Packages": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4122,6 +4123,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {

@@ -237,7 +237,6 @@ export class PromotionComponent implements OnInit {
     const endDate = new Date(promotion.endTime);
     this.promotionForm.patchValue({
       id: promotion.id,
-      promotionCode: promotion.promotionCode,
       promotionName: promotion.promotionName,
       startDate: startDate,
       endDate: endDate,

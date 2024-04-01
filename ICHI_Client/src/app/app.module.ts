@@ -50,6 +50,7 @@ import { InventoryReceiptsComponent } from './components/admin/inventory.receipt
 import { InsertInventoryReceiptsComponent } from './components/admin/inventory.receipts/insert.inventory.receipts/insert.inventory.receipts.component';
 import { CurrencyFormatPipe } from './pipe/currency-format.pipe';
 import { AccessForbiddenComponent } from './components/auth/errors/access-forbidden/access-forbidden.component';
+import { InsertPromotionComponent } from './components/admin/promotion/Insert/insert-promotion/insert-promotion.component';
 
 register();
 
@@ -89,6 +90,7 @@ register();
     CurrencyFormatPipe,
     AccessForbiddenComponent,
     ResetPasswordComponent,
+    InsertPromotionComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),

@@ -8,6 +8,7 @@ using ICHI_API;
 using ICHI_API.Data;
 using ICHI_API.Service.IService;
 using ICHI_CORE.NlogConfig;
+using ICHI_API.Model;
 namespace ICHI_CORE.Controllers.MasterController
 {
     [ApiController]
@@ -68,37 +69,37 @@ namespace ICHI_CORE.Controllers.MasterController
             return result;
         }
 
-        [HttpPost("Create-Promotion")]
-        public async Task<ApiResponse<Promotion>> CreateSupplỉer([FromBody] Promotion Promotion)
+        [HttpPost("Create")]
+        public async Task<ApiResponse<PromotionDTO>> CreateSupplỉer([FromBody] PromotionDTO Promotion)
         {
-            ApiResponse<Promotion> result;
+            ApiResponse<PromotionDTO> result;
             string strMessage = "";
             try
             {
                 var data = _PromotionService.Create(Promotion, out strMessage);
-                result = new ApiResponse<Promotion>(System.Net.HttpStatusCode.OK, strMessage, data);
+                result = new ApiResponse<PromotionDTO>(System.Net.HttpStatusCode.OK, strMessage, data);
             }
             catch (Exception ex)
             {
                 NLogger.log.Error(ex.ToString());
                 strMessage = "Có lỗi xảy ra";
-                result = new ApiResponse<Promotion>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+                result = new ApiResponse<PromotionDTO>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
             }
             return result;
         }
-        [HttpPost("Update-Promotion")]
-        public async Task<ApiResponse<Promotion>> UpdateSupplỉer([FromBody] Promotion Promotion)
+        [HttpPost("Update")]
+        public async Task<ApiResponse<PromotionDTO>> UpdateSupplỉer([FromBody] PromotionDTO Promotion)
         {
-            ApiResponse<Promotion> result;
+            ApiResponse<PromotionDTO> result;
             string strMessage = "";
             try
             {
                 var data = _PromotionService.Update(Promotion, out strMessage);
-                result = new ApiResponse<Promotion>(System.Net.HttpStatusCode.OK, strMessage, data);
+                result = new ApiResponse<PromotionDTO>(System.Net.HttpStatusCode.OK, strMessage, data);
             }
             catch (Exception ex)
             {
-                result = new ApiResponse<Promotion>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+                result = new ApiResponse<PromotionDTO>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
             }
             return result;
         }

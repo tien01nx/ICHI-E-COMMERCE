@@ -391,15 +391,11 @@
                   />
                 </div>
               </td>
-              <td class="align-middle ps-4">{{ promotion.promotionCode }}</td>
               <td class="align-middle white-space-nowrap text-700 ps-4">
                 {{ promotion.promotionName }}
               </td>
               <td class="align-middle text-600 ps-4">
                 {{ promotion.discount | number : "1.0-0" }}
-              </td>
-              <td class="align-middle text-600 ps-4">
-                {{ promotion.minimumPrice | number : "1.0-0" }}
               </td>
               <td class="align-middle text-600 ps-4">
                 {{ promotion.quantity }}
@@ -665,30 +661,6 @@
           </div>
 
           <div class="row mb-3">
-            <label class="col-sm-4 col-form-label fs-9" for="minimumPrice"
-              >Số lượng áp dụng khuyến mãi</label
-            >
-            <div class="col-sm-8">
-              <input
-                class="form-control"
-                id="minimumPrice"
-                type="number"
-                formControlName="minimumPrice"
-                placeholder="Giá tối thiểu"
-              />
-              <small
-                class="text-danger mt-1"
-                *ngIf="promotionForm['controls']['minimumPrice'].dirty"
-              >
-                <span
-                  *ngIf="promotionForm['controls']['minimumPrice'].errors?.['required']"
-                >
-                  Giá tối thiếu không được để trống
-                </span>
-              </small>
-            </div>
-          </div>
-          <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="quantity"
               >Số lượng giảm giá</label
             >
@@ -724,7 +696,6 @@
                 formControlName="startDate"
                 placeholder="Ngày bắt đầu"
                 value="{{ startTime | date : 'yyyy-MM-dd' }}"
-
               />
               <small
                 class="text-danger mt-1"

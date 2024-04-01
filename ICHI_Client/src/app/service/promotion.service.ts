@@ -52,7 +52,7 @@ export class PromotionService {
   create(promotion: InsertSupplierDTO) {
     debugger;
     return this.apiService.callApi<PromotionModel>(
-      '/Promotion/Create-Promotion',
+      '/Promotion/Create',
       'post',
       null,
       promotion
@@ -62,7 +62,7 @@ export class PromotionService {
   update(promotion: PromotionModel) {
     debugger;
     return this.apiService.callApi<PromotionModel>(
-      '/Promotion/Update-Promotion',
+      '/Promotion/Update',
       'post',
       null,
       promotion

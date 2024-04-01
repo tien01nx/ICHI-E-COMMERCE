@@ -28,6 +28,7 @@ import { InsertInventoryReceiptsComponent } from './components/admin/inventory.r
 import { AccessForbiddenComponent } from './components/auth/errors/access-forbidden/access-forbidden.component';
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
 import { UserGuard } from './guard/user.guard';
+import { InsertPromotionComponent } from './components/admin/promotion/Insert/insert-promotion/insert-promotion.component';
 
 export const routes: Routes = [
   {
@@ -47,6 +48,7 @@ export const routes: Routes = [
       { path: 'auth', component: AuthComponent },
       { path: 'trademark', component: TrademarkComponent },
       { path: 'promotion', component: PromotionComponent },
+      { path: 'promotion_insert', component: InsertPromotionComponent },
       { path: 'promotiondemo', component: PromotiondemoComponent },
       { path: 'inventory_receipts', component: InventoryReceiptsComponent },
       {
