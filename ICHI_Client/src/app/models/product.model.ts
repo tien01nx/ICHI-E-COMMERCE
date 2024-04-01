@@ -14,5 +14,6 @@ export interface ProductModel extends MasterEntity {
   isActive: boolean;
   isDeleted: boolean;
   productImages: any;
+  discount: number;
   category: CategoryProduct;
 }

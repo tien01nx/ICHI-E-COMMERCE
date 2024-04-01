@@ -51,18 +51,25 @@ namespace ICHI_API.Service
       }
     }
 
-    public Promotion FindById(int id, out string strMessage)
+    public PromotionDTO FindById(int id, out string strMessage)
     {
       strMessage = string.Empty;
       try
       {
-        var data = _unitOfWork.Promotion.Get(u => u.Id == id);
-        if (data == null)
+        var dataPromotion = _unitOfWork.Promotion.Get(u => u.Id == id);
+        if (dataPromotion == null)
         {
-          strMessage = "Mã chương trình khuyến mãi không tồn tại";
+          strMessage = "Chương trình khuyến mãi không tồn tại";
           return null;
         }
-        return data;
+
+        PromotionDTO model = new PromotionDTO
+        {
+          Promotion = dataPromotion,
+          PromotionDetails = _unitOfWork.PromotionDetail.GetAll(u => u.PromotionId == dataPromotion.Id, "Product")
+        };
+
+        return model;
       }
       catch (Exception ex)
       {
@@ -78,61 +85,46 @@ namespace ICHI_API.Service
       try
       {
         _unitOfWork.BeginTransaction();
-        var checkPromotion = _unitOfWork.Promotion.Get(u => u.PromotionName == model.Promotion.PromotionName);
+        var checkPromotion = _unitOfWork.Promotion.Get(u => u.PromotionName == model.PromotionName);
         if (checkPromotion != null)
         {
           strMessage = "Mã chương trình khuyến mãi đã tồn tại";
           return null;
         }
-        if(model.Promotion.StartTime < DateTime.Today)
+
+        if (model.StartTime < DateTime.Today)
         {
           strMessage = "Ngày bắt đầu phải lớn hơn hoặc bằng ngày hiện tại";
           return null;
         }
-        if (model.Promotion.EndTime <= DateTime.Today)
+
+        if (model.EndTime <= DateTime.Today)
         {
           strMessage = "Ngày kết thúc phải lớn hơn hoặc bằng ngày hiện tại";
           return null;
         }
-        if(model.Promotion.StartTime > model.Promotion.EndTime)
+
+        if (model.StartTime > model.EndTime)
         {
           strMessage = "Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu";
           return null;
         }
 
+        model.CreateBy = "Admin";
+        model.ModifiedBy = "Admin";
 
-
-        model.Promotion.CreateBy = "Admin";
-        model.Promotion.ModifiedBy = "Admin";
         _unitOfWork.Promotion.Add(model.Promotion);
         _unitOfWork.Save();
 
         // thực hiện thêm chi tiết chương trình khuyến mãi
         if (model.PromotionDetails != null && model.PromotionDetails.Count() > 0)
         {
-          string strError = string.Empty;
           List<int> existingProductIds = new List<int>();
           foreach (var item in model.PromotionDetails)
           {
-            var product = _unitOfWork.Product.Get(u => u.Id == item.ProductId);
-            if (product == null)
-            {
-              strMessage = "Sản phẩm không tồn tại";
-              return null;
-            }
-            var checkExistProduct = _db.PromotionDetails.Include(u => u.Promotion).Where(u => u.ProductId == item.ProductId
-                           && 
-                           (
-                           (u.Promotion.StartTime >= model.Promotion.StartTime
-                           && u.Promotion.EndTime >= model.Promotion.EndTime)
-                           || (u.Promotion.StartTime <= model.Promotion.StartTime
-                           && u.Promotion.EndTime >= model.Promotion.EndTime
-                           )
-                           || (u.Promotion.StartTime >= model.Promotion.StartTime
-                           && u.Promotion.StartTime >= model.Promotion.EndTime)
-                          || (u.Promotion.EndTime <= model.Promotion.StartTime
-                           && u.Promotion.EndTime <= model.Promotion.EndTime)));
-            if (checkExistProduct.Count() > 0)
+            var promotionDetails = _unitOfWork.PromotionDetail.GetAll(u => u.ProductId == item.ProductId, "Promotion").AsQueryable();
+
+            if (CheckProductPromotion(promotionDetails, model.StartTime, model.EndTime) == false)
             {
               existingProductIds.Add(item.ProductId);
             }
@@ -146,25 +138,12 @@ namespace ICHI_API.Service
           if (existingProductIds.Any())
           {
             strMessage = $"Sản phẩm với Id: {string.Join(",", existingProductIds)} :Đã tồn tại trong chương trình khuyến mãi";
-            //string pattern = @"Id:\s*([\d,]+)\s*:"; // Biểu thức chính quy để tìm chuỗi số và dấu phẩy nằm giữa "Id:" và ":"
-
-            //Match match = Regex.Match(strMessage, pattern);
-
-            //if (match.Success)
-            //{
-            //  string numbersString = match.Groups[1].Value;
-            //}
-            //else
-            //{
-            //  Console.WriteLine("Không tìm thấy chuỗi số.");
-            //}
-
             return null;
           }
           _unitOfWork.Save();
         }
 
-        strMessage = "Tạo mới thành công";
+        strMessage = "Tạo mới chương trình khuyến mãi thành công";
         _unitOfWork.Commit();
         return model;
       }
@@ -177,17 +156,18 @@ namespace ICHI_API.Service
       }
     }
 
+
     public PromotionDTO Update(PromotionDTO model, out string strMessage)
     {
       strMessage = string.Empty;
       try
       {
-
+        _unitOfWork.BeginTransaction();
         // lấy thông tin chương trình khuyến mãi
         var data = _unitOfWork.Promotion.Get(u => u.Id == model.Promotion.Id);
         if (data == null)
         {
-          strMessage = "Mã chương trình khuyến mãi không tồn tại";
+          strMessage = "Có lỗi xảy ra";
           return null;
         }
         // kiểm tra xem mã chương trình khuyến mãi đã tồn tại chưa
@@ -201,59 +181,48 @@ namespace ICHI_API.Service
         model.Promotion.ModifiedBy = "Admin";
         _unitOfWork.Promotion.Update(model.Promotion);
         _unitOfWork.Save();
-        var promotionDetails = _unitOfWork.PromotionDetail.GetAll(u=> u.PromotionId == model.Promotion.Id);
+
+        var promotionDetails = _unitOfWork.PromotionDetail.GetAll(u => u.PromotionId == model.Promotion.Id, "Product").AsQueryable();
+        var promotionDetailDelete = promotionDetails.Where(x => !model.PromotionDetails.Select(y => y.Id).Contains(x.Id)).ToList();
+        var promotionDetailNew = model.PromotionDetails.Where(x => x.Id == 0).ToList();
+        _unitOfWork.PromotionDetail.RemoveRange(promotionDetailDelete);
+
         // thực hiện cập nhật chi tiết chương trình khuyến mãi
-        if (model.PromotionDetails != null && model.PromotionDetails.Count() > 0)
+        if (model.PromotionDetails != null && promotionDetailNew.Count > 0)
         {
-          foreach (var item in model.PromotionDetails)
+          List<int> existingProductIds = new List<int>();
+          foreach (var itemAdd in promotionDetailNew)
           {
-            // danh sách sản phẩm trong chương trình khuyến mãi trong db là
-            // dách sách sản phẩm trong chương trình khuyến mãi mà thực hiện thêm mới là khi có id =0
-            var promotionDetail = model.PromotionDetails.Where(u => u.Id == 0).ToList();
-            // danh sách sản phẩm mà thực hiện xóa là 
-            var promotionDetailDelete = promotionDetails.Where(u => !model.PromotionDetails.Select(x => x.Id).Contains(u.Id)).ToList();
-
-            // thực hiện thêm mới sản phẩm
-            if (promotionDetail != null && promotionDetail.Count() > 0)
+            var productPromotionDetail = _unitOfWork.PromotionDetail.GetAll(u => u.ProductId == itemAdd.Id, "Product").AsQueryable();
+            if (CheckProductPromotion(productPromotionDetail, model.StartTime, model.EndTime) == false)
             {
-              foreach (var itemAdd in promotionDetail)
-              {
-                var product = _unitOfWork.Product.Get(u => u.Id == itemAdd.ProductId);
-                if (product == null)
-                {
-                  strMessage = "Sản phẩm không tồn tại";
-                  return null;
-                }
-                // thực hiện kiểm tra sản phẩm đã tồn tại trong chương trình khuyến mãi chưa, đảm bảo mã sản phẩm đó phải hết thời hạn trước  đó thì mới cho thêm
-                var checkPromotionDetail = _unitOfWork.PromotionDetail.Get(u => u.ProductId == itemAdd.ProductId && u.PromotionId == model.Promotion.Id
-                                                                                                       && u.Promotion.EndTime < DateTime.Now.AddDays(1).AddSeconds(-1), "Promotion");
-                if (checkPromotionDetail != null)
-                {
-                  strMessage = "Sản phẩm đã tồn tại trong chương trình khuyến mãi";
-                  return null;
-                }
-
-                itemAdd.PromotionId = model.Promotion.Id;
-                itemAdd.ProductId = itemAdd.ProductId;
-                itemAdd.CreateBy = "Admin";
-                itemAdd.ModifiedBy = "Admin";
-                _unitOfWork.PromotionDetail.Add(itemAdd);
-              }
+              existingProductIds.Add(itemAdd.ProductId);
             }
 
-            // thực hiện xóa sản phẩm
-            _unitOfWork.PromotionDetail.RemoveRange(promotionDetailDelete);
-
+            itemAdd.PromotionId = model.Promotion.Id;
+            itemAdd.ProductId = itemAdd.ProductId;
+            itemAdd.CreateBy = "Admin";
+            itemAdd.ModifiedBy = "Admin";
+            _unitOfWork.PromotionDetail.Add(itemAdd);
           }
-          _unitOfWork.Save();
+
+          if (existingProductIds.Any())
+          {
+            strMessage = $"Sản phẩm với Id: {string.Join(",", existingProductIds)} :Đã tồn tại trong chương trình khuyến mãi";
+            return null;
+          }
+
+
         }
 
-
         strMessage = "Cập nhật chương trình khuyến mãi thành công";
+        _unitOfWork.Save();
+        _unitOfWork.Commit();
         return model;
       }
       catch (Exception ex)
       {
+        _unitOfWork.Rollback();
         NLogger.log.Error(ex.ToString());
         strMessage = ex.ToString();
         return null;
@@ -282,6 +251,21 @@ namespace ICHI_API.Service
       {
         NLogger.log.Error(ex.ToString());
         strMessage = ex.ToString();
+        return false;
+      }
+    }
+
+    public bool CheckProductPromotion(IQueryable<PromotionDetail> data, DateTime StartTime, DateTime EndTime)
+    {
+      try
+      {
+        bool isOutsidePromotion = !data.Any(u =>
+             (StartTime >= u.Promotion.StartTime && StartTime <= u.Promotion.EndTime) ||
+             (EndTime >= u.Promotion.StartTime && EndTime <= u.Promotion.EndTime));
+        return isOutsidePromotion;
+      }
+      catch (Exception ex)
+      {
         return false;
       }
     }

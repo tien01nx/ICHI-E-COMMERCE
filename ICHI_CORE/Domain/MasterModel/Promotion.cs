@@ -8,20 +8,20 @@ using System.Threading.Tasks;
 
 namespace ICHI_CORE.Domain.MasterModel
 {
-    public class Promotion : MasterEntity
-    {
-        [Required]
-        [StringLength(255)]
-        public string PromotionName { get; set; } = string.Empty;
-        [Required]
-        public DateTime StartTime { get; set; }
-        [Required]
-        public DateTime EndTime { get; set; }
-        [Required]
-        public int Quantity { get; set; }
-        [Required]
-        public int Discount { get; set; }
-        public bool isActive { get; set; } = false;
-        public bool isDeleted { get; set; } = false;
+  public class Promotion : MasterEntity
+  {
+    [Required]
+    [StringLength(255)]
+    public string PromotionName { get; set; } = string.Empty;
+    [Required]
+    public DateTime StartTime { get; set; }
+    [Required]
+    public DateTime EndTime { get; set; }
+    [Required]
+    public int Quantity { get; set; }
+    [Required]
+    public double Discount { get; set; }
+    public bool isActive { get; set; } = false;
+    public bool isDeleted { get; set; } = false;
   }
 }

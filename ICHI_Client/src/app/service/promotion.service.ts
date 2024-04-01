@@ -5,12 +5,17 @@ import { ApiResponse } from '../models/api.response.model';
 import { Observable, tap } from 'rxjs';
 import { ApiServiceService } from './api.service.service';
 import { InsertSupplierDTO } from '../dtos/insert.supplier.dto';
+import { Environment } from '../environment/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PromotionService {
-  constructor(private apiService: ApiServiceService) {}
+  baseUrl = Environment.apiBaseUrl;
+  constructor(
+    private apiService: ApiServiceService,
+    private http: HttpClient
+  ) {}
 
   findAllByName(
     PageNumber: number,
@@ -49,27 +54,24 @@ export class PromotionService {
     );
   }
 
-  create(promotion: InsertSupplierDTO) {
-    debugger;
-    return this.apiService.callApi<PromotionModel>(
-      '/Promotion/Create',
-      'post',
-      null,
-      promotion
-    );
+  findById<T>(id: number): Observable<ApiResponse<T>> {
+    return this.http.get<ApiResponse<T>>(this.baseUrl + '/Promotion/' + id);
   }
 
-  update(promotion: PromotionModel) {
-    debugger;
-    return this.apiService.callApi<PromotionModel>(
-      '/Promotion/Update',
-      'post',
-      null,
-      promotion
-    );
+  create(data: any) {
+    return this.http.post('https://localhost:7150/api/Promotion/Create', data);
   }
-
+  update(data: any) {
+    return this.http.put('https://localhost:7150/api/Promotion/Update', data);
+  }
   delete(id: number) {
+    return this.apiService.callApi<PromotionModel[]>(
+      '/Promotion/' + id,
+      'delete'
+    );
+  }
+
+  updateStatus(id: number, status: boolean) {
     return this.apiService.callApi<PromotionModel[]>(
       '/Promotion/' + id,
       'delete'

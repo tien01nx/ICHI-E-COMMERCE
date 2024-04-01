@@ -15,7 +15,7 @@ namespace ICHI_API.Service.IService
 
         PromotionDTO Update(PromotionDTO model, out string strMessage);
 
-        Promotion FindById(int id, out string strMessage);
+    PromotionDTO FindById(int id, out string strMessage);
 
         bool Delete(int id, out string strMessage);
 

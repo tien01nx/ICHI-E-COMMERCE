@@ -49,6 +49,7 @@ export const routes: Routes = [
       { path: 'trademark', component: TrademarkComponent },
       { path: 'promotion', component: PromotionComponent },
       { path: 'promotion_insert', component: InsertPromotionComponent },
+      { path: 'promotion_insert/:id', component: InsertPromotionComponent },
       { path: 'promotiondemo', component: PromotiondemoComponent },
       { path: 'inventory_receipts', component: InventoryReceiptsComponent },
       {

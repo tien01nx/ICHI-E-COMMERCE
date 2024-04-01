@@ -20,8 +20,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../../../../../service/token.service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
+import { PromotionService } from '../../../../../service/promotion.service';
+import { ApiResponse } from '../../../../../models/api.response.model';
 import { InsertPromotion } from '../../../../../dtos/Insert.Promotion.dto.';
-import { PromotionModel } from '../../../../../models/promotion.model';
+import { DatePipe } from '@angular/common';
 import { PromotionDetails } from '../../../../../models/PromotionDetails.model';
 
 @Component({
@@ -47,10 +49,9 @@ export class InsertPromotionComponent implements OnInit {
     promotionName: new FormControl('', [
       Validators.required,
       Validators.maxLength(50),
-      Validators.pattern(Utils.textPattern),
     ]),
-    startTime: new FormControl('', [Validators.required]),
-    endTime: new FormControl('', [Validators.required]),
+    startTime: new FormControl(Date, [Validators.required]),
+    endTime: new FormControl(Date, [Validators.required]),
     discount: new FormControl('', [Validators.required]),
     quantity: new FormControl('', [Validators.required]),
     isActive: new FormControl(true),
@@ -72,22 +73,22 @@ export class InsertPromotionComponent implements OnInit {
     private title: Title,
     private productService: ProductsService,
     private supplierService: SupplierService,
-    private inventoryService: InventorryReceiptsService,
+    private promotionService: PromotionService,
     private activatedRoute: ActivatedRoute,
     private tokenService: TokenService,
     private router: Router,
     private toastr: ToastrService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private datePipe: DatePipe
   ) {
     this.promotionForm = this.fb.group({
       id: new FormControl('0'),
       promotionName: new FormControl('', [
         Validators.required,
         Validators.maxLength(50),
-        Validators.pattern(Utils.textPattern),
       ]),
-      startDate: new FormControl('', [Validators.required]),
-      endDate: new FormControl('', [Validators.required]),
+      startTime: new FormControl('', [Validators.required]),
+      endTime: new FormControl('', [Validators.required]),
       discount: new FormControl('', [
         Validators.required,
         Validators.min(1),
@@ -108,20 +109,12 @@ export class InsertPromotionComponent implements OnInit {
     if (this.activatedRoute.snapshot.params['id'] === undefined) {
       this.titleString = 'Thêm sản phẩm';
       this.btnSave = 'Thêm mới';
-      // thumbnailFileControl?.setValidators([Validators.required]);
     } else {
       this.titleString = 'Cập nhật sản phẩm';
       this.btnSave = 'Cập nhật';
       this.findProductById(this.activatedRoute.snapshot.params['id']);
     }
 
-    const promotionDetailsArray = this.promotionForm.get(
-      'promotionDetails'
-    ) as FormArray;
-
-    promotionDetailsArray.valueChanges.subscribe(() => {
-      this.totalMoney = this.getTotalMoney();
-    });
     this.title.setTitle(this.titleString);
     this.getDatacombobox();
     this.promotionForm
@@ -197,15 +190,10 @@ export class InsertPromotionComponent implements OnInit {
   }
 
   onSubmit() {
-    debugger;
     console.log(this.promotionForm.value);
     if (this.promotionForm.invalid) {
       const formErrors = this.promotionForm.errors;
-
-      // Log các lỗi để kiểm tra
       console.log(formErrors);
-
-      // Trả về để dừng tiến trình nếu form không hợp lệ
       return;
     }
     if (this.activatedRoute.snapshot.params['id'] === undefined) {
@@ -216,34 +204,41 @@ export class InsertPromotionComponent implements OnInit {
   }
 
   findProductById(id: number) {
-    this.inventoryService.findById(id).subscribe({
-      next: (response: any) => {
+    this.promotionService.findById<InsertPromotion>(id).subscribe({
+      next: (response: ApiResponse<InsertPromotion>) => {
         const data = response.data;
         if (data === null) {
           this.toastr.error('Không tìm thấy sản phẩm', 'Thất bại');
-          this.router.navigate(['/admin/inventory_receipts']);
+          this.router.navigate(['/admin/promotion']);
         }
         this.isDisplayNone = true;
-        this.employeeName = data.fullName;
-        // Set values for top-level controls
+
         this.promotionForm.get('id')?.setValue(data.id);
-        this.promotionForm.get('notes')?.setValue(data.notes);
-        this.promotionForm.get('supplierId')?.setValue(data.supplierId);
-        this.promotionForm.get('employeeId')?.setValue(data.employeeId);
+        this.promotionForm.get('promotionName')?.setValue(data.promotionName);
+        this.promotionForm
+          .get('startTime')
+          ?.setValue(this.datePipe.transform(data.startTime, 'yyyy-MM-dd'));
+        this.promotionForm
+          .get('endTime')
+          ?.setValue(this.datePipe.transform(data.endTime, 'yyyy-MM-dd'));
+        this.promotionForm.get('discount')?.setValue(data.discount);
+        this.promotionForm.get('quantity')?.setValue(data.quantity);
+        this.promotionForm.get('isActive')?.setValue(data.isActive);
+        this.promotionForm.get('isDeleted')?.setValue(data.isDeleted);
 
         // Clear existing controls in promotionDetails FormArray
         while (this.promotionDetails.length !== 0) {
           this.promotionDetails.removeAt(0);
         }
 
+        debugger;
+
         // Iterate through promotionDetails in response data and add each detail to FormArray
-        data.promotionDetails.forEach((detail: any) => {
+        data.promotionDetails.forEach((detail: PromotionDetails) => {
           const detailFormGroup = new FormGroup({
             id: new FormControl(detail.id),
-            inventoryReceiptId: new FormControl(detail.inventoryReceiptId),
-            price: new FormControl(detail.price),
-            total: new FormControl(detail.total),
-            productId: new FormControl(detail.product?.id), // Assuming product is available in detail
+            promotionId: new FormControl(detail.promotionId),
+            productId: new FormControl(detail.productId), // Assuming product is available in detail
           });
 
           this.promotionDetails.push(detailFormGroup);
@@ -277,17 +272,16 @@ export class InsertPromotionComponent implements OnInit {
       return productId;
     });
 
-    if (allFieldsFilled) {
-      // Lọc ra các sản phẩm chưa được chọn
-      // const unselectedProducts = this.originalProducts.filter((product) =>
-      //   this.promotionForm.value.promotionDetails.every(
-      //     (detail: { productId: any }) =>
-      //       detail.productId !== product.product.id
-      //   )
-      // );
-      // // Cập nhật danh sách sản phẩm chỉ hiển thị các sản phẩm chưa được chọn
-      // this.products = unselectedProducts;
+    // trường hợp có id trên url thực hiện cập nhật danh sách sản phẩm
+    if (this.activatedRoute.snapshot.params['id'] !== undefined)
+      this.products = this.productsRoot.filter((product) =>
+        this.promotionDetails.value.every(
+          (detail: { productId: any }) =>
+            detail.productId !== product.product.id
+        )
+      );
 
+    if (allFieldsFilled) {
       this.promotionDetails.push(this.createReceiptDetail());
       this.updateOriginalProducts();
     } else {
@@ -295,106 +289,74 @@ export class InsertPromotionComponent implements OnInit {
     }
   }
 
-  getTotalMoney(): number {
-    const promotionDetails = this.promotionForm.get(
-      'promotionDetails'
-    ) as FormArray;
-    let total = 0;
-
-    promotionDetails.controls.forEach((control: AbstractControl<any, any>) => {
-      const price = (control.get('price') as FormControl)?.value || 0;
-      const quantity = (control.get('total') as FormControl)?.value || 0;
-      total += price * quantity;
-    });
-
-    return total;
-  }
-  convertToDTO(form: FormGroup): InsertPromotion {
-    const promotion: PromotionModel = {
-      id: form.get('id')?.value,
-      promotionName: form.get('promotionName')?.value,
-      startTime: form.get('startTime')?.value,
-      endTime: form.get('endTime')?.value,
-      discount: form.get('discount')?.value,
-      quantity: form.get('quantity')?.value,
-      isActive: form.get('isActive')?.value,
-      isDeleted: form.get('isDeleted')?.value,
-      createBy: this.tokenService.getUserEmail(),
-      createDate: new Date(),
-      modifiedBy: this.tokenService.getUserEmail(),
-      modifiedDate: new Date(),
-    };
-
-    const promotionDetails: PromotionDetails[] = [];
-    const promotionDetailsFormArray = form.get('promotionDetails') as FormArray;
-    promotionDetailsFormArray.controls.forEach((control) => {
-      const promotionDetail: PromotionDetails = {
-        id: control.get('id')?.value,
-        promotionId: control.get('promotionId')?.value,
-        productId: control.get('productId')?.value,
-        createBy: this.tokenService.getUserEmail(),
-        createDate: new Date(),
-        modifiedBy: this.tokenService.getUserEmail(),
-        modifiedDate: new Date(),
-      };
-      promotionDetails.push(promotionDetail);
-    });
-
-    return new InsertPromotion(promotion, promotionDetails);
-  }
-
   createProduct() {
-    // chuyển dữ liệu từ form sang model
-    console.log('data', this.convertToDTO(this.promotionForm.value));
-    this.inventoryService
-      .create(this.convertToDTO(this.promotionForm.value))
-      .subscribe({
-        next: (respon: any) => {
+    this.promotionService.create(this.promotionForm.value).subscribe({
+      next: (respon: any) => {
+        if (respon.message === 'Tạo mới chương trình khuyến mãi thành công') {
+          this.promotionForm.reset();
           this.toastr.success(respon.message, 'Thành công');
-          // this.router.navigateByUrl('/admin/products');
-        },
-        error: (err: any) => {
-          this.toastr.error(err.error, 'Thất bại');
-        },
-      });
+          this.router.navigateByUrl('/admin/promotion');
+        } else {
+          const regex = /Id:\s*([\d,]+)\s*:/;
+          const match = respon.message.match(regex);
+
+          if (match) {
+            this.toastr.error(
+              'Sản phẩm đã tồn tại trong chương trình khuyến mãi khác',
+              'Thất bại'
+            );
+            const numbersString = match[1];
+            const invalidProductIds = numbersString.split(',').map(Number);
+            console.log(invalidProductIds);
+
+            this.promotionDetails.controls.forEach((control, index) => {
+              const productIdControl = control.get('productId');
+              if (productIdControl && productIdControl.value) {
+                const productId = productIdControl.value;
+                if (invalidProductIds.includes(productId)) {
+                  productIdControl.setErrors({ invalid: true });
+                }
+              }
+            });
+          } else {
+            console.log('Không tìm thấy chuỗi số.');
+          }
+        }
+      },
+      error: (err: any) => {
+        this.toastr.error(err.error, 'Thất bại');
+      },
+    });
   }
 
   updateProduct() {
-    // debugger;
-    // // this.promotionForm.value.id = 0;
-    // if (this.promotionForm.value.productImages === null) {
-    //   this.toastr.error('Chưa chọn ảnh sản phẩm', 'Thất bại');
-    //   return;
-    // }
-    // this.productService
-    //   .update(this.promotionForm.value, this.selectedImageProductFiles)
-    //   .subscribe({
-    //     next: () => {
-    //       this.toastr.success('Cập nhật sản phẩm thành công');
-    //       this.router.navigateByUrl('/admin/product');
-    //     },
-    //     error: (err: any) => {
-    //       this.toastr.error(err.error, 'Thất bại');
-    //     },
-    //   });
-  }
+    debugger;
+    this.promotionService.update(this.promotionForm.value).subscribe({
+      next: (response: any) => {
+        if (
+          response.message === 'Cập nhật chương trình khuyến mãi thành công'
+        ) {
+          this.toastr.success('Cập nhật sản phẩm thành công');
+          this.router.navigateByUrl('/admin/promotion');
+        } else {
+          this.toastr.error(
+            'Sản phẩm đã tồn tại trong chương trình khuyến mãi khác',
+            'Thất bại'
+          );
+          const regex = /Id:\s*([\d,]+)\s*:/;
+          const match = response.message.match(regex);
 
-  deleteImageProduct(imageName: string) {
-    Swal.fire({
-      title: 'Bạn có chắc chắn muốn xóa?',
-      text: 'Dữ liệu sẽ không thể phục hồi sau khi xóa!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Xác nhận',
-      cancelButtonText: 'Hủy',
-      buttonsStyling: false,
-      customClass: {
-        confirmButton: 'btn btn-danger me-1',
-        cancelButton: 'btn btn-secondary',
+          if (match) {
+            const numbersString = match[1];
+            console.log(numbersString);
+          } else {
+            console.log('Không tìm thấy chuỗi số.');
+          }
+        }
       },
-    }).then((result) => {
-      if (result.isConfirmed) {
-      }
+      error: (err: any) => {
+        this.toastr.error(err.error, 'Thất bại');
+      },
     });
   }
 
@@ -429,9 +391,6 @@ export class InsertPromotionComponent implements OnInit {
   removeProduct(index: number) {
     if (this.promotionDetails.length > 1) {
       this.promotionDetails.removeAt(index);
-      // cập nhật lại danh sách sản phẩm products
-      // productsRoot là data gốc ban đầu
-      // products = productsRoot - các sản phẩm đang chọn trong promotionDetails
       this.products = this.productsRoot.filter((product) =>
         this.promotionDetails.value.every(
           (detail: { productId: any }) =>
@@ -479,5 +438,4 @@ export class InsertPromotionComponent implements OnInit {
       }
     }
   }
-  // chuyển
 }

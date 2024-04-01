@@ -147,54 +147,11 @@ export class PromotionComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.promotionForm.invalid) {
-      return;
-    }
-    if (this.promotionForm.value.id == null) this.create();
-    else this.update();
-  }
-
-  create() {
-    this.isDisplayNone = true;
-    this.promotionForm.value.id = 0;
-    this.promotionForm.value.isDeleted = false;
-    this.promotionForm.value.isActive = true;
-    this.promotionService.create(this.promotionForm.value).subscribe({
-      next: (response: any) => {
-        if (response.code === 200) {
-          debugger;
-          this.promotionForm.reset();
-          this.btnCloseModal.nativeElement.click();
-          this.updateTable();
-          this.toastr.success(response.message, 'Thông báo');
-        } else {
-          this.errorMessage = response.message;
-          this.isDisplayNone = false;
-        }
-      },
-      error: (error: any) => {
-        this.errorMessage = error.error;
-        this.isDisplayNone = false;
-      },
-    });
-  }
-
-  update() {
-    this.isDisplayNone = true;
-    this.promotionService.update(this.promotionForm.value).subscribe({
-      next: (response: any) => {
-        console.log(response);
-        debugger;
-        this.promotionForm.reset();
-        this.btnCloseModal.nativeElement.click();
-        this.updateTable();
-        this.toastr.success(response.message, 'Thông báo');
-      },
-      error: (error: any) => {
-        this.errorMessage = error.error;
-        this.isDisplayNone = false;
-      },
-    });
+    // if (this.promotionForm.invalid) {
+    //   return;
+    // }
+    // if (this.promotionForm.value.id == null) this.create();
+    // else this.update();
   }
 
   delete(id: number) {
@@ -214,7 +171,7 @@ export class PromotionComponent implements OnInit {
       if (result.isConfirmed) {
         this.promotionService.delete(id).subscribe({
           next: (response: any) => {
-            this.updateTable();
+            // this.updateTable();
             this.toastr.success(response.message, 'Thông báo');
           },
           error: (error: any) => {
@@ -225,36 +182,46 @@ export class PromotionComponent implements OnInit {
     });
   }
 
-  openModalCreate() {
-    this.promotionForm.reset();
-    this.titleModal = 'Thêm thông tin khuyến mãi';
-    this.btnSave = 'Thêm mới';
-    this.errorMessage = '';
+  insertPromotion() {
+    this.router.navigate(['/admin/promotion_insert']);
   }
 
-  openModalUpdate(promotion: PromotionModel) {
-    const startDate = new Date(promotion.startTime);
-    const endDate = new Date(promotion.endTime);
-    this.promotionForm.patchValue({
-      id: promotion.id,
-      promotionName: promotion.promotionName,
-      startDate: startDate,
-      endDate: endDate,
-      discount: promotion.discount,
-      quantity: promotion.quantity,
-      isActive: promotion.isActive,
-      isDeleted: promotion.isDeleted,
+  lockAccount(id: number, status: boolean) {
+    Swal.fire({
+      title: 'Bạn có chắc chắn muốn xóa?',
+      text: 'Dữ liệu sẽ không thể phục hồi sau khi xóa!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xác nhận',
+      cancelButtonText: 'Hủy',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: 'btn btn-danger me-1',
+        cancelButton: 'btn btn-secondary',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        debugger;
+        this.promotionService.updateStatus(id, status).subscribe({
+          next: (response: any) => {
+            if (response.message === 'Mở khóa tài khoản thành công') {
+              // this.updateTable();
+              this.toastr.success(response.message, 'Thông báo');
+            } else if (response.message === 'Khóa tài khoản thành công') {
+              // this.updateTable();
+              this.toastr.info(response.message, 'Thông báo');
+            } else {
+              this.toastr.error(response.message, 'Thông báo');
+            }
+          },
+          error: (error: any) => {
+            this.toastr.error(error.error, 'Thất bại');
+          },
+        });
+      }
     });
-    debugger;
-    this.startTime = startDate;
-    this.endTime = endDate;
-    this.titleModal = 'Cập nhật thông tin khuyến mãi';
-    this.btnSave = 'Cập nhật';
   }
-
-  updateTable() {
-    this.isDisplayNone = false;
-    this.errorMessage = '';
-    this.findAll(this.paginationModel.pageSize, 1, '', '', '');
+  promotionDetail(id: number) {
+    this.router.navigate(['/admin/promotion_insert/' + id]);
   }
 }

@@ -93,14 +93,17 @@
                       </div>
                       <div>
                         <div class="d-flex align-items-center mb-1">
-                          <p
+                          <h3
                             class="me-2 text-body text-decoration-line-through mb-0"
+                            *ngIf="data.product.discount > 0"
                           >
-                            <!-- $125.00 -->
-                            Giá gốc
-                          </p>
-                          <h3 class="text-body-emphasis mb-0">
                             {{ data.product.price }}
+                        </h3>
+                          <h3 class="text-body-emphasis mb-0">
+                            {{
+                              data.product.price *
+                                (1 - data.product.discount / 100)
+                            }}
                           </h3>
                         </div>
                         <p
