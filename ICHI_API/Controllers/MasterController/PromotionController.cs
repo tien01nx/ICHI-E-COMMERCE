@@ -9,6 +9,7 @@ using ICHI_API.Data;
 using ICHI_API.Service.IService;
 using ICHI_CORE.NlogConfig;
 using ICHI_API.Model;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace ICHI_CORE.Controllers.MasterController
 {
   [ApiController]
@@ -74,6 +75,13 @@ namespace ICHI_CORE.Controllers.MasterController
     {
       ApiResponse<PromotionDTO> result;
       string strMessage = "";
+
+      if (Promotion.PromotionDetails.Count() == 0)
+      {
+        strMessage = "Yêu cầu phải có sản phẩm";
+        return new ApiResponse<PromotionDTO>(System.Net.HttpStatusCode.BadRequest, strMessage, null);
+      }
+
       try
       {
         var data = _PromotionService.Create(Promotion, out strMessage);

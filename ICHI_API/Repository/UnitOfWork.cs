@@ -31,7 +31,6 @@ namespace ICHI.DataAccess.Repository
 
     public IInventoryReceiptRepository InventoryReceipt { get; private set; }
 
-    public IProductDetailRepository ProductDetail { get; private set; }
 
     public IProductReturnRepository ProductReturn { get; private set; }
 
@@ -68,7 +67,6 @@ namespace ICHI.DataAccess.Repository
       Employee = new EmployeeRepository(_db);
       InventoryReceiptDetail = new InventoryReceiptDetailRepository(_db);
       InventoryReceipt = new InventoryReceiptRepository(_db);
-      ProductDetail = new ProductDetailRepository(_db);
       ProductReturn = new ProductReturnRepository(_db);
       ProductReturnDetail = new ProductReturnDetailRepository(_db);
       ProductImages = new ProductImagesRepository(_db);

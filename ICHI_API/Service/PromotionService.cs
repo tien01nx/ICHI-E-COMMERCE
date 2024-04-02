@@ -110,6 +110,7 @@ namespace ICHI_API.Service
           return null;
         }
 
+
         model.CreateBy = "Admin";
         model.ModifiedBy = "Admin";
 
@@ -181,22 +182,22 @@ namespace ICHI_API.Service
         model.Promotion.ModifiedBy = "Admin";
         _unitOfWork.Promotion.Update(model.Promotion);
         _unitOfWork.Save();
-
         var promotionDetails = _unitOfWork.PromotionDetail.GetAll(u => u.PromotionId == model.Promotion.Id, "Product").AsQueryable();
         var promotionDetailDelete = promotionDetails.Where(x => !model.PromotionDetails.Select(y => y.Id).Contains(x.Id)).ToList();
+        var promotionDetailUpdate = promotionDetails.Where(x => !model.PromotionDetails.Select(y => y.ProductId).Contains(x.ProductId)).ToList();
         var promotionDetailNew = model.PromotionDetails.Where(x => x.Id == 0).ToList();
         _unitOfWork.PromotionDetail.RemoveRange(promotionDetailDelete);
-
-        // thực hiện cập nhật chi tiết chương trình khuyến mãi
+        List<int> existingProductIds = new List<int>();
+        // thực hiện tạo mới product thêm vào chi tiết chương trình khuyến mãi
         if (model.PromotionDetails != null && promotionDetailNew.Count > 0)
         {
-          List<int> existingProductIds = new List<int>();
           foreach (var itemAdd in promotionDetailNew)
           {
-            var productPromotionDetail = _unitOfWork.PromotionDetail.GetAll(u => u.ProductId == itemAdd.Id, "Product").AsQueryable();
+            var productPromotionDetail = _unitOfWork.PromotionDetail.GetAll(u => u.ProductId == itemAdd.ProductId, "Promotion").AsQueryable();
             if (CheckProductPromotion(productPromotionDetail, model.StartTime, model.EndTime) == false)
             {
               existingProductIds.Add(itemAdd.ProductId);
+              continue;
             }
 
             itemAdd.PromotionId = model.Promotion.Id;
@@ -205,16 +206,36 @@ namespace ICHI_API.Service
             itemAdd.ModifiedBy = "Admin";
             _unitOfWork.PromotionDetail.Add(itemAdd);
           }
-
-          if (existingProductIds.Any())
-          {
-            strMessage = $"Sản phẩm với Id: {string.Join(",", existingProductIds)} :Đã tồn tại trong chương trình khuyến mãi";
-            return null;
-          }
-
-
         }
 
+        // update theo danh sách sản phẩm
+        if (promotionDetailUpdate.Count > 0)
+        {
+          foreach (var itemUpdate in promotionDetailUpdate)
+          {
+            var newProductId = model.PromotionDetails.FirstOrDefault(x => x.ProductId != itemUpdate.ProductId)?.ProductId;
+
+            if (newProductId != null)
+            {
+
+              var productPromotionDetail = _unitOfWork.PromotionDetail.GetAll(u => u.ProductId == newProductId, "Promotion").AsQueryable();
+              if (CheckProductPromotion(productPromotionDetail, model.StartTime, model.EndTime) == false)
+              {
+                existingProductIds.Add(newProductId.Value);
+                continue;
+              }
+              itemUpdate.ProductId = newProductId.Value;
+              itemUpdate.ModifiedBy = "Admin";
+              itemUpdate.ModifiedDate = DateTime.Now;
+            }
+          }
+        }
+
+        if (existingProductIds.Any())
+        {
+          strMessage = $"Sản phẩm với Id: {string.Join(",", existingProductIds)} :Đã tồn tại trong chương trình khuyến mãi";
+          return null;
+        }
         strMessage = "Cập nhật chương trình khuyến mãi thành công";
         _unitOfWork.Save();
         _unitOfWork.Commit();
@@ -240,9 +261,10 @@ namespace ICHI_API.Service
           strMessage = "Mã chương trình khuyến mãi không tồn tại";
           return false;
         }
-        data.isDeleted = true;
-        data.ModifiedDate = DateTime.Now;
-        _unitOfWork.Promotion.Update(data);
+        //data.isDeleted = true;
+        //data.ModifiedDate = DateTime.Now;
+        //_unitOfWork.Promotion.Update(data);
+        _unitOfWork.Promotion.Remove(data);
         _unitOfWork.Save();
         strMessage = "Xóa chương trình khuyến mãi thành công";
         return true;
@@ -259,6 +281,7 @@ namespace ICHI_API.Service
     {
       try
       {
+
         bool isOutsidePromotion = !data.Any(u =>
              (StartTime >= u.Promotion.StartTime && StartTime <= u.Promotion.EndTime) ||
              (EndTime >= u.Promotion.StartTime && EndTime <= u.Promotion.EndTime));

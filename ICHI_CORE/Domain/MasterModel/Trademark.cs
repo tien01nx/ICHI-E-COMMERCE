@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ICHI_CORE.Domain.MasterModel
+﻿namespace ICHI_CORE.Domain.MasterModel
 {
+  using System.ComponentModel.DataAnnotations;
+
   public class Trademark : MasterEntity
   {
-    [Required]
-    [StringLength(255)]
+    [Required(ErrorMessage = "Tên thương hiệu là bắt buộc")]
+    [StringLength(255, ErrorMessage = "Số điện thoại phải có tối đa 255 ký tự")]
     public string TrademarkName { get; set; } = string.Empty;
   }
 }

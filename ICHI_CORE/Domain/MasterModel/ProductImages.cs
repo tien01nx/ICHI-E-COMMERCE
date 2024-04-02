@@ -6,15 +6,20 @@ namespace ICHI_CORE.Domain.MasterModel
   public class ProductImages : MasterEntity
   {
     public int ProductId { get; set; }
+
     [ForeignKey("ProductId")]
     [ValidateNever]
     public Product? Product { get; set; }
-    public string ImageName { get; set; } = string.Empty;
-    public string ImagePath { get; set; } = string.Empty;
-    public bool IsDefault { get; set; }
-    public bool IsActive { get; set; }
-    public bool IsDeleted { get; set; }
 
+    public string ImageName { get; set; } = string.Empty;
+
+    public string ImagePath { get; set; } = string.Empty;
+
+    public bool IsDefault { get; set; }
+
+    public bool IsActive { get; set; }
+
+    public bool IsDeleted { get; set; }
 
     public string DisplayValue
     {

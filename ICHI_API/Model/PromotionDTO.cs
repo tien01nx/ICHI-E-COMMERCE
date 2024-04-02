@@ -1,44 +1,76 @@
 ﻿using ICHI_CORE.Domain.MasterModel;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ICHI_API.Model
+public class PromotionDTO
 {
-  public class PromotionDTO
+  public int Id { get; set; }
+
+  [Required(ErrorMessage = "Tên khuyến mãi là bắt buộc")]
+  [StringLength(255, ErrorMessage = "Tên khuyến mãi không được vượt quá 255 ký tự")]
+  public string PromotionName { get; set; }
+
+  [Required(ErrorMessage = "Thời gian bắt đầu là bắt buộc")]
+  public DateTime StartTime { get; set; }
+
+  [Required(ErrorMessage = "Thời gian kết thúc là bắt buộc")]
+  public DateTime EndTime { get; set; }
+
+  [Required(ErrorMessage = "Số lượng là bắt buộc")]
+  public int Quantity { get; set; }
+
+  [Required(ErrorMessage = "Giảm giá là bắt buộc")]
+  public double Discount { get; set; }
+
+  public bool isActive { get; set; }
+
+  public bool isDeleted { get; set; }
+
+  public DateTime? CreateDate { get; set; }
+
+  [Required(ErrorMessage = "Người tạo là bắt buộc")]
+  [StringLength(100, ErrorMessage = "Người tạo không được vượt quá 100 ký tự")]
+  public string CreateBy { get; set; }
+
+  public DateTime? ModifiedDate { get; set; }
+
+  [StringLength(100, ErrorMessage = "Người sửa không được vượt quá 100 ký tự")]
+  public string ModifiedBy { get; set; }
+
+
+  public Promotion? _promotion;
+
+
+  [ValidateNever]
+  public Promotion? Promotion
   {
-    public int Id { get { return Promotion.Id; } set { Promotion.Id = value; } }
-
-    [Required]
-    [StringLength(255)]
-    public string PromotionName { get { return Promotion.PromotionName; } set { Promotion.PromotionName = value; } }
-    [Required]
-    public DateTime StartTime { get { return Promotion.StartTime; } set { Promotion.StartTime = value; } }
-    [Required]
-    public DateTime EndTime { get { return Promotion.EndTime; } set { Promotion.EndTime = value; } }
-    [Required]
-    public int Quantity { get { return Promotion.Quantity; } set { Promotion.Quantity = value; } }
-    [Required]
-    public double Discount { get { return Promotion.Discount; } set { Promotion.Discount = value; } }
-    public bool isActive { get { return Promotion.isActive; } set { Promotion.isActive = value; } }
-    public bool isDeleted { get { return Promotion.isDeleted; } set { Promotion.isDeleted = value; } }
-    public DateTime? CreateDate { get { return Promotion.CreateDate; } set { Promotion.CreateDate = DateTime.Now; } }
-
-    [Required]
-    [StringLength(100)]
-    public string CreateBy { get { return Promotion.CreateBy; } set { Promotion.CreateBy = "Admin"; } }
-
-    public DateTime? ModifiedDate { get { return Promotion.ModifiedDate; } set { Promotion.ModifiedDate = DateTime.Now; } }
-
-    [StringLength(100)]
-    public string? ModifiedBy { get { return Promotion.ModifiedBy; } set { Promotion.ModifiedBy = "Admin"; } }
-
-    public Promotion Promotion { get; set; } = new Promotion();
-
-    public IEnumerable<PromotionDetail> PromotionDetails { get; set; }
-
-    public PromotionDTO() : base()
+    get { return _promotion; }
+    set
     {
-      Promotion = new Promotion();
-      PromotionDetails = new List<PromotionDetail>();
+      _promotion = value;
+
+      Id = _promotion.Id;
+      PromotionName = _promotion.PromotionName;
+      StartTime = _promotion.StartTime;
+      EndTime = _promotion.EndTime;
+      Quantity = _promotion.Quantity;
+      Discount = _promotion.Discount;
+      isActive = _promotion.isActive;
+      isDeleted = _promotion.isDeleted;
+      CreateDate = _promotion.CreateDate;
+      CreateBy = _promotion.CreateBy;
+      ModifiedDate = _promotion.ModifiedDate;
+      ModifiedBy = _promotion.ModifiedBy;
     }
+  }
+
+  public IEnumerable<PromotionDetail> PromotionDetails { get; set; }
+
+  public PromotionDTO()
+  {
+    Promotion = new Promotion();
+    PromotionDetails = new List<PromotionDetail>();
   }
 }

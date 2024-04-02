@@ -1,23 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ICHI_CORE.Domain.MasterModel
+﻿namespace ICHI_CORE.Domain.MasterModel
 {
+  using System.ComponentModel.DataAnnotations;
+  using System.ComponentModel.DataAnnotations.Schema;
+  using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
   public class ProductReturnDetail : MasterEntity
   {
-    public int TrxTransactionID { get; set; } = 0;
-    [ForeignKey("TrxTransactionID")]
+    [Required(ErrorMessage = "Hóa đơn là bắt buộc")]
+    public int TrxTransactionId { get; set; } = 0;
+
+    [ForeignKey("TrxTransactionId")]
     [ValidateNever]
     public TrxTransaction? TrxTransaction { get; set; }
-    public int ProductDetailID { get; set; } = 0;
-    [ForeignKey("ProductDetailID")]
+
+    [Required(ErrorMessage = "Sản phẩm là bắt buộc")]
+    public int ProductId { get; set; } = 0;
+
+    [ForeignKey("ProductId")]
     [ValidateNever]
-    public ProductDetail? ProductDetail { get; set; }
+    public Product? Product { get; set; }
 
   }
 }

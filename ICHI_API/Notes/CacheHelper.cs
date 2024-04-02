@@ -5,12 +5,6 @@
 //{
 //  public class CacheHelper
 
-
-
-
-
-
-
 //  {
 //    private static CacheHelper? instance;
 //    private bool isReady;

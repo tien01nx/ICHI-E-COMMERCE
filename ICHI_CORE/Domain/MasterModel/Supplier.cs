@@ -1,43 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ICHI_CORE.Domain.MasterModel
+﻿namespace ICHI_CORE.Domain.MasterModel
 {
-    public class Supplier : MasterEntity
-    {
-        [Required]
-        [StringLength(255)]
-        public string SupplierName { get; set; } = string.Empty;
+  using System.ComponentModel.DataAnnotations;
 
-        [Required]
-        [StringLength(50)]
-        public string TaxCode { get; set; } = string.Empty;
+  public class Supplier : MasterEntity
+  {
+    [Required(ErrorMessage = "Tên nhà cung cấp là bắt buộc")]
+    [StringLength(255, ErrorMessage = "Tên nhà cung cấp phải có tối đa 255 ký tự")]
+    public string SupplierName { get; set; } = string.Empty;
 
-        [StringLength(255)]
-        public string Address { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Mã số thuế là bắt buộc")]
+    [StringLength(50, ErrorMessage = "Mã số thuế phải có tối đa 50 ký tự")]
+    public string TaxCode { get; set; } = string.Empty;
 
-        [Required]
-        [StringLength(12)]
-        public string PhoneNumber { get; set; } = string.Empty;
+    [StringLength(255, ErrorMessage = "Địa chỉ phải có tối đa 255 ký tự")]
+    public string Address { get; set; } = string.Empty;
 
-        [StringLength(255)]
-        public string Email { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Số điện thoại là bắt buộc")]
+    [StringLength(12, ErrorMessage = "Số điện thoại phải có tối đa 12 ký tự")]
+    public string PhoneNumber { get; set; } = string.Empty;
 
-        [StringLength(50)]
-        public string BankAccount { get; set; } = string.Empty;
+    [StringLength(255, ErrorMessage = "Email phải có tối đa 255 ký tự")]
+    public string Email { get; set; } = string.Empty;
 
-        [StringLength(100)]
-        public string BankName { get; set; } = string.Empty;
+    [StringLength(50, ErrorMessage = "Số tài khoản ngân hàng phải có tối đa 50 ký tự")]
+    public string BankAccount { get; set; } = string.Empty;
 
-        public string Notes { get; set; } = string.Empty;
+    [StringLength(100, ErrorMessage = "Tên ngân hàng phải có tối đa 100 ký tự")]
+    public string BankName { get; set; } = string.Empty;
 
-        public bool isActive { get; set; } = false;
+    public string Notes { get; set; } = string.Empty;
 
-        public bool isDeleted { get; set; } = false;
-    }
+    public bool isActive { get; set; } = false;
+
+    public bool isDeleted { get; set; } = false;
+  }
 }

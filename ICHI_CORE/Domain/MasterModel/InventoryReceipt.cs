@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ICHI_CORE.Domain.MasterModel
+﻿namespace ICHI_CORE.Domain.MasterModel
 {
+  using System.ComponentModel.DataAnnotations;
+  using System.ComponentModel.DataAnnotations.Schema;
+  using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
   public class InventoryReceipt : MasterEntity
   {
     public int EmployeeId { get; set; }
@@ -22,8 +18,9 @@ namespace ICHI_CORE.Domain.MasterModel
     [ValidateNever]
     public Supplier? Supplier { get; set; }
 
+    [StringLength(255, ErrorMessage = "Ghi chú phải có tối đa 255 ký tự")]
     public string? Notes { get; set; } = string.Empty;
 
-    public bool isAvtive { get; set; } = false;
+    public bool IsActive { get; set; } = false;
   }
 }
