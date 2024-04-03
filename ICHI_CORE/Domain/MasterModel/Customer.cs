@@ -1,8 +1,8 @@
 ﻿namespace ICHI_CORE.Domain.MasterModel
 {
+  using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
   using System.ComponentModel.DataAnnotations;
   using System.ComponentModel.DataAnnotations.Schema;
-  using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
   public class Customer : MasterEntity
   {
     public string UserId { get; set; }
@@ -23,19 +23,12 @@
     [DataType(DataType.Date, ErrorMessage = "Định dạng ngày sinh không hợp lệ")]
     public DateTime Birthday { get; set; }
 
-    [StringLength(255, ErrorMessage = "Email phải dài tối đa 255 ký tự")]
-    [EmailAddress(ErrorMessage = "Địa chỉ email không hợp lệ")]
-    public string Email { get; set; } = string.Empty;
-
     [StringLength(12, ErrorMessage = "Số điện thoại phải dài tối đa 12 ký tự")]
     [Phone(ErrorMessage = "Số điện thoại không hợp lệ")]
     public string PhoneNumber { get; set; } = string.Empty;
 
     [StringLength(255, ErrorMessage = "Địa chỉ phải dài tối đa 255 ký tự")]
     public string Address { get; set; } = string.Empty;
-
-    [StringLength(255, ErrorMessage = "Hình đại diện phải dài tối đa 255 ký tự")]
-    public string Avatar { get; set; } = string.Empty;
 
     public bool isActive { get; set; } = false;
 

@@ -1,16 +1,10 @@
 ﻿using ICHI.DataAccess.Repository.IRepository;
 using ICHI_API.Data;
-using ICHI_API.Helpers;
-using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.NlogConfig;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
 using System.Linq.Dynamic.Core;
-using System.Net.WebSockets;
-using System.Text.RegularExpressions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace ICHI_API.Service
@@ -109,12 +103,18 @@ namespace ICHI_API.Service
           strMessage = "Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu";
           return null;
         }
-
-
-        model.CreateBy = "Admin";
-        model.ModifiedBy = "Admin";
-
-        _unitOfWork.Promotion.Add(model.Promotion);
+        Promotion promotion = new Promotion();
+        promotion.PromotionName = model.PromotionName;
+        promotion.StartTime = model.StartTime;
+        promotion.EndTime = model.EndTime;
+        promotion.Discount = model.Discount;
+        promotion.isActive = model.isActive;
+        promotion.isDeleted = model.isDeleted;
+        promotion.CreateBy = "Admin";
+        promotion.ModifiedBy = "Admin";
+        promotion.CreateDate = DateTime.Now;
+        promotion.ModifiedDate = DateTime.Now;
+        _unitOfWork.Promotion.Add(promotion);
         _unitOfWork.Save();
 
         // thực hiện thêm chi tiết chương trình khuyến mãi
@@ -128,10 +128,13 @@ namespace ICHI_API.Service
             if (CheckProductPromotion(promotionDetails, model.StartTime, model.EndTime) == false)
             {
               existingProductIds.Add(item.ProductId);
+              continue;
             }
 
-            item.PromotionId = model.Promotion.Id;
+            item.PromotionId = promotion.Id;
             item.ProductId = item.ProductId;
+            item.Quantity = item.Quantity;
+            item.UsedCodesCount = item.UsedCodesCount;
             item.CreateBy = "Admin";
             item.ModifiedBy = "Admin";
             _unitOfWork.PromotionDetail.Add(item);
@@ -165,24 +168,31 @@ namespace ICHI_API.Service
       {
         _unitOfWork.BeginTransaction();
         // lấy thông tin chương trình khuyến mãi
-        var data = _unitOfWork.Promotion.Get(u => u.Id == model.Promotion.Id);
+        var data = _unitOfWork.Promotion.Get(u => u.Id == model.Id);
         if (data == null)
         {
           strMessage = "Có lỗi xảy ra";
           return null;
         }
         // kiểm tra xem mã chương trình khuyến mãi đã tồn tại chưa
-        var checkPromotion = _unitOfWork.Promotion.Get(u => u.PromotionName == model.Promotion.PromotionName);
-        if (checkPromotion != null && checkPromotion.Id != model.Promotion.Id)
+        var checkPromotion = _unitOfWork.Promotion.Get(u => u.PromotionName == model.PromotionName);
+        if (checkPromotion != null && checkPromotion.Id != model.Id)
         {
           strMessage = "Tên chương trình khuyến mãi đã tồn tại";
           return null;
         }
-
-        model.Promotion.ModifiedBy = "Admin";
-        _unitOfWork.Promotion.Update(model.Promotion);
+        Promotion promotion = new Promotion();
+        promotion.Id = model.Id;
+        promotion.PromotionName = model.PromotionName;
+        promotion.Discount = model.Discount;
+        promotion.StartTime = model.StartTime;
+        promotion.EndTime = model.EndTime;
+        promotion.isActive = model.isActive;
+        promotion.isDeleted = model.isDeleted;
+        promotion.ModifiedBy = "Admin";
+        _unitOfWork.Promotion.Update(promotion);
         _unitOfWork.Save();
-        var promotionDetails = _unitOfWork.PromotionDetail.GetAll(u => u.PromotionId == model.Promotion.Id, "Product").AsQueryable();
+        var promotionDetails = _unitOfWork.PromotionDetail.GetAll(u => u.PromotionId == model.Id, "Product").AsQueryable();
         var promotionDetailDelete = promotionDetails.Where(x => !model.PromotionDetails.Select(y => y.Id).Contains(x.Id)).ToList();
         var promotionDetailUpdate = promotionDetails.Where(x => !model.PromotionDetails.Select(y => y.ProductId).Contains(x.ProductId)).ToList();
         var promotionDetailNew = model.PromotionDetails.Where(x => x.Id == 0).ToList();
@@ -200,8 +210,10 @@ namespace ICHI_API.Service
               continue;
             }
 
-            itemAdd.PromotionId = model.Promotion.Id;
+            itemAdd.PromotionId = model.Id;
             itemAdd.ProductId = itemAdd.ProductId;
+            itemAdd.Quantity = itemAdd.Quantity;
+            itemAdd.UsedCodesCount = itemAdd.UsedCodesCount;
             itemAdd.CreateBy = "Admin";
             itemAdd.ModifiedBy = "Admin";
             _unitOfWork.PromotionDetail.Add(itemAdd);
@@ -225,6 +237,8 @@ namespace ICHI_API.Service
                 continue;
               }
               itemUpdate.ProductId = newProductId.Value;
+              itemUpdate.Quantity = model.PromotionDetails.FirstOrDefault(x => x.ProductId == newProductId.Value).Quantity;
+              itemUpdate.UsedCodesCount = model.PromotionDetails.FirstOrDefault(x => x.ProductId == newProductId.Value).UsedCodesCount;
               itemUpdate.ModifiedBy = "Admin";
               itemUpdate.ModifiedDate = DateTime.Now;
             }
@@ -281,7 +295,6 @@ namespace ICHI_API.Service
     {
       try
       {
-
         bool isOutsidePromotion = !data.Any(u =>
              (StartTime >= u.Promotion.StartTime && StartTime <= u.Promotion.EndTime) ||
              (EndTime >= u.Promotion.StartTime && EndTime <= u.Promotion.EndTime));
@@ -292,5 +305,8 @@ namespace ICHI_API.Service
         return false;
       }
     }
+
+    // check hiện tại chương trình khuyến mãi có hoạt động không
+
   }
 }

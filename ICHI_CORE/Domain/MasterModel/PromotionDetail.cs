@@ -1,8 +1,8 @@
 ﻿namespace ICHI_CORE.Domain.MasterModel
 {
+  using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
   using System.ComponentModel.DataAnnotations;
   using System.ComponentModel.DataAnnotations.Schema;
-  using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
   public class PromotionDetail : MasterEntity
   {
@@ -19,5 +19,13 @@
     [ForeignKey("ProductId")]
     [ValidateNever]
     public Product? Product { get; set; }
+
+    [Required(ErrorMessage = "Số lượng là bắt buộc")]
+    [Range(0, int.MaxValue, ErrorMessage = "Số lượng phải lớn hơn hoặc bằng 0")]
+    public int Quantity { get; set; }
+
+    [Required(ErrorMessage = "Số mã sử dụng bắt buộc")]
+    [Range(0, int.MaxValue, ErrorMessage = "Số lượng mã sử dụng phải lớn hơn hoặc bằng 0")]
+    public int? UsedCodesCount { get; set; } = 0;
   }
 }

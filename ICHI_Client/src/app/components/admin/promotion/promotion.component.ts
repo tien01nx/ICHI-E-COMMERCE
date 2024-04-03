@@ -78,6 +78,10 @@ export class PromotionComponent implements OnInit {
     this.selectAll = !this.selectAll;
   }
 
+  updateTable() {
+    this.findAll(this.paginationModel.pageSize, 1, '', '', '');
+  }
+
   findAll(
     pageSize: number,
     pageNumber: number,
@@ -171,8 +175,11 @@ export class PromotionComponent implements OnInit {
       if (result.isConfirmed) {
         this.promotionService.delete(id).subscribe({
           next: (response: any) => {
-            // this.updateTable();
-            this.toastr.success(response.message, 'Thông báo');
+            if (response.message === 'Xóa chương trình khuyến mãi thành công') {
+              this.toastr.success(response.message, 'Thông báo');
+              this.updateTable();
+            }
+            this.toastr.error(response.message, 'Thông báo');
           },
           error: (error: any) => {
             this.toastr.error(error.error, 'Thất bại');

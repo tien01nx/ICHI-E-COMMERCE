@@ -17,6 +17,11 @@ import { Router } from '@angular/router';
 export class CartComponent implements OnInit {
   carts: CartModel[] = [];
   Environment = Environment;
+  isCheck: boolean = false;
+  selectAll: boolean = false;
+  selectedItems: number[] = [];
+  cartsOrder: CartModel[] = [];
+
   constructor(
     private cartService: TrxTransactionService,
     private toastr: ToastrService,
@@ -27,11 +32,45 @@ export class CartComponent implements OnInit {
   priceShip: number = 30000;
   ngOnInit(): void {
     this.getCartByUserId();
+    this.cartService.getCartItemCount(this.tokenService.getUserEmail());
+  }
+
+  toggleSelectAll() {
+    if (this.selectAll) {
+      this.selectedItems = [];
+    } else {
+      this.selectedItems = this.carts.map((item) => item.id);
+    }
+    this.cartsOrder = this.carts.filter((item) =>
+      this.selectedItems.includes(item.id)
+    );
+    this.selectAll = !this.selectAll;
+  }
+
+  selectItem(itemId: number) {
+    const index = this.selectedItems.indexOf(itemId);
+    if (index > -1) {
+      // Nếu mục đã được chọn, loại bỏ nó khỏi mảng
+      this.selectedItems.splice(index, 1);
+    } else {
+      // Nếu mục chưa được chọn, thêm nó vào mảng
+      this.selectedItems.push(itemId);
+    }
+
+    console.log('item', this.selectedItems);
+
+    // từ selectedItem lấy ra các item trong carts
+    this.cartsOrder = this.carts.filter((item) =>
+      this.selectedItems.includes(item.id)
+    );
+    // nếu cartsOrder có ít nhất 1 phần tử thì hiển thị isCheck = true
+    this.isCheck = this.cartsOrder.length > 0;
+    console.log(this.isCheck);
   }
 
   getCartByUserId() {
     this.cartService
-      .GetCartByUserId(this.tokenService.getUserEmail())
+      .getCartByUserId(this.tokenService.getUserEmail())
       .subscribe({
         next: (response: any) => {
           this.carts = response.data;
@@ -60,6 +99,24 @@ export class CartComponent implements OnInit {
   }
 
   checkout() {
+    if (!this.isCheck) {
+      this.cartsOrder = this.carts;
+    }
+    this.cartService.setCarts(this.cartsOrder);
+    console.log('cartsOrder-localStorage', this.cartService.getCarts());
+    // check mã giảm giá
+    this.cartService.checkProductPromotion(this.cartsOrder).subscribe({
+      next: (response: any) => {
+        if (response.code === 200) {
+          this.router.navigate(['/checkout']);
+        } else {
+          this.toastr.error(response.message, 'Thông báo');
+        }
+      },
+      error: (error: any) => {
+        this.toastr.error('Lỗi kiểm tra mã giảm giá', 'Thông báo');
+      },
+    });
     this.router.navigate(['/checkout']);
   }
 
@@ -85,21 +142,40 @@ export class CartComponent implements OnInit {
   increaseQuantity(cart: CartModel) {
     this.updateQuantity(cart, 1);
   }
+  getTotalPriceItem(cart: CartModel): number {
+    return cart.quantity * cart.product.price;
+  }
 
   decreaseQuantity(cart: CartModel) {
     this.updateQuantity(cart, -1);
   }
+
   getTotalPrice(): number {
-    let totalPrice = 0;
-    this.carts.forEach((cart) => {
-      totalPrice += cart.quantity * cart.product.price;
-    });
-    return totalPrice;
+    if (!this.isCheck) {
+      let totalPrice = 0;
+      this.carts.forEach((cart) => {
+        totalPrice += cart.quantity * cart.product.price;
+      });
+      return totalPrice;
+    } else {
+      let totalPrice = 0;
+      this.cartsOrder?.forEach((cart) => {
+        totalPrice += cart.quantity * cart.product.price;
+      });
+      return totalPrice;
+    }
   }
   // Tổng số tiền các sanr phẩm giảm gía trong giỏ hàng = Số lượng * giảm giá * % giảm giá
   getTotalDiscount(): number {
     let totalDiscount = 0;
-    this.carts.forEach((cart) => {
+    if (!this.isCheck) {
+      this.carts.forEach((cart) => {
+        totalDiscount +=
+          cart.quantity * (cart.discount / 100) * cart.product.price;
+      });
+      return totalDiscount;
+    }
+    this.cartsOrder?.forEach((cart) => {
       totalDiscount +=
         cart.quantity * (cart.discount / 100) * cart.product.price;
     });

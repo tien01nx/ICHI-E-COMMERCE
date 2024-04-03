@@ -45,7 +45,7 @@
             <tr>
               <th
                 class="white-space-nowrap fs--1 align-middle ps-0"
-                style="max-width: 20px; width: 18px"
+                style="width: 5%"
               >
                 <div class="form-check mb-0 fs-0">
                   <input
@@ -59,7 +59,7 @@
               <th
                 class="sort white-space-nowrap align-middle ps-4"
                 scope="col"
-                style="width: 250px"
+                style="width: 30%"
                 (click)="sortByField('PromotionCode')"
               >
                 Mã khuyến mãi
@@ -90,10 +90,10 @@
               <th
                 class="sort align-middle ps-4"
                 scope="col"
-                style="width: 150px"
+                style="width: 120px"
                 (click)="sortByField('Discount')"
               >
-                Số tiền được giảm
+                Triết khấu
                 <label
                   [class.d-none]="
                     SortBy === 'Discount' &&
@@ -113,34 +113,11 @@
                   <span class="fas fa-sort-down align-middle fs-9"></span>
                 </label>
               </th>
+
               <th
                 class="sort align-middle ps-4"
                 scope="col"
-                (click)="sortByField('Quantity')"
-              >
-                Số lượng mã
-                <label
-                  [class.d-none]="
-                    SortBy === 'Quantity' &&
-                    (sortDir === 'DESC' || sortDir === 'ASC')
-                  "
-                >
-                  <span class="fas fa-sort align-middle fs-9"></span>
-                </label>
-                <label
-                  [class.d-none]="SortBy !== 'Quantity' || sortDir !== 'ASC'"
-                >
-                  <span class="fas fa-sort-up align-middle fs-9"></span>
-                </label>
-                <label
-                  [class.d-none]="SortBy !== 'Quantity' || sortDir !== 'DESC'"
-                >
-                  <span class="fas fa-sort-down align-middle fs-9"></span>
-                </label>
-              </th>
-              <th
-                class="sort align-middle ps-4"
-                scope="col"
+                style="width: 150px"
                 (click)="sortByField('StartTime')"
               >
                 Ngày bắt đầu
@@ -167,6 +144,7 @@
                 class="sort align-middle ps-4"
                 scope="col"
                 (click)="sortByField('EndTime')"
+                style="width: 150px"
               >
                 Ngày kết thúc
                 <label
@@ -245,17 +223,14 @@
               <td class="align-middle white-space-nowrap text-700 ps-4">
                 {{ promotion.promotionName }}
               </td>
-              <td class="align-middle text-600 ps-4">
+              <td class="align-middle text-600 ps-11">
                 {{ promotion.discount | number : "1.0-0" }}
               </td>
-              <td class="align-middle text-600 ps-4">
-                {{ promotion.quantity }}
-              </td>
 
-              <td class="align-middle text-600 ps-4">
+              <td class="align-middle text-600 ps-6">
                 {{ promotion.startTime | date : "dd/MM/yyyy" }}
               </td>
-              <td class="align-middle text-600 ps-4">
+              <td class="align-middle text-600 ps-6">
                 {{ promotion.endTime | date : "dd/MM/yyyy" }}
               </td>
               <td class="align-middle text-600 ps-4">

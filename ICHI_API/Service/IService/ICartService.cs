@@ -1,9 +1,5 @@
-﻿using API.Model;
-using ICHI_API.Helpers;
-using ICHI_API.Model;
+﻿using ICHI_API.Model;
 using ICHI_CORE.Domain.MasterModel;
-using ICHI_CORE.Model;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ICHI_API.Service.IService
 {
@@ -18,6 +14,7 @@ namespace ICHI_API.Service.IService
 
     Cart UpdateCart(Cart cart, out string strMessage);
 
+    IEnumerable<Cart> CheckCartPromotion(List<Cart> carts, out string strMessage);
 
   }
 }

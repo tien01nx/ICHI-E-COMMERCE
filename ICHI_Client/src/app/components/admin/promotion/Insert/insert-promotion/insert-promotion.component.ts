@@ -53,7 +53,7 @@ export class InsertPromotionComponent implements OnInit {
     startTime: new FormControl(Date, [Validators.required]),
     endTime: new FormControl(Date, [Validators.required]),
     discount: new FormControl('', [Validators.required]),
-    quantity: new FormControl('', [Validators.required]),
+
     isActive: new FormControl(true),
     isDeleted: new FormControl(false),
     promotionDetails: new FormArray([
@@ -61,6 +61,12 @@ export class InsertPromotionComponent implements OnInit {
         id: new FormControl(0),
         promotionId: new FormControl(0),
         productId: new FormControl(null, [Validators.required]),
+        quantity: new FormControl('', [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(1000),
+        ]),
+        usedCodesCount: new FormControl(0),
       }),
     ]),
   });
@@ -93,11 +99,6 @@ export class InsertPromotionComponent implements OnInit {
         Validators.required,
         Validators.min(1),
         Validators.max(100),
-      ]),
-      quantity: new FormControl('', [
-        Validators.required,
-        Validators.min(1),
-        Validators.max(1000),
       ]),
       isActive: new FormControl(true),
       isDeleted: new FormControl(false),
@@ -138,58 +139,8 @@ export class InsertPromotionComponent implements OnInit {
     });
   }
 
-  addProductDetails() {
-    const productDetails = this.promotionForm.get(
-      'productDetails'
-    ) as FormArray;
-    productDetails.push(
-      new FormGroup({
-        id: new FormControl(null),
-        color: new FormControl('', [Validators.required]),
-        quantity: new FormControl(0),
-      })
-    );
-  }
-
-  removeProductDetails(index: number) {
-    const productDetails = this.promotionForm.get(
-      'productDetails'
-    ) as FormArray;
-
-    if (productDetails.at(index).get('id')?.value !== null) {
-      Swal.fire({
-        title: 'Bạn có chắc chắn muốn xóa?',
-        text: 'Dữ liệu sẽ không thể phục hồi sau khi xóa!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Xác nhận',
-        cancelButtonText: 'Hủy',
-        buttonsStyling: false,
-        customClass: {
-          confirmButton: 'btn btn-danger me-1',
-          cancelButton: 'btn btn-secondary',
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.productService
-            .deleteProductDetails(productDetails.at(index).get('id')?.value)
-            .subscribe({
-              next: () => {
-                this.toastr.success('Xóa chi tiết sản phẩm thành công');
-                productDetails.removeAt(index);
-              },
-              error: (err: any) => {
-                this.toastr.error(err.error, 'Thất bại');
-              },
-            });
-        }
-      });
-    } else {
-      productDetails.removeAt(index);
-    }
-  }
-
   onSubmit() {
+    debugger;
     console.log(this.promotionForm.value);
     if (this.promotionForm.invalid) {
       const formErrors = this.promotionForm.errors;
@@ -239,6 +190,12 @@ export class InsertPromotionComponent implements OnInit {
             id: new FormControl(detail.id),
             promotionId: new FormControl(detail.promotionId),
             productId: new FormControl(detail.productId), // Assuming product is available in detail
+            quantity: new FormControl(detail.quantity, [
+              Validators.required,
+              Validators.min(1),
+              Validators.max(1000),
+            ]),
+            usedCodesCount: new FormControl(detail.usedCodesCount),
           });
 
           this.promotionDetails.push(detailFormGroup);
@@ -255,6 +212,12 @@ export class InsertPromotionComponent implements OnInit {
       id: [0],
       promotionId: [0],
       productId: ['', Validators.required],
+      quantity: new FormControl('', [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(1000),
+      ]),
+      usedCodesCount: new FormControl(0),
     });
   }
 

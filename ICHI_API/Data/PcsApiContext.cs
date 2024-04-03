@@ -1,13 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ICHI_CORE.Domain;
+﻿using ICHI_CORE.Domain;
 using ICHI_CORE.Domain.MasterModel;
-using Microsoft.AspNetCore.Http.HttpResults;
-using static Org.BouncyCastle.Asn1.Cmp.Challenge;
-using System.Collections.Generic;
-using System.Runtime.Intrinsics.Arm;
-using Microsoft.AspNetCore.Server.IISIntegration;
-using static System.Net.Mime.MediaTypeNames;
 using ICHI_CORE.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace ICHI_API.Data
 {
@@ -138,9 +132,7 @@ namespace ICHI_API.Data
         PhoneNumber = "0123456789",
         Address = "123 Đường ABC, Quận XYZ, Thành phố HCM",
         Gender = "Nam",
-        Avatar = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2F717761877848073%2F&psig=AOvVaw",
         Birthday = DateTime.Now,
-        Email = "kh03@gmail.com",
         FullName = "Khách hàng A",
         isActive = true,
         isDeleted = false,
@@ -149,15 +141,30 @@ namespace ICHI_API.Data
         ModifiedDate = null,
         ModifiedBy = null
       });
+
       modelBuilder.Entity<Employee>().HasData(new Employee
       {
         Id = 1,
+        UserId = "tien01nx@gmail.com",
+        PhoneNumber = "0123456789",
+        Address = "170 Trịnh Đình Cửu",
+        Birthday = DateTime.Now,
+        CreateDate = DateTime.Now,
+        CreateBy = "Admin",
+        ModifiedDate = null,
+        ModifiedBy = null,
+        FullName = "ADMIN",
+        Gender = "Nam",
+        isActive = true,
+        isDeleted = false
+      });
+      modelBuilder.Entity<Employee>().HasData(new Employee
+      {
+        Id = 2,
         UserId = "diuthanh88@gmail.com",
         PhoneNumber = "0123456789",
         Address = "123 Đường ABC, Quận XYZ, Thành",
-        Avatar = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2F717761877848073%2F&psig=AOvVaw",
         Birthday = DateTime.Now,
-        Email = "nhanvien@gmail.com",
         CreateDate = DateTime.Now,
         CreateBy = "Admin",
         ModifiedDate = null,

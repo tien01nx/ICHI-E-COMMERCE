@@ -5,4 +5,6 @@ import { ProductModel } from './product.model';
 export interface PromotionDetails extends MasterEntity {
   promotionId: number;
   productId: number;
+  quantity: number;
+  usedCodesCount: number;
 }

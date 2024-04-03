@@ -3,20 +3,83 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Environment } from '../environment/environment';
 import { InsertCartDTO } from '../dtos/insert.cart.dto';
-import { Observable, catchError, map, mergeMap, tap, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  catchError,
+  map,
+  mergeMap,
+  tap,
+  throwError,
+} from 'rxjs';
 import { VnPaymentRequestDTO } from '../dtos/vn.payment.request.dto';
 import { ApiServiceService } from './api.service.service';
 import { ShoppingCartDTO } from '../dtos/shopping.cart.dto.';
+import { Utils } from '../Utils.ts/utils';
+import { CartModel } from '../models/cart.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TrxTransactionService {
   baseUrl = Environment.apiBaseUrl;
+  private cartItems: any[] = [];
+  private cartItemCount = new BehaviorSubject<number>(0);
   constructor(
     private http: HttpClient,
     private apiService: ApiServiceService
   ) {}
+
+  getCarts(): CartModel[] {
+    const cartsString = localStorage.getItem(Utils.cartList);
+    if (cartsString) {
+      return JSON.parse(cartsString);
+    } else {
+      return [];
+    }
+  }
+
+  setCarts(carts: CartModel[]): void {
+    const cartsString = JSON.stringify(carts);
+    localStorage.setItem(Utils.cartList, cartsString);
+  }
+
+  getCartByUserId(userId: string): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.baseUrl}/Cart/GetCarts?email=${userId}`
+    );
+  }
+
+  getCartItemCount(userId: string): Observable<number> {
+    return this.getCartByUserId(userId).pipe(
+      map((cartItems: any) => {
+        const data = cartItems.data;
+        console.log('data', data);
+        // Kiểm tra xem cartItems có phải là một mảng không
+        if (Array.isArray(data)) {
+          // Đếm số lượng sản phẩm trong giỏ hàng
+          let itemCount = 0;
+          data.forEach((cartItem: any) => {
+            itemCount++;
+          });
+          return itemCount;
+        } else {
+          // Nếu cartItems không phải là một mảng, trả về 0 hoặc giá trị mặc định khác
+          return 0;
+        }
+      })
+    );
+  }
+
+  checkProductPromotion(carts: any) {
+    debugger;
+    return this.http.post(`${this.baseUrl}/Cart/CheckCartPromotion`, carts);
+  }
+
+  addToCart(product: any) {
+    this.cartItems.push(product);
+    this.cartItemCount.next(this.cartItems.length);
+  }
 
   AddToCart(model: InsertCartDTO) {
     return this.http.post(this.baseUrl + '/Cart/AddtoCart', model);
@@ -35,10 +98,6 @@ export class TrxTransactionService {
     };
 
     return this.http.delete(this.baseUrl + '/Cart/DeleteCart', options);
-  }
-
-  GetCartByUserId(userId: string) {
-    return this.http.get(this.baseUrl + '/Cart/GetCarts?email=' + userId);
   }
 
   GetTrxTransaction(userId: string) {

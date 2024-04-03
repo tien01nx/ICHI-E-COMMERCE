@@ -87,3 +87,16 @@ C:\Users\tien0\Downloads\ICHI-E-COMMERCE\ICHI_CORE\obj\Debug\net7.0\ICHI_CORE.dl
 C:\Users\tien0\Downloads\ICHI-E-COMMERCE\ICHI_CORE\obj\Debug\net7.0\refint\ICHI_CORE.dll
 C:\Users\tien0\Downloads\ICHI-E-COMMERCE\ICHI_CORE\obj\Debug\net7.0\ICHI_CORE.pdb
 C:\Users\tien0\Downloads\ICHI-E-COMMERCE\ICHI_CORE\obj\Debug\net7.0\ref\ICHI_CORE.dll
+C:\Users\tien0\source\repos\tien01nx\ICHI-E-COMMERCE\ICHI_CORE\bin\Debug\net7.0\ICHI_CORE.deps.json
+C:\Users\tien0\source\repos\tien01nx\ICHI-E-COMMERCE\ICHI_CORE\bin\Debug\net7.0\ICHI_CORE.dll
+C:\Users\tien0\source\repos\tien01nx\ICHI-E-COMMERCE\ICHI_CORE\bin\Debug\net7.0\ICHI_CORE.pdb
+C:\Users\tien0\source\repos\tien01nx\ICHI-E-COMMERCE\ICHI_CORE\obj\Debug\net7.0\ICHI_CORE.csproj.AssemblyReference.cache
+C:\Users\tien0\source\repos\tien01nx\ICHI-E-COMMERCE\ICHI_CORE\obj\Debug\net7.0\ICHI_CORE.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\tien0\source\repos\tien01nx\ICHI-E-COMMERCE\ICHI_CORE\obj\Debug\net7.0\ICHI_CORE.AssemblyInfoInputs.cache
+C:\Users\tien0\source\repos\tien01nx\ICHI-E-COMMERCE\ICHI_CORE\obj\Debug\net7.0\ICHI_CORE.AssemblyInfo.cs
+C:\Users\tien0\source\repos\tien01nx\ICHI-E-COMMERCE\ICHI_CORE\obj\Debug\net7.0\ICHI_CORE.csproj.CoreCompileInputs.cache
+C:\Users\tien0\source\repos\tien01nx\ICHI-E-COMMERCE\ICHI_CORE\obj\Debug\net7.0\ICHI_CORE.sourcelink.json
+C:\Users\tien0\source\repos\tien01nx\ICHI-E-COMMERCE\ICHI_CORE\obj\Debug\net7.0\ICHI_CORE.dll
+C:\Users\tien0\source\repos\tien01nx\ICHI-E-COMMERCE\ICHI_CORE\obj\Debug\net7.0\refint\ICHI_CORE.dll
+C:\Users\tien0\source\repos\tien01nx\ICHI-E-COMMERCE\ICHI_CORE\obj\Debug\net7.0\ICHI_CORE.pdb
+C:\Users\tien0\source\repos\tien01nx\ICHI-E-COMMERCE\ICHI_CORE\obj\Debug\net7.0\ref\ICHI_CORE.dll

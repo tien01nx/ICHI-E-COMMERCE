@@ -38,4 +38,6 @@ export class Utils {
   static textPattern = /^[a-zA-ZÀ-ỹ\s]*$/;
 
   static phoneNumberPattern = /^[0-9]{10}$/;
+
+  static cartList ="cartList";
 }

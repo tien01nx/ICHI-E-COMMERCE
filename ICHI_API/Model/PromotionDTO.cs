@@ -1,7 +1,5 @@
 ﻿using ICHI_CORE.Domain.MasterModel;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 public class PromotionDTO
@@ -17,9 +15,6 @@ public class PromotionDTO
 
   [Required(ErrorMessage = "Thời gian kết thúc là bắt buộc")]
   public DateTime EndTime { get; set; }
-
-  [Required(ErrorMessage = "Số lượng là bắt buộc")]
-  public int Quantity { get; set; }
 
   [Required(ErrorMessage = "Giảm giá là bắt buộc")]
   public double Discount { get; set; }
@@ -55,7 +50,6 @@ public class PromotionDTO
       PromotionName = _promotion.PromotionName;
       StartTime = _promotion.StartTime;
       EndTime = _promotion.EndTime;
-      Quantity = _promotion.Quantity;
       Discount = _promotion.Discount;
       isActive = _promotion.isActive;
       isDeleted = _promotion.isDeleted;

@@ -58,6 +58,25 @@
       return result;
     }
 
+    [HttpPost("CheckCartPromotion")]
+    public async Task<ApiResponse<IEnumerable<Cart>>> CheckCartPromotion([FromBody] List<Cart> carts)
+    {
+      ApiResponse<IEnumerable<Cart>> result;
+      string strMessage = string.Empty;
+      try
+      {
+        var data = _cartService.CheckCartPromotion(carts, out strMessage);
+        return new ApiResponse<IEnumerable<Cart>>(System.Net.HttpStatusCode.OK, strMessage, data);
+      }
+      catch (Exception ex)
+      {
+        strMessage = "Có lỗi xảy ra";
+        NLogger.log.Error(ex.ToString());
+        result = new ApiResponse<IEnumerable<Cart>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+      }
+      return result;
+    }
+
     [HttpDelete("DeleteCart")]
     public async Task<ApiResponse<Cart>> DeleteCart([FromBody] Cart cart)
     {

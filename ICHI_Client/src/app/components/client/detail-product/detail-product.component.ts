@@ -41,6 +41,7 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.findProductById(this.activatedRoute.snapshot.params['id']);
+    this.cartService.getCartItemCount(this.tokenService.getUserEmail());
   }
   findProductById(id: number) {
     this.productService.findById(id).subscribe({

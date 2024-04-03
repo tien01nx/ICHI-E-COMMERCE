@@ -16,10 +16,6 @@
     //[DataType(DataType.DateTime, ErrorMessage = "Thời gian không hợp lệ")]
     public DateTime EndTime { get; set; }
 
-    [Required(ErrorMessage = "Số lượng là bắt buộc")]
-    [Range(0, int.MaxValue, ErrorMessage = "Số lượng phải lớn hơn hoặc bằng 0")]
-    public int Quantity { get; set; }
-
     [Required(ErrorMessage = "Giảm giá là bắt buộc")]
     [Range(0, double.MaxValue, ErrorMessage = "Giảm giá phải lớn hơn hoặc bằng 0")]
     public double Discount { get; set; }

@@ -25,10 +25,6 @@ namespace ICHI_CORE.Domain.MasterModel
     [Display(Name = "Ngày sinh")]
     public DateTime Birthday { get; set; }
 
-    [StringLength(255, ErrorMessage = "Email phải có tối đa 255 ký tự")]
-    [EmailAddress(ErrorMessage = "Email không hợp lệ")]
-    public string Email { get; set; } = string.Empty;
-
     [Required(ErrorMessage = "Số điện thoại là bắt buộc")]
     [StringLength(12, ErrorMessage = "Số điện thoại phải có tối đa 12 ký tự")]
     [Phone(ErrorMessage = "Số điện thoại không hợp lệ")]
@@ -40,8 +36,5 @@ namespace ICHI_CORE.Domain.MasterModel
     public bool isActive { get; set; } = false;
 
     public bool isDeleted { get; set; } = false;
-
-    [StringLength(255, ErrorMessage = "Ảnh đại diện phải có tối đa 255 ký tự")]
-    public string Avatar { get; set; } = string.Empty;
   }
 }
