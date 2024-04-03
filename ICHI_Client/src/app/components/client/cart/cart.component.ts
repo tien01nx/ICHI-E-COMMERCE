@@ -24,6 +24,7 @@ export class CartComponent implements OnInit {
     private router: Router
   ) {}
 
+  priceShip: number = 30000;
   ngOnInit(): void {
     this.getCartByUserId();
   }
@@ -41,6 +42,7 @@ export class CartComponent implements OnInit {
         },
       });
   }
+
   deleteItemCart(cart: CartModel) {
     this.cartService.DeleteItemCart(cart).subscribe({
       next: (response: any) => {
@@ -86,5 +88,29 @@ export class CartComponent implements OnInit {
 
   decreaseQuantity(cart: CartModel) {
     this.updateQuantity(cart, -1);
+  }
+  getTotalPrice(): number {
+    let totalPrice = 0;
+    this.carts.forEach((cart) => {
+      totalPrice += cart.quantity * cart.product.price;
+    });
+    return totalPrice;
+  }
+  // Tổng số tiền các sanr phẩm giảm gía trong giỏ hàng = Số lượng * giảm giá * % giảm giá
+  getTotalDiscount(): number {
+    let totalDiscount = 0;
+    this.carts.forEach((cart) => {
+      totalDiscount +=
+        cart.quantity * (cart.discount / 100) * cart.product.price;
+    });
+    return totalDiscount;
+  }
+
+  getTotalIntoMoney(): number {
+    let totalPrice = 0;
+    totalPrice += this.getTotalPrice(); // Tổng giá trị hàng hóa
+    totalPrice -= this.getTotalDiscount(); // Giảm giá
+    totalPrice += this.priceShip; // Giá vận chuyển
+    return totalPrice;
   }
 }

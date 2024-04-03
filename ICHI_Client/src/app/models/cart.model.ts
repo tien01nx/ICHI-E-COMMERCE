@@ -9,4 +9,5 @@ export interface CartModel extends MasterEntity {
   quantity: number;
   product: ProductModel;
   productImage: string;
+  discount: number;
 }
