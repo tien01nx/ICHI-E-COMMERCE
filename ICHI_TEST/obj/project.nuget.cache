@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vV2Tl29w1sJuD+gfIbwlw9sgWxqEFGHUftKlQVnLjoZ2jqcy0UJstUMaETT1bHLjMi4oOVEYxTPFI2A3FE3t9w==",
+  "dgSpecHash": "SV2E6GHd/lYa0aJoUsJ9GyY2PlbWfbZO6vjSd8x2zdrDQ7Q5+n1jXHYdy2L322wij7ui8M8WGK2TGoqCA9HmwQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_TEST\\ICHI_TEST.csproj",
+  "projectFilePath": "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_TEST\\ICHI_TEST.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tien0\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\tien0\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
