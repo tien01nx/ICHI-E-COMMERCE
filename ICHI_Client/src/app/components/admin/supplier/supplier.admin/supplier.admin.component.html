@@ -543,6 +543,11 @@
                 >
                   Tên nhà cung cấp không được vượt quá 50 ký tự
                 </span>
+                <span
+                  *ngIf="supplierForm['controls']['supplierName'].errors?.['pattern']"
+                >
+                  Tên nhà cung cấp không hợp lệ
+                </span>
               </small>
             </div>
           </div>
@@ -591,6 +596,7 @@
                 type="tel"
                 formControlName="phoneNumber"
                 placeholder="Số điện thoại"
+                (keypress)="Utils.onKeyPressNumber($event)"
               />
               <small
                 class="text-danger mt-1"
@@ -623,13 +629,13 @@
               >Email</label
             >
             <div class="col-sm-8">
-              <textarea
+              <input
                 class="form-control"
                 id="email"
                 rows="3"
                 placeholder="Email"
                 formControlName="email"
-              ></textarea>
+              />
               <small
                 class="text-danger mt-1"
                 *ngIf="supplierForm['controls']['email'].dirty"
@@ -640,7 +646,7 @@
                   Email không được để trống
                 </span>
                 <span
-                  *ngIf="( supplierForm['controls']['email'].errors?.['email'])"
+                  *ngIf="( supplierForm['controls']['email'].errors?.['pattern'])"
                 >
                   Email không hợp lệ
                 </span>
@@ -652,28 +658,39 @@
               >Mã số thuế</label
             >
             <div class="col-sm-8">
-              <textarea
+              <input
                 class="form-control"
                 id="taxCode"
                 rows="3"
-                type="number"
+                type="text"
                 placeholder="Mã số thuế"
                 formControlName="taxCode"
-              ></textarea>
+                (keypress)="Utils.onKeyPressNumber($event)"
+              />
               <small
                 class="text-danger mt-1"
                 *ngIf="supplierForm['controls']['taxCode'].dirty"
               >
                 <span
-                  *ngIf="supplierForm['controls']['taxCode'].errors?.['required']"
+                  *ngIf="!(supplierForm['controls']['taxCode'].errors?.['minlength'] || supplierForm['controls']['taxCode'].errors?.['maxlength'] ) && supplierForm['controls']['taxCode'].errors?.['pattern']"
+                >
+                  Mã số thuế không đúng định dạng
+                </span>
+                <span
+                  *ngIf="  supplierForm['controls']['taxCode'].errors?.['required']"
                 >
                   Mã số thuế không được để trống
                 </span>
                 <span
-                  *ngIf="supplierForm['controls']['taxCode'].errors?.['maxlength']
-                  || supplierForm['controls']['taxCode'].errors?.['minlength']"
+                  *ngIf=" supplierForm['controls']['taxCode'].errors?.['minlength']"
                 >
-                  Mã số thuế phải đủ 10 số và nhỏ hơn 20 số
+                  Mã số thuế tối thiểu 10 số
+                </span>
+
+                <span
+                  *ngIf="supplierForm['controls']['taxCode'].errors?.['maxlength']"
+                >
+                  Mã số thuế tối thiểu 13 số
                 </span>
               </small>
             </div>
@@ -683,14 +700,15 @@
               >Số tài khoản</label
             >
             <div class="col-sm-8">
-              <textarea
+              <input
                 class="form-control"
                 id="bankAccount"
                 rows="3"
-                type="number"
+                type="text"
                 placeholder="Số tài khoản"
                 formControlName="bankAccount"
-              ></textarea>
+                (keypress)="Utils.onKeyPressTextNumberNoSpacebar($event)"
+              />
               <small
                 class="text-danger mt-1"
                 *ngIf="supplierForm['controls']['bankAccount'].dirty"
@@ -714,13 +732,13 @@
               >Tên ngân hàng</label
             >
             <div class="col-sm-8">
-              <textarea
+              <input
                 class="form-control"
                 id="bankName"
                 rows="3"
                 placeholder="Tên ngân hàng"
                 formControlName="bankName"
-              ></textarea>
+              />
               <small
                 class="text-danger mt-1"
                 *ngIf="supplierForm['controls']['bankName'].dirty"
@@ -731,9 +749,14 @@
                   Tên ngân hàng không được để trống
                 </span>
                 <span
-                  *ngIf="supplierForm['controls']['bankName'].errors?.['maxlength']"
+                  *ngIf="supplierForm['controls']['bankName'].errors?.['maxlength'] || supplierForm['controls']['bankName'].errors?.['minlength']"
                 >
-                  Tên ngân hàng phải đủ 5 số và nhỏ hơn 20 số
+                  Tên ngân hàng tối thiểu 3 ký tự và không vượt quá 10 ký tự
+                </span>
+                <span
+                  *ngIf="!(supplierForm['controls']['bankName'].errors?.['maxlength'] || supplierForm['controls']['bankName'].errors?.['minlength']) &&supplierForm['controls']['bankName'].errors?.['pattern']"
+                >
+                  Tên ngân hàng không đúng định dạng
                 </span>
               </small>
             </div>

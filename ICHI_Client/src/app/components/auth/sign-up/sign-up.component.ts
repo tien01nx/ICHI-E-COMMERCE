@@ -20,6 +20,7 @@ import { ApiResponse } from '../../../models/api.response.model';
   styleUrl: './sign-up.component.css',
 })
 export class SignUpComponent implements OnInit {
+  protected readonly Utils = Utils;
   errorMessage: string = '';
   successMessage: string = '';
   isActive: boolean = false;
@@ -37,7 +38,7 @@ export class SignUpComponent implements OnInit {
     email: new FormControl('', [
       Validators.required,
       Validators.maxLength(100),
-      Validators.email,
+      Validators.pattern(Utils.checkEmail),
     ]),
     password: new FormControl('', [
       Validators.required,
@@ -46,16 +47,19 @@ export class SignUpComponent implements OnInit {
       Validators.pattern(Utils.passwordPattern),
     ]),
     confirmPassword: new FormControl('', [Validators.required]),
+
     fullname: new FormControl('', [
       Validators.required,
+      Validators.minLength(6),
       Validators.maxLength(40),
       Validators.pattern(Utils.textPattern),
     ]),
+
     phoneNumber: new FormControl('', [
       Validators.required,
       Validators.maxLength(10),
       Validators.minLength(10),
-      Validators.pattern(Utils.phoneNumberPattern),
+      Validators.pattern(Utils.textPhoneNumber),
     ]),
     birthday: new FormControl('', [Validators.required]),
     gender: new FormControl('', [Validators.required]),

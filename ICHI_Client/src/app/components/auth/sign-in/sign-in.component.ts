@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../../service/auth.service';
 import { TokenService } from '../../../service/token.service';
 import { ApiResponse } from '../../../models/api.response.model';
+import { Utils } from '../../../Utils.ts/utils';
 
 @Component({
   selector: 'app-sign-in',
@@ -20,7 +21,7 @@ import { ApiResponse } from '../../../models/api.response.model';
 })
 export class SignInComponent implements OnInit {
   errorMessage: string = '';
-
+  protected readonly Utils = Utils;
   ngOnInit(): void {
     throw new Error('Method not implemented.');
   }
@@ -36,6 +37,7 @@ export class SignInComponent implements OnInit {
     userName: new FormControl('', [
       Validators.required,
       Validators.maxLength(100),
+      Validators.pattern(Utils.checkEmail),
     ]),
     password: new FormControl('', [
       Validators.required,
@@ -44,7 +46,6 @@ export class SignInComponent implements OnInit {
   });
 
   userLogin() {
-    debugger; // Breakpoint
     this.authServer.login(this.userForm.value).subscribe({
       next: (response: ApiResponse<string>) => {
         if (response.code === 200) {

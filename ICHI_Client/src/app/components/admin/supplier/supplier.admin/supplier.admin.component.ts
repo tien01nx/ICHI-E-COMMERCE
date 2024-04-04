@@ -39,6 +39,7 @@ export class SupplierAdminComponent implements OnInit {
     supplierName: new FormControl('', [
       Validators.required,
       Validators.maxLength(50),
+      Validators.pattern(Utils.textPattern),
     ]),
     address: new FormControl('', [
       Validators.required,
@@ -49,13 +50,17 @@ export class SupplierAdminComponent implements OnInit {
       Validators.required,
       Validators.maxLength(10),
       Validators.minLength(10),
-      Validators.pattern(Utils.phoneNumberPattern),
+      Validators.pattern(Utils.textPhoneNumber),
     ]),
-    email: new FormControl('', [Validators.required, Validators.email]),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.pattern(Utils.checkEmail),
+    ]),
     taxCode: new FormControl('', [
       Validators.required,
-      Validators.maxLength(20),
       Validators.minLength(10),
+      Validators.maxLength(13),
+      Validators.pattern(Utils.numberPattern),
     ]),
     bankAccount: new FormControl('', [
       Validators.required,
@@ -64,7 +69,9 @@ export class SupplierAdminComponent implements OnInit {
     ]),
     bankName: new FormControl('', [
       Validators.required,
-      Validators.maxLength(50),
+      Validators.minLength(3),
+      Validators.maxLength(10),
+      Validators.pattern(Utils.textPattern),
     ]),
   });
 

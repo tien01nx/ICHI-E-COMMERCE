@@ -55,7 +55,6 @@ export class ResetPasswordComponent {
           this.toastr.success('Đổi mật khẩu thành công', 'Thông báo');
           return;
         }
-        // chuyeenr url ddeens trang /login
         this.toastr.error('Mật khẩu cũ không đúng', 'Thông báo');
         return;
       },

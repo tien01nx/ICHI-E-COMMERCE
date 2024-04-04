@@ -48,17 +48,22 @@ export class EmployeeComponent {
     id: new FormControl(null),
     fullName: new FormControl('', [
       Validators.required,
+      Validators.minLength(6),
       Validators.maxLength(50),
+      Validators.pattern(Utils.textPattern),
     ]),
     phoneNumber: new FormControl('', [
       Validators.required,
       Validators.maxLength(10),
       Validators.minLength(10),
-      Validators.pattern('^0[0-9]{9}$'),
+      Validators.pattern(Utils.textPhoneNumber),
     ]),
     gender: new FormControl('', [Validators.required]),
     birthday: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.pattern(Utils.checkEmail),
+    ]),
     address: new FormControl('', [Validators.required]),
     userId: new FormControl(null),
     password: new FormControl(

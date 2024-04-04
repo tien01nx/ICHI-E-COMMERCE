@@ -122,6 +122,11 @@
                           >
                             Tên tài khoản không được vượt quá 100 ký tự
                           </span>
+                          <span
+                            *ngIf="userForm['controls']['userName'].errors?.['pattern']"
+                          >
+                            Email không đúng định dạng
+                          </span>
                         </small>
                       </div>
                     </div>

@@ -36,10 +36,17 @@ export class Utils {
     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
   static textPattern = /^[a-zA-ZÀ-ỹ\s]*$/;
+  static textPattern1 = /^[a-zA-ZÀ-ỹ\s]*$/;
 
   static phoneNumberPattern = /^[0-9]{10}$/;
 
+  static numberPattern = /^[0-9]*$/;
+
+  static textPhoneNumber = /^0\d{9}$/;
+
   static cartList = 'cartList';
+
+  static checkEmail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
   // Các loại thanh toán
   static paymentTypes = [
@@ -49,6 +56,44 @@ export class Utils {
 
   static PaymentOnDelivery = 'PaymentOnDelivery';
   static PaymentViaCard = 'PaymentViaCard';
+
+  static onKeyPressNumber(event: KeyboardEvent) {
+    const charCode = event.key; // Lấy mã ký tự từ sự kiện
+    // Kiểm tra nếu ký tự không phải số (0-9) hoặc không phải phím điều hướng
+    if (
+      isNaN(Number(charCode)) &&
+      !['ArrowLeft', 'ArrowRight', 'Delete', 'Backspace'].includes(charCode)
+    ) {
+      event.preventDefault(); // Ngăn chặn hành động mặc định của phím
+    }
+  }
+
+  static onKeyPressText(event: KeyboardEvent) {
+    const charCode = event.key; // Lấy mã ký tự từ sự kiện
+    const isText = /^[a-zA-Z\s]*$/.test(charCode); // Kiểm tra xem ký tự là văn bản
+    // Nếu không phải là văn bản, ngăn chặn hành động mặc định của phím
+    if (!isText) {
+      event.preventDefault();
+    }
+  }
+
+  static onKeyPressTextNumberNoSpacebar(event: KeyboardEvent) {
+    const charCode = event.key; // Lấy mã ký tự từ sự kiện
+    const isAlphanumeric = /^[a-zA-Z0-9]*$/.test(charCode); // Kiểm tra xem ký tự là văn bản hoặc số
+    // Nếu không phải là văn bản hoặc số, ngăn chặn hành động mặc định của phím
+    if (!isAlphanumeric) {
+      event.preventDefault();
+    }
+  }
+
+  static onKeyPressTextNumber(event: KeyboardEvent) {
+    const charCode = event.key; // Lấy mã ký tự từ sự kiện
+    const isAllowedChar = /^[a-zA-Z0-9\s]*$/.test(charCode); // Kiểm tra xem ký tự là văn bản, số hoặc khoảng trắng
+    // Nếu không phải là văn bản, số hoặc khoảng trắng, ngăn chặn hành động mặc định của phím
+    if (!isAllowedChar) {
+      event.preventDefault();
+    }
+  }
   //   sách https://theme.hstatic.net/1000230347/1000782290/14/menu_icon_8.png?v=20386
   // buts https://theme.hstatic.net/1000230347/1000782290/14/menu_icon_1.png?v=20386
   // dungj cuj hoc tap

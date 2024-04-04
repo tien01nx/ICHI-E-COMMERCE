@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../../service/auth.service';
+import { Utils } from '../../../Utils.ts/utils';
 
 @Component({
   selector: 'app-forget-password',
@@ -18,7 +19,7 @@ import { AuthService } from '../../../service/auth.service';
 })
 export class ForgotPasswordComponent {
   errorMessage: string = '';
-
+  protected readonly Utils = Utils;
   constructor(
     private authServer: AuthService,
     private activatedRoute: ActivatedRoute,
@@ -27,7 +28,10 @@ export class ForgotPasswordComponent {
   ) {}
 
   userForm: FormGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.pattern(Utils.checkEmail),
+    ]),
   });
 
   userLogin() {
@@ -37,8 +41,6 @@ export class ForgotPasswordComponent {
           this.userForm.reset();
           debugger; // tslint:disable-line
           console.log(response.message);
-
-          // nếu message trả về là "Gửi email thành công" thì hiển thị thông báo thành công
           if (response.message === 'Gửi email thành công') {
             this.router.navigate(['/login']);
             this.toastr.success(response.message, 'Thông báo');
