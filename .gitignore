@@ -102,3 +102,4 @@ ICHI_TEST/obj/ICHI_TEST.csproj.nuget.g.props
 ICHI_TEST/obj/project.assets.json
 ICHI_TEST/obj/project.nuget.cache
 ICHI_TEST/bin/Debug/net7.0/CoverletSourceRootsMapping
+*.txt
