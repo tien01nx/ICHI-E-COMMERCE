@@ -1,3 +1,4 @@
+import { OrderComponent } from './components/admin/order/order.component';
 import { CustomerComponent } from './components/admin/customer/customer.component';
 import { ClientLayoutComponent } from './components/client/client-layout/client-layout.component';
 import { DetailProductComponent } from './components/client/detail-product/detail-product.component';
@@ -56,6 +57,7 @@ export const routes: Routes = [
         path: 'insert_inventory_receipts',
         component: InsertInventoryReceiptsComponent,
       },
+      { path: 'order', component: OrderComponent },
       {
         path: 'insert_inventory_receipts/:id',
         component: InsertInventoryReceiptsComponent,
@@ -66,10 +68,18 @@ export const routes: Routes = [
   { path: '', component: ClientLayoutComponent },
   { path: 'product_detail/:id', component: DetailProductComponent },
   { path: 'product_filter/:categoryName', component: ProductsFilterComponent },
-  { path: 'cart', component: CartComponent },
-  { path: 'checkout', component: CheckoutComponent },
-  { path: 'checkout/:id', component: CheckoutComponent },
-  { path: 'shipping_info', component: ShippingInfoComponent },
+  { path: 'cart', component: CartComponent, canActivate: [UserGuard] },
+  { path: 'checkout', component: CheckoutComponent, canActivate: [UserGuard] },
+  {
+    path: 'checkout/:id',
+    component: CheckoutComponent,
+    canActivate: [UserGuard],
+  },
+  {
+    path: 'shipping_info',
+    component: ShippingInfoComponent,
+    canActivate: [UserGuard],
+  },
   { path: 'login', component: SignInComponent },
   { path: 'register', component: SignUpComponent },
   { path: 'forgot_password', component: ForgotPasswordComponent },

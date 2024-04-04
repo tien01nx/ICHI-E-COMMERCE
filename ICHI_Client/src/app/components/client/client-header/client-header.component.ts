@@ -11,6 +11,7 @@ import { TrxTransactionService } from '../../../service/trx-transaction.service'
 })
 export class ClientHeaderComponent {
   cartItemCount: number = 0;
+  email = this.tokenService.getUserEmail();
   constructor(
     private tokenService: TokenService,
     private router: Router,
@@ -24,11 +25,18 @@ export class ClientHeaderComponent {
       .subscribe((count) => {
         this.cartItemCount = count;
       });
+    console.log('object111', this.email);
   }
+
   signout() {
     this.tokenService.removeToken();
-    this.router.navigate(['/']);
+    // this.router.navigate(['/']);
+    window.location.href = '/';
     this.toastr.success('Đăng xuất thành công');
+  }
+
+  login() {
+    this.router.navigate(['login']);
   }
 
   resetPassword() {

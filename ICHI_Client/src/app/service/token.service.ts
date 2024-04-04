@@ -35,6 +35,7 @@ export class TokenService {
   getUserEmail(): string {
     const token = localStorage.getItem(this.TOKEN_KEY);
     const decodedToken = token ? this.jwtHelper.decodeToken(token) : null;
+    if (decodedToken === null) return "";
     return decodedToken.sub;
   }
 

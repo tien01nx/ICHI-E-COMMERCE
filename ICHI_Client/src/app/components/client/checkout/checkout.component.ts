@@ -1,3 +1,4 @@
+import { CartModel } from './../../../models/cart.model';
 import { Environment } from './../../../environment/environment';
 import { Component, OnInit } from '@angular/core';
 import { ClientFooterComponent } from '../client-footer/client-footer.component';
@@ -10,6 +11,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ShoppingCartDTO } from '../../../dtos/shopping.cart.dto.';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TrxTransactionDTO } from '../../../dtos/trxtransaction.dto';
+import { CartProductDTO } from '../../../dtos/cart.product.dto';
+import { Utils } from '../../../Utils.ts/utils';
 
 @Component({
   selector: 'app-checkout',
@@ -18,6 +21,11 @@ import { TrxTransactionDTO } from '../../../dtos/trxtransaction.dto';
 })
 export class CheckoutComponent implements OnInit {
   shoppingcartdto!: ShoppingCartDTO;
+  cartProductDTO!: CartProductDTO;
+  carts: CartModel[] = [];
+  priceDiscount: number = 0;
+  priceShip = 30000;
+  paymentsType: any;
   Environment = Environment;
   trxTransactionDTO!: TrxTransactionDTO;
   titleStatus: string = '';
@@ -35,6 +43,7 @@ export class CheckoutComponent implements OnInit {
       Validators.pattern('^0[0-9]{9}$'),
     ]),
     address: new FormControl('', [Validators.required]),
+    paymentTypes: new FormControl('', [Validators.required]),
   });
 
   constructor(
@@ -51,18 +60,22 @@ export class CheckoutComponent implements OnInit {
     } else {
       this.getInitDataId(this.activatedRoute.snapshot.params['id']);
     }
+    this.paymentsType = Utils.paymentTypes;
   }
 
   getInitDataId(id: number) {
     this.cartService.GetTrxTransactionFindById(id).subscribe({
       next: (response: any) => {
+        console.log('dataPay', response.data);
         this.shoppingcartdto = response.data;
         this.trxTransacForm.setValue({
           userId: this.tokenService.getUserEmail(),
           phoneNumber: this.shoppingcartdto.trxTransaction.phoneNumber,
           fullName: this.shoppingcartdto.trxTransaction.fullName,
           address: this.shoppingcartdto.trxTransaction.address,
+          paymentTypes: this.shoppingcartdto.trxTransaction.paymentTypes,
         });
+        console.log('object11', this.trxTransacForm.value);
         if (
           this.shoppingcartdto &&
           this.shoppingcartdto.trxTransaction.paymentStatus === 'Approved'
@@ -85,54 +98,72 @@ export class CheckoutComponent implements OnInit {
   }
 
   getInitData() {
-    this.cartService
-      .GetTrxTransaction(this.tokenService.getUserEmail())
-      .subscribe({
-        next: (response: any) => {
-          this.shoppingcartdto = response.data;
+    this.cartProductDTO = new CartProductDTO(
+      this.tokenService.getUserEmail(),
+      this.cartService.getCarts()
+    );
 
-          this.trxTransacForm.setValue({
-            userId: this.tokenService.getUserEmail(),
-            phoneNumber: this.shoppingcartdto.trxTransaction.phoneNumber,
-            fullName: this.shoppingcartdto.trxTransaction.fullName,
-            address: this.shoppingcartdto.trxTransaction.address,
-          });
-          this.isDisplayNone = true;
+    this.cartService.GetTrxTransaction(this.cartProductDTO).subscribe({
+      next: (response: any) => {
+        console.log('responsecheck', response.data);
+        this.shoppingcartdto = response.data;
 
-          this.titleStatus = 'Tiến hành thanh toán';
-        },
-        error: (error: any) => {
-          this.toastr.error('Lỗi lấy thông tin giỏ hàng', 'Thông báo');
-        },
-      });
+        this.trxTransacForm.setValue({
+          userId: this.tokenService.getUserEmail(),
+          phoneNumber: this.shoppingcartdto.trxTransaction.phoneNumber,
+          fullName: this.shoppingcartdto.trxTransaction.fullName,
+          address: this.shoppingcartdto.trxTransaction.address,
+          paymentTypes: this.shoppingcartdto.trxTransaction.paymentTypes,
+        });
+        // tính ra số tiền giảm giá của sản phẩm trong giỏ hàng bằng khi discount > 0 => sản phẩm cần tính giảm giá => số tiền giảm giá sản phẩm đó
+        // duyệt qua từng sản phẩm trong giỏ hàng
+        this.shoppingcartdto.cart.forEach((item) => {
+          // nếu discount > 0 thì tính ra số tiền giảm giá của sản phẩm đó
+          if (item.discount > 0) {
+            this.priceDiscount +=
+              item.price * item.quantity * (item.discount / 100);
+          }
+        });
+        this.isDisplayNone = true;
+        this.titleStatus = 'Đặt hàng';
+      },
+      error: (error: any) => {
+        this.toastr.error('Lỗi lấy thông tin giỏ hàng', 'Thông báo');
+      },
+    });
   }
   getTotalPrice(): number {
-    // debugger;
+    let totalPrice = 0; // Khởi tạo biến tổng giá tiền
+    console.log('id', this.shoppingcartdto);
     // Kiểm tra xem this.shoppingcartdto đã được xác định và có giá trị không
-    if (this.shoppingcartdto && this.shoppingcartdto.cart === undefined) {
+    if (this.shoppingcartdto.cart === null) {
       // nếu shoppingcartdto.cart không tồn tại thì lấy dữ liệu từ shoppingcartdto.transactionDetail
-      return this.shoppingcartdto.transactionDetail.reduce((acc, item) => {
-        return acc + item.total * item.price;
-      }, 0);
+      this.shoppingcartdto.transactionDetail.forEach((item) => {
+        totalPrice += item.total * item.price;
+      });
     }
 
     // Nếu shoppingcartdto hoặc shoppingcartdto.cart không tồn tại, hoặc có giá trị,
     // thì trả về 0 hoặc một giá trị mặc định khác tùy thuộc vào yêu cầu của bạn.
-    if (!this.shoppingcartdto || !this.shoppingcartdto.cart) {
-      return this.shoppingcartdto.transactionDetail.reduce((acc, item) => {
-        return acc + item.total * item.price;
-      }, 0);
-    }
+    // if (!this.shoppingcartdto || !this.shoppingcartdto.cart) {
+    //   return this.shoppingcartdto.transactionDetail.reduce((acc, item) => {
+    //     return acc + item.total * item.price;
+    //   }, 0);
+    // }
 
-    // Nếu shoppingcartdto và shoppingcartdto.cart đều tồn tại và có giá trị,
-    // thực hiện tính toán tổng giá trị của các mặt hàng trong giỏ hàng.
-    return this.shoppingcartdto.cart.reduce((acc, item) => {
-      return acc + item.quantity * item.price;
-    }, 0);
+    // Nếu shoppingcartdto.cart tồn tại, duyệt qua từng sản phẩm trong giỏ hàng và tính tổng giá tiền
+    // Nếu shoppingcartdto.cart tồn tại, duyệt qua từng sản phẩm trong giỏ hàng và tính tổng giá tiền
+    if (this.shoppingcartdto.cart) {
+      this.shoppingcartdto.cart.forEach((item) => {
+        totalPrice += item.price * item.quantity; // Tính tổng giá tiền
+      });
+    }
+    totalPrice = totalPrice - this.priceDiscount + this.priceShip; // Trừ giảm giá và cộng phí ship
+
+    return totalPrice;
   }
 
   submit() {
-    trxtransactionId: Number;
     // nếu url có id thì set giá trị cho trxtransactionId và không có thì set = 0
     if (this.activatedRoute.snapshot.params['id'] === undefined) {
       this.trxTransactionDTO = new TrxTransactionDTO(
@@ -141,25 +172,34 @@ export class CheckoutComponent implements OnInit {
         this.trxTransacForm.value?.fullName || '',
         this.trxTransacForm.value?.phoneNumber || '',
         this.trxTransacForm.value?.address || '',
-        this.getTotalPrice()
-      );
-    } else {
-      this.trxTransactionDTO = new TrxTransactionDTO(
-        this.activatedRoute.snapshot.params['id'],
-        this.tokenService.getUserEmail(),
-        this.trxTransacForm.value?.fullName || '',
-        this.trxTransacForm.value?.phoneNumber || '',
-        this.trxTransacForm.value?.address || '',
-        this.getTotalPrice()
+        this.getTotalPrice(),
+        this.trxTransacForm.value?.paymentTypes || '',
+        this.shoppingcartdto.cart
       );
     }
+
     this.cartService.PaymentExecute(this.trxTransactionDTO).subscribe({
       next: (response: any) => {
-        console.log('response', response.data);
-        //chuyển trang sau khi đặt hàng thành công
-        window.location.href = response.data;
-        this.toastr.success('Đặt hàng thành công', 'Thông báo');
-        // this.router.navigate(['/client/home']);
+        debugger;
+        if (
+          response.data &&
+          typeof response.data === 'string' &&
+          (response.data.startsWith('http://') ||
+            response.data.startsWith('https://'))
+        ) {
+          window.location.href = response.data;
+          this.cartService.removeCarts();
+          this.router.navigate(['/login']);
+        } else {
+          this.toastr.success(
+            'Đặt hàng thành công vui lòng đợi phê duyệt!',
+            'Thông báo'
+          );
+          this.isDisplayNone = false;
+          this.router.navigate(['/']);
+          // Handle other cases, such as routing to another page
+          // For example, you can use this.router.navigate([some_other_route]);
+        }
       },
       error: (error: any) => {
         this.toastr.error('Lỗi đặt hàng', 'Thông báo');

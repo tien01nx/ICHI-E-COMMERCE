@@ -4,20 +4,19 @@
 <!-- <section> begin ============================-->
 <section class="pt-5 pb-9">
   <div class="container-small">
-    <nav class="mb-2" aria-label="breadcrumb">
+    <!-- <nav class="mb-2" aria-label="breadcrumb">
       <ol class="breadcrumb mb-0">
         <li class="breadcrumb-item"><a href="#!">Page 1</a></li>
         <li class="breadcrumb-item"><a href="#!">Page 2</a></li>
         <li class="breadcrumb-item active" aria-current="page">Default</li>
       </ol>
-    </nav>
+    </nav> -->
     <h2 class="mb-5">Kiểm tra</h2>
     <div class="row justify-content-between">
       <div class="col-lg-7 col-xl-7">
         <form class="form" [formGroup]="trxTransacForm">
           <div class="d-flex align-items-end">
             <h3 class="mb-0 me-3">Chi tiết vận chuyển</h3>
-            <button class="btn btn-link p-0" type="button">Edit</button>
           </div>
           <table class="table table-borderless mt-4">
             <tbody>
@@ -138,6 +137,41 @@
                   </small>
                 </td>
               </tr>
+
+              <tr>
+                <td class="py-2 ps-0">
+                  <div class="d-flex">
+                    <span
+                      class="fs-3 me-2"
+                      data-feather="phone"
+                      style="height: 16px; width: 16px"
+                    >
+                    </span>
+                    <h5 class="lh-sm me-4">Phương thức thanh toán</h5>
+                  </div>
+                </td>
+                <td class="py-2 fw-bold lh-sm">:</td>
+                <td class="py-2 px-3">
+                  <ng-select
+                    style="height: 16px; width: 400px"
+                    [items]="paymentsType"
+                    bindValue="paymentTypes"
+                    bindLabel="name"
+                    placeholder="Chọn phương thức thanh toán"
+                    formControlName="paymentTypes"
+                  ></ng-select>
+                  <small
+                    class="text-danger mt-1"
+                    *ngIf="trxTransacForm['controls']['paymentTypes'].dirty"
+                  >
+                    <span
+                      *ngIf="trxTransacForm['controls']['paymentTypes'].errors?.['required']"
+                    >
+                      Phương thức thanh toán không được để trống
+                    </span>
+                  </small>
+                </td>
+              </tr>
             </tbody>
           </table>
           <hr class="my-6" />
@@ -156,12 +190,12 @@
           </div>
         </form>
       </div>
-      <div class="col-lg-5 col-xl-4">
+      <div class="col-lg-5 col-xl-5">
         <div class="card mt-3 mt-lg-0">
           <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
               <h3 class="mb-0">Chi tiết đơn hàng</h3>
-              <button class="btn btn-link pe-0" type="button">Edit cart</button>
+              <!-- <button class="btn btn-link pe-0" type="button">Edit cart</button> -->
             </div>
             <div class="border-dashed border-bottom border-translucent mt-4">
               <!-- Nếu shoppingcartdto.cart không có dữ liệu thì lấy dữ liệu từ transactiondetail đổ ra -->
@@ -200,7 +234,7 @@
                     </div>
                     <div class="col-2 ps-0">
                       <h5 class="mb-0 fw-semibold text-end">
-                        {{ item.quantity * item.price }}
+                        {{ item.quantity * item.price | number : "1.0-0" }}
                       </h5>
                     </div>
                   </div>
@@ -232,16 +266,31 @@
                     </div>
                     <div class="col-2 ps-0">
                       <h5 class="mb-0 fw-semibold text-end">
-                        {{ item.total * item.price }}
+                        {{ item.total * item.price | number : "1.0-0" }}
                       </h5>
                     </div>
                   </div>
                 </div>
               </ng-template>
             </div>
+            <div
+              class="d-flex justify-content-between"
+              *ngIf="priceDiscount > 0"
+            >
+              <p class="text-body fw-semibold">Giảm giá :</p>
+              <p class="text-danger fw-semibold">
+                {{ priceDiscount | number : "1.0-0" }}
+              </p>
+            </div>
+            <div class="d-flex justify-content-between">
+              <p class="text-body fw-semibold">Phí vận chuyển:</p>
+              <p class="fw-semibold">
+                {{ priceShip | number : "1.0-0" }}
+              </p>
+            </div>
             <div class="d-flex justify-content-between border-dashed-y pt-3">
-              <h4 class="mb-0">Thành tiền :</h4>
-              <h4 class="mb-0">{{ getTotalPrice() }}</h4>
+              <h4 class="mb-0">Tổng tiền :</h4>
+              <h4 class="mb-0">{{ getTotalPrice() | number : "1.0-0" }}</h4>
             </div>
           </div>
         </div>

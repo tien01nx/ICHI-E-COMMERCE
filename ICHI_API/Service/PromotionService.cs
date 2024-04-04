@@ -160,7 +160,6 @@ namespace ICHI_API.Service
       }
     }
 
-
     public PromotionDTO Update(PromotionDTO model, out string strMessage)
     {
       strMessage = string.Empty;
@@ -307,6 +306,27 @@ namespace ICHI_API.Service
     }
 
     // check hiện tại chương trình khuyến mãi có hoạt động không
+
+    public IEnumerable<PromotionDetail> CheckPromotionActive()
+    {
+      try
+      {
+        DateTime toDay = DateTime.Today.AddSeconds(-1);
+        var data = _unitOfWork.Promotion.GetAll(u => u.isActive == true && u.isDeleted == false && u.EndTime >= toDay).AsQueryable();
+        var promotionDetails = _unitOfWork.PromotionDetail.GetAll(u => u.Promotion.isActive == true && u.Promotion.isDeleted == false && u.UsedCodesCount < u.Quantity, "Product").AsQueryable();
+        List<PromotionDetail> promotionDetailList = new List<PromotionDetail>();
+        foreach (var item in data)
+        {
+          var promotionDetail = promotionDetails.Where(u => u.PromotionId == item.Id).ToList();
+          promotionDetailList.AddRange(promotionDetail);
+        }
+        return promotionDetailList;
+      }
+      catch (Exception ex)
+      {
+        return null;
+      }
+    }
 
   }
 }

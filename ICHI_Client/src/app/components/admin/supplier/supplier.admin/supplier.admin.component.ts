@@ -40,7 +40,11 @@ export class SupplierAdminComponent implements OnInit {
       Validators.required,
       Validators.maxLength(50),
     ]),
-    address: new FormControl('', [Validators.maxLength(100)]),
+    address: new FormControl('', [
+      Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(100),
+    ]),
     phoneNumber: new FormControl('', [
       Validators.required,
       Validators.maxLength(10),

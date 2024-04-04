@@ -125,7 +125,7 @@
                           | number : "1.0-0"
                       }}
                     </p>
-                    <div *ngIf="item.discount !== null">
+                    <div *ngIf="item.discount !== 0">
                       <del>{{ item.product.price | number : "1.0-0" }}</del>
                       <h6 class="text-danger" style="display: inline">
                         (-{{ item.discount }}%)
@@ -204,7 +204,10 @@
                   {{ getTotalPrice() | number : "1.0-0" }}
                 </p>
               </div>
-              <div class="d-flex justify-content-between">
+              <div
+                class="d-flex justify-content-between"
+                *ngIf="getTotalDiscount() > 0"
+              >
                 <p class="text-body fw-semibold">Giảm giá :</p>
                 <p class="text-danger fw-semibold">
                   {{ getTotalDiscount() | number : "1.0-0" }}

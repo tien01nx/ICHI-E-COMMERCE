@@ -8,6 +8,7 @@ export interface TrxTransactionModel extends MasterEntity {
   shoppingDate: Date;
   orderTotal: number;
   orderStatus: string;
+  paymentTypes: string;
   paymentStatus: string;
   paymentDate: Date;
   sessionId: string;

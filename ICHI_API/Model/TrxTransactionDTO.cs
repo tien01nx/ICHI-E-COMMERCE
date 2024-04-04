@@ -1,4 +1,6 @@
-﻿namespace ICHI_API.Model
+﻿using ICHI_CORE.Domain.MasterModel;
+
+namespace ICHI_API.Model
 {
   public class TrxTransactionDTO
   {
@@ -11,6 +13,10 @@
     public string PhoneNumber { get; set; }
 
     public string Address { get; set; }
+
+    public string PaymentTypes { get; set; }
+
+    public List<Cart> Carts { get; set; }
 
     public decimal? Amount { get; set; }
   }

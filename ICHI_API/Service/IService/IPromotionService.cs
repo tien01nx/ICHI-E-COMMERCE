@@ -17,5 +17,7 @@ namespace ICHI_API.Service.IService
 
     bool CheckProductPromotion(IQueryable<PromotionDetail> data, DateTime StartTime, DateTime EndTime);
 
+    IEnumerable<PromotionDetail> CheckPromotionActive();
+
   }
 }

@@ -10,7 +10,7 @@ namespace ICHI_API.Service.IService
 
     Cart DeleteCart(Cart cart, out string strMessage);
 
-    ShoppingCartVM GetShoppingCart(string email, out string strMessage);
+    ShoppingCartVM GetShoppingCart(string email, List<Cart> carts, out string strMessage);
 
     Cart UpdateCart(Cart cart, out string strMessage);
 

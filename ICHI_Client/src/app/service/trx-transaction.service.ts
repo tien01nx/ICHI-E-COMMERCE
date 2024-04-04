@@ -9,6 +9,7 @@ import {
   catchError,
   map,
   mergeMap,
+  of,
   tap,
   throwError,
 } from 'rxjs';
@@ -17,6 +18,7 @@ import { ApiServiceService } from './api.service.service';
 import { ShoppingCartDTO } from '../dtos/shopping.cart.dto.';
 import { Utils } from '../Utils.ts/utils';
 import { CartModel } from '../models/cart.model';
+import { CartProductDTO } from '../dtos/cart.product.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -42,6 +44,10 @@ export class TrxTransactionService {
   setCarts(carts: CartModel[]): void {
     const cartsString = JSON.stringify(carts);
     localStorage.setItem(Utils.cartList, cartsString);
+  }
+
+  removeCarts(): void {
+    localStorage.removeItem(Utils.cartList);
   }
 
   getCartByUserId(userId: string): Observable<any[]> {
@@ -100,10 +106,8 @@ export class TrxTransactionService {
     return this.http.delete(this.baseUrl + '/Cart/DeleteCart', options);
   }
 
-  GetTrxTransaction(userId: string) {
-    return this.http.get(
-      this.baseUrl + '/Cart/GetShoppingCart?email=' + userId
-    );
+  GetTrxTransaction(cartProduct: CartProductDTO) {
+    return this.http.post(this.baseUrl + '/Cart/GetShoppingCart', cartProduct);
   }
 
   GetTrxTransactionFindById(id: number) {
@@ -123,15 +127,15 @@ export class TrxTransactionService {
   }
   vnpaydto!: VnPaymentRequestDTO;
 
-  PaymentExecute(model: TrxTransactionDTO) {
-    debugger;
-    let requestObservable: Observable<any>;
-
-    if (model.trxTransactionId === 0) {
-      requestObservable = this.http
-        .post(this.baseUrl + '/TrxTransaction/InsertTxTransaction', model)
-        .pipe(
-          mergeMap((response: any) => {
+  PaymentExecute(model: TrxTransactionDTO): Observable<any> {
+    return this.http
+      .post(this.baseUrl + '/TrxTransaction/InsertTxTransaction', model)
+      .pipe(
+        mergeMap((response: any) => {
+          if (
+            response.data &&
+            response.data.paymentTypes === Utils.PaymentViaCard
+          ) {
             const vnpaydto = new VnPaymentRequestDTO(
               response.data.trxTransactionId,
               response.data.fullName,
@@ -139,20 +143,12 @@ export class TrxTransactionService {
               new Date()
             );
             return this.createPaymentUrl(vnpaydto);
-          }),
-          catchError((error: any) => throwError(error))
-        );
-    } else {
-      const vnpaydto = new VnPaymentRequestDTO(
-        model.trxTransactionId,
-        model.fullName,
-        model.amount,
-        new Date()
+          } else {
+            // Return data for routing to another page if payment type is not via card
+            return of(response.data);
+          }
+        })
       );
-      requestObservable = this.createPaymentUrl(vnpaydto);
-    }
-
-    return requestObservable;
   }
 
   private createPaymentUrl(vnpaydto: VnPaymentRequestDTO): Observable<any> {

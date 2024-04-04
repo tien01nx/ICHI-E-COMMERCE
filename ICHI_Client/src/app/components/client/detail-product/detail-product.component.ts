@@ -15,6 +15,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TokenService } from '../../../service/token.service';
 import { TrxTransactionService } from '../../../service/trx-transaction.service';
 import { ToastrService } from 'ngx-toastr';
+import { CategoryService } from '../../../service/category-product.service';
 
 @Component({
   selector: 'app-detail-product',
@@ -26,9 +27,12 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
   productdto: any;
   errorMessage: string = '';
   cart: InsertCartDTO = new InsertCartDTO('', 0, 0, 1);
+  category!: CategoryProduct;
+  categories: CategoryProduct[] = [];
   constructor(
     private activatedRoute: ActivatedRoute,
     private productService: ProductsService,
+    private categoryService: CategoryService,
     private tokenService: TokenService,
     private toastr: ToastrService,
     private router: Router,
@@ -37,6 +41,7 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
   ) {}
   ngAfterViewInit(): void {
     // this.ratingInit();
+    console.log('object', this.category);
   }
 
   ngOnInit(): void {
@@ -47,7 +52,17 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
     this.productService.findById(id).subscribe({
       next: (respon: any) => {
         this.productdto = respon.data;
-        console.log(this.productdto);
+        this.category = respon.data.categoryProduct;
+        this.getParent();
+      },
+    });
+  }
+
+  getParent() {
+    this.categoryService.getParentId(this.category).subscribe({
+      next: (respon: any) => {
+        this.categories = respon.data;
+        console.log('list', this.categories);
       },
     });
   }
@@ -124,5 +139,9 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
         // this.isDisplayNone = false;
       },
     });
+  }
+
+  productCategory(category: CategoryProduct) {
+    this.router.navigate(['/product_filter', category.categoryName]);
   }
 }

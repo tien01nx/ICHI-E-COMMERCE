@@ -74,6 +74,13 @@ export class CategoryService {
     );
   }
 
+  getParentId(category: CategoryProduct) {
+    return this.http.post(
+      this.apiBaseUrl + '/CategoryProduct/GetCategoryLevels',
+      category
+    );
+  }
+
   update(category: CategoryProduct) {
     return this.apiService.callApi<CategoryProduct>(
       '/CategoryProduct/Update',

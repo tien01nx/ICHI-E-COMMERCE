@@ -19,6 +19,7 @@ import { SwiperConfigInterface } from 'ngx-swiper-wrapper';
 import { SwiperOptions } from 'swiper/types/swiper-options';
 import { SwiperContainer } from 'swiper/element/swiper-element';
 import { CategoryService } from '../../../service/category-product.service';
+import { Utils } from '../../../Utils.ts/utils';
 
 @Component({
   selector: 'app-home',
@@ -105,5 +106,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   productFilter(categoryName: string) {
     this.router.navigate(['/product_filter/' + categoryName]);
+  }
+
+  getImageUrl(categoryName: string): string {
+    const category = Utils.categories.find((cat) => cat.name === categoryName);
+    return category ? category.image : '';
   }
 }

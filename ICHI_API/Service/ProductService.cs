@@ -1,20 +1,16 @@
 ﻿namespace ICHI_API.Service
 {
-  using System.Data;
-  using System.Linq;
-  using System.Linq.Dynamic.Core;
-  using System.Reflection.Metadata;
   using ICHI.DataAccess.Repository.IRepository;
   using ICHI_API.Data;
   using ICHI_API.Model;
   using ICHI_API.Service.IService;
   using ICHI_CORE.Domain.MasterModel;
   using ICHI_CORE.Helpers;
-  using ICHI_CORE.Model;
   using ICHI_CORE.NlogConfig;
   using Microsoft.AspNetCore.Hosting;
-  using Microsoft.AspNetCore.Http.HttpResults;
-  using Microsoft.EntityFrameworkCore.Metadata.Internal;
+  using System.Data;
+  using System.Linq;
+  using System.Linq.Dynamic.Core;
 
   public class ProductService : IProductService
   {
@@ -23,14 +19,16 @@
     private PcsApiContext _db;
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly ICategoryProductService _categoryProductService;
+    private readonly IPromotionService _promotionService;
 
 
-    public ProductService(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment, PcsApiContext pcsApiContext, ICategoryProductService categoryProductService)
+    public ProductService(IUnitOfWork unitOfWork, IPromotionService promotionService, IWebHostEnvironment webHostEnvironment, PcsApiContext pcsApiContext, ICategoryProductService categoryProductService)
     {
+      _db = pcsApiContext;
       _unitOfWork = unitOfWork;
       _webHostEnvironment = webHostEnvironment;
-      _db = pcsApiContext;
       _categoryProductService = categoryProductService;
+      _promotionService = promotionService;
     }
 
     public Helpers.PagedResult<ProductDTO> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
@@ -47,9 +45,11 @@
 
         var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
         query = query.OrderBy(orderBy);
+        var promotion = _promotionService.CheckPromotionActive();
         foreach (var item in query)
         {
-          item.Discount = _unitOfWork.PromotionDetail.Get(u => u.ProductId == item.Id, "Promotion")?.Promotion?.Discount ?? 0;
+          //item.Discount = _unitOfWork.PromotionDetail.Get(u => u.ProductId == item.Id, "Promotion")?.Promotion?.Discount ?? 0;
+          item.Discount = promotion.Where(u => u.ProductId == item.Id).FirstOrDefault()?.Promotion?.Discount ?? 0;
         }
 
         var pagedResult = Helpers.PagedResult<ProductDTO>.CreatePagedResult(query.Select(p => new ProductDTO

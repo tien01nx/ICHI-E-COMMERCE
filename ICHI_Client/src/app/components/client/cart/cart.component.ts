@@ -103,20 +103,6 @@ export class CartComponent implements OnInit {
       this.cartsOrder = this.carts;
     }
     this.cartService.setCarts(this.cartsOrder);
-    console.log('cartsOrder-localStorage', this.cartService.getCarts());
-    // check mã giảm giá
-    this.cartService.checkProductPromotion(this.cartsOrder).subscribe({
-      next: (response: any) => {
-        if (response.code === 200) {
-          this.router.navigate(['/checkout']);
-        } else {
-          this.toastr.error(response.message, 'Thông báo');
-        }
-      },
-      error: (error: any) => {
-        this.toastr.error('Lỗi kiểm tra mã giảm giá', 'Thông báo');
-      },
-    });
     this.router.navigate(['/checkout']);
   }
 
@@ -143,7 +129,11 @@ export class CartComponent implements OnInit {
     this.updateQuantity(cart, 1);
   }
   getTotalPriceItem(cart: CartModel): number {
-    return cart.quantity * cart.product.price;
+    // return cart.quantity * cart.product.price;
+    return (
+      cart.quantity * cart.product.price -
+      (cart.discount * cart.product.price) / 100
+    );
   }
 
   decreaseQuantity(cart: CartModel) {
@@ -151,16 +141,26 @@ export class CartComponent implements OnInit {
   }
 
   getTotalPrice(): number {
+    let totalPrice = 0;
     if (!this.isCheck) {
-      let totalPrice = 0;
+      console.log('object111', this.carts);
+      // nếu discount ===0 thì => discount ===1 để tránh lỗi chia cho 0
+      // suy ra totalPrice = quantity * price - (discount * price) / 100 ( xử lý nếu discount === 0 => discount === 1)
       this.carts.forEach((cart) => {
-        totalPrice += cart.quantity * cart.product.price;
+        if (cart.discount === 0) {
+          totalPrice += cart.quantity * cart.product.price;
+        } else {
+          totalPrice += cart.quantity * cart.product.price;
+        }
       });
       return totalPrice;
     } else {
-      let totalPrice = 0;
       this.cartsOrder?.forEach((cart) => {
-        totalPrice += cart.quantity * cart.product.price;
+        if (cart.discount === 0) {
+          totalPrice += cart.quantity * cart.product.price;
+        } else {
+          totalPrice += cart.quantity * cart.product.price;
+        }
       });
       return totalPrice;
     }

@@ -1,8 +1,8 @@
 ﻿namespace ICHI_CORE.Domain.MasterModel
 {
+  using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
   using System.ComponentModel.DataAnnotations;
   using System.ComponentModel.DataAnnotations.Schema;
-  using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
   public class TrxTransaction : MasterEntity
   {
@@ -24,6 +24,10 @@
 
     [Required(ErrorMessage = "Trạng thái đơn hàng là bắt buộc")]
     public string OrderStatus { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Phương thức thanh toán là bắt buộc")]
+
+    public string PaymentTypes { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Trạng thái thanh toán là bắt buộc")]
     public string PaymentStatus { get; set; } = string.Empty;

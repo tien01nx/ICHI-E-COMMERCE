@@ -64,12 +64,12 @@ namespace ICHI_API.Service
         {
           return null;
         }
-        var promotionDetail = _unitOfWork.PromotionDetail.GetAll(includeProperties: "Promotion").AsQueryable();
+        var promotionDetail = _promotionService.CheckPromotionActive();
         foreach (var item in data)
         {
           item.ProductImage = _unitOfWork.ProductImages.Get(u => u.ProductId == item.ProductId).ImagePath;
           item.SetCustomer(_unitOfWork.Customer.Get(u => u.UserId == item.UserId));
-          item.Discount = promotionDetail.Where(u => u.ProductId == item.ProductId).FirstOrDefault()?.Promotion?.Discount;
+          item.Discount = promotionDetail.Where(u => u.ProductId == item.ProductId).FirstOrDefault()?.Promotion?.Discount ?? 0;
         }
 
         return data;
@@ -87,12 +87,13 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var promotionDetail = _unitOfWork.PromotionDetail.GetAll(includeProperties: "Promotion").AsQueryable();
+        var promotionDetail = _promotionService.CheckPromotionActive();
+
         foreach (var item in carts)
         {
           item.ProductImage = _unitOfWork.ProductImages.Get(u => u.ProductId == item.ProductId).ImagePath;
           item.SetCustomer(_unitOfWork.Customer.Get(u => u.UserId == item.UserId));
-          item.Discount = promotionDetail.Where(u => u.ProductId == item.ProductId).FirstOrDefault()?.Promotion?.Discount;
+          item.Discount = promotionDetail.Where(u => u.ProductId == item.ProductId).FirstOrDefault()?.Promotion?.Discount ?? 0;
         }
         return carts;
       }
@@ -104,17 +105,13 @@ namespace ICHI_API.Service
       }
     }
 
-    public ShoppingCartVM GetShoppingCart(string email, out string strMessage)
+    public ShoppingCartVM GetShoppingCart(string email, List<Cart> carts, out string strMessage)
     {
       strMessage = string.Empty;
       try
       {
         ShoppingCartVM cartVM = new ShoppingCartVM();
-        cartVM.Cart = _unitOfWork.Cart.GetAll(u => u.UserId == email, "User,Product");
-        foreach (var item in cartVM.Cart)
-        {
-          item.ProductImage = _unitOfWork.ProductImages.Get(u => u.ProductId == item.ProductId).ImagePath;
-        }
+        cartVM.Cart = CheckCartPromotion(carts, out strMessage);
 
         // thực hiện lấy thông tin từ email và từ đó lấy ra role => bảng employee hay customer
         var roles = _unitOfWork.UserRole.Get(u => u.UserId == email, "User,Role");

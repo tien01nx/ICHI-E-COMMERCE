@@ -1,7 +1,7 @@
 <nav class="mb-2" aria-label="breadcrumb">
   <ol class="breadcrumb mb-0">
     <li class="breadcrumb-item"><a href="/admin">Trang chủ</a></li>
-    <li class="breadcrumb-item">Quản lý danh mục</li>
+    <li class="breadcrumb-item">Quản lý nhập hàng</li>
     <li class="breadcrumb-item active">Nhà cung cấp</li>
   </ol>
 </nav>
@@ -560,9 +560,23 @@
               ></textarea>
               <small
                 class="text-danger mt-1"
-                *ngIf="supplierForm['controls']['address'].dirty && supplierForm['controls']['address'].errors?.['maxlength']"
+                *ngIf="supplierForm['controls']['address'].dirty"
               >
-                Địa chỉ không được vượt quá 100 ký tự
+                <span
+                  *ngIf="supplierForm['controls']['address'].errors?.['required']"
+                >
+                  Địa chỉ không được để trống
+                </span>
+                <span
+                  *ngIf="supplierForm['controls']['address'].errors?.['maxlength']"
+                >
+                  Địa chỉ không được vượt quá 100 ký tự
+                </span>
+                <span
+                  *ngIf="supplierForm['controls']['address'].errors?.['minlength']"
+                >
+                  Địa chỉ tối thiểu 10 ký tự
+                </span>
               </small>
             </div>
           </div>

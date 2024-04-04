@@ -1,8 +1,8 @@
 ﻿namespace ICHI_CORE.Domain.MasterModel
 {
+  using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
   using System.ComponentModel.DataAnnotations;
   using System.ComponentModel.DataAnnotations.Schema;
-  using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
   public class InventoryReceipt : MasterEntity
   {
@@ -21,6 +21,5 @@
     [StringLength(255, ErrorMessage = "Ghi chú phải có tối đa 255 ký tự")]
     public string? Notes { get; set; } = string.Empty;
 
-    public bool IsActive { get; set; } = false;
   }
 }

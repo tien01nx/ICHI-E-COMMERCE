@@ -8,12 +8,13 @@
       <div class="container-small">
         <nav class="mb-3" aria-label="breadcrumb">
           <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="#">Thời trang</a></li>
-            <li class="breadcrumb-item">
-              <a href="#">Thời trang của phụ nữ</a>
+            <li class="breadcrumb-item" *ngFor="let item of categories">
+              <a (click)="productCategory(item)"> {{ item.categoryName }}</a>
             </li>
-            <li class="breadcrumb-item"><a href="#">giày dép</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Đồi</li>
+
+            <li class="breadcrumb-item active" aria-current="page">
+              {{ productdto?.product?.productName }}
+            </li>
           </ol>
         </nav>
         <form class="form" (submit)="onSubmit()">
@@ -107,7 +108,7 @@
                   </div>
                 </div>
               </div>
-              <div class="d-flex">
+              <!-- <div class="d-flex">
                 <button
                   class="btn btn-lg btn-outline-warning rounded-pill w-100 me-3 px-2 px-sm-4 fs-9 fs-sm-8"
                 >
@@ -119,15 +120,15 @@
                   <span class="fas fa-shopping-cart me-2"></span>
                   Thêm vào giỏ hàng
                 </button>
-              </div>
+              </div> -->
             </div>
             <div class="col-12 col-lg-6">
               <div class="d-flex flex-column justify-content-between h-100">
                 <div>
                   <div class="d-flex flex-wrap">
-                    <div class="me-2">
+                    <!-- <div class="me-2">
                       <span class="fa fa-star text-warning"></span>
-                    </div>
+                    </div> -->
                     <!-- <p class="text-primary fw-semibold mb-2">
                   6548 Người đánh giá và đánh giá
                   </p> -->
@@ -135,16 +136,18 @@
                   <h3 class="mb-3 lh-sm">
                     {{ productdto?.product?.productName }}
                   </h3>
-                  <div class="d-flex flex-wrap align-items-start mb-3">
+                  <!-- <div class="d-flex flex-wrap align-items-start mb-3">
                     <span
                       class="badge text-bg-success fs-9 rounded-pill me-2 fw-semibold"
                       >#1 Bán chạy nhất</span
                     ><a class="fw-semibold" href="#!"
                       >phân tích bán hàng ở Phoenix 2021</a
                     >
-                  </div>
+                  </div> -->
                   <div class="d-flex flex-wrap align-items-center">
-                    <h1 class="me-3">{{ productdto?.product?.price  | number : "1.0-0"  }}</h1>
+                    <h1 class="me-3">
+                      {{ productdto?.product?.price | number : "1.0-0" }}
+                    </h1>
 
                     <!-- <p
                     class="text-body-quaternary text-decoration-line-through fs-6 mb-0 me-3"
@@ -191,11 +194,17 @@
                           <span class="fas fa-plus"></span>
                         </button>
                       </div>
-                      <button class="btn btn-phoenix-primary px-3 border-0">
+                      <!-- <button class="btn btn-phoenix-primary px-3 border-0">
                         <span class="fas fa-share-alt fs-7"></span>
-                      </button>
+                      </button> -->
                     </div>
                   </div>
+                  <button
+                    class="btn btn-lg btn-warning rounded-pill w-100 fs-9 fs-sm-8 mt-3"
+                  >
+                    <span class="fas fa-shopping-cart me-2"></span>
+                    Thêm vào giỏ hàng
+                  </button>
                   <!-- <p class="text-success fw-semibold fs-7 mb-2">Trong kho</p>
                 <p class="mb-2 text-body-secondary">
                   <strong class="text-body-highlight"
