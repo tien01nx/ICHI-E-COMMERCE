@@ -1,1 +1,418 @@
-<p>order works!</p>
+<nav class="mb-2" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a href="#!">Trang 1</a></li>
+    <li class="breadcrumb-item"><a href="#!">Trang 2</a></li>
+    <li class="breadcrumb-item active">Mặc định</li>
+  </ol>
+</nav>
+<form
+  class="mb-9"
+  [formGroup]="productForm"
+  enctype="multipart/form-data"
+  (submit)="onSubmit()"
+>
+  <div class="row g-3 flex-between-end mb-5">
+    <div class="col-auto">
+      <h2 class="mb-2">Thêm một sản phẩm</h2>
+      <h5 class="text-body-tertiary fw-semibold">
+        Đơn đặt hàng được đặt trên cửa hàng của bạn
+      </h5>
+    </div>
+    <div class="col-auto">
+      <span
+        class="btn btn-danger mb-2 mb-sm-0 me-8"
+        (click)="deleteProduct(productForm.value.id)"
+      >
+        Xóa
+      </span>
+      <button class="btn btn-primary mb-2 mb-sm-0 me-8" type="submit">
+        Thêm
+      </button>
+    </div>
+
+    <ng-select [items]="products" bindLabel="productName" bindValue="id">
+      <ng-template ng-option-tmp let-item="item">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="checkbox"
+                />
+                <label class="form-check-label" for="checkbox">
+                  Check this checkbox
+                </label>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <img
+                *ngIf="item.image"
+                [src]="item.image"
+                alt="Product Image"
+                class="img-fluid"
+                style="max-width: 100px; max-height: 100px"
+              />
+            </div>
+            <div class="col-md-3">
+              <p>{{ item.productName }}</p>
+            </div>
+            <div class="col-md-3">
+              <p>Giá: {{ item.price }}</p>
+              <p>Số lượng tồn: {{ item.quantity }}</p>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ng-select>
+  </div>
+  <div class="row g-5">
+    <!-- Thông tin sản phẩm -->
+    <div class="col-12 col-xl-9">
+      <div class="row g-2">
+        <div class="col-12 col-xl-12">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h4 class="card-title mb-4">Thông tin</h4>
+              <div class="row gx-3">
+                <div class="col-12 col-sm-6 col-xl-12">
+                  <div class="mb-4">
+                    <div class="d-flex flex-wrap mb-2">
+                      <h5 class="mb-0 text-body-highlight me-2">
+                        Loại <sup class="text-danger">*</sup>
+                      </h5>
+                      <a class="fw-bold fs-9" href="/admin/categories"
+                        >Thêm danh mục mới</a
+                      >
+                    </div>
+                    <ng-select
+                      [items]="products"
+                      bindLabel="productName"
+                      bindValue="id"
+                      [multiple]="true"
+                    >
+                      <ng-template ng-option-tmp let-item="item">
+                        <div class="container">
+                          <div class="row">
+                            <div class="col-md-2">
+                              <img
+                                *ngIf="item.image"
+                                [src]="item.image"
+                                alt="Product Image"
+                                class="img-fluid"
+                                style="max-width: 100px; max-height: 100px"
+                              />
+                            </div>
+                            <div class="col-md-8 text-start">
+                              <p>{{ item.productName }}</p>
+                            </div>
+                            <div class="col-md-2">
+                              <p>Giá: {{ item.price }}</p>
+                              <p>Số lượng tồn: {{ item.quantity }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-12">
+                  <div class="mb-4">
+                    <div class="d-flex flex-wrap mb-2">
+                      <h5 class="mb-0 text-body-highlight me-2">
+                        Thương hiệu <sup class="text-danger">*</sup>
+                      </h5>
+                      <a class="fw-bold fs-9" href="/admin/trademark"
+                        >Thêm mới thương hiệu</a
+                      >
+                    </div>
+
+                    <ng-select
+                      formControlName="trademarkId"
+                      placeholder="Chọn thương hiệu"
+                    >
+                      <ng-option
+                        *ngFor="let trademark of trademarks"
+                        [value]="trademark.id"
+                      >
+                        {{ trademark.trademarkName }}
+                      </ng-option>
+                    </ng-select>
+                    <small
+                      class="text-danger mt-1"
+                      *ngIf="productForm['controls']['trademarkId'].dirty"
+                    >
+                      <span
+                        *ngIf="productForm['controls']['trademarkId'].errors?.['required']"
+                      >
+                        Thương hiệu không được để trống
+                      </span>
+                    </small>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-12">
+                  <div class="mb-4">
+                    <h5 class="mb-2 text-body-highlight">
+                      Màu sắc <sup class="text-danger">*</sup>
+                    </h5>
+                    <!-- <input
+                      class="form-control mb-xl-3"
+                      type="text"
+                      placeholder="Collection"
+                    /> -->
+                    <!-- <ng-select
+                      [items]="color"
+                      bindValue="name"
+                      bindLabel="name"
+                      formControlName="color"
+                    ></ng-select> -->
+                    <input
+                      class="form-control mb-xl-3"
+                      type="text"
+                      placeholder="Màu sắc"
+                      formControlName="color"
+                    />
+                    <small
+                      class="text-danger mt-1"
+                      *ngIf="productForm['controls']['color'].dirty"
+                    >
+                      <span
+                        *ngIf="productForm['controls']['color'].errors?.['maxLength']"
+                      >
+                        Màu sắc tối đa 30 kí tự
+                      </span>
+                    </small>
+                  </div>
+                </div>
+                <!-- thứ tự hiện thị sản phẩm -->
+                <div class="col-6 col -sm-6 col-xl-6">
+                  <div class="mb-4">
+                    <h5 class="mb-2 text-body-highlight">Thứ tự hiển thị</h5>
+                    <input
+                      class="form-control mb-xl-3"
+                      type="number"
+                      min="0"
+                      max="4"
+                      placeholder="Thứ tự hiển thị"
+                      formControlName="priorityLevel"
+                    />
+                  </div>
+                </div>
+                <div class="col-6 col -sm-6 col-xl-6">
+                  <div class="mb-4">
+                    <h5 class="mb-2 text-body-highlight">Trình trạng</h5>
+
+                    <!-- combobox -->
+                    <select
+                      class="form-control mb-xl-3"
+                      formControlName="isActive"
+                    >
+                      <option [value]="true">Đang bán</option>
+                      <option [value]="false">Ngừng bán</option>
+                    </select>
+
+                    <!-- <input
+                      class="form-control mb-xl-3"
+                      type="number"
+                      placeholder="Trình trạng bán sản phẩm"
+                      formControlName="isActive"
+                    /> -->
+                  </div>
+                </div>
+                <div class="col-12 col -sm-6 col-xl-12">
+                  <div class="mb-4">
+                    <h5 class="mb-2 text-body-highlight">Ghi chú</h5>
+                    <!-- <input
+                      class="form-control mb-xl-3"
+                      type="number"
+                      placeholder="Ghi chú"
+                      formControlName="notes"
+                    /> -->
+                    <textarea
+                      class="form-control"
+                      placeholder="Ghi chú"
+                      formControlName="notes"
+                      style="height: 100px"
+                    >
+                    </textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-xl-12">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title mb-4">Thông tin sản phẩm chi tiết</h4>
+              <div class="row g-3">
+                <div class="col-12 col-sm-6 col-xl-12">
+                  <div
+                    class="border-bottom viền-đường viền mờ-đường viền nét đứt-sm-0 border-bottom-xl pb-4"
+                  >
+                    <div class="d-flex flex-wrap mb-2">
+                      <h5 class="text-body-highlight me-2">
+                        Giá <sup class="text-danger"></sup>
+                      </h5>
+                    </div>
+
+                    <div class="input-group">
+                      <input
+                        class="form-control"
+                        type="number"
+                        placeholder="0"
+                        formControlName="price"
+                      />
+
+                      <span class="input-group-text">vnđ</span>
+                    </div>
+
+                    <div class="d-flex flex-wrap mb-2 mt-2">
+                      <h5 class="text-body-highlight me-2">Số lượng tồn</h5>
+                    </div>
+                    <div class="input-group">
+                      <input
+                        class="form-control"
+                        type="text"
+                        placeholder="0"
+                        formControlName="quantity"
+                        readonly
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- thông tin khách hàng -->
+    <div class="col-12 col-xl-3">
+      <div class="row g-2">
+        <div class="col-12 col-xl-12">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h4 class="card-title mb-4">Thông tin khách hàng</h4>
+              <div class="row gx-3">
+                <div class="col-12 col-sm-6 col-xl-12">
+                  <div class="mb-4">
+                    <div class="d-flex flex-wrap mb-2">
+                      <h5 class="mb-0 text-body-highlight me-2">
+                        Loại <sup class="text-danger">*</sup>
+                      </h5>
+                      <a class="fw-bold fs-9" href="/admin/categories"
+                        >Thêm danh mục mới</a
+                      >
+                    </div>
+                    <ng-select
+                      formControlName="categoryId"
+                      placeholder="Chọn danh mục"
+                    >
+                      <ng-option
+                        *ngFor="let category of categories"
+                        [value]="category.id"
+                      >
+                        {{ category.categoryName }}
+                      </ng-option>
+                    </ng-select>
+                    <small
+                      class="text-danger mt-1"
+                      *ngIf="
+                        productForm.get('categoryId')?.invalid &&
+                        (productForm.get('categoryId')?.dirty ||
+                          productForm.get('categoryId')?.touched)
+                      "
+                    >
+                      <span
+                        *ngIf="productForm.get('categoryId')?.errors?.['required']"
+                      >
+                        Danh mục không được để trống
+                      </span>
+                    </small>
+                  </div>
+                </div>
+                <div
+                  class="border-dashed border-bottom border-translucent mt-4"
+                >
+                  <div class="d-flex justify-content-between mb-2">
+                    <h5 class="text-body fw-semibold">Tên KH</h5>
+                    <h5 class="text-body fw-semibold">
+                      <span class="fas fa-times"></span>
+                    </h5>
+                  </div>
+                  <div class="d-flex justify-content-between mb-2">
+                    <h5 class="text-body fw-semibold">Tổng chi tiêu</h5>
+                    <h5 class="text-body fw-semibold">Số tiền</h5>
+                  </div>
+                  <div class="d-flex justify-content-between mb-2">
+                    <h5 class="text-body fw-semibold">Đơn gần nhất</h5>
+                    <h5 class="text-body fw-semibold">Mã hóa đơn</h5>
+                  </div>
+                  <hr class="bg-body-secondary mb-2 mt-2" />
+
+                  <div class="d-flex justify-content-between mb-2">
+                    <h5 class="text-body fw-semibold">Thông tin liên hệ:</h5>
+                    <h5 class="text-body fw-semibold">
+                      <button
+                        class="far fa-edit"
+                        type="button"
+                        aria-label="Close"
+                      ></button>
+                    </h5>
+                  </div>
+                  <div class="d-flex justify-content-between mb-3">
+                    <h5 class="text-body fw-semibold">Email</h5>
+                    <h5 class="text-body fw-semibold">Số điện thoại</h5>
+                  </div>
+                  <hr class="bg-body-secondary mb-2 mt-2" />
+                  <div class="d-flex justify-content-between mb-3">
+                    <h5 class="text-body fw-semibold">Địa chỉ giao hàng</h5>
+                    <h5 class="text-body fw-semibold">
+                      <button
+                        class="far fa-edit"
+                        type="button"
+                        aria-label="Close"
+                      ></button>
+                    </h5>
+                  </div>
+                  <div class="input-group mb-3">
+                    <textarea
+                      class="form-control"
+                      type="text"
+                      placeholder="Không có địa chỉ"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-xl-12">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title mb-4">Ghi chú</h4>
+              <div class="row g-3">
+                <div class="col-12 col-sm-6 col-xl-12">
+                  <div class="mb-4">
+                    <textarea
+                      class="form-control"
+                      placeholder="VD: Giao hàng trong giờ hành chính cho khách"
+                      formControlName="notes"
+                      style="height: 100px"
+                    >
+                    </textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<footer class="footer position-absolute"></footer>

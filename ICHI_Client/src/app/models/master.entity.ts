@@ -6,6 +6,4 @@ export interface MasterEntity {
   createBy: string;
   modifiedDate: Date;
   modifiedBy: string;
-
- 
 }

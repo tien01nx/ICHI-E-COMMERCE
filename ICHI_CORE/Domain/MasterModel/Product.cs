@@ -50,6 +50,9 @@
     [NotMapped]
     public double? Discount { get; set; }
 
+    [NotMapped]
+    public string? Image { get; set; } = "https://localhost:7150";
+
     public void SetPromotion(double promotion)
     {
       Discount = promotion;

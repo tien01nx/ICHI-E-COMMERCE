@@ -50,6 +50,7 @@
         {
           //item.Discount = _unitOfWork.PromotionDetail.Get(u => u.ProductId == item.Id, "Promotion")?.Promotion?.Discount ?? 0;
           item.Discount = promotion.Where(u => u.ProductId == item.Id).FirstOrDefault()?.Promotion?.Discount ?? 0;
+          item.Image += _unitOfWork.ProductImages.GetAll(u => u.ProductId == item.Id).FirstOrDefault()?.ImagePath;
         }
 
         var pagedResult = Helpers.PagedResult<ProductDTO>.CreatePagedResult(query.Select(p => new ProductDTO

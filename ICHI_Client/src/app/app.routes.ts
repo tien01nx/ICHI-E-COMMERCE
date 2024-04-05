@@ -63,7 +63,7 @@ export const routes: Routes = [
         component: InsertInventoryReceiptsComponent,
       },
     ],
-    canActivate: [AdminGuard], // Thêm guard vào đây
+    canActivate: [AdminGuard],
   },
   { path: '', component: ClientLayoutComponent },
   { path: 'product_detail/:id', component: DetailProductComponent },
