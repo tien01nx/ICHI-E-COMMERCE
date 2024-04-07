@@ -16,4 +16,5 @@ export interface ProductModel extends MasterEntity {
   productImages: any;
   discount: number;
   category: CategoryProduct;
+  batchNumber: number;
 }

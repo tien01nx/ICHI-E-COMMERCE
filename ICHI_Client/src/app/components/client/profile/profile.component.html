@@ -1,0 +1,784 @@
+<app-client-header></app-client-header>
+<app-client-menu></app-client-menu>
+<section class="pt-5 pb-9">
+  <div class="container-small">
+    <div class="row align-items-center justify-content-between g-3 mb-4">
+      <div class="col-auto">
+        <h2 class="mb-0">Thông tin cá nhân</h2>
+      </div>
+      <div class="col-auto">
+        <div class="row g-2 g-sm-3">
+          <div class="col-auto">
+            <!-- <button class="btn btn-phoenix-danger">
+              <span class="fas fa-trash-alt me-2"></span>Delete customer
+            </button> -->
+          </div>
+          <div class="col-auto">
+            <button
+              class="btn btn-phoenix-secondary"
+              (click)="openModalUpdate(customerTransaction?.customer)"
+              data-bs-target="#modalcustomer"
+              data-bs-toggle="modal"
+            >
+              <span class="fas fa-edit fs-9 ms-3 text-body-quaternary"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row g-3 mb-6">
+      <div class="col-12 col-lg-8">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="border-bottom border-dashed pb-4">
+              <div
+                class="row align-items-center g-3 g-sm-5 text-center text-sm-start"
+              >
+                <div class="col-12 col-sm-auto">
+                  <input class="d-none" id="avatarFile" type="file" /><label
+                    class="cursor-pointer avatar avatar-5xl"
+                    for="avatarFile"
+                    ><img
+                      class="rounded-circle"
+                      src="{{ Environment.apiBaseRoot }}{{
+                        customerTransaction?.customer?.user?.avatar
+                      }}"
+                      alt=""
+                  /></label>
+                </div>
+                <div class="col-12 col-sm-auto flex-1">
+                  <h3>{{ customerTransaction?.customer?.fullName }}</h3>
+                  <!-- <p class="text-body-secondary">Joined 3 months ago</p> -->
+                  <div>
+                    <!-- <a class="me-2" href="#!"
+                      ><span
+                        class="fab fa-linkedin-in text-body-quaternary text-opacity-75 text-primary-hover"
+                      ></span></a
+                    ><a class="me-2" href="#!"
+                      ><span
+                        class="fab fa-facebook text-body-quaternary text-opacity-75 text-primary-hover"
+                      ></span></a
+                    ><a href="#!"
+                      ><span
+                        class="fab fa-twitter text-body-quaternary text-opacity-75 text-primary-hover"
+                      ></span
+                    ></a> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-between-center pt-4">
+              <div>
+                <h6 class="mb-2 text-body-secondary">Tổng tiền đã chi</h6>
+                <h4 class="fs-7 text-body-highlight mb-0">
+                  {{ totalPrice | number : "1.0-0" }}
+                </h4>
+              </div>
+              <!-- <div class="text-end">
+                <h6 class="mb-2 text-body-secondary">Last Order</h6>
+                <h4 class="fs-7 text-body-highlight mb-0">1 week ago</h4>
+              </div> -->
+              <div class="text-end">
+                <h6 class="mb-2 text-body-secondary">Tổng số đơn hàng</h6>
+                <h4 class="fs-7 text-body-highlight mb-0">{{ totalorder }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="border-bottom border-dashed">
+              <h4 class="mb-3">
+                Địa chỉ mặc định<button
+                  class="btn btn-link p-0"
+                  type="button"
+                ></button>
+              </h4>
+            </div>
+            <div class="pt-4 mb-7 mb-lg-4 mb-xl-7">
+              <div class="row justify-content-between">
+                <div class="col-auto">
+                  <h5 class="text-body-highlight">Địa chỉ</h5>
+                </div>
+                <div class="col-auto">
+                  <p class="text-body-secondary">
+                    {{ customerTransaction?.customer?.address }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="border-top border-dashed pt-4">
+              <div class="row flex-between-center mb-2">
+                <div class="col-auto">
+                  <h5 class="text-body-highlight mb-0">Email</h5>
+                </div>
+                <div class="col-auto">
+                  <a class="lh-1" href="mailto:shatinon@jeemail.com">{{
+                    customerTransaction?.customer?.user?.email
+                  }}</a>
+                </div>
+              </div>
+              <div class="row flex-between-center">
+                <div class="col-auto">
+                  <h5 class="text-body-highlight mb-0">Số điện thoại</h5>
+                </div>
+                <div class="col-auto">
+                  <a href="tel:+1234567890">{{
+                    customerTransaction?.customer?.phoneNumber
+                  }}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="scrollbar">
+        <ul
+          class="nav nav-underline fs-9 flex-nowrap mb-3 pb-1"
+          id="myTab"
+          role="tablist"
+        >
+          <li class="nav-item me-3">
+            <a
+              class="nav-link text-nowrap active"
+              id="orders-tab"
+              data-bs-toggle="tab"
+              href="#tab-orders"
+              role="tab"
+              aria-controls="tab-orders"
+              aria-selected="true"
+              ><span class="fas fa-shopping-cart me-2"></span>Đơn hàng
+              <span class="text-body-tertiary fw-normal">
+                {{ customerTransaction?.trxTransactions?.length }}</span
+              ></a
+            >
+          </li>
+          <!-- <li class="nav-item me-3">
+            <a
+              class="nav-link text-nowrap"
+              id="reviews-tab"
+              data-bs-toggle="tab"
+              href="#tab-reviews"
+              role="tab"
+              aria-controls="tab-orders"
+              aria-selected="true"
+              ><span class="fas fa-star me-2"></span>Reviews<span
+                class="text-body-tertiary fw-normal"
+              >
+                (24)</span
+              ></a
+            >
+          </li>
+          <li class="nav-item me-3">
+            <a
+              class="nav-link text-nowrap"
+              id="wishlist-tab"
+              data-bs-toggle="tab"
+              href="#tab-wishlist"
+              role="tab"
+              aria-controls="tab-orders"
+              aria-selected="true"
+              ><span class="fas fa-heart me-2"></span>Wishlist</a
+            >
+          </li>
+          <li class="nav-item me-3">
+            <a
+              class="nav-link text-nowrap"
+              id="stores-tab"
+              data-bs-toggle="tab"
+              href="#tab-stores"
+              role="tab"
+              aria-controls="tab-stores"
+              aria-selected="true"
+              ><span class="fas fa-home me-2"></span>Stores</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link text-nowrap"
+              id="personal-info-tab"
+              data-bs-toggle="tab"
+              href="#tab-personal-info"
+              role="tab"
+              aria-controls="tab-personal-info"
+              aria-selected="true"
+              ><span class="fas fa-user me-2"></span>Personal info</a
+            >
+          </li> -->
+        </ul>
+      </div>
+      <div class="tab-content" id="profileTabContent">
+        <div
+          class="tab-pane fade show active"
+          id="tab-orders"
+          role="tabpanel"
+          aria-labelledby="orders-tab"
+        >
+          <div
+            class="border-top border-bottom border-translucent"
+            id="profileOrdersTable"
+            data-list='{"valueNames":["order","status","delivery","date","total"],"page":6,"pagination":true}'
+          >
+            <div class="table-responsive scrollbar">
+              <table class="table fs-9 mb-0">
+                <thead>
+                  <tr>
+                    <th
+                      class="sort white-space-nowrap align-middle pe-3 ps-0"
+                      scope="col"
+                      data-sort="order"
+                      style="width: 15%; min-width: 140px"
+                    >
+                      Mã đơn hàng
+                    </th>
+                    <th
+                      class="sort align-middle pe-3"
+                      scope="col"
+                      data-sort="status"
+                      style="width: 15%; min-width: 180px"
+                    >
+                      Trạng thái đơn hàng
+                    </th>
+                    <th
+                      class="sort align-middle text-start"
+                      scope="col"
+                      data-sort="delivery"
+                      style="width: 20%; min-width: 160px"
+                    >
+                      Trạng thái thanh toán
+                    </th>
+                    <th
+                      class="sort align-middle pe-0 text-end"
+                      scope="col"
+                      data-sort="date"
+                      style="width: 15%; min-width: 160px"
+                    >
+                      NGÀY
+                    </th>
+                    <th
+                      class="sort align-middle text-end"
+                      scope="col"
+                      data-sort="total"
+                      style="width: 15%; min-width: 160px"
+                    >
+                      TỔNG CỘNG
+                    </th>
+                    <th
+                      class="align-middle pe-0 text-end"
+                      scope="col"
+                      style="width: 15%"
+                    ></th>
+                  </tr>
+                </thead>
+                <tbody class="list" id="profile-order-table-body">
+                  <tr
+                    class="hover-actions-trigger btn-reveal-trigger position-static"
+                    *ngFor="
+                      let trxTransaction of customerTransaction?.trxTransactions
+                    "
+                  >
+                    <td class="order align-middle white-space-nowrap py-2 ps-0">
+                      <a
+                        class="fw-semibold text-primary"
+                        routerLink="/order_tracking/{{ trxTransaction.id }}"
+                        >#{{ trxTransaction.id }}</a
+                      >
+                    </td>
+                    <td
+                      class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2"
+                    >
+                      <span
+                        class="badge badge-phoenix fs-10 badge-phoenix-success"
+                        *ngIf="
+                          Utils.getOrdersStatus(trxTransaction.orderStatus) ===
+                          'Đã vận chuyển'
+                        "
+                        ><span class="badge-label">Đã vận chuyển</span
+                        ><svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16px"
+                          height="16px"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="feather feather-check ms-1"
+                          style="height: 12.8px; width: 12.8px"
+                        >
+                          <polyline points="20 6 9 17 4 12"></polyline></svg
+                      ></span>
+
+                      <span
+                        class="badge badge-phoenix fs-10 badge-phoenix-info"
+                        *ngIf="
+                          Utils.getOrdersStatus(trxTransaction.orderStatus) ===
+                          'Đang xử lý'
+                        "
+                        ><span class="badge-label">Đang xử lý</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16px"
+                          height="16px"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="feather feather-info ms-1"
+                          style="height: 12.8px; width: 12.8px"
+                        >
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <line x1="12" y1="16" x2="12" y2="12"></line>
+                          <line x1="12" y1="8" x2="12.01" y2="8"></line></svg
+                      ></span>
+
+                      <!-- <span
+                        class="badge badge-phoenix fs-10 badge-phoenix-warning"
+                        *ngIf="Utils.getOrdersStatus('Đã vận chuyển')"
+                        ><span class="badge-label">Partially fulfilled</span
+                        ><svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16px"
+                          height="16px"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="feather feather-clock ms-1"
+                          style="height: 12.8px; width: 12.8px"
+                        >
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12 6 12 12 16 14"></polyline></svg
+                      ></span> -->
+
+                      <span
+                        class="badge badge-phoenix fs-10 badge-phoenix-secondary"
+                        *ngIf="
+                          Utils.getOrdersStatus(trxTransaction.orderStatus) ===
+                          'Đã hủy'
+                        "
+                        ><span class="badge-label">Đã hủy</span
+                        ><svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16px"
+                          height="16px"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="feather feather-x ms-1"
+                          style="height: 12.8px; width: 12.8px"
+                        >
+                          <line x1="18" y1="6" x2="6" y2="18"></line>
+                          <line x1="6" y1="6" x2="18" y2="18"></line></svg
+                      ></span>
+
+                      <span
+                        class="badge badge-phoenix fs-10 badge-phoenix-success"
+                        *ngIf="
+                          Utils.getOrdersStatus(trxTransaction.orderStatus) ===
+                          'Hoàn thành'
+                        "
+                        ><span class="badge-label">Hoàn thành</span
+                        ><svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16px"
+                          height="16px"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="feather feather-check ms-1"
+                          style="height: 12.8px; width: 12.8px"
+                        >
+                          <polyline points="20 6 9 17 4 12"></polyline></svg
+                      ></span>
+
+                      <span
+                        class="badge badge-phoenix fs-10 badge-phoenix-danger"
+                        *ngIf="
+                          Utils.getOrdersStatus(trxTransaction.orderStatus) ===
+                          'Chưa xác nhận'
+                        "
+                        ><span class="badge-label">Chưa xác nhận</span
+                        ><svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16px"
+                          height="16px"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="feather feather-check ms-1"
+                          style="height: 12.8px; width: 12.8px"
+                        >
+                          <polyline points="20 6 9 17 4 12"></polyline></svg
+                      ></span>
+                    </td>
+                    <td
+                      class="delivery align-middle white-space-nowrap text-body py-2"
+                    >
+                      <span
+                        class="badge badge-phoenix fs-10 badge-phoenix-success"
+                        *ngIf="
+                          Utils.getPaymentStatus(
+                            trxTransaction.paymentStatus
+                          ) === 'Đã thanh toán'
+                        "
+                        ><span class="badge-label">Đã thanh toán</span>
+                        <span class="ms-1 fas fa-check"></span
+                      ></span>
+                      <span
+                        class="badge badge-phoenix fs-10 badge-phoenix-danger"
+                        *ngIf="
+                          Utils.getPaymentStatus(
+                            trxTransaction.paymentStatus
+                          ) === 'Chưa thanh toán'
+                        "
+                        ><span class="badge-label">Chưa thanh toán</span>
+                        <span class="ms-1 fas fa-times"></span>
+                      </span>
+                    </td>
+                    <td
+                      class="total align-middle text-body-tertiary text-end py-2"
+                    >
+                      {{ trxTransaction.orderDate | date : "dd/MM/yyyy" }}
+                    </td>
+                    <td
+                      class="date align-middle fw-semibold text-end py-2 text-body-highlight"
+                    >
+                      {{ trxTransaction.orderTotal | number : "1.0-0" }}
+                    </td>
+                    <td
+                      class="align-middle text-end white-space-nowrap pe-0 action py-2"
+                    >
+                      <div class="btn-reveal-trigger position-static">
+                        <button
+                          class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal"
+                          type="button"
+                          data-bs-toggle="dropdown"
+                          data-boundary="window"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                          data-bs-reference="parent"
+                        >
+                          <span class="fas fa-ellipsis-h fs-10"></span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end py-2">
+                          <a class="dropdown-item" href="#!">View</a
+                          ><a class="dropdown-item" href="#!">Export</a>
+                          <div class="dropdown-divider"></div>
+                          <a class="dropdown-item text-danger" href="#!"
+                            >Remove</a
+                          >
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- <div
+              class="row align-items-center justify-content-between py-2 pe-0 fs-9"
+            >
+              <div class="col-auto d-flex">
+                <p
+                  class="mb-0 d-none d-sm-block me-3 fw-semibold text-body"
+                  data-list-info="data-list-info"
+                ></p>
+                <a class="fw-semibold" href="#!" data-list-view="*"
+                  >View all<span
+                    class="fas fa-angle-right ms-1"
+                    data-fa-transform="down-1"
+                  ></span></a
+                ><a class="fw-semibold d-none" href="#!" data-list-view="less"
+                  >View Less<span
+                    class="fas fa-angle-right ms-1"
+                    data-fa-transform="down-1"
+                  ></span
+                ></a>
+              </div>
+              <div class="col-auto d-flex">
+                <button class="page-link" data-list-pagination="prev">
+                  <span class="fas fa-chevron-left"></span>
+                </button>
+                <ul class="mb-0 pagination"></ul>
+                <button class="page-link pe-0" data-list-pagination="next">
+                  <span class="fas fa-chevron-right"></span>
+                </button>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- <section> close ============================-->
+<div class="modal fade" id="modalcustomer" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalcustomerLabel">Cập nhật</h5>
+        <button
+          class="btn p-1"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          #btnCloseModal
+        >
+          <span class="fas fa-times fs-9"></span>
+        </button>
+      </div>
+      <form class="form" [formGroup]="customerForm" (submit)="onSubmit()">
+        <div class="modal-body">
+          <div class="row px-3" *ngIf="errorMessage != ''">
+            <label
+              class="col-sm-12 col-form-label fs-9 alert alert-subtle-danger p-2"
+              role="alert"
+            >
+              {{ errorMessage }}
+            </label>
+          </div>
+          <span formGroupName="userId"></span>
+
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="avatar"
+              >Ảnh đại diện</label
+            >
+            <div class="avatar avatar-5xl avatar-bordered me-4 ms-10">
+              <img
+                class="rounded-circle"
+                src="{{ avatarSrc }}"
+                alt="Avatar"
+                (click)="avatarInput.click()"
+                style="cursor: pointer"
+              />
+              <input
+                class="form-control"
+                id="avatar"
+                type="file"
+                accept="image/*"
+                style="display: none"
+                #avatarInput
+                (change)="onFileSelected($event)"
+              />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="fullName"
+              >Tên khách hàng</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="fullname"
+                type="text"
+                placeholder="Tên khách hàng"
+                formControlName="fullName"
+              />
+              <small
+                class="text-danger mt-1"
+                *ngIf="customerForm['controls']['fullName'].dirty"
+              >
+                <span
+                  *ngIf="customerForm['controls']['fullName'].errors?.['required']"
+                >
+                  Tên khách hàng không được để trống
+                </span>
+                <span
+                  *ngIf="customerForm['controls']['fullName'].errors?.['maxlength']"
+                >
+                  Tên khách hàng không được vượt quá 40 ký tự
+                </span>
+
+                <span
+                  *ngIf="customerForm['controls']['fullName'].errors?.['pattern']"
+                >
+                  Tên khách hàng không hợp lệ
+                </span>
+              </small>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="phoneNumber"
+              >Số điện thoại</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="phoneNumber"
+                type="tel"
+                placeholder="Số điện thoại"
+                formControlName="phoneNumber"
+              />
+              <small
+                class="text-danger mt-1"
+                *ngIf="customerForm['controls']['phoneNumber'].dirty"
+              >
+                <span
+                  *ngIf="customerForm['controls']['phoneNumber'].errors?.['required']"
+                >
+                  Số điện thoại không được để trống
+                </span>
+                <span
+                  *ngIf="customerForm['controls']['phoneNumber'].errors?.['maxlength']
+                  || customerForm['controls']['phoneNumber'].errors?.['minlength']"
+                >
+                  Số điện thoại phải đủ 10 số
+                </span>
+                <span
+                  *ngIf="!(customerForm['controls']['phoneNumber'].errors?.['maxlength']
+                              || customerForm['controls']['phoneNumber'].errors?.['minlength'])
+                              && customerForm['controls']['phoneNumber'].errors?.['pattern']"
+                >
+                  Số điện thoại không hợp lệ
+                </span>
+              </small>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="gender"
+              >Giới tính</label
+            >
+            <div class="col-sm-8">
+              <select
+                class="form-select"
+                id="basic-form-gender"
+                aria-label="Default select example"
+                formControlName="gender"
+              >
+                <option selected="selected">Chọn giới tính</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="birthday"
+              >Ngày sinh</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="birthday"
+                rows="3"
+                placeholder="Ngày sinh"
+                formControlName="birthday"
+                type="date"
+              />
+              <small
+                class="text-danger mt-1"
+                *ngIf="customerForm['controls']['birthday'].dirty"
+              >
+                <span
+                  *ngIf="customerForm['controls']['birthday'].errors?.['required']"
+                >
+                  Ngày sinh không được để trống
+                </span>
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="email"
+              >Email</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="email"
+                rows="3"
+                placeholder="Email"
+                formControlName="email"
+              />
+              <small
+                class="text-danger mt-1"
+                *ngIf="customerForm['controls']['email'].dirty"
+              >
+                <span
+                  *ngIf="customerForm['controls']['email'].errors?.['required']"
+                >
+                  Email không được để trống
+                </span>
+                <span
+                  *ngIf="customerForm['controls']['email'].errors?.['email']"
+                >
+                  Email không đúng định dạng
+                </span>
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="address"
+              >Địa chỉ</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="address"
+                rows="3"
+                placeholder="address"
+                formControlName="address"
+              />
+              <small
+                class="text-danger mt-1"
+                *ngIf="customerForm['controls']['address'].dirty"
+              >
+                <span
+                  *ngIf="customerForm['controls']['address'].errors?.['required']"
+                >
+                  Địa chỉ không được để trống
+                </span>
+                <span
+                  *ngIf="customerForm['controls']['address'].errors?.['maxLength']"
+                >
+                  Địa chỉ tối đa 100 ký tự
+                </span>
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-primary"
+            type="submit"
+            [disabled]="customerForm.invalid"
+          >
+            <span [class.d-none]="isDisplayNone">Cập nhật</span>
+            <span class="indicator-progress" [class.d-none]="!isDisplayNone">
+              Vui lòng chờ...
+              <span
+                class="spinner-border spinner-border-sm align-middle ms-2"
+              ></span>
+            </span>
+          </button>
+
+          <button
+            class="btn btn-outline-primary"
+            type="button"
+            data-bs-dismiss="modal"
+          >
+            Quay lại
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<app-client-footer></app-client-footer>

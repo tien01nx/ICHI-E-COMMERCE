@@ -1,0 +1,866 @@
+<nav class="mb-2" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a href="/admin">Trang chủ</a></li>
+    <li class="breadcrumb-item">Quản lý bán hàng</li>
+    <li class="breadcrumb-item active">Danh sách hóa đơn bán hàng</li>
+  </ol>
+</nav>
+<div class="mb-9">
+  <div class="row g-3 mb-4">
+    <div class="col-auto">
+      <h2 class="mb-0">Danh sách hóa đơn bán hàng</h2>
+    </div>
+  </div>
+
+  <div class="d-flex flex-wrap gap-3 mb-4">
+    <div class="search-box">
+      <form class="position-relative">
+        <input
+          class="form-control search-input search"
+          type="text"
+          placeholder="Tìm kiếm hóa đơn bán hàng"
+          name="searchTemp"
+          (input)="search()"
+          [(ngModel)]="searchTemp"
+        />
+        <span class="fas fa-search search-box-icon"></span>
+      </form>
+    </div>
+    <div class="scrollbar overflow-hidden-y">
+      <div class="btn-group position-static" role="group">
+        <div class="btn-group position-static text-nowrap">
+          <button
+            class="btn btn-phoenix-secondary px-7 flex-shrink-0"
+            type="button"
+            data-bs-toggle="dropdown"
+            data-boundary="window"
+            aria-haspopup="true"
+            aria-expanded="false"
+            data-bs-reference="parent"
+          >
+            Trạng thái đơn<span class="fas fa-angle-down ms-2"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" (click)="orderStatus('Pending')"
+                >Chưa xác nhận</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="orderStatus('Approved')"
+                >Đã xác nhận</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="orderStatus('Processing')"
+                >Đang xử lý</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="orderStatus('Shipped')"
+                >Đã vận chuyển</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="orderStatus('Cancelled')"
+                >Đã hủy</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="orderStatus('Refunded')"
+                >Đã hoàn tiền</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="ms-xxl-auto">
+      <button
+        class="btn btn-link text-body me-4 px-0"
+        (click)="clearUrl()"
+        *ngIf="shouldDisplayClearButton()"
+      >
+        <!-- <span class="fa-solid fa-file-export fs-9 me-2"></span> -->
+        Xóa lọc
+      </button>
+      <button class="btn btn-primary" id="addBtn">
+        <span class="fas fa-plus me-2"></span>Tạo hóa đơn bán
+      </button>
+    </div>
+  </div>
+  <div id="transaction">
+    <div
+      class="mx-n4 px-4 mx-lg-n6 px-lg-6 bg-white border-top border-bottom border-200 position-relative top-1"
+    >
+      <div class="table-responsive scrollbar mx-n1 px-1">
+        <table class="table fs--1 mb-0">
+          <thead>
+            <tr>
+              <th
+                class="white-space-nowrap fs--1 align-middle ps-0"
+                style="width: 3%"
+              >
+                <div class="form-check mb-0 fs-0">
+                  <input
+                    class="form-check-input"
+                    id="checkbox-bulk-products-select"
+                    type="checkbox"
+                    (input)="toggleSelectAll()"
+                  />
+                </div>
+              </th>
+              <!-- Ngày đặt hàng -->
+              <th
+                class="sort white-space-nowrap align-middle ps-4"
+                scope="col"
+                style="width: 5%"
+                (click)="sortByField('OrderDate')"
+              >
+                Ngày đặt hàng
+                <label
+                  [class.d-none]="
+                    SortBy === 'OrderDate' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'OrderDate' || sortDir !== 'ASC'"
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'OrderDate' || sortDir !== 'DESC'"
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+
+              <!-- Tên khách hàng -->
+              <th
+                class="sort align-middle ps-4"
+                scope="col"
+                style="width: 20%"
+                (click)="sortByField('FullName')"
+              >
+                Tên khách
+                <label
+                  [class.d-none]="
+                    SortBy === 'FullName' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'FullName' || sortDir !== 'ASC'"
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'FullName' || sortDir !== 'DESC'"
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+
+              <!-- Số điện thoại -->
+              <th
+                class="sort align-middle ps-4"
+                scope="col"
+                style="width: 10%"
+                (click)="sortByField('PhoneNumber')"
+              >
+                Số điện thoại
+                <label
+                  [class.d-none]="
+                    SortBy === 'PhoneNumber' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'PhoneNumber' || sortDir !== 'ASC'"
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="
+                    SortBy !== 'PhoneNumber' || sortDir !== 'DESC'
+                  "
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <!-- Trạng thái đonư -->
+              <th
+                class="sort align-middle ps-4"
+                scope="col"
+                style="width: 10%"
+                (click)="sortByField('OrderStatus')"
+              >
+                Trạng thái đơn
+                <label
+                  [class.d-none]="
+                    SortBy === 'OrderStatus' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'OrderStatus' || sortDir !== 'ASC'"
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="
+                    SortBy !== 'OrderStatus' || sortDir !== 'DESC'
+                  "
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <!-- Trạng thái thanh toán -->
+              <th
+                class="sort align-middle ps-4"
+                scope="col"
+                style="width: 15%"
+                (click)="sortByField('PaymentStatus')"
+              >
+                Trạng thái thanh toán
+                <label
+                  [class.d-none]="
+                    SortBy === 'PaymentStatus' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="
+                    SortBy !== 'PaymentStatus' || sortDir !== 'ASC'
+                  "
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="
+                    SortBy !== 'PaymentStatus' || sortDir !== 'DESC'
+                  "
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <!-- Thời gian cập nhật -->
+
+              <th
+                class="sort align-middle ps-4"
+                scope="col"
+                style="width: 10%"
+                (click)="sortByField('ModifiedDate')"
+              >
+                Thời gian cập nhật
+                <label
+                  [class.d-none]="
+                    SortBy === 'ModifiedDate' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="
+                    SortBy !== 'ModifiedDate' || sortDir !== 'ASC'
+                  "
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="
+                    SortBy !== 'ModifiedDate' || sortDir !== 'DESC'
+                  "
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+              <th
+                class="sort text-end align-middle pe-0 ps-4"
+                scope="col"
+                style="width: 5%"
+              ></th>
+            </tr>
+          </thead>
+          <tbody class="list" id="transaction-table-body">
+            <tr *ngIf="paginationModel.content.length <= 0">
+              <td colspan="7" class="text-center">
+                <span class="fs-7">Không có dữ liệu</span>
+              </td>
+            </tr>
+            <tr
+              class="position-static"
+              *ngFor="let transaction of paginationModel.content"
+            >
+              <td class="fs--1 align-middle">
+                <div class="form-check mb-0 fs-0">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    [value]="transaction.id"
+                    [checked]="selectAll"
+                  />
+                </div>
+              </td>
+              <!-- <td class="align-middle ps-4">{{ transaction.transactionCode }}</td> -->
+              <td class="align-middle white-space-nowrap text-700 ps-4">
+                {{ transaction.orderDate | date : "dd/MM/yyyy" }}
+              </td>
+              <td class="align-middle text-600 ps-4">
+                {{ transaction.fullName }}
+              </td>
+              <td class="align-middle text-600 ps-4">
+                {{ transaction.phoneNumber }}
+              </td>
+              <td class="align-middle text-600 ps-4">
+                <span
+                  class="badge badge-phoenix fs-10 badge-phoenix-primary"
+                  *ngIf="
+                    Utils.getOrdersStatus(transaction.orderStatus) ===
+                    'Chưa xác nhận'
+                  "
+                  ><span class="badge-label">Chưa xác nhận</span
+                  ><span
+                    class="ms-1"
+                    data-feather="package"
+                    style="height: 12.8px; width: 12.8px"
+                  ></span
+                ></span>
+                <span
+                  class="badge badge-phoenix fs-10 badge-phoenix-secondary"
+                  *ngIf="
+                    Utils.getOrdersStatus(transaction.orderStatus) ===
+                    'Đã xác nhận'
+                  "
+                  ><span class="badge-label">Đã xác nhận</span
+                  ><span
+                    class="ms-1"
+                    data-feather="plus"
+                    style="height: 12.8px; width: 12.8px"
+                  ></span
+                ></span>
+                <span
+                  class="badge badge-phoenix fs-10 badge-phoenix-success"
+                  *ngIf="
+                    Utils.getOrdersStatus(transaction.orderStatus) ===
+                    'Đang xử lý'
+                  "
+                  ><span class="badge-label">Đang xử lý</span
+                  ><span
+                    class="ms-1"
+                    data-feather="check"
+                    style="height: 12.8px; width: 12.8px"
+                  ></span
+                ></span>
+                <span
+                  class="badge badge-phoenix fs-10 badge-phoenix-info"
+                  *ngIf="
+                    Utils.getOrdersStatus(transaction.orderStatus) ===
+                    'Đã vận chuyển'
+                  "
+                  ><span class="badge-label">Đã vận chuyển</span
+                  ><span
+                    class="ms-1"
+                    data-feather="info"
+                    style="height: 12.8px; width: 12.8px"
+                  ></span
+                ></span>
+                <span
+                  class="badge badge-phoenix fs-10 badge-phoenix-warning"
+                  *ngIf="
+                    Utils.getOrdersStatus(transaction.orderStatus) === 'Đã hủy'
+                  "
+                  ><span class="badge-label">Đã hủy</span
+                  ><span
+                    class="ms-1"
+                    data-feather="alert-octagon"
+                    style="height: 12.8px; width: 12.8px"
+                  ></span
+                ></span>
+                <span
+                  class="badge badge-phoenix fs-10 badge-phoenix-danger"
+                  *ngIf="
+                    Utils.getOrdersStatus(transaction.orderStatus) ===
+                    'Đã hoàn tiền'
+                  "
+                  ><span class="badge-label">Đã hoàn tiền</span
+                  ><span
+                    class="ms-1"
+                    data-feather="x"
+                    style="height: 12.8px; width: 12.8px"
+                  ></span
+                ></span>
+              </td>
+              <td class="align-middle text-600 ps-4">
+                <span
+                  class="badge badge-phoenix fs-10 badge-phoenix-success"
+                  *ngIf="
+                    Utils.getPaymentStatus(transaction.paymentStatus) ===
+                    'Đã thanh toán'
+                  "
+                  ><span class="badge-label">Đã thanh toán</span>
+                  <span class="ms-1 fas fa-check"></span
+                ></span>
+                <span
+                  class="badge badge-phoenix fs-10 badge-phoenix-danger"
+                  *ngIf="
+                    Utils.getPaymentStatus(transaction.paymentStatus) ===
+                    'Chưa thanh toán'
+                  "
+                  ><span class="badge-label">Chưa thanh toán</span>
+                  <span class="ms-1 fas fa-times"></span>
+                </span>
+              </td>
+
+              <!-- <td class="align-middle white-space-nowrap text-600 ps-4">
+                {{ transaction.createDatetime | date : "dd/MM/yyyy HH:mm:ss" }}
+              </td> -->
+              <td class="align-middle white-space-nowrap text-600 ps-3">
+                {{ transaction.modifiedDate | date : "dd/MM/yyyy" }}
+              </td>
+              <td
+                class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger"
+              >
+                <div class="font-sans-serif btn-reveal-trigger position-static">
+                  <button
+                    class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    data-boundary="window"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    data-bs-reference="parent"
+                  >
+                    <span class="fas fa-ellipsis-h fs--2"></span>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end py-2">
+                    <button
+                      class="dropdown-item"
+                      data-bs-target="#modaltransaction"
+                      data-bs-toggle="modal"
+                      (click)="openModalUpdate(transaction)"
+                    >
+                      Cập nhật
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <button
+                      class="dropdown-item text-danger"
+                      (click)="delete(transaction.id)"
+                    >
+                      Xóa
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row align-items-center py-2 pe-0 fs--1">
+        <div class="col-auto d-flex">
+          <label>
+            <select
+              class="form-select form-select-sm form-select-solid"
+              name="sizeSelected"
+              [(ngModel)]="paginationModel.pageSize"
+              (change)="changePageSize(paginationModel.pageSize)"
+            >
+              <option value="5" [selected]="paginationModel.pageSize == 5">
+                5
+              </option>
+              <option value="10" [selected]="paginationModel.pageSize == 10">
+                10
+              </option>
+              <option value="25" [selected]="paginationModel.pageSize == 25">
+                25
+              </option>
+              <option value="50" [selected]="paginationModel.pageSize == 50">
+                50
+              </option>
+              <option value="100" [selected]="paginationModel.pageSize == 100">
+                100
+              </option>
+            </select>
+          </label>
+        </div>
+        <div class="col-auto d-flex">
+          <p class="mb-0 d-none d-sm-block me-3 fw-semi-bold text-900">
+            Hiển thị {{ paginationModel.firstElementOnPage }} đến
+            {{ paginationModel.lastElementOnPage }}
+            <span class="text-body-tertiary"> của </span
+            >{{ paginationModel.totalElements }} danh mục
+          </p>
+        </div>
+        <div class="col-auto ms-auto d-flex">
+          <button
+            type="button"
+            class="page-link"
+            (click)="changePageNumber(1)"
+            [class.disabled]="paginationModel.pageNumber <= 1"
+          >
+            <span class="fas fa-angle-double-left"></span>
+          </button>
+          <button
+            type="button"
+            class="page-link"
+            (click)="changePageNumber(paginationModel.pageNumber - 1)"
+            [class.disabled]="paginationModel.pageNumber <= 1"
+          >
+            <span class="fas fa-angle-left"></span>
+          </button>
+          <ul class="mb-0 pagination">
+            <li
+              class="page-item"
+              *ngFor="
+                let i of Utils.getVisiblePages(
+                  paginationModel.pageNumber,
+                  paginationModel.totalPages,
+                  5
+                )
+              "
+              [class.active]="i === paginationModel.pageNumber"
+            >
+              <button
+                type="button"
+                class="page-link"
+                (click)="changePageNumber(i)"
+              >
+                {{ i }}
+              </button>
+            </li>
+          </ul>
+          <button
+            type="button"
+            class="page-link"
+            (click)="changePageNumber(paginationModel.pageNumber + 1)"
+            [class.disabled]="
+              paginationModel.pageNumber >= paginationModel.totalPages
+            "
+          >
+            <span class="fas fa-angle-right"></span>
+          </button>
+          <button
+            type="button"
+            class="page-link"
+            (click)="changePageNumber(paginationModel.totalPages)"
+            [class.disabled]="
+              paginationModel.pageNumber >= paginationModel.totalPages
+            "
+          >
+            <span class="fas fa-angle-double-right"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modaltransaction" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modaltransactionLabel">{{ titleModal }}</h5>
+        <button
+          class="btn p-1"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          #btnCloseModal
+        >
+          <span class="fas fa-times fs-9"></span>
+        </button>
+      </div>
+      <form class="form" [formGroup]="transactionForm" (submit)="onSubmit()">
+        <div class="modal-body">
+          <div class="row px-3" *ngIf="errorMessage != ''">
+            <label
+              class="col-sm-12 col-form-label fs-9 alert alert-subtle-danger p-2"
+              role="alert"
+            >
+              {{ errorMessage }}
+            </label>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="transactionName"
+              >Tên nhà cung cấp</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="transactionName"
+                type="text"
+                formControlName="transactionName"
+                placeholder="Tên nhà cung cấp"
+              />
+              <small
+                class="text-danger mt-1"
+                *ngIf="transactionForm['controls']['transactionName'].dirty"
+              >
+                <span
+                  *ngIf="transactionForm['controls']['transactionName'].errors?.['required']"
+                >
+                  Tên nhà cung cấp không được để trống
+                </span>
+                <span
+                  *ngIf="transactionForm['controls']['transactionName'].errors?.['maxlength']"
+                >
+                  Tên nhà cung cấp không được vượt quá 50 ký tự
+                </span>
+                <span
+                  *ngIf="transactionForm['controls']['transactionName'].errors?.['pattern']"
+                >
+                  Tên nhà cung cấp không hợp lệ
+                </span>
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="address"
+              >Địa chỉ</label
+            >
+            <div class="col-sm-8">
+              <textarea
+                class="form-control"
+                id="address"
+                rows="3"
+                placeholder="Địa chỉ"
+                formControlName="address"
+              ></textarea>
+              <small
+                class="text-danger mt-1"
+                *ngIf="transactionForm['controls']['address'].dirty"
+              >
+                <span
+                  *ngIf="transactionForm['controls']['address'].errors?.['required']"
+                >
+                  Địa chỉ không được để trống
+                </span>
+                <span
+                  *ngIf="transactionForm['controls']['address'].errors?.['maxlength']"
+                >
+                  Địa chỉ không được vượt quá 100 ký tự
+                </span>
+                <span
+                  *ngIf="transactionForm['controls']['address'].errors?.['minlength']"
+                >
+                  Địa chỉ tối thiểu 10 ký tự
+                </span>
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="phoneNumber"
+              >Số điện thoại</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="phoneNumber"
+                type="tel"
+                formControlName="phoneNumber"
+                placeholder="Số điện thoại"
+                (keypress)="Utils.onKeyPressNumber($event)"
+              />
+              <small
+                class="text-danger mt-1"
+                *ngIf="transactionForm['controls']['phoneNumber'].dirty"
+              >
+                <span
+                  *ngIf="transactionForm['controls']['phoneNumber'].errors?.['required']"
+                >
+                  Số điện thoại không được để trống
+                </span>
+                <span
+                  *ngIf="transactionForm['controls']['phoneNumber'].errors?.['maxlength']
+                  || transactionForm['controls']['phoneNumber'].errors?.['minlength']"
+                >
+                  Số điện thoại phải đủ 10 số
+                </span>
+                <span
+                  *ngIf="!(transactionForm['controls']['phoneNumber'].errors?.['maxlength']
+                              || transactionForm['controls']['phoneNumber'].errors?.['minlength'])
+                              && transactionForm['controls']['phoneNumber'].errors?.['pattern']"
+                >
+                  Số điện thoại không hợp lệ
+                </span>
+              </small>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="email"
+              >Email</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="email"
+                rows="3"
+                placeholder="Email"
+                formControlName="email"
+              />
+              <small
+                class="text-danger mt-1"
+                *ngIf="transactionForm['controls']['email'].dirty"
+              >
+                <span
+                  *ngIf="transactionForm['controls']['email'].errors?.['required']"
+                >
+                  Email không được để trống
+                </span>
+                <span
+                  *ngIf="( transactionForm['controls']['email'].errors?.['pattern'])"
+                >
+                  Email không hợp lệ
+                </span>
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="taxCode"
+              >Mã số thuế</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="taxCode"
+                rows="3"
+                type="text"
+                placeholder="Mã số thuế"
+                formControlName="taxCode"
+                (keypress)="Utils.onKeyPressNumber($event)"
+              />
+              <small
+                class="text-danger mt-1"
+                *ngIf="transactionForm['controls']['taxCode'].dirty"
+              >
+                <span
+                  *ngIf="!(transactionForm['controls']['taxCode'].errors?.['minlength'] || transactionForm['controls']['taxCode'].errors?.['maxlength'] ) && transactionForm['controls']['taxCode'].errors?.['pattern']"
+                >
+                  Mã số thuế không đúng định dạng
+                </span>
+                <span
+                  *ngIf="  transactionForm['controls']['taxCode'].errors?.['required']"
+                >
+                  Mã số thuế không được để trống
+                </span>
+                <span
+                  *ngIf=" transactionForm['controls']['taxCode'].errors?.['minlength']"
+                >
+                  Mã số thuế tối thiểu 10 số
+                </span>
+
+                <span
+                  *ngIf="transactionForm['controls']['taxCode'].errors?.['maxlength']"
+                >
+                  Mã số thuế tối thiểu 13 số
+                </span>
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="bankAccount"
+              >Số tài khoản</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="bankAccount"
+                rows="3"
+                type="text"
+                placeholder="Số tài khoản"
+                formControlName="bankAccount"
+                (keypress)="Utils.onKeyPressTextNumberNoSpacebar($event)"
+              />
+              <small
+                class="text-danger mt-1"
+                *ngIf="transactionForm['controls']['bankAccount'].dirty"
+              >
+                <span
+                  *ngIf="transactionForm['controls']['bankAccount'].errors?.['required']"
+                >
+                  Số tài khoản không được để trống
+                </span>
+                <span
+                  *ngIf="transactionForm['controls']['bankAccount'].errors?.['maxlength']
+                  || transactionForm['controls']['bankAccount'].errors?.['minlength']"
+                >
+                  Số tài khoản phải đủ 5 số và nhỏ hơn 20 số
+                </span>
+              </small>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="bankName"
+              >Tên ngân hàng</label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="bankName"
+                rows="3"
+                placeholder="Tên ngân hàng"
+                formControlName="bankName"
+              />
+              <small
+                class="text-danger mt-1"
+                *ngIf="transactionForm['controls']['bankName'].dirty"
+              >
+                <span
+                  *ngIf="transactionForm['controls']['bankName'].errors?.['required']"
+                >
+                  Tên ngân hàng không được để trống
+                </span>
+                <span
+                  *ngIf="transactionForm['controls']['bankName'].errors?.['maxlength'] || transactionForm['controls']['bankName'].errors?.['minlength']"
+                >
+                  Tên ngân hàng tối thiểu 3 ký tự và không vượt quá 10 ký tự
+                </span>
+                <span
+                  *ngIf="!(transactionForm['controls']['bankName'].errors?.['maxlength'] || transactionForm['controls']['bankName'].errors?.['minlength']) &&transactionForm['controls']['bankName'].errors?.['pattern']"
+                >
+                  Tên ngân hàng không đúng định dạng
+                </span>
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-primary"
+            type="submit"
+            [disabled]="transactionForm.invalid"
+          >
+            <span [class.d-none]="isDisplayNone">{{ btnSave }}</span>
+            <span class="indicator-progress" [class.d-none]="!isDisplayNone">
+              Vui lòng chờ...
+              <span
+                class="spinner-border spinner-border-sm align-middle ms-2"
+              ></span>
+            </span>
+          </button>
+
+          <button
+            class="btn btn-outline-primary"
+            type="button"
+            data-bs-dismiss="modal"
+          >
+            Quay lại
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

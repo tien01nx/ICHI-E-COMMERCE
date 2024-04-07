@@ -20,6 +20,7 @@ import { Utils } from '../../../Utils.ts/utils';
   styleUrl: './checkout.component.css',
 })
 export class CheckoutComponent implements OnInit {
+  protected readonly Utils = Utils;
   shoppingcartdto!: ShoppingCartDTO;
   cartProductDTO!: CartProductDTO;
   carts: CartModel[] = [];

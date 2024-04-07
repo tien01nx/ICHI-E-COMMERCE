@@ -2,18 +2,21 @@
 
 namespace ICHI_API.Model
 {
-  public class InventoryReceiptDTO
-  {
-    public string EmployeeId { get; set; }
+    public class InventoryReceiptDTO
+    {
+        public int Id { get; set; }
+        public string EmployeeId { get; set; }
 
-    public string? FullName { get; set; }
+        public string? FullName { get; set; }
 
-    public int SupplierId { get; set; }
+        public int SupplierId { get; set; }
 
-    public string? SupplierName { get; set; }
+        public string? SupplierName { get; set; }
 
-    public string? Notes { get; set; } = string.Empty;
+        public bool isActive { get; set; } = false;
 
-    public List<InventoryReceiptDetail> InventoryReceiptDetails { get; set; } = new List<InventoryReceiptDetail>();
-  }
+        public string? Notes { get; set; } = string.Empty;
+
+        public List<InventoryReceiptDetail> InventoryReceiptDetails { get; set; } = new List<InventoryReceiptDetail>();
+    }
 }

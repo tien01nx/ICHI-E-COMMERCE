@@ -19,55 +19,12 @@
       </h5>
     </div>
     <div class="col-auto">
-      <span
-        class="btn btn-danger mb-2 mb-sm-0 me-8"
-        (click)="deleteProduct(productForm.value.id)"
-      >
-        Xóa
-      </span>
       <button class="btn btn-primary mb-2 mb-sm-0 me-8" type="submit">
         Thêm
       </button>
     </div>
-
-    <ng-select [items]="products" bindLabel="productName" bindValue="id">
-      <ng-template ng-option-tmp let-item="item">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-3">
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  value=""
-                  id="checkbox"
-                />
-                <label class="form-check-label" for="checkbox">
-                  Check this checkbox
-                </label>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <img
-                *ngIf="item.image"
-                [src]="item.image"
-                alt="Product Image"
-                class="img-fluid"
-                style="max-width: 100px; max-height: 100px"
-              />
-            </div>
-            <div class="col-md-3">
-              <p>{{ item.productName }}</p>
-            </div>
-            <div class="col-md-3">
-              <p>Giá: {{ item.price }}</p>
-              <p>Số lượng tồn: {{ item.quantity }}</p>
-            </div>
-          </div>
-        </div>
-      </ng-template>
-    </ng-select>
   </div>
+
   <div class="row g-5">
     <!-- Thông tin sản phẩm -->
     <div class="col-12 col-xl-9">
@@ -75,171 +32,245 @@
         <div class="col-12 col-xl-12">
           <div class="card mb-3">
             <div class="card-body">
-              <h4 class="card-title mb-4">Thông tin</h4>
+              <h4 class="card-title mb-4">Thông tin đơn hàng</h4>
               <div class="row gx-3">
                 <div class="col-12 col-sm-6 col-xl-12">
                   <div class="mb-4">
                     <div class="d-flex flex-wrap mb-2">
-                      <h5 class="mb-0 text-body-highlight me-2">
-                        Loại <sup class="text-danger">*</sup>
-                      </h5>
                       <a class="fw-bold fs-9" href="/admin/categories"
-                        >Thêm danh mục mới</a
+                        >Thêm mới sản phẩm</a
                       >
                     </div>
-                    <ng-select
-                      [items]="products"
-                      bindLabel="productName"
-                      bindValue="id"
-                      [multiple]="true"
-                    >
-                      <ng-template ng-option-tmp let-item="item">
-                        <div class="container">
-                          <div class="row">
-                            <div class="col-md-2">
-                              <img
-                                *ngIf="item.image"
-                                [src]="item.image"
-                                alt="Product Image"
-                                class="img-fluid"
-                                style="max-width: 100px; max-height: 100px"
-                              />
-                            </div>
-                            <div class="col-md-8 text-start">
-                              <p>{{ item.productName }}</p>
-                            </div>
-                            <div class="col-md-2">
-                              <p>Giá: {{ item.price }}</p>
-                              <p>Số lượng tồn: {{ item.quantity }}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </ng-template>
-                    </ng-select>
                   </div>
-                </div>
-                <div class="col-12 col-sm-6 col-xl-12">
-                  <div class="mb-4">
-                    <div class="d-flex flex-wrap mb-2">
-                      <h5 class="mb-0 text-body-highlight me-2">
-                        Thương hiệu <sup class="text-danger">*</sup>
-                      </h5>
-                      <a class="fw-bold fs-9" href="/admin/trademark"
-                        >Thêm mới thương hiệu</a
-                      >
-                    </div>
+                  <div class="table-responsive-x scrollbar-overlay mx-n1 px-1">
+                    <table class="table table-sm fs-9 mb-0">
+                      <thead>
+                        <tr>
+                          <th
+                            class="sort align-middle pe-5 text-start pb-3 pt-3"
+                            scope="col"
+                            style="width: 40%"
+                            nowrap
+                          >
+                            Sản phẩm <span class="text-danger">*</span>
+                          </th>
+                          <th
+                            class="sort align-middle pe-5 text-center pb-3 pt-3"
+                            scope="col"
+                            style="width: 8%"
+                            nowrap
+                          >
+                            Số lượng <span class="text-danger">*</span>
+                          </th>
+                          <th
+                            class="sort align-middle pe-5 text-start pb-3 pt-3"
+                            scope="col"
+                            style="width: 15%"
+                            nowrap
+                          >
+                            Đơn giá <span class="text-danger">*</span>
+                          </th>
 
-                    <ng-select
-                      formControlName="trademarkId"
-                      placeholder="Chọn thương hiệu"
-                    >
-                      <ng-option
-                        *ngFor="let trademark of trademarks"
-                        [value]="trademark.id"
-                      >
-                        {{ trademark.trademarkName }}
-                      </ng-option>
-                    </ng-select>
-                    <small
-                      class="text-danger mt-1"
-                      *ngIf="productForm['controls']['trademarkId'].dirty"
-                    >
-                      <span
-                        *ngIf="productForm['controls']['trademarkId'].errors?.['required']"
-                      >
-                        Thương hiệu không được để trống
-                      </span>
-                    </small>
-                  </div>
-                </div>
-                <div class="col-12 col-sm-6 col-xl-12">
-                  <div class="mb-4">
-                    <h5 class="mb-2 text-body-highlight">
-                      Màu sắc <sup class="text-danger">*</sup>
-                    </h5>
-                    <!-- <input
-                      class="form-control mb-xl-3"
-                      type="text"
-                      placeholder="Collection"
-                    /> -->
-                    <!-- <ng-select
-                      [items]="color"
-                      bindValue="name"
-                      bindLabel="name"
-                      formControlName="color"
-                    ></ng-select> -->
-                    <input
-                      class="form-control mb-xl-3"
-                      type="text"
-                      placeholder="Màu sắc"
-                      formControlName="color"
-                    />
-                    <small
-                      class="text-danger mt-1"
-                      *ngIf="productForm['controls']['color'].dirty"
-                    >
-                      <span
-                        *ngIf="productForm['controls']['color'].errors?.['maxLength']"
-                      >
-                        Màu sắc tối đa 30 kí tự
-                      </span>
-                    </small>
-                  </div>
-                </div>
-                <!-- thứ tự hiện thị sản phẩm -->
-                <div class="col-6 col -sm-6 col-xl-6">
-                  <div class="mb-4">
-                    <h5 class="mb-2 text-body-highlight">Thứ tự hiển thị</h5>
-                    <input
-                      class="form-control mb-xl-3"
-                      type="number"
-                      min="0"
-                      max="4"
-                      placeholder="Thứ tự hiển thị"
-                      formControlName="priorityLevel"
-                    />
-                  </div>
-                </div>
-                <div class="col-6 col -sm-6 col-xl-6">
-                  <div class="mb-4">
-                    <h5 class="mb-2 text-body-highlight">Trình trạng</h5>
+                          <th
+                            class="sort align-middle pe-5 text-start pb-3 pt-3"
+                            scope="col"
+                            style="width: 25%"
+                            nowrap
+                          >
+                            Thành tiền
+                          </th>
+                          <th
+                            class="sort align-middle pe-5 text-center pb-3 pt-3"
+                            scope="col"
+                            style="width: 5%"
+                            nowrap
+                          ></th>
+                        </tr>
+                      </thead>
+                      <tbody formArrayName="inventoryReceiptDetails">
+                        <tr
+                          *ngFor="
+                            let receiptDetails of inventoryReceiptDetails.controls;
+                            let i = index
+                          "
+                          [formGroupName]="i"
+                        >
+                          <!-- productId -->
+                          <td class="pt-2 pb-2">
+                            <ng-select
+                              appendTo="body"
+                              [items]="products"
+                              bindLabel="productName"
+                              bindValue="id"
+                              formControlName="productId"
+                              (change)="onProductSelection($event, i)"
+                            >
+                              <ng-template ng-option-tmp let-item="item">
+                                <div class="container">
+                                  <div class="row">
+                                    <div class="col-md-2">
+                                      <img
+                                        *ngIf="item.image"
+                                        [src]="item.image"
+                                        alt="Product Image"
+                                        class="img-fluid"
+                                        style="
+                                          max-width: 50px;
+                                          max-height: 50px;
+                                        "
+                                      />
+                                    </div>
+                                    <div class="col-md-10 text-start">
+                                      <p>{{ item.productName }}</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </ng-template>
+                            </ng-select>
+                          </td>
+                          <!-- total -->
+                          <td class="pt-2 pb-2">
+                            <input
+                              class="form-control"
+                              type="number"
+                              [value]="0"
+                              min="1"
+                              max="1000"
+                              formControlName="total"
+                              required
+                            />
+                            <!-- (keydown)="onKeyDown($event, false)" -->
 
-                    <!-- combobox -->
-                    <select
-                      class="form-control mb-xl-3"
-                      formControlName="isActive"
-                    >
-                      <option [value]="true">Đang bán</option>
-                      <option [value]="false">Ngừng bán</option>
-                    </select>
+                            <div
+                              class="label-error mt-1"
+                              *ngIf="receiptDetails.get('total')?.dirty"
+                            >
+                              <span
+                                *ngIf="
+                                  receiptDetails
+                                    .get('total')
+                                    ?.hasError('required')
+                                "
+                              >
+                                <small>Số lượng là trường bắt buộc.</small>
+                              </span>
+                              <span
+                                *ngIf="
+                                  receiptDetails
+                                    .get('total')
+                                    ?.hasError('max') ||
+                                  receiptDetails.get('total')?.hasError('min')
+                                "
+                              >
+                                <small>Số lượng phải từ 1 đến 1000.</small>
+                              </span>
+                            </div>
+                          </td>
+                          <!-- price -->
+                          <td class="pt-2 pb-2">
+                            <input
+                              class="form-control"
+                              type="text"
+                              formControlName="price"
+                              readonly
+                            />
+                            <!-- 
+                              (keydown)="onKeyDown($event, true)" -->
 
-                    <!-- <input
-                      class="form-control mb-xl-3"
-                      type="number"
-                      placeholder="Trình trạng bán sản phẩm"
-                      formControlName="isActive"
-                    /> -->
+                            <div
+                              class="label-error mt-1"
+                              *ngIf="receiptDetails.get('price')?.dirty"
+                            >
+                              <span
+                                *ngIf="
+                                  receiptDetails
+                                    .get('price')
+                                    ?.hasError('required')
+                                "
+                              >
+                                <small>Đơn giá là trường bắt buộc.</small>
+                              </span>
+                              <span
+                                *ngIf="
+                                  receiptDetails
+                                    .get('price')
+                                    ?.hasError('max') ||
+                                  receiptDetails.get('price')?.hasError('min')
+                                "
+                              >
+                                <small>Đơn giá phải từ 0 đến 1 tỷ.</small>
+                              </span>
+                            </div>
+                          </td>
+
+                          <td class="pt-2 pb-2">
+                            <div class="form-control text-end">
+                              {{ getTotalPrice()[i] | currencyFormat }}
+                            </div>
+                          </td>
+                          <td class="pt-2 pb-2">
+                            <button
+                              class="fw-bold fs-9 btn btn-phoenix-primary"
+                              href="javascript:void(0);"
+                              [disabled]="isDisplayNone"
+                              (click)="removeProduct(i)"
+                            >
+                              Xóa
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            class="align-middle white-space-nowrap pe-5 text-end fw-bold pb-3 pt-3"
+                          >
+                            <p class="mb-0 text-truncate fs-8 text-start">
+                              Tổng tiền:
+                            </p>
+                          </td>
+                          <td></td>
+                          <td></td>
+                          <td
+                            class="align-middle white-space-nowrap pe-1 text-end fw-bold text-success pb-3 pt-3"
+                            style="width: 10%"
+                          >
+                            <p class="mb-0 text-truncate fs-8 pe-3">
+                              {{ totalMoney | currencyFormat }}
+                              tiền
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                </div>
-                <div class="col-12 col -sm-6 col-xl-12">
-                  <div class="mb-4">
-                    <h5 class="mb-2 text-body-highlight">Ghi chú</h5>
-                    <!-- <input
-                      class="form-control mb-xl-3"
-                      type="number"
-                      placeholder="Ghi chú"
-                      formControlName="notes"
-                    /> -->
-                    <textarea
-                      class="form-control"
-                      placeholder="Ghi chú"
-                      formControlName="notes"
-                      style="height: 100px"
-                    >
-                    </textarea>
-                  </div>
+                  <button
+                    class="btn btn-phoenix-primary w-100 mt-3"
+                    type="button"
+                    (click)="addProduct()"
+                  >
+                    Thêm sản phẩm
+                  </button>
                 </div>
               </div>
+
+              <ng-select
+                style="height: 16px; width: 400px"
+                [items]="Utils.paymentTypes"
+                bindValue="paymentTypes"
+                bindLabel="name"
+                placeholder="Chọn phương thức thanh toán"
+                formControlName="paymentTypes"
+              ></ng-select>
+              <!-- <small
+                class="text-danger mt-1"
+              >
+                *ngIf="trxTransacForm['controls']['paymentTypes'].dirty"
+
+                <span
+                  *ngIf="trxTransacForm['controls']['paymentTypes'].errors?.['required']"
+                >
+                  Phương thức thanh toán không được để trống
+                </span>
+              </small> -->
             </div>
           </div>
         </div>
@@ -299,7 +330,7 @@
               <h4 class="card-title mb-4">Thông tin khách hàng</h4>
               <div class="row gx-3">
                 <div class="col-12 col-sm-6 col-xl-12">
-                  <div class="mb-4">
+                  <div class="mb-2">
                     <div class="d-flex flex-wrap mb-2">
                       <h5 class="mb-0 text-body-highlight me-2">
                         Loại <sup class="text-danger">*</sup>
@@ -309,81 +340,84 @@
                       >
                     </div>
                     <ng-select
-                      formControlName="categoryId"
+                      formControlName="userId"
                       placeholder="Chọn danh mục"
+                      [formControl]="getDistrictsControl()"
                     >
                       <ng-option
-                        *ngFor="let category of categories"
+                        *ngFor="let category of customers"
                         [value]="category.id"
                       >
-                        {{ category.categoryName }}
+                        {{ category.fullName + " - " + category.phoneNumber }}
                       </ng-option>
                     </ng-select>
                     <small
                       class="text-danger mt-1"
                       *ngIf="
-                        productForm.get('categoryId')?.invalid &&
-                        (productForm.get('categoryId')?.dirty ||
-                          productForm.get('categoryId')?.touched)
+                        productForm.get('userId')?.invalid &&
+                        (productForm.get('userId')?.dirty ||
+                          productForm.get('userId')?.touched)
                       "
                     >
                       <span
-                        *ngIf="productForm.get('categoryId')?.errors?.['required']"
+                        *ngIf="productForm.get('userId')?.errors?.['required']"
                       >
-                        Danh mục không được để trống
+                        Tên người mua
                       </span>
                     </small>
                   </div>
                 </div>
                 <div
                   class="border-dashed border-bottom border-translucent mt-4"
+                  *ngIf="customer !== undefined"
                 >
                   <div class="d-flex justify-content-between mb-2">
-                    <h5 class="text-body fw-semibold">Tên KH</h5>
+                    <h5 class="text-body fw-semibold">
+                      {{ customer.fullName }}
+                    </h5>
                     <h5 class="text-body fw-semibold">
                       <span class="fas fa-times"></span>
                     </h5>
                   </div>
-                  <div class="d-flex justify-content-between mb-2">
+                  <!-- <div class="d-flex justify-content-between mb-2">
                     <h5 class="text-body fw-semibold">Tổng chi tiêu</h5>
                     <h5 class="text-body fw-semibold">Số tiền</h5>
-                  </div>
-                  <div class="d-flex justify-content-between mb-2">
-                    <h5 class="text-body fw-semibold">Đơn gần nhất</h5>
-                    <h5 class="text-body fw-semibold">Mã hóa đơn</h5>
-                  </div>
+                  </div> -->
                   <hr class="bg-body-secondary mb-2 mt-2" />
 
                   <div class="d-flex justify-content-between mb-2">
                     <h5 class="text-body fw-semibold">Thông tin liên hệ:</h5>
-                    <h5 class="text-body fw-semibold">
+                    <!-- <h5 class="text-body fw-semibold">
                       <button
                         class="far fa-edit"
                         type="button"
                         aria-label="Close"
                       ></button>
-                    </h5>
+                    </h5> -->
                   </div>
                   <div class="d-flex justify-content-between mb-3">
-                    <h5 class="text-body fw-semibold">Email</h5>
+                    <h5 class="text-body fw-semibold">
+                      {{ customer.userId }}
+                    </h5>
                     <h5 class="text-body fw-semibold">Số điện thoại</h5>
                   </div>
                   <hr class="bg-body-secondary mb-2 mt-2" />
                   <div class="d-flex justify-content-between mb-3">
                     <h5 class="text-body fw-semibold">Địa chỉ giao hàng</h5>
-                    <h5 class="text-body fw-semibold">
+                    <!-- <h5 class="text-body fw-semibold">
                       <button
                         class="far fa-edit"
                         type="button"
                         aria-label="Close"
                       ></button>
-                    </h5>
+                    </h5> -->
                   </div>
                   <div class="input-group mb-3">
                     <textarea
                       class="form-control"
                       type="text"
                       placeholder="Không có địa chỉ"
+                      [value]="customer.address"
                     ></textarea>
                   </div>
                 </div>
@@ -397,7 +431,7 @@
               <h4 class="card-title mb-4">Ghi chú</h4>
               <div class="row g-3">
                 <div class="col-12 col-sm-6 col-xl-12">
-                  <div class="mb-4">
+                  <div class="mb-2">
                     <textarea
                       class="form-control"
                       placeholder="VD: Giao hàng trong giờ hành chính cho khách"

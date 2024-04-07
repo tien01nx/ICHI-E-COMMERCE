@@ -56,13 +56,13 @@ export class InventoryReceiptsComponent implements OnInit {
     private toastr: ToastrService
   ) {}
   ngOnInit() {
-    this.title.setTitle('Quản lý nhà cung cấp');
+    this.title.setTitle('Quản lý danh sách nhập hàng');
     this.activatedRoute.queryParams.subscribe((params) => {
       const search = params['search'] || '';
       const pageSize = +params['page-size'] || 10;
       const pageNumber = +params['page-number'] || 1;
-      const sortDir = params['sort-direction'] || 'ASC';
-      const sortBy = params['sort-by'] || '';
+      const sortDir = params['sort-direction'] || 'DESC';
+      const sortBy = params['sort-by'] || 'CreateDate';
       this.findAll(pageSize, pageNumber, sortBy, sortDir, search);
     });
   }

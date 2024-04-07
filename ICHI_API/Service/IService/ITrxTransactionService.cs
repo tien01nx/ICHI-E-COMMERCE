@@ -9,8 +9,10 @@ namespace ICHI_API.Service.IService
 {
     public interface ITrxTransactionService
     {
+        Helpers.PagedResult<TrxTransaction> GetAll(string name, string orderStatus, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage);
         TrxTransactionDTO InsertTxTransaction(TrxTransactionDTO trxTransactionDTO, out string strMessage);
         ShoppingCartVM GetTrxTransactionFindById(int id, out string strMessage);
+        CustomerTransactionDTO GetCustomerTransaction(string userid, out string strMessage);
 
     }
 }

@@ -37,8 +37,10 @@ export class InsertPromotionComponent implements OnInit {
   product: ProductModel | undefined = undefined;
   titleString: string = '';
   suppliers: SupplierModel[] = [];
+
   products: ProductDTO[] = [];
   productsRoot: ProductDTO[] = [];
+
   originalProducts: ProductDTO[] = [];
   totalMoney: number = 0;
   isDisplayNone: boolean = false;
@@ -246,7 +248,7 @@ export class InsertPromotionComponent implements OnInit {
 
     if (allFieldsFilled) {
       this.promotionDetails.push(this.createReceiptDetail());
-      this.updateOriginalProducts();
+      // this.updateOriginalProducts();
     } else {
       this.toastr.error('Vui lòng điền đầy đủ thông tin sản phẩm', 'Thông báo');
     }
@@ -364,10 +366,10 @@ export class InsertPromotionComponent implements OnInit {
     }
   }
 
-  updateOriginalProducts() {
-    this.originalProducts = this.products.map((item) => ({ ...item }));
-    console.log(this.originalProducts);
-  }
+  // updateOriginalProducts() {
+  //   this.originalProducts = this.products.map((item) => ({ ...item }));
+  //   console.log(this.originalProducts);
+  // }
 
   onProductSelection(event: any) {
     // Xử lý sự kiện khi người dùng chọn một sản phẩm từ ng-select

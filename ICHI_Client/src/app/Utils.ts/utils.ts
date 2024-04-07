@@ -48,15 +48,6 @@ export class Utils {
 
   static checkEmail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
-  // Các loại thanh toán
-  static paymentTypes = [
-    { paymentTypes: 'PaymentOnDelivery', name: 'Thanh toán khi nhận hàng' },
-    { paymentTypes: 'PaymentViaCard', name: 'Thanh toán qua thẻ' },
-  ];
-
-  static PaymentOnDelivery = 'PaymentOnDelivery';
-  static PaymentViaCard = 'PaymentViaCard';
-
   static onKeyPressNumber(event: KeyboardEvent) {
     const charCode = event.key; // Lấy mã ký tự từ sự kiện
     // Kiểm tra nếu ký tự không phải số (0-9) hoặc không phải phím điều hướng
@@ -133,4 +124,60 @@ export class Utils {
         'https://theme.hstatic.net/1000230347/1000782290/14/menu_icon_9.png?v=20386',
     },
   ];
+
+  // Pending: Đơn hàng chưa được xử lý hoặc chưa được xác nhận.
+  // Processing: Đơn hàng đang được xử lý.
+  // Shipped: Đơn hàng đã được gửi đi.
+  // Delivered: Đơn hàng đã được giao thành công.
+  // Cancelled: Đơn hàng đã bị hủy.
+  // Refunded: Đơn hàng đã được hoàn lại tiền.
+  // On hold: Đơn hàng đang bị tạm dừng.
+  // Completed: Đơn hàng đã được hoàn thành.
+  // Failed: Đơn hàng thất bại trong quá trình xử lý.
+  // Returned: Đơn hàng đã được trả lại.
+
+  // Các loại thanh toán
+  static paymentTypes = [
+    { paymentTypes: 'PaymentOnDelivery', name: 'Thanh toán khi nhận hàng' },
+    { paymentTypes: 'PaymentViaCard', name: 'Thanh toán qua thẻ' },
+    { paymentTypes: 'Cash', name: 'Tiền mặt' },
+  ];
+
+  static PaymentOnDelivery = 'PaymentOnDelivery';
+  static PaymentViaCard = 'PaymentViaCard';
+
+  static statusOrder = [
+    { name: 'Pending', value: 'Chưa xác nhận' }, // Chưa xác nhận
+    { name: 'Processing', value: 'Đang xử lý' }, // Đang xử lý
+    { name: 'Shipped', value: 'Đã vận chuyển' }, // Đã vận chuyển
+    { name: 'Delivered', value: 'Đã giao hàng' },
+    { name: 'Cancelled', value: 'Đã hủy' },
+    { name: 'Refunded', value: 'Đã hoàn lại' },
+    { name: 'On hold', value: 'Đang chờ' },
+    { name: 'Completed', value: 'Đã hoàn thành' }, // Đã hoàn thành
+    { name: 'Failed', value: 'Thất bại' },
+    { name: 'Returned', value: 'Đã trả lại' },
+  ];
+
+  static paymentStatus = [
+    { name: 'Pending', value: 'Chưa thanh toán' },
+    { name: 'Approved', value: 'Đã thanh toán' },
+    { name: 'Cancelled', value: 'Đã hủy' },
+  ];
+
+  static getOrdersStatus(status: string): string {
+    const orderStatus = this.statusOrder.find((x) => x.name === status);
+    return orderStatus ? orderStatus.value : '';
+  }
+
+  static getPaymentStatus(status: string): string {
+    const paymentStatus = this.paymentStatus.find((x) => x.name === status);
+    return paymentStatus ? paymentStatus.value : '';
+  }
+  static getPaymentType(paymentType: string): string {
+    const paymentTypes = this.paymentTypes.find(
+      (x) => x.paymentTypes === paymentType
+    );
+    return paymentTypes ? paymentTypes.name : '';
+  }
 }

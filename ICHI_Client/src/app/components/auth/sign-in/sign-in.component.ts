@@ -53,11 +53,19 @@ export class SignInComponent implements OnInit {
           if (response.message === 'Đăng nhập thành công') {
             debugger;
             this.tokenService.setToken(response.data);
-            const roles = this.tokenService.getUserRoles();
+            let roles = this.tokenService.getUserRoles();
+
+              if (!Array.isArray(roles)) {
+                roles = [roles];
+              }
+
             const userId = this.tokenService.getUserEmail();
 
             const requiredRole = ['ADMIN', 'EMPLOYEE'];
-            if (requiredRole.includes(roles)) {
+            const hasRequiredRole = roles.some((role :any) =>
+              requiredRole.includes(role)
+            );
+            if (hasRequiredRole) {
               // xóa lịch sử trước đó
               this.router.navigate(['/admin'], { replaceUrl: true });
             } else {

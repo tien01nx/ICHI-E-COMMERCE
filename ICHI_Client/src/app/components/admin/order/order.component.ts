@@ -6,7 +6,14 @@ import { ProductModel } from '../../../models/product.model';
 import { CategoryProduct } from '../../../models/category.product';
 import { TrademarkModel } from '../../../models/trademark.model';
 import { ProductImage } from '../../../models/product.image';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ProductsService } from '../../../service/products.service';
 import { CategoryService } from '../../../service/category-product.service';
@@ -14,6 +21,8 @@ import { TrademarkService } from '../../../service/trademark.service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { ProductDTO } from '../../../dtos/product.dto';
+import { CustomerModel } from '../../../models/customer.model';
+import { CustomerService } from '../../../service/customer.service';
 
 @Component({
   selector: 'app-order',
@@ -24,17 +33,22 @@ export class OrderComponent implements OnInit {
   protected readonly Environment = Environment;
   protected readonly Utils = Utils;
   product: ProductModel | undefined = undefined;
+  totalMoney: number = 0;
   titleString: string = '';
   selectedImageUrl: string = '';
   selectedImageFile: File = new File([''], 'filename');
   selectedImageProductUrl: string[] = [];
   selectedImageProductFiles: File[] = [];
-  categories: CategoryProduct[] = [];
   trademarks: TrademarkModel[] = [];
   productImage: ProductImage[] = [];
 
+  // data gốc
   productdtos: ProductDTO[] = [];
   products: ProductModel[] = [];
+
+  // getData khách hàng
+  customers: CustomerModel[] = [];
+  customer: CustomerModel | undefined;
 
   color: any;
   selectedItem: any; // Biến để lưu trữ giá trị được chọn
@@ -44,7 +58,7 @@ export class OrderComponent implements OnInit {
   productForm: FormGroup = new FormGroup({
     id: new FormControl(0),
     trademarkId: new FormControl(null, [Validators.required]),
-    categoryId: new FormControl(null, [Validators.required]),
+    userId: new FormControl(null, [Validators.required]),
     productName: new FormControl('', [
       Validators.required,
       Validators.maxLength(50),
@@ -57,140 +71,71 @@ export class OrderComponent implements OnInit {
     notes: new FormControl('', [Validators.maxLength(200)]),
     isActive: new FormControl(true, [Validators.required]),
     quantity: new FormControl(0, [Validators.required]),
+    inventoryReceiptDetails: new FormArray([
+      new FormGroup({
+        id: new FormControl(0),
+        inventoryReceiptId: new FormControl(0),
+        price: new FormControl(null, [
+          Validators.required,
+          Validators.min(0),
+          Validators.max(1000000000),
+        ]),
+        total: new FormControl(null, [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(1000),
+        ]),
+        productId: new FormControl(null),
+      }),
+    ]),
     // isActive: new FormControl('false', [Validators.required]),
   });
-
-  get productDetails() {
-    return this.productForm.get('productDetails') as FormArray;
-  }
 
   constructor(
     private title: Title,
     private productService: ProductsService,
     private categoryService: CategoryService,
+    private customerService: CustomerService,
     private trademarkService: TrademarkService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private toastr: ToastrService
-  ) {}
+    private toastr: ToastrService,
+    private fb: FormBuilder
+  ) {
+    // this.receiptForm = this.fb.group({
+    //   id: [0],
+    //   notes: ['', Validators.required],
+    //   employeeId: [null, Validators.required],
+    //   supplierId: [null, Validators.required],
+    //   inventoryReceiptDetails: this.fb.array([this.createReceiptDetail()]),
+    // });
+  }
   ngOnInit(): void {
-    // const thumbnailFileControl = this.productForm.get('thumbnailFile');
-    const imageProductFilesControl = this.productForm.get('imageProductFiles');
-    if (this.activatedRoute.snapshot.params['id'] === undefined) {
-      this.titleString = 'Thêm sản phẩm';
-      this.btnSave = 'Thêm mới';
-      // thumbnailFileControl?.setValidators([Validators.required]);
-      imageProductFilesControl?.setValidators([Validators.required]);
-    } else {
-      this.titleString = 'Cập nhật sản phẩm';
-      this.btnSave = 'Cập nhật';
-      // thumbnailFileControl?.setValidators([Validators.nullValidator]);
-      imageProductFilesControl?.setValidators([Validators.nullValidator]);
-      this.findProductById(this.activatedRoute.snapshot.params['id']);
-    }
-    this.productService.findAll().subscribe((data: any) => {
-      this.productdtos = data.data.items;
-      this.products = this.productdtos.map((product) => product.product);
-      console.log('products', this.products);
-    });
-
-    imageProductFilesControl?.updateValueAndValidity();
-    this.title.setTitle(this.titleString);
-    this.findAllCategory();
-    this.findAllOrigin();
-    this.findAllBrand();
-    this.findAllShape();
-    this.findAllMaterial();
+    this.titleString = 'Thêm sản phẩm';
+    this.btnSave = 'Thêm mới';
     this.getDatacombobox();
+
+    const inventoryReceiptDetailsArray = this.productForm.get(
+      'inventoryReceiptDetails'
+    ) as FormArray;
+
+    inventoryReceiptDetailsArray.valueChanges.subscribe(() => {
+      this.totalMoney = this.getTotalMoney();
+    });
   }
 
   getDatacombobox() {
-    this.categoryService.findAll().subscribe((data: any) => {
-      this.categories = data.data;
-      console.log(data.data);
+    this.productService.findAll().subscribe((data: any) => {
+      this.productdtos = data.data.items;
+      this.products = this.productdtos.map((product) => product.product);
+      this.products;
+      console.log('products', this.products);
     });
-    this.trademarkService.findAll().subscribe((data: any) => {
-      this.trademarks = data.data.items;
-      console.log(data.data.items);
+    this.customerService.findAll().subscribe((data: any) => {
+      this.customers = data.data.items;
+      // console.log(data.data);
+      console.log('customer', this.customers);
     });
-    this.color = Utils.createColorList();
-  }
-
-  onFileChange(event: any) {
-    const file = event.target.files[0];
-    this.selectedImageFile = file;
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.selectedImageUrl = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  onSelect(event: any) {
-    this.selectedImageProductFiles.push(...event.addedFiles);
-    this.productForm
-      .get('imageProductFiles')
-      ?.setValue(this.selectedImageProductFiles);
-    console.log(this.selectedImageProductFiles);
-  }
-
-  onRemove(event: any) {
-    this.selectedImageProductFiles.splice(
-      this.selectedImageProductFiles.indexOf(event),
-      1
-    );
-    this.productForm
-      .get('imageProductFiles')
-      ?.setValue(this.selectedImageProductFiles);
-  }
-
-  addProductDetails() {
-    const productDetails = this.productForm.get('productDetails') as FormArray;
-    productDetails.push(
-      new FormGroup({
-        id: new FormControl(null),
-        color: new FormControl('', [Validators.required]),
-        quantity: new FormControl(0),
-      })
-    );
-  }
-
-  removeProductDetails(index: number) {
-    const productDetails = this.productForm.get('productDetails') as FormArray;
-
-    if (productDetails.at(index).get('id')?.value !== null) {
-      Swal.fire({
-        title: 'Bạn có chắc chắn muốn xóa?',
-        text: 'Dữ liệu sẽ không thể phục hồi sau khi xóa!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Xác nhận',
-        cancelButtonText: 'Hủy',
-        buttonsStyling: false,
-        customClass: {
-          confirmButton: 'btn btn-danger me-1',
-          cancelButton: 'btn btn-secondary',
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.productService
-            .deleteProductDetails(productDetails.at(index).get('id')?.value)
-            .subscribe({
-              next: () => {
-                this.toastr.success('Xóa chi tiết sản phẩm thành công');
-                productDetails.removeAt(index);
-              },
-              error: (err: any) => {
-                this.toastr.error(err.error, 'Thất bại');
-              },
-            });
-        }
-      });
-    } else {
-      productDetails.removeAt(index);
-    }
   }
 
   onSubmit() {
@@ -198,101 +143,9 @@ export class OrderComponent implements OnInit {
       return;
     }
     this.createProduct();
-    // if (this.activatedRoute.snapshot.params['id'] === undefined) {
-    //   this.createProduct();
-    // } else {
-    //   this.updateProduct();
-    // }
-  }
-
-  findAllCategory() {
-    // this.categoryService
-    //   .findAllByName('', true, 100, 1, 'ASC', 'name')
-    //   .subscribe((data: any) => {
-    //     this.categories = data.content;
-    //   });
-  }
-
-  findAllOrigin() {
-    // this.originService.findAll().subscribe((data: any) => {
-    //   this.origins = data;
-    // });
-  }
-
-  findAllBrand() {
-    // this.brandService.findAll().subscribe((data: any) => {
-    //   this.brands = data;
-    // });
-  }
-
-  findAllShape() {
-    // this.shapeService.findAll().subscribe((data: any) => {
-    //   this.shapes = data;
-    // });
-  }
-
-  findAllMaterial() {
-    // this.materialService.findAll().subscribe((data: any) => {
-    //   this.materials = data;
-    // });
-  }
-
-  findProductById(id: number) {
-    this.productService.findById(id).subscribe({
-      next: (respon: any) => {
-        this.productForm.get('id')?.setValue(respon.data.product.id);
-        this.productForm
-          .get('productName')
-          ?.setValue(respon.data.product.productName);
-        this.productForm
-          .get('description')
-          ?.setValue(respon.data.product.description);
-        this.productForm.get('price')?.setValue(respon.data.product.price);
-        this.productForm
-          .get('priorityLevel')
-          ?.setValue(respon.data.product.priorityLevel);
-        this.productForm.get('notes')?.setValue(respon.data.product.notes);
-        this.productForm.get('color')?.setValue(respon.data.product.color);
-        this.productForm
-          .get('quantity')
-          ?.setValue(respon.data.product.quantity);
-        this.productForm
-          .get('categoryId')
-          ?.setValue(respon.data.product.categoryId);
-        this.productForm
-          .get('trademarkId')
-          ?.setValue(respon.data.product.trademarkId);
-
-        this.productForm
-          .get('isActive')
-          ?.setValue(respon.data.product.isActive);
-        this.productImage = respon.data.productImages;
-        console.log('image', this.productImage);
-
-        this.selectedImageUrl =
-          Environment.apiBaseUrl + '/images/' + respon.data.product.thumbnail;
-        this.selectedImageFile = new File([''], 'filename');
-        respon.data.productImages.forEach((productImage: ProductImage) => {
-          this.selectedImageProductUrl.push(productImage.imagePath);
-        });
-        console.log(this.selectedImageProductUrl);
-      },
-      error: (err: any) => {
-        this.toastr.error(err.error, 'Thất bại');
-      },
-    });
   }
 
   createProduct() {
-    debugger;
-    if (
-      this.selectedImageProductFiles.length === 0 &&
-      this.productImage.length === 0
-    ) {
-      this.toastr.error('Chưa chọn ảnh sản phẩm', 'Thất bại');
-      return;
-    }
-
     this.productService
       .create(this.productForm.value, this.selectedImageProductFiles)
       .subscribe({
@@ -313,138 +166,158 @@ export class OrderComponent implements OnInit {
       });
   }
 
-  updateProduct() {
-    debugger;
-    // this.productForm.value.id = 0;
-    if (this.productForm.value.productImages === null) {
-      this.toastr.error('Chưa chọn ảnh sản phẩm', 'Thất bại');
-      return;
+  getDistrictsControl(): FormControl {
+    const customerId = this.productForm.get('userId') as FormControl;
+
+    customerId.valueChanges.pipe().subscribe((id: any) => {
+      this.customer = this.customers.find((customer) => customer.id === id);
+    });
+    return customerId;
+  }
+  get inventoryReceiptDetails() {
+    return this.productForm.get('inventoryReceiptDetails') as FormArray;
+  }
+
+  createReceiptDetail(): FormGroup {
+    return this.fb.group({
+      id: [0],
+      inventoryReceiptId: [0],
+      price: [
+        null,
+        [Validators.required, Validators.min(0), Validators.max(1000000000)],
+      ],
+      total: [
+        null,
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(1000),
+          this.customTotalValidator.bind(this),
+        ],
+      ],
+      productId: [null],
+    });
+  }
+
+  customTotalValidator(control: any) {
+    if (control.value > 1000) {
+      return { maxExceeded: true };
     }
-    this.productService
-      .update(this.productForm.value, this.selectedImageProductFiles)
-      .subscribe({
-        next: () => {
-          this.toastr.success('Cập nhật sản phẩm thành công');
-          this.router.navigateByUrl('/admin/product');
-        },
-        error: (err: any) => {
-          this.toastr.error(err.error, 'Thất bại');
-        },
-      });
+    return null;
   }
 
-  deleteImageProduct(imageName: string) {
-    Swal.fire({
-      title: 'Bạn có chắc chắn muốn xóa?',
-      text: 'Dữ liệu sẽ không thể phục hồi sau khi xóa!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Xác nhận',
-      cancelButtonText: 'Hủy',
-      buttonsStyling: false,
-      customClass: {
-        confirmButton: 'btn btn-danger me-1',
-        cancelButton: 'btn btn-secondary',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.productService
-          .deleteImage(this.activatedRoute.snapshot.params['id'], imageName)
-          .subscribe({
-            next: () => {
-              this.productImage = this.productImage.filter(
-                (image) => image.imageName !== imageName
-              );
-
-              this.toastr.success('Xóa ảnh thành công');
-            },
-            error: (err: any) => {
-              this.toastr.error(err.error, 'Thất bại');
-            },
-          });
+  addProduct() {
+    // Kiểm tra tất cả các trường có giá trị không
+    const allFieldsFilled = this.inventoryReceiptDetails.controls.every(
+      (control) => {
+        const productId = control.get('productId')?.value;
+        const price = control.get('price')?.value;
+        const total = control.get('total')?.value;
+        return productId && price && total;
       }
-    });
+    );
+    this.updateProductSelect();
+    this.inventoryReceiptDetails.push(this.createReceiptDetail());
   }
 
-  deleteProduct(id: number) {
-    Swal.fire({
-      title: 'Bạn có chắc chắn muốn xóa?',
-      text: 'Dữ liệu sẽ không thể phục hồi sau khi xóa!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Xác nhận',
-      cancelButtonText: 'Hủy',
-      buttonsStyling: false,
-      customClass: {
-        confirmButton: 'btn btn-danger me-1',
-        cancelButton: 'btn btn-secondary',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.productService.deleteProductDetails(id).subscribe({
-          next: () => {
-            this.toastr.success('Xóa sản phẩm thành công');
-            this.router.navigateByUrl('/admin/products');
-          },
-          error: (err: any) => {
-            this.toastr.error(err.error, 'Thất bại');
-          },
-        });
+  updateProductSelect() {
+    // lấy ra sản phẩm được chọn trong inventoryReceiptDetails
+    let selectedProducts = this.productForm.value.inventoryReceiptDetails.map(
+      (detail: { productId: any }) => detail.productId
+    );
+    console.log('listItemId: ', selectedProducts.toString());
+
+    // this.products = this.productdtos
+    //   .map((product) => product.product)
+    //   .filter(
+    //     (product) =>
+    //       !selectedProducts.some((selectedId: any) =>
+    //         selectedId.includes(product.id)
+    //       )
+    //   );
+    if (!Array.isArray(selectedProducts)) {
+      selectedProducts = [selectedProducts];
+    }
+
+    console.log('Các productId đã chọn: ', selectedProducts.toString());
+
+    // Cập nhật mảng products bằng cách lọc ra các sản phẩm chưa được chọn từ mảng gốc là productdtos.product và đảm bảo không trùng với selectedProducts
+    this.products = this.productdtos
+      .map((productDto) => productDto.product)
+      .filter((product) => !selectedProducts.includes(product.id));
+
+    console.log('Mảng sản phẩm được cập nhật:', selectedProducts);
+    console.log('mảng product update', this.products);
+  }
+
+  // onProductSelection(event: any) {
+  //   // Xử lý sự kiện khi người dùng chọn một sản phẩm từ ng-select
+  //   const unselectedProducts = this.products.filter((product) =>
+  //     this.productForm.value.promotionDetails.every(
+  //       (detail: { productId: any }) => detail.productId !== product.id
+  //     )
+  //   );
+  //   console.log('chưa chọn', unselectedProducts);
+  //   // Cập nhật danh sách sản phẩm chỉ hiển thị các sản phẩm chưa được chọn
+  //   this.products = unselectedProducts;
+  // }
+  getTotalMoney(): number {
+    const inventoryReceiptDetails = this.productForm.get(
+      'inventoryReceiptDetails'
+    ) as FormArray;
+    let total = 0;
+
+    inventoryReceiptDetails.controls.forEach(
+      (control: AbstractControl<any, any>) => {
+        const price = (control.get('price') as FormControl)?.value || 0;
+        const quantity = (control.get('total') as FormControl)?.value || 0;
+        total += price * quantity;
       }
-    });
+    );
+
+    return total;
+  }
+  getTotalPrice(): number[] {
+    const inventoryReceiptDetails = this.productForm.get(
+      'inventoryReceiptDetails'
+    ) as FormArray;
+    const totals: number[] = [];
+
+    inventoryReceiptDetails.controls.forEach(
+      (control: AbstractControl<any, any>) => {
+        const price = (control.get('price') as FormControl)?.value || 0;
+        const quantity = (control.get('total') as FormControl)?.value || 0;
+        const total = price * quantity;
+        totals.push(total);
+      }
+    );
+
+    return totals;
   }
 
-  // items = [
-  //   { id: 1, name: 'Item 1', imageURL: 'https://example.com/image1.jpg' },
-  //   { id: 2, name: 'Item 2', imageURL: 'https://example.com/image2.jpg' },
-  //   { id: 3, name: 'Item 3', imageURL: '' }, // No image URL for this item
-  // ];
-  items = [
-    {
-      trademarkId: 5,
-      categoryId: 3,
-      color: 'Xanh',
-      producName: 'Bút 12',
-      description: '<p>axx</p>',
-      price: 8000,
-      priorityLevel: 0,
-      quantity: 10,
-      notes: '',
-      isActive: true,
-      isDeleted: false,
-      discount: 20,
-      image:
-        Environment.apiBaseRoot +
-        '\\images\\products\\product-17\\d869afa2-2e51-419a-8148-be1665fdeb2a.jpg',
-      id: 17,
-      createDate: '2024-04-04T15:48:58.8030916',
-      createBy: 'Admin',
-      modifiedDate: '2024-04-04T15:48:58.8030924',
-      modifiedBy: 'Admin',
-    },
-    {
-      trademarkId: 7,
-      categoryId: 2,
-      color: 'Xanh',
-      producName: 'Sản phẩm demo',
-      description: '<p>www</p>',
-      price: 9000,
-      priorityLevel: 0,
-      quantity: 0,
-      notes: '',
-      isActive: true,
-      isDeleted: false,
-      discount: 20,
-      image:
-        Environment.apiBaseRoot +
-        '\\images\\products\\product-17\\d869afa2-2e51-419a-8148-be1665fdeb2a.jpg',
+  onProductSelection(event: any, index: number) {
+    let pricePromotion;
+    const receiptDetails = this.productForm.get(
+      'inventoryReceiptDetails'
+    ) as FormArray;
+    const formGroup = receiptDetails.at(index) as FormGroup;
+    if (event.discount > 0) {
+      pricePromotion = event.price - event.price * (event.discount / 100);
+    } else {
+      pricePromotion = event.price;
+    }
 
-      id: 16,
-      createDate: '2024-04-04T14:54:17.4795909',
-      createBy: 'Admin',
-      modifiedDate: '2024-04-04T14:54:17.4795916',
-      modifiedBy: 'Admin',
-    },
-    // Các mục sản phẩm khác
-  ];
+    if (formGroup !== null) {
+      formGroup.get('price')?.setValue(pricePromotion);
+      // formGroup.get('productId')?.setValue(event.id);
+      formGroup.get('total')?.setValue(1);
+    }
+  }
+
+  removeProduct(index: number) {
+    if (this.inventoryReceiptDetails.length > 1) {
+      this.inventoryReceiptDetails.removeAt(index);
+      this.updateProductSelect();
+    }
+  }
 }

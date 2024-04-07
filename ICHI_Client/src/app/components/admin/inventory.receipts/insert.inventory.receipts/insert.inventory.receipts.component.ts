@@ -37,14 +37,15 @@ export class InsertInventoryReceiptsComponent implements OnInit {
   product: ProductModel | undefined = undefined;
   titleString: string = '';
   suppliers: SupplierModel[] = [];
-  products: ProductDTO[] = [];
-  originalProducts: ProductDTO[] = [];
+  products: ProductModel[] = [];
+  originalProducts: ProductModel[] = [];
+
   totalMoney: number = 0;
   isDisplayNone: boolean = false;
   btnSave: string = '';
   employeeName: string = '';
   receiptForm: FormGroup = new FormGroup({
-    id: new FormControl(6),
+    id: new FormControl(0),
     notes: new FormControl('', [Validators.required]),
     supplierId: new FormControl(null, [Validators.required]),
     employeeId: new FormControl('', [Validators.required]),
@@ -63,6 +64,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
           Validators.max(1000),
         ]),
         productId: new FormControl(null),
+        batchNumber: new FormControl(0),
       }),
     ]),
   });
@@ -93,11 +95,11 @@ export class InsertInventoryReceiptsComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.activatedRoute.snapshot.params['id'] === undefined) {
-      this.titleString = 'Thêm sản phẩm';
+      this.title.setTitle('Thêm hóa đơn nhập hàng');
       this.btnSave = 'Thêm mới';
       // thumbnailFileControl?.setValidators([Validators.required]);
     } else {
-      this.titleString = 'Cập nhật sản phẩm';
+      this.titleString = 'Cập nhật hóa đơn nhập hàng';
       this.btnSave = 'Cập nhật';
       this.findProductById(this.activatedRoute.snapshot.params['id']);
     }
@@ -109,6 +111,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
     inventoryReceiptDetailsArray.valueChanges.subscribe(() => {
       this.totalMoney = this.getTotalMoney();
     });
+
     this.title.setTitle(this.titleString);
     this.getDatacombobox();
     this.receiptForm
@@ -122,12 +125,13 @@ export class InsertInventoryReceiptsComponent implements OnInit {
       console.log(data.data.items);
     });
 
-    this.productService.findAll().subscribe((data: any) => {
-      this.products = data.data.items;
-      this.originalProducts = data.data.items.map((item: ProductDTO) => ({
-        ...item,
+    this.inventoryService.findAll().subscribe((respon: any) => {
+      console.log('productData', respon.data);
+      this.products = respon.data;
+      this.originalProducts = respon.data.map((item: ProductDTO) => ({
+        ...item.product,
       }));
-      console.log(data.data.items);
+      console.log(respon.data);
     });
   }
 
@@ -138,6 +142,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
         id: new FormControl(null),
         color: new FormControl('', [Validators.required]),
         quantity: new FormControl(0),
+        batchNumber: new FormControl(0),
       })
     );
   }
@@ -210,7 +215,9 @@ export class InsertInventoryReceiptsComponent implements OnInit {
         this.receiptForm.get('id')?.setValue(data.id);
         this.receiptForm.get('notes')?.setValue(data.notes);
         this.receiptForm.get('supplierId')?.setValue(data.supplierId);
-        this.receiptForm.get('employeeId')?.setValue(data.employeeId);
+        this.receiptForm
+          .get('employeeId')
+          ?.setValue(this.tokenService.getUserEmail());
 
         // Clear existing controls in inventoryReceiptDetails FormArray
         while (this.inventoryReceiptDetails.length !== 0) {
@@ -225,6 +232,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
             price: new FormControl(detail.price),
             total: new FormControl(detail.total),
             productId: new FormControl(detail.product?.id), // Assuming product is available in detail
+            batchNumber: new FormControl(detail.batchNumber),
           });
 
           this.inventoryReceiptDetails.push(detailFormGroup);
@@ -254,6 +262,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
         ],
       ],
       productId: [null],
+      batchNumber: new FormControl(0),
     });
   }
 
@@ -279,8 +288,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
       // Lọc ra các sản phẩm chưa được chọn
       const unselectedProducts = this.originalProducts.filter((product) =>
         this.receiptForm.value.inventoryReceiptDetails.every(
-          (detail: { productId: any }) =>
-            detail.productId !== product.product.id
+          (detail: { productId: any }) => detail.productId !== product.id
         )
       );
       // Cập nhật danh sách sản phẩm chỉ hiển thị các sản phẩm chưa được chọn
@@ -313,7 +321,12 @@ export class InsertInventoryReceiptsComponent implements OnInit {
   createProduct() {
     this.inventoryService.create(this.receiptForm.value).subscribe({
       next: (respon: any) => {
-        this.toastr.success(respon.message, 'Thành công');
+        if (respon.message === 'Tạo phiếu nhập thành công') {
+          this.toastr.success(respon.message, 'Thành công');
+          this.router.navigateByUrl('/admin/inventory_receipts');
+        } else {
+          this.toastr.error(respon.message, 'Thất bại');
+        }
         // this.router.navigateByUrl('/admin/products');
       },
       error: (err: any) => {
@@ -322,24 +335,30 @@ export class InsertInventoryReceiptsComponent implements OnInit {
     });
   }
 
+  onProductSelection(event: any, index: number) {
+    const receiptDetails = this.receiptForm.get(
+      'inventoryReceiptDetails'
+    ) as FormArray;
+    const formGroup = receiptDetails.at(index) as FormGroup;
+    if (formGroup !== null) {
+      formGroup.get('batchNumber')?.setValue(event.batchNumber);
+    }
+  }
   updateProduct() {
-    // debugger;
-    // // this.receiptForm.value.id = 0;
-    // if (this.receiptForm.value.productImages === null) {
-    //   this.toastr.error('Chưa chọn ảnh sản phẩm', 'Thất bại');
-    //   return;
-    // }
-    // this.productService
-    //   .update(this.receiptForm.value, this.selectedImageProductFiles)
-    //   .subscribe({
-    //     next: () => {
-    //       this.toastr.success('Cập nhật sản phẩm thành công');
-    //       this.router.navigateByUrl('/admin/product');
-    //     },
-    //     error: (err: any) => {
-    //       this.toastr.error(err.error, 'Thất bại');
-    //     },
-    //   });
+    this.inventoryService.update(this.receiptForm.value).subscribe({
+      next: (respon: any) => {
+        if (respon.message === 'Cập nhật hóa đơn nhập thành công') {
+          this.toastr.success(respon.message, 'Thành công');
+          this.router.navigateByUrl('/admin/inventory_receipts');
+        } else {
+          this.toastr.error(respon.message, 'Thất bại');
+        }
+        // this.router.navigateByUrl('/admin/products');
+      },
+      error: (err: any) => {
+        this.toastr.error(err.error, 'Thất bại');
+      },
+    });
   }
 
   deleteImageProduct(imageName: string) {
@@ -410,10 +429,10 @@ export class InsertInventoryReceiptsComponent implements OnInit {
   removeProduct(index: number) {
     if (this.inventoryReceiptDetails.length > 1) {
       this.inventoryReceiptDetails.removeAt(index);
-      const productIdToRemove = this.products[index].product.id;
+      const productIdToRemove = this.products[index].id;
       // Loại bỏ sản phẩm đã xóa khỏi mảng originalProducts
       this.originalProducts = this.originalProducts.filter(
-        (item) => item.product.id !== productIdToRemove
+        (item) => item.id !== productIdToRemove
       );
       console.log(this.originalProducts);
     }

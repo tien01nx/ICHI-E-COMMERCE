@@ -51,9 +51,20 @@ export class InventorryReceiptsService {
     );
   }
 
+  findAll() {
+    return this.http.get(this.baseUrl + '/InventoryReceipt/FindAll');
+  }
+
   create(data: any) {
     return this.http.post(
       'https://localhost:7150/api/InventoryReceipt/Create',
+      data
+    );
+  }
+
+  update(data: any) {
+    return this.http.post(
+      'https://localhost:7150/api/InventoryReceipt/Update',
       data
     );
   }

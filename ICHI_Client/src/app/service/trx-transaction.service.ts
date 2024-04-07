@@ -1,5 +1,5 @@
 import { TrxTransactionDTO } from './../dtos/trxtransaction.dto';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Environment } from '../environment/environment';
 import { InsertCartDTO } from '../dtos/insert.cart.dto';
@@ -31,6 +31,52 @@ export class TrxTransactionService {
     private http: HttpClient,
     private apiService: ApiServiceService
   ) {}
+
+  getFindAllTransaction(
+    PageNumber: number,
+    PageSize: number,
+    SortDirection: string,
+    SortBy: string,
+    Search: string,
+    OrderStatis: string
+  ) {
+    let params = new HttpParams();
+    if (PageNumber && PageNumber.toString().trim() !== '') {
+      params = params.set('page-number', PageNumber.toString());
+    }
+    if (PageSize && PageSize.toString().trim() !== '') {
+      params = params.set('page-size', PageSize.toString());
+    }
+    if (SortDirection && SortDirection.trim() !== '') {
+      params = params.set('sort-direction', SortDirection);
+    }
+    if (SortBy && SortBy.trim() !== '') {
+      params = params.set('sort-by', SortBy);
+    }
+    if (Search && Search.trim() !== '') {
+      params = params.set('search', Search);
+    }
+
+    if (OrderStatis && OrderStatis.trim() !== '') {
+      params = params.set('order-status', OrderStatis);
+    }
+    // console.log(params);
+    // return this.apiService.callApi<PromotionModel>(
+    //   '/Promotion/FindAllPaged',
+    //   'get',
+    //   params
+    // );
+    return this.http.get(this.baseUrl + '/TrxTransaction/FindAllPaged', {
+      params: params,
+    });
+  }
+
+  findAll() {
+    return this.http.get(
+      this.baseUrl +
+        'TrxTransaction/FindAllPaged?page-size=10000&page-number=1&sort-direction=desc&sort-by=Id'
+    );
+  }
 
   getCarts(): CartModel[] {
     const cartsString = localStorage.getItem(Utils.cartList);
@@ -163,6 +209,11 @@ export class TrxTransactionService {
       );
   }
 
+  getOrderTracking(orderId: string) {
+    return this.http.get(
+      this.baseUrl + '/Cart/CheckTransactionPromotion?transactionId=' + orderId
+    );
+  }
   // PaymentExecute(model: TrxTransactionDTO) {
   //   if (model.trxTransactionId === 0) {
   //     return this.http

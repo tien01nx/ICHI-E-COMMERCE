@@ -30,6 +30,9 @@ import { AccessForbiddenComponent } from './components/auth/errors/access-forbid
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
 import { UserGuard } from './guard/user.guard';
 import { InsertPromotionComponent } from './components/admin/promotion/Insert/insert-promotion/insert-promotion.component';
+import { ListOrderComponent } from './components/admin/order/list-order/list-order.component';
+import { ProfileComponent } from './components/client/profile/profile.component';
+import { OrderTrackingComponent } from './components/client/order-tracking/order-tracking.component';
 
 export const routes: Routes = [
   {
@@ -58,6 +61,7 @@ export const routes: Routes = [
         component: InsertInventoryReceiptsComponent,
       },
       { path: 'order', component: OrderComponent },
+      { path: 'list_order', component: ListOrderComponent },
       {
         path: 'insert_inventory_receipts/:id',
         component: InsertInventoryReceiptsComponent,
@@ -85,6 +89,16 @@ export const routes: Routes = [
   { path: 'forgot_password', component: ForgotPasswordComponent },
   { path: 'verify_email', component: VerificationCodeComponent },
   { path: 'access-denied', component: AccessForbiddenComponent },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [UserGuard],
+  },
+  {
+    path: 'order_tracking/:id',
+    component: OrderTrackingComponent,
+    canActivate: [UserGuard],
+  },
   {
     path: 'reset-password',
     component: ResetPasswordComponent,

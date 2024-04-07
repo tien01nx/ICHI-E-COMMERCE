@@ -9,6 +9,7 @@ export interface InventoryReceiptsModel extends MasterEntity {
   supplierId: number;
   notes: string;
   isActive: boolean;
+  batchNumber: number;
   employee: EmployeeModel;
   supplier: SupplierModel;
 }

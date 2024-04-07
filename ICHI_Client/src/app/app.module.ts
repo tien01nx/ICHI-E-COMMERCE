@@ -52,6 +52,9 @@ import { CurrencyFormatPipe } from './pipe/currency-format.pipe';
 import { AccessForbiddenComponent } from './components/auth/errors/access-forbidden/access-forbidden.component';
 import { InsertPromotionComponent } from './components/admin/promotion/Insert/insert-promotion/insert-promotion.component';
 import { OrderComponent } from './components/admin/order/order.component';
+import { ListOrderComponent } from './components/admin/order/list-order/list-order.component';
+import { ProfileComponent } from './components/client/profile/profile.component';
+import { OrderTrackingComponent } from './components/client/order-tracking/order-tracking.component';
 
 register();
 
@@ -93,6 +96,9 @@ register();
     ResetPasswordComponent,
     InsertPromotionComponent,
     OrderComponent,
+    ListOrderComponent,
+    ProfileComponent,
+    OrderTrackingComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),

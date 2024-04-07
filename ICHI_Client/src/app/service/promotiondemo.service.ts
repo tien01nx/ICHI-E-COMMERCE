@@ -48,6 +48,8 @@ export class PromotiondemoService {
       }
     );
   }
+
+  
   getDetailCategory(id: number): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(`${this.apiBaseUrl}/categories/${id}`);
   }

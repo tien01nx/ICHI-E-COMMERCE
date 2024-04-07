@@ -25,8 +25,12 @@ export class AdminGuard {
   ): boolean | UrlTree => {
     // debugger
     const requiredRole = ['ADMIN', 'EMPLOYEE']; // Quyền truy cập yêu cầu
-    const roles = this.tokenService.getUserRoles(); // Lấy danh sách các quyền từ AuthService
+    let roles = this.tokenService.getUserRoles(); // Lấy danh sách các quyền từ AuthService
     // console.log("role:" + roles);
+    if (!Array.isArray(roles)) {
+      roles = [roles];
+    }
+
     // debugger
     if (
       roles == null ||
@@ -36,12 +40,22 @@ export class AdminGuard {
       // nếu token hết hạn, chuyển hướng đến trang đăng nhập
       this.toastr.error('Phiên làm việc hết hạn, vui lòng đăng nhập lại');
       return this.router.createUrlTree(['/login']);
-    } else if (requiredRole.includes(roles)) {
-      // Nếu người dùng có ít nhất một quyền nằm trong danh sách quyền yêu cầu
-      return true; // Người dùng có quyền truy cập
     } else {
+      const hasRequiredRole = roles.some((role: any) =>
+        requiredRole.includes(role)
+      );
+      if (hasRequiredRole) {
+        return true;
+      }
       // Người dùng không có quyền truy cập, chuyển hướng đến trang access-denied
       return this.router.createUrlTree(['/access-denied']);
     }
+    // } if (requiredRole.includes(roles)) {
+    //   // Nếu người dùng có ít nhất một quyền nằm trong danh sách quyền yêu cầu
+    //   return true; // Người dùng có quyền truy cập
+    // } else {
+    //   // Người dùng không có quyền truy cập, chuyển hướng đến trang access-denied
+    //   return this.router.createUrlTree(['/access-denied']);
+    // }
   };
 }

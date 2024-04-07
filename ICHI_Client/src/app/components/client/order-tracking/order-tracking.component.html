@@ -1,0 +1,255 @@
+<app-client-header></app-client-header>
+<app-client-menu></app-client-menu>
+<section class="pt-5 pb-9">
+  <div class="container-small cart">
+    <div class="d-flex flex-wrap justify-content-between align-items-end mb-5">
+      <div>
+        <h2>
+          Trạng thái đơn hàng số {{ orderTrackingDTO[0].trxTransactionId }}
+        </h2>
+        <p class="text-body-secondary mb-0">
+          Hình thức thanh toán<a class="fw-bold" href="#!">
+            {{
+              Utils.getPaymentType(
+                orderTrackingDTO[0].trxTransaction.paymentTypes
+              )
+            }}</a
+          >
+          <!-- ,<br class="d-sm-none" /> -->
+          <!-- <span class="ms-sm-1"
+            >Nov 12, 2021, 8:54AM.</span -->
+          <!-- > -->
+        </p>
+      </div>
+      <button class="btn btn-outline-primary mt-3">
+        <span class="fa-solid fa-phone me-2"></span>
+        Support
+      </button>
+    </div>
+    <div class="row gy-9 gx-5">
+      <div class="col-12 col-lg-6">
+        <!-- hiện thị thông tin product -->
+        <div class="card mt-3 mt-lg-0">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+              <h3 class="mb-0">Chi tiết đơn hàng</h3>
+              <!-- <button class="btn btn-link pe-0" type="button">Edit cart</button> -->
+            </div>
+            <div class="border-dashed border-bottom border-translucent mt-4">
+              <div *ngFor="let item of orderTrackingDTO">
+                <div class="row align-items-center mb-2 g-3">
+                  <div class="col-8 col-md-7 col-lg-8">
+                    <div class="d-flex align-items-center">
+                      <img
+                        class="me-2 ms-1"
+                        src="{{ Environment.apiBaseRoot }}/{{
+                          item.productImage
+                        }}"
+                        width="40"
+                        alt=""
+                      />
+                      <h6 class="fw-semibold text-body-highlight lh-base">
+                        {{ item.product.productName }}
+                      </h6>
+                    </div>
+                  </div>
+                  <div class="col-2 col-md-3 col-lg-2">
+                    <h6 class="fs-10 mb-0">
+                      {{ item.total }}
+                    </h6>
+                  </div>
+                  <div class="col-2 ps-0">
+                    <h5 class="mb-0 fw-semibold text-end">
+                      {{ item.total * item.price | number : "1.0-0" }}
+                    </h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="d-flex justify-content-between"
+              *ngIf="priceDiscount > 0"
+            >
+              <p class="text-body fw-semibold">Giảm giá :</p>
+              <p class="text-danger fw-semibold">
+                {{ priceDiscount | number : "1.0-0" }}
+              </p>
+            </div>
+            <div class="d-flex justify-content-between">
+              <p class="text-body fw-semibold">Phí vận chuyển:</p>
+              <p class="fw-semibold">
+                {{ priceShip | number : "1.0-0" }}
+              </p>
+            </div>
+            <div class="d-flex justify-content-between border-dashed-y pt-3">
+              <h4 class="mb-0">Tổng tiền :</h4>
+              <h4 class="mb-0">{{ getTotalPrice() | number : "1.0-0" }}</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="timeline-vertical">
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                >
+                  <p class="fs-10 fw-semibold text-body-tertiary mb-0">
+                    23 August, 2023<br class="d-none d-md-block" />
+                    10:30 AM
+                  </p>
+                </div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-success"
+                    data-bs-theme="light"
+                  >
+                    <span class="fa-solid fa-check text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-success"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Order is processing</h4>
+                  <p class="fs-9 text-body-secondary mb-0">
+                    Your package is ready for the seller to prepare.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                >
+                  <p class="fs-10 fw-semibold text-body-tertiary mb-0">
+                    25 August, 2023<br class="d-none d-md-block" />
+                    11:30 AM
+                  </p>
+                </div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-success"
+                    data-bs-theme="light"
+                  >
+                    <span class="fa-solid fa-check text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-warning"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Picked Up</h4>
+                  <p class="fs-9 text-body-secondary mb-0">
+                    Your package has been picked up from the seller.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                >
+                  <p class="fs-10 fw-semibold text-body-tertiary mb-0">
+                    27 August, 2023<br class="d-none d-md-block" />
+                    6:30 AM
+                  </p>
+                </div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-warning"
+                    data-bs-theme="light"
+                  >
+                    <!-- class="icon-item icon-item-sm bg-success" -->
+
+                    <span
+                      class="fa-solid fa-truck-ramp-box text-white fs-10"
+                    ></span>
+                  </div>
+                  <span class="timeline-bar border-end border-dashed"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Ready to Ship</h4>
+                  <p class="fs-9 text-body-secondary mb-0">
+                    Your package is now ready to be shipped.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                >
+                  <p class="fs-10 fw-semibold text-body-tertiary mb-0">
+                    Estimated time<br class="d-none d-md-block" />
+                    29 August, 2023
+                  </p>
+                </div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-body-quaternary"
+                    data-bs-theme="light"
+                  >
+                    <span class="fa-solid fa-truck text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-dashed"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Shipped</h4>
+                  <p class="fs-9 text-body-secondary mb-0">Pending</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                >
+                  <p class="fs-10 fw-semibold text-body-tertiary mb-0">
+                    Estimated time<br class="d-none d-md-block" />
+                    30 August, 2023
+                  </p>
+                </div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-body-quaternary"
+                    data-bs-theme="light"
+                  >
+                    <span
+                      class="fa-solid fa-truck-fast text-white fs-10"
+                    ></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Delivered</h4>
+                  <p class="fs-9 text-body-secondary mb-0">Pending</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end of .container-->
+</section>
+<app-client-footer></app-client-footer>
