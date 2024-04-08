@@ -519,7 +519,7 @@
 
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="supplierName"
-              >Tên nhà cung cấp</label
+              >Tên nhà cung cấp <sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">
               <input
@@ -553,7 +553,7 @@
           </div>
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="address"
-              >Địa chỉ</label
+              >Địa chỉ <sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">
               <textarea
@@ -587,7 +587,7 @@
           </div>
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="phoneNumber"
-              >Số điện thoại</label
+              >Số điện thoại <sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">
               <input
@@ -626,7 +626,7 @@
 
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="email"
-              >Email</label
+              >Email <sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">
               <input
@@ -655,7 +655,7 @@
           </div>
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="taxCode"
-              >Mã số thuế</label
+              >Mã số thuế <sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">
               <input
@@ -697,7 +697,7 @@
           </div>
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="bankAccount"
-              >Số tài khoản</label
+              >Số tài khoản <sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">
               <input
@@ -729,7 +729,7 @@
           </div>
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="bankName"
-              >Tên ngân hàng</label
+              >Tên ngân hàng <sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">
               <input
@@ -749,14 +749,19 @@
                   Tên ngân hàng không được để trống
                 </span>
                 <span
-                  *ngIf="supplierForm['controls']['bankName'].errors?.['maxlength'] || supplierForm['controls']['bankName'].errors?.['minlength']"
-                >
-                  Tên ngân hàng tối thiểu 3 ký tự và không vượt quá 10 ký tự
-                </span>
-                <span
                   *ngIf="!(supplierForm['controls']['bankName'].errors?.['maxlength'] || supplierForm['controls']['bankName'].errors?.['minlength']) &&supplierForm['controls']['bankName'].errors?.['pattern']"
                 >
                   Tên ngân hàng không đúng định dạng
+                </span>
+                <span
+                  *ngIf=" supplierForm['controls']['bankName'].errors?.['minlength']"
+                >
+                  Tên ngân hàng tối thiểu 3 ký tự
+                </span>
+                <span
+                  *ngIf="supplierForm['controls']['bankName'].errors?.['maxlength']"
+                >
+                  Tên ngân hàng tối đa 10 ký tự
                 </span>
               </small>
             </div>

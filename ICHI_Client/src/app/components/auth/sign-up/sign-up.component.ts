@@ -25,6 +25,7 @@ export class SignUpComponent implements OnInit {
   successMessage: string = '';
   isActive: boolean = false;
   birthday: Date = new Date();
+  passwordsNotMatching: boolean = false;
   ngOnInit(): void {}
   constructor(
     private authServer: AuthService,
@@ -64,6 +65,26 @@ export class SignUpComponent implements OnInit {
     birthday: new FormControl('', [Validators.required]),
     gender: new FormControl('', [Validators.required]),
   });
+
+  onKeyPress(event: KeyboardEvent) {
+    const inputValue = event.key;
+    const pattern = /^[a-zA-ZÀ-ỹ\s]*$/;
+    if (!pattern.test(inputValue)) {
+      console.log('event', event);
+      event.preventDefault();
+    }
+  }
+
+  checkPasswordMatch() {
+    const password = this.userForm.get('password')?.value;
+    const confirmPassword = this.userForm.get('confirmPassword')?.value;
+
+    if (password !== confirmPassword) {
+      this.passwordsNotMatching = true;
+    } else {
+      this.passwordsNotMatching = false;
+    }
+  }
 
   userRegister() {
     if (this.userForm.value.password !== this.userForm.value.confirmPassword) {

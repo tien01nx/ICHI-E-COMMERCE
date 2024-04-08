@@ -126,7 +126,6 @@
                         >
                           Họ và tên là bắt buộc
                         </span>
-
                         <span
                           *ngIf="userForm['controls']['fullname'].errors?.['minlength'] "
                         >
@@ -198,7 +197,7 @@
                           <span
                             *ngIf="userForm['controls']['password'].errors?.['minlength']"
                           >
-                            Mật khẩu dài tối thiểu 8 ký tự ></span
+                            Mật khẩu dài tối thiểu 8 ký tự</span
                           >
 
                           <span
@@ -207,7 +206,7 @@
                             Mật khẩu không được vượt quá 40 ký tự
                           </span>
                           <span
-                            *ngIf="userForm['controls']['password'].errors?.['pattern']"
+                            *ngIf="!(userForm['controls']['password'].errors?.['minlength'] || userForm['controls']['password'].errors?.['maxlength']) &&userForm['controls']['password'].errors?.['pattern']"
                           >
                             Mật khẩu cần có chữ hoa, chữ thường và số
                           </span>
@@ -222,7 +221,14 @@
                           type="password"
                           placeholder="Xác nhận mật khẩu"
                           formControlName="confirmPassword"
+                          (input)="checkPasswordMatch()"
                         />
+                        <small
+                          class="text-danger mt-1"
+                          *ngIf="passwordsNotMatching"
+                        >
+                          Mật khẩu không khớp
+                        </small>
                         <small
                           class="text-danger mt-1"
                           *ngIf="userForm['controls']['confirmPassword'].dirty"

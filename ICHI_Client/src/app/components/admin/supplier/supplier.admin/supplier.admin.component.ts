@@ -69,9 +69,9 @@ export class SupplierAdminComponent implements OnInit {
     ]),
     bankName: new FormControl('', [
       Validators.required,
+      Validators.pattern(Utils.textPattern),
       Validators.minLength(3),
       Validators.maxLength(10),
-      Validators.pattern(Utils.textPattern),
     ]),
   });
 

@@ -1,10 +1,5 @@
-﻿using ICHI_API.Data;
-using ICHI.DataAccess.Repository.IRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ICHI.DataAccess.Repository.IRepository;
+using ICHI_API.Data;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ICHI.DataAccess.Repository
