@@ -122,7 +122,6 @@ export class TrademarkService {
   }
 
   update(Trademark: TrademarkModel) {
-    debugger;
     return this.apiService.callApi<TrademarkModel>(
       '/Trademark/Update',
       'put',

@@ -15,6 +15,7 @@ import { PaginationDTO } from '../../../dtos/pagination.dto';
 import { Utils } from '../../../Utils.ts/utils';
 import { TrademarkModel } from '../../../models/trademark.model';
 import { TrademarkService } from '../../../service/trademark.service';
+import validator from 'validator';
 
 @Component({
   selector: 'app-trademark',
@@ -39,6 +40,8 @@ export class TrademarkComponent implements OnInit {
     trademarkName: new FormControl('', [
       Validators.required,
       Validators.maxLength(50),
+      Validators.minLength(6),
+      Validators.pattern(Utils.textPattern),
     ]),
   });
 
@@ -168,12 +171,14 @@ export class TrademarkComponent implements OnInit {
     this.isDisplayNone = true;
     this.trademarkService.update(this.trademarkForm.value).subscribe({
       next: (response: any) => {
+        debugger;
         if (response.message === 'Cập nhật thành công') {
           this.trademarkForm.reset();
           this.btnCloseModal.nativeElement.click();
           this.updateTable();
           this.toastr.success(response.message, 'Thông báo');
         } else {
+          this.isDisplayNone = false;
           this.toastr.error(response.message, 'Thông báo');
         }
       },
@@ -233,7 +238,7 @@ export class TrademarkComponent implements OnInit {
       // trademarkCode: trademark.trademarkCode,
       // trademarkName: trademark.trademarkName,
     });
-    this.titleModal = 'Cập nhật nhà cung cấp';
+    this.titleModal = 'Cập nhật thương hiệu';
     this.btnSave = 'Cập nhật';
   }
 

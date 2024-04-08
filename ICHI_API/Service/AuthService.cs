@@ -10,7 +10,6 @@ using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Helpers;
 using ICHI_CORE.Model;
 using ICHI_CORE.NlogConfig;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq.Dynamic.Core;
