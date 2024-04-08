@@ -87,6 +87,7 @@
                   <span class="fas fa-sort-down align-middle fs-9"></span>
                 </label>
               </th>
+
               <th
                 class="sort white-space-nowrap align-middle ps-4"
                 scope="col"
@@ -113,6 +114,33 @@
                   [class.d-none]="
                     SortBy !== 'SupplierName' || sortDir !== 'DESC'
                   "
+                >
+                  <span class="fas fa-sort-down align-middle fs-9"></span>
+                </label>
+              </th>
+
+              <th
+                class="sort white-space-nowrap align-middle ps-4"
+                scope="col"
+                style="width: 200px"
+                (click)="sortByField('isActive')"
+              >
+                Trạng thái
+                <label
+                  [class.d-none]="
+                    SortBy === 'isActive' &&
+                    (sortDir === 'DESC' || sortDir === 'ASC')
+                  "
+                >
+                  <span class="fas fa-sort align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'isActive' || sortDir !== 'ASC'"
+                >
+                  <span class="fas fa-sort-up align-middle fs-9"></span>
+                </label>
+                <label
+                  [class.d-none]="SortBy !== 'isActive' || sortDir !== 'DESC'"
                 >
                   <span class="fas fa-sort-down align-middle fs-9"></span>
                 </label>
@@ -181,6 +209,19 @@
                 >
                   <h6 class="mb-0 ms-3 fw-semibold">
                     {{ inventory.supplier.supplierName }}
+                  </h6>
+                </a>
+              </td>
+
+              <td class="inventory align-middle white-space-nowrap">
+                <a
+                  class="d-flex align-items-center text-body text-hover-1000"
+                  routerLink="/admin/inventory/insert/{{ inventory.id }}"
+                >
+                  <h6 class="mb-0 ms-3 fw-semibold">
+                    {{
+                      inventory.isActive ? "Đã xác nhận" : "Chưa hoàn thành"
+                    }}
                   </h6>
                 </a>
               </td>

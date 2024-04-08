@@ -82,7 +82,7 @@ namespace ICHI_API.Service
                 var user = _unitOfWork.Employee.Get(u => u.UserId == data.EmployeeId);
                 inventory.SupplierId = data.SupplierId;
                 inventory.EmployeeId = user.Id;
-                inventory.isActive = data.isActive;
+                inventory.isActive = true;
                 inventory.Notes = data.Notes;
                 _unitOfWork.InventoryReceipt.Update(inventory);
                 _unitOfWork.Save();
@@ -103,7 +103,10 @@ namespace ICHI_API.Service
                     item.Total = item.Total;
                     item.Price = item.Price;
                     _unitOfWork.InventoryReceiptDetail.Add(item);
+                    productItem.Quantity += item.Total;
+                    _unitOfWork.Product.Update(productItem);
                 }
+
                 _unitOfWork.Save();
                 strMessage = "Cập nhật hóa đơn nhập thành công";
                 return inventory;

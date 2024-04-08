@@ -16,7 +16,11 @@
       <h2 class="mb-2">Tạo đơn nhập hàng</h2>
     </div>
     <div class="col-auto">
-      <button class="btn btn-primary mb-2 mb-sm-0 me-8" type="submit">
+      <button
+        class="btn btn-primary mb-2 mb-sm-0 me-8"
+        type="submit"
+        *ngIf="isStatus"
+      >
         {{ btnSave }}
       </button>
     </div>
@@ -248,6 +252,7 @@
                     class="fw-bold fs-9 btn btn-phoenix-primary"
                     href="javascript:void(0);"
                     (click)="removeProduct(i)"
+                    *ngIf="isStatus"
                   >
                     <!-- [disabled]="count <= 1" -->
                     Xóa
@@ -280,6 +285,7 @@
         class="btn btn-phoenix-primary w-100 mt-3"
         type="button"
         (click)="addProduct()"
+        *ngIf="isStatus"
       >
         Thêm sản phẩm
       </button>

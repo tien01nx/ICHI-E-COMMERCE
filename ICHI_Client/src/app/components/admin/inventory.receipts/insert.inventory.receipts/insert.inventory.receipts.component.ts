@@ -39,7 +39,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
   suppliers: SupplierModel[] = [];
   products: ProductModel[] = [];
   originalProducts: ProductModel[] = [];
-
+  isStatus: boolean = true;
   totalMoney: number = 0;
   isDisplayNone: boolean = false;
   btnSave: string = '';
@@ -49,6 +49,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
     notes: new FormControl('', [Validators.required]),
     supplierId: new FormControl(null, [Validators.required]),
     employeeId: new FormControl('', [Validators.required]),
+    isActive: new FormControl(false),
     inventoryReceiptDetails: new FormArray([
       new FormGroup({
         id: new FormControl(0),
@@ -100,7 +101,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
       // thumbnailFileControl?.setValidators([Validators.required]);
     } else {
       this.titleString = 'Cập nhật hóa đơn nhập hàng';
-      this.btnSave = 'Cập nhật';
+      this.btnSave = 'Xác nhận';
       this.findProductById(this.activatedRoute.snapshot.params['id']);
     }
 
@@ -209,6 +210,9 @@ export class InsertInventoryReceiptsComponent implements OnInit {
           this.toastr.error('Không tìm thấy sản phẩm', 'Thất bại');
           this.router.navigate(['/admin/inventory_receipts']);
         }
+        if (data.isActive === true) {
+          this.isStatus = false;
+        }
         this.isDisplayNone = true;
         this.employeeName = data.fullName;
         // Set values for top-level controls
@@ -285,20 +289,32 @@ export class InsertInventoryReceiptsComponent implements OnInit {
     );
 
     if (allFieldsFilled) {
-      // Lọc ra các sản phẩm chưa được chọn
-      const unselectedProducts = this.originalProducts.filter((product) =>
-        this.receiptForm.value.inventoryReceiptDetails.every(
-          (detail: { productId: any }) => detail.productId !== product.id
-        )
-      );
-      // Cập nhật danh sách sản phẩm chỉ hiển thị các sản phẩm chưa được chọn
-      this.products = unselectedProducts;
-
       this.inventoryReceiptDetails.push(this.createReceiptDetail());
       this.updateOriginalProducts();
     } else {
       this.toastr.error('Vui lòng điền đầy đủ thông tin sản phẩm', 'Thông báo');
     }
+  }
+
+  updateOriginalProducts() {
+    // lấy ra sản phẩm được chọn trong inventoryReceiptDetails
+    let selectedProducts = this.receiptForm.value.inventoryReceiptDetails.map(
+      (detail: { productId: any }) => detail.productId
+    );
+    console.log('listItemId: ', selectedProducts.toString());
+    if (!Array.isArray(selectedProducts)) {
+      selectedProducts = [selectedProducts];
+    }
+
+    console.log('Các productId đã chọn: ', selectedProducts.toString());
+
+    // Cập nhật mảng products bằng cách lọc ra các sản phẩm chưa được chọn từ mảng gốc là productdtos.product và đảm bảo không trùng với selectedProducts
+    this.products = this.products
+      .map((productDto) => productDto)
+      .filter((product) => !selectedProducts.includes(product.id));
+
+    console.log('Mảng sản phẩm được cập nhật:', selectedProducts);
+    console.log('mảng product update', this.products);
   }
 
   getTotalMoney(): number {
@@ -436,11 +452,6 @@ export class InsertInventoryReceiptsComponent implements OnInit {
       );
       console.log(this.originalProducts);
     }
-  }
-
-  updateOriginalProducts() {
-    this.originalProducts = this.products.map((item) => ({ ...item }));
-    console.log(this.originalProducts);
   }
 
   onKeyDown(event: any, type: boolean) {
