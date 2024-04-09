@@ -64,7 +64,10 @@ export class EmployeeComponent {
       Validators.required,
       Validators.pattern(Utils.checkEmail),
     ]),
-    address: new FormControl('', [Validators.required]),
+    address: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(100),
+    ]),
     userId: new FormControl(null),
     password: new FormControl('', [
       Validators.minLength(6),
@@ -87,8 +90,8 @@ export class EmployeeComponent {
       const search = params['search'] || '';
       const pageSize = +params['page-size'] || 10;
       const pageNumber = +params['page-number'] || 1;
-      const sortDir = params['sort-direction'] || 'ASC';
-      const sortBy = params['sort-by'] || '';
+      const sortDir = params['sort-direction'] || 'DESC';
+      const sortBy = params['sort-by'] || 'CreateDate';
       this.findAll(pageSize, pageNumber, sortBy, sortDir, search);
     });
   }
@@ -343,7 +346,7 @@ export class EmployeeComponent {
   updateTable() {
     this.isDisplayNone = false;
     this.errorMessage = '';
-    this.findAll(this.paginationModel.pageSize, 1, '', '', '');
+    this.findAll(this.paginationModel.pageSize, 1, 'CreateDate', 'DESC', '');
   }
 
   lockAccount(id: number, status: boolean) {

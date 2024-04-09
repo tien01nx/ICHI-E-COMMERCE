@@ -1,5 +1,6 @@
 ﻿using ICHI_API.Helpers;
 using ICHI_CORE.Domain.MasterModel;
+using System.Data;
 
 namespace ICHI_API.Service.IService
 {
@@ -21,6 +22,7 @@ namespace ICHI_API.Service.IService
     List<Category> GetCategoriesByParentID(string categoryName, out string strMessage);
 
     List<Category> GetCategoryLevels(Category category);
+    DataTable GetData();
 
   }
 }

@@ -1131,6 +1131,11 @@
                 >
                   Địa chỉ không được để trống
                 </span>
+                <span
+                  *ngIf="employeeForm['controls']['address'].errors?.['maxlength']"
+                >
+                  Đia chỉ tối đa 100 ký tự
+                </span>
               </small>
             </div>
           </div>

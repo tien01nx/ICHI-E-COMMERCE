@@ -27,6 +27,7 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
   productdto: any;
   errorMessage: string = '';
   cart: InsertCartDTO = new InsertCartDTO('', 0, 0, 1);
+  quantity: number = 1;
   category!: CategoryProduct;
   categories: CategoryProduct[] = [];
   constructor(
@@ -95,35 +96,29 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
     return this.sanitizer.bypassSecurityTrustHtml(combinedContent);
   }
 
-  updateQuantity(newQuantity: number | 0) {
-    if (this.cart) {
-      this.cart.quantity = newQuantity;
-    }
-  }
-
   // Hàm tăng số lượng khi người dùng nhấn nút plus
   increaseQuantity() {
     if (this.cart) {
-      this.cart.quantity++;
+      this.quantity++;
     }
   }
 
   // Hàm giảm số lượng khi người dùng nhấn nút minus
   decreaseQuantity() {
-    if (this.cart && this.cart.quantity > 1) {
-      this.cart.quantity--;
+    if (this.quantity > 1) {
+      this.quantity--;
     }
   }
   onSubmit() {
     this.cart.productId = this.productdto.product.id;
     this.cart.price = this.productdto.product.price;
     this.cart.userId = this.tokenService.getUserEmail();
-
+    this.cart.quantity = this.quantity;
     this.cartService.AddToCart(this.cart).subscribe({
       next: (response: any) => {
         if (response.code === 200) {
           // Đăng nhập thành công
-          if (response.message === 'Thêm sản phẩm vào giỏ hàng thành công') {
+          if (response.message === 'Thêm vào giỏ hàng thành công') {
             this.toastr.success(response.message, 'Thông báo');
             this.router.navigate(['/']);
           } else {

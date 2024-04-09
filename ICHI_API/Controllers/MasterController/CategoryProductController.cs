@@ -4,6 +4,7 @@ using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Model;
 using ICHI_CORE.NlogConfig;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 namespace ICHI_CORE.Controllers.MasterController
 {
   [ApiController]
@@ -177,6 +178,23 @@ namespace ICHI_CORE.Controllers.MasterController
       }
     }
 
-
+    [HttpGet("Test")]
+    public async Task<ApiResponse<DataTable>> Test()
+    {
+      ApiResponse<DataTable> result;
+      string strMessage = "";
+      try
+      {
+        var data = _categoryproductService.GetData();
+        result = new ApiResponse<DataTable>(System.Net.HttpStatusCode.OK, strMessage, data);
+      }
+      catch (Exception ex)
+      {
+        NLogger.log.Error(ex.ToString());
+        strMessage = "Có lỗi xảy ra";
+        result = new ApiResponse<DataTable>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+      }
+      return result;
+    }
   }
 }

@@ -35775,7 +35775,7 @@ html:not(.navbar-vertical-collapsed)
   .timeline-item-bar
   .timeline-bar {
   position: absolute;
-  height: 100px;
+  height: 75px;
   left: 11px;
   top: 24px;
 }

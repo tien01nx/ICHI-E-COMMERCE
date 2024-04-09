@@ -8,17 +8,30 @@
           Trạng thái đơn hàng số {{ orderTrackingDTO[0].trxTransactionId }}
         </h2>
         <p class="text-body-secondary mb-0">
-          Hình thức thanh toán<a class="fw-bold" href="#!">
-            {{
-              Utils.getPaymentType(
-                orderTrackingDTO[0].trxTransaction.paymentTypes
-              )
-            }}</a
+          Hình thức thanh toán
+          {{
+            Utils.getPaymentType(
+              orderTrackingDTO[0].trxTransaction.paymentTypes
+            )
+          }}
+
+          <br class="text-body-secondary fw-bold" />
+          <span
+            [ngClass]="{
+              'text-success':
+                orderTrackingDTO[0].trxTransaction.paymentStatus === 'APPROVED',
+              'text-danger':
+                orderTrackingDTO[0].trxTransaction.paymentStatus === 'PENDING'
+            }"
           >
-          <!-- ,<br class="d-sm-none" /> -->
-          <!-- <span class="ms-sm-1"
-            >Nov 12, 2021, 8:54AM.</span -->
-          <!-- > -->
+            {{
+              Utils.getPaymentStatus(
+                orderTrackingDTO[0].trxTransaction.paymentStatus
+              )
+            }}
+          </span>
+
+          <span class="ms-sm-1"></span>
         </p>
       </div>
       <button class="btn btn-outline-primary mt-3">
@@ -89,21 +102,20 @@
         </div>
       </div>
       <div class="col-12 col-lg-6">
-        <div class="timeline-vertical">
+        <!-- chưa xác nhận -->
+        <div
+          class="timeline-vertical"
+          *ngIf="orderTrackingDTO[0].trxTransaction.orderStatus === 'PENDING'"
+        >
           <div class="timeline-item">
             <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
               <div class="col-12 col-md-auto d-flex">
                 <div
                   class="timeline-item-date text-end order-1 order-md-0 me-md-4"
-                >
-                  <p class="fs-10 fw-semibold text-body-tertiary mb-0">
-                    23 August, 2023<br class="d-none d-md-block" />
-                    10:30 AM
-                  </p>
-                </div>
+                ></div>
                 <div class="timeline-item-bar position-relative me-3 me-md-0">
                   <div
-                    class="icon-item icon-item-sm bg-success"
+                    class="icon-item icon-item-sm bg-warning"
                     data-bs-theme="light"
                   >
                     <span class="fa-solid fa-check text-white fs-10"></span>
@@ -113,10 +125,8 @@
               </div>
               <div class="col">
                 <div class="timeline-item-content ps-6 ps-md-3">
-                  <h4>Order is processing</h4>
-                  <p class="fs-9 text-body-secondary mb-0">
-                    Your package is ready for the seller to prepare.
-                  </p>
+                  <h4>Chưa xác nhận</h4>
+                  <p class="fs-9 text-body-secondary mb-0"></p>
                 </div>
               </div>
             </div>
@@ -126,28 +136,20 @@
               <div class="col-12 col-md-auto d-flex">
                 <div
                   class="timeline-item-date text-end order-1 order-md-0 me-md-4"
-                >
-                  <p class="fs-10 fw-semibold text-body-tertiary mb-0">
-                    25 August, 2023<br class="d-none d-md-block" />
-                    11:30 AM
-                  </p>
-                </div>
+                ></div>
                 <div class="timeline-item-bar position-relative me-3 me-md-0">
                   <div
-                    class="icon-item icon-item-sm bg-success"
+                    class="icon-item icon-item-sm bg-body-quaternary"
                     data-bs-theme="light"
                   >
                     <span class="fa-solid fa-check text-white fs-10"></span>
                   </div>
-                  <span class="timeline-bar border-end border-warning"></span>
+                  <span class="timeline-bar border-end border-dashed"></span>
                 </div>
               </div>
               <div class="col">
                 <div class="timeline-item-content ps-6 ps-md-3">
-                  <h4>Picked Up</h4>
-                  <p class="fs-9 text-body-secondary mb-0">
-                    Your package has been picked up from the seller.
-                  </p>
+                  <h4>Đã xác nhận</h4>
                 </div>
               </div>
             </div>
@@ -157,15 +159,10 @@
               <div class="col-12 col-md-auto d-flex">
                 <div
                   class="timeline-item-date text-end order-1 order-md-0 me-md-4"
-                >
-                  <p class="fs-10 fw-semibold text-body-tertiary mb-0">
-                    27 August, 2023<br class="d-none d-md-block" />
-                    6:30 AM
-                  </p>
-                </div>
+                ></div>
                 <div class="timeline-item-bar position-relative me-3 me-md-0">
                   <div
-                    class="icon-item icon-item-sm bg-warning"
+                    class="icon-item icon-item-sm bg-body-quaternary"
                     data-bs-theme="light"
                   >
                     <!-- class="icon-item icon-item-sm bg-success" -->
@@ -179,10 +176,7 @@
               </div>
               <div class="col">
                 <div class="timeline-item-content ps-6 ps-md-3">
-                  <h4>Ready to Ship</h4>
-                  <p class="fs-9 text-body-secondary mb-0">
-                    Your package is now ready to be shipped.
-                  </p>
+                  <h4>Chờ lấy hàng</h4>
                 </div>
               </div>
             </div>
@@ -192,12 +186,7 @@
               <div class="col-12 col-md-auto d-flex">
                 <div
                   class="timeline-item-date text-end order-1 order-md-0 me-md-4"
-                >
-                  <p class="fs-10 fw-semibold text-body-tertiary mb-0">
-                    Estimated time<br class="d-none d-md-block" />
-                    29 August, 2023
-                  </p>
-                </div>
+                ></div>
                 <div class="timeline-item-bar position-relative me-3 me-md-0">
                   <div
                     class="icon-item icon-item-sm bg-body-quaternary"
@@ -210,8 +199,7 @@
               </div>
               <div class="col">
                 <div class="timeline-item-content ps-6 ps-md-3">
-                  <h4>Shipped</h4>
-                  <p class="fs-9 text-body-secondary mb-0">Pending</p>
+                  <h4>Chờ giao hàng</h4>
                 </div>
               </div>
             </div>
@@ -221,27 +209,522 @@
               <div class="col-12 col-md-auto d-flex">
                 <div
                   class="timeline-item-date text-end order-1 order-md-0 me-md-4"
-                >
-                  <p class="fs-10 fw-semibold text-body-tertiary mb-0">
-                    Estimated time<br class="d-none d-md-block" />
-                    30 August, 2023
-                  </p>
-                </div>
+                ></div>
                 <div class="timeline-item-bar position-relative me-3 me-md-0">
                   <div
                     class="icon-item icon-item-sm bg-body-quaternary"
                     data-bs-theme="light"
                   >
-                    <span
-                      class="fa-solid fa-truck-fast text-white fs-10"
-                    ></span>
+                    <span class="far fa-user text-white fs-10"></span>
                   </div>
                 </div>
               </div>
               <div class="col">
                 <div class="timeline-item-content ps-6 ps-md-3">
-                  <h4>Delivered</h4>
-                  <p class="fs-9 text-body-secondary mb-0">Pending</p>
+                  <h4>Đã giao hàng</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="timeline-vertical"
+          *ngIf="orderTrackingDTO[0].trxTransaction.orderStatus === 'ONHOLD'"
+        >
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-success"
+                    data-bs-theme="light"
+                  >
+                    <span class="fa-solid fa-check text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-success"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Chưa xác nhận</h4>
+                  <p class="fs-9 text-body-secondary mb-0"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-warning"
+                    data-bs-theme="light"
+                  >
+                    <span class="fa-solid fa-check text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-warning"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Đã xác nhận</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-body-quaternary"
+                    data-bs-theme="light"
+                  >
+                    <!-- class="icon-item icon-item-sm bg-success" -->
+
+                    <span
+                      class="fa-solid fa-truck-ramp-box text-white fs-10"
+                    ></span>
+                  </div>
+                  <span class="timeline-bar border-end border-dashed"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Chờ lấy hàng</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-body-quaternary"
+                    data-bs-theme="light"
+                  >
+                    <span class="fa-solid fa-truck text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-dashed"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Chờ giao hàng</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-body-quaternary"
+                    data-bs-theme="light"
+                  >
+                    <span class="far fa-user text-white fs-10"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Đã giao hàng</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="timeline-vertical"
+          *ngIf="
+            orderTrackingDTO[0].trxTransaction.orderStatus ===
+            'WAITINGFORPICKUP'
+          "
+        >
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-success"
+                    data-bs-theme="light"
+                  >
+                    <span class="fa-solid fa-check text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-success"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Chưa xác nhận</h4>
+                  <p class="fs-9 text-body-secondary mb-0"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-success"
+                    data-bs-theme="light"
+                  >
+                    <span class="fa-solid fa-check text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-success"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Đã xác nhận</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-warning"
+                    data-bs-theme="light"
+                  >
+                    <!-- class="icon-item icon-item-sm bg-success" -->
+
+                    <span
+                      class="fa-solid fa-truck-ramp-box text-white fs-10"
+                    ></span>
+                  </div>
+                  <span class="timeline-bar border-end border-warning"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Chờ lấy hàng</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-body-quaternary"
+                    data-bs-theme="light"
+                  >
+                    <span class="fa-solid fa-truck text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-dashed"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Chờ giao hàng</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-body-quaternary"
+                    data-bs-theme="light"
+                  >
+                    <span class="far fa-user text-white fs-10"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Đã giao hàng</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="timeline-vertical"
+          *ngIf="
+            orderTrackingDTO[0].trxTransaction.orderStatus ===
+            'WAITINGFORDELIVERY'
+          "
+        >
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-success"
+                    data-bs-theme="light"
+                  >
+                    <span class="fa-solid fa-check text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-success"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Chưa xác nhận</h4>
+                  <p class="fs-9 text-body-secondary mb-0"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-success"
+                    data-bs-theme="light"
+                  >
+                    <span class="fa-solid fa-check text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-success"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Đã xác nhận</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-success"
+                    data-bs-theme="light"
+                  >
+                    <!-- class="icon-item icon-item-sm bg-success" -->
+
+                    <span
+                      class="fa-solid fa-truck-ramp-box text-white fs-10"
+                    ></span>
+                  </div>
+                  <span class="timeline-bar border-end border-success"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Chờ lấy hàng</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-warning"
+                    data-bs-theme="light"
+                  >
+                    <span class="fa-solid fa-truck text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-warning"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Chờ giao hàng</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-body-quaternary"
+                    data-bs-theme="light"
+                  >
+                    <span class="far fa-user text-white fs-10"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Đã giao hàng</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="timeline-vertical"
+          *ngIf="orderTrackingDTO[0].trxTransaction.orderStatus === 'DELIVERED'"
+        >
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-success"
+                    data-bs-theme="light"
+                  >
+                    <span class="fa-solid fa-check text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-success"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Chưa xác nhận</h4>
+                  <p class="fs-9 text-body-secondary mb-0"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-success"
+                    data-bs-theme="light"
+                  >
+                    <span class="fa-solid fa-check text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-success"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Đã xác nhận</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-success"
+                    data-bs-theme="light"
+                  >
+                    <!-- class="icon-item icon-item-sm bg-success" -->
+                    <span class="fa-solid fa-check text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-success"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Chờ lấy hàng</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-success"
+                    data-bs-theme="light"
+                  >
+                    <span class="fa-solid fa-check text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-success"></span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Chờ giao hàng</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="row g-md-3 align-items-center">
+              <div class="col-12 col-md-auto d-flex">
+                <div
+                  class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                ></div>
+                <div class="timeline-item-bar position-relative me-3 me-md-0">
+                  <div
+                    class="icon-item icon-item-sm bg-success"
+                    data-bs-theme="light"
+                  >
+                    <span class="far fa-user text-white fs-10"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="timeline-item-content ps-6 ps-md-3">
+                  <h4>Đã giao hàng</h4>
                 </div>
               </div>
             </div>

@@ -139,13 +139,13 @@ export class Utils {
 
   // Các loại thanh toán
   static paymentTypes = [
-    { paymentTypes: 'PaymentOnDelivery', name: 'Thanh toán khi nhận hàng' },
-    { paymentTypes: 'PaymentViaCard', name: 'Thanh toán qua thẻ' },
-    { paymentTypes: 'Cash', name: 'Tiền mặt' },
+    { paymentTypes: 'PAYMENTONDELIVERY', name: 'Thanh toán khi nhận hàng' },
+    { paymentTypes: 'PAYMENTVIACARD', name: 'Thanh toán qua thẻ' },
+    { paymentTypes: 'CASH', name: 'Tiền mặt' },
   ];
 
-  static PaymentOnDelivery = 'PaymentOnDelivery';
-  static PaymentViaCard = 'PaymentViaCard';
+  static PaymentOnDelivery = 'PAYMENTONDELIVERY';
+  static PaymentViaCard = 'PAYMENTVIACARD';
 
   // Trạng thái đơn hàng
   // Chưa xác nhận - Pending
@@ -154,19 +154,19 @@ export class Utils {
   // Chờ giao hàng - WaitingForDelivery
   // Đã giao hàng - Delivered
   // Đã hủy - Cancelled
-
+  // sửa thành name có có giá trị viết hoa  hết
   static statusOrder = [
-    { name: 'Pending', value: 'Chưa xác nhận' },
-    { name: 'On hold', value: 'Chờ xác nhận' },
-    { name: 'WaitingForPickup', value: 'Chờ lấy hàng' },
-    { name: 'WaitingForDelivery', value: 'Chờ giao hàng' },
-    { name: 'Delivered', value: 'Đã giao hàng' },
-    { name: 'Cancelled', value: 'Đã hủy' },
+    { name: 'PENDING', value: 'Chưa xác nhận' },
+    { name: 'ONHOLD', value: 'Đã xác nhận' },
+    { name: 'WAITINGFORPICKUP', value: 'Chờ lấy hàng' },
+    { name: 'WAITINGFORDELIVERY', value: 'Chờ giao hàng' },
+    { name: 'DELIVERED', value: 'Đã giao hàng' },
+    { name: 'CANCELLED', value: 'Đã hủy' },
   ];
 
   static paymentStatus = [
-    { name: 'Pending', value: 'Chưa thanh toán' },
-    { name: 'Approved', value: 'Đã thanh toán' },
+    { name: 'PENDING', value: 'Chưa thanh toán' },
+    { name: 'APPROVED', value: 'Đã thanh toán' },
   ];
 
   static getOrdersStatus(status: string): string {

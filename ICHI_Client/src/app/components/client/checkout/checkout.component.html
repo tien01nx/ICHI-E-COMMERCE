@@ -86,7 +86,12 @@
                     <span
                       *ngIf="trxTransacForm['controls']['address'].errors?.['required']"
                     >
-                      Họ và tên không được để trống
+                      Địa chỉ là bắt buộc
+                    </span>
+                    <span
+                      *ngIf="trxTransacForm['controls']['address'].errors?.['maxlength']"
+                    >
+                      Địa chỉ tối đa 100 ký tự
                     </span>
                   </small>
                 </td>
@@ -119,7 +124,7 @@
                     <span
                       *ngIf="trxTransacForm['controls']['phoneNumber'].errors?.['required']"
                     >
-                      Số điện thoại không được để trống
+                      Số điện thoại là bắt buộc
                     </span>
                     <span
                       *ngIf="trxTransacForm['controls']['phoneNumber'].errors?.['maxlength']
@@ -167,7 +172,7 @@
                     <span
                       *ngIf="trxTransacForm['controls']['paymentTypes'].errors?.['required']"
                     >
-                      Phương thức thanh toán không được để trống
+                      Phương thức thanh toán là bắt buộc
                     </span>
                   </small>
                 </td>

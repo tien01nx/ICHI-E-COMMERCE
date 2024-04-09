@@ -171,28 +171,27 @@
                         class="d-flex flex-between-center"
                         data-quantity="data-quantity"
                       >
-                        <button
+                        <span
                           class="btn btn-phoenix-primary px-3"
                           data-type="minus"
                           (click)="decreaseQuantity()"
                         >
-                          <span class="fas fa-minus"></span></button
+                          <span class="fas fa-minus"></span></span
                         ><input
                           class="form-control text-center input-spin-none bg-transparent border-0 outline-none"
                           style="width: 50px"
                           type="number"
                           min="1"
-                          value="1"
                           max="50"
-                          [value]="cart.quantity"
-                          (input)="updateQuantity(cart.quantity)"
-                        /><button
+                          [value]="quantity"
+                        />
+                        <span
                           class="btn btn-phoenix-primary px-3"
                           data-type="plus"
                           (click)="increaseQuantity()"
                         >
                           <span class="fas fa-plus"></span>
-                        </button>
+                        </span>
                       </div>
                       <!-- <button class="btn btn-phoenix-primary px-3 border-0">
                         <span class="fas fa-share-alt fs-7"></span>

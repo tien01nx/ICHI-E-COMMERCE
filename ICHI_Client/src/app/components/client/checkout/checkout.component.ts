@@ -35,7 +35,7 @@ export class CheckoutComponent implements OnInit {
     userId: new FormControl(''),
     fullName: new FormControl('', [
       Validators.required,
-      Validators.maxLength(100),
+      Validators.maxLength(50),
     ]),
     phoneNumber: new FormControl('', [
       Validators.required,
@@ -43,7 +43,10 @@ export class CheckoutComponent implements OnInit {
       Validators.minLength(10),
       Validators.pattern('^0[0-9]{9}$'),
     ]),
-    address: new FormControl('', [Validators.required]),
+    address: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(100),
+    ]),
     paymentTypes: new FormControl('', [Validators.required]),
   });
 

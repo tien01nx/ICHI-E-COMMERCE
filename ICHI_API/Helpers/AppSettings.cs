@@ -22,8 +22,8 @@
     // Chưa thanh toán - Pending
     // Đã thanh toán - Approved
 
-    public const string PaymentStatusPending = "Pending";
-    public const string PaymentStatusApproved = "Approved";
+    public const string PaymentStatusPending = "PENDING";
+    public const string PaymentStatusApproved = "APPROVED";
 
     // Trạng thái đơn hàng
     // Chưa xác nhận - Pending
@@ -33,12 +33,12 @@
     // Đã giao hàng - Delivered
     // Đã hủy - Cancelled
 
-    public static string StatusOrderPending = "Pending";
-    public static string StatusOrderOnHold = "Onhold";
-    public static string StatusOrderWaitingForPickup = "WaitingForPickup";
-    public static string StatusOrderWaitingForDelivery = "WaitingForDelivery";
-    public static string StatusOrderDelivered = "Delivered";
-    public static string StatusOrderCancelled = "Cancelled";
+    public static string StatusOrderPending = "PENDING";
+    public static string StatusOrderOnHold = "ONHOLD";
+    public static string StatusOrderWaitingForPickup = "WAITINGFORPICKUP";
+    public static string StatusOrderWaitingForDelivery = "WAITINGFORDELIVERY";
+    public static string StatusOrderDelivered = "DELIVERED";
+    public static string StatusOrderCancelled = "CANCELLED";
 
     //  static paymentTypes = [
     //  { paymentTypes: 'PaymentOnDelivery', name: 'Thanh toán khi nhận hàng' },
@@ -46,9 +46,9 @@
     //  { paymentTypes: 'Cash', name: 'Tiền mặt' },
     //];
 
-    public static string PaymentOnDelivery = "PaymentOnDelivery";
-    public static string PaymentViaCard = "PaymentViaCard";
-    public static string Cash = "Cash";
+    public static string PaymentOnDelivery = "PAYMENTONDELIVERY";
+    public static string PaymentViaCard = "PAYMENTVIACARD";
+    public static string Cash = "CASH";
 
 
     public const string SessionCart = "SessionShoppingCart";

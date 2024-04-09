@@ -51,7 +51,7 @@ export class CustomerComponent {
       Validators.required,
       Validators.maxLength(10),
       Validators.minLength(10),
-      Validators.pattern(Utils.phoneNumberPattern),
+      Validators.pattern(Utils.textPhoneNumber),
     ]),
     gender: new FormControl('', [Validators.required]),
     birthday: new FormControl('', [Validators.required]),
@@ -77,8 +77,8 @@ export class CustomerComponent {
       const search = params['search'] || '';
       const pageSize = +params['page-size'] || 10;
       const pageNumber = +params['page-number'] || 1;
-      const sortDir = params['sort-direction'] || 'ASC';
-      const sortBy = params['sort-by'] || '';
+      const sortDir = params['sort-direction'] || 'DESC';
+      const sortBy = params['sort-by'] || 'CreateDate';
       this.findAll(pageSize, pageNumber, sortBy, sortDir, search);
     });
   }
@@ -297,7 +297,7 @@ export class CustomerComponent {
   updateTable() {
     this.isDisplayNone = false;
     this.errorMessage = '';
-    this.findAll(this.paginationModel.pageSize, 1, '', '', '');
+    this.findAll(this.paginationModel.pageSize, 1, 'CreateDate', 'DESC', '');
   }
   lockAccount(id: number, status: boolean) {
     Swal.fire({

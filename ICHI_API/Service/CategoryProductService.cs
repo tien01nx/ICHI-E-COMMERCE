@@ -3,6 +3,7 @@ using ICHI_API.Data;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.NlogConfig;
+using System.Data;
 using System.Linq.Dynamic.Core;
 
 
@@ -227,6 +228,16 @@ namespace ICHI_API.Service
       FindCategoryLevels(category, categoryLevels);
       categoryLevels.Sort((x, y) => x.ParentID.CompareTo(y.ParentID));
       return categoryLevels;
+    }
+
+    public DataTable GetData()
+    {
+      // Lấy dữ liệu từ cơ sở dữ liệu bằng hàm GetDataTableFromSQL
+      var dataTable = _unitOfWork
+        .Category
+        .GetDataTableFromSQL
+        ("  Select * from Products join Categories on Products.CategoryId = Categories.Id");
+      return dataTable;
     }
 
   }

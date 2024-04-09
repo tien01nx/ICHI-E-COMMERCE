@@ -85,7 +85,7 @@ export class CartComponent implements OnInit {
   deleteItemCart(cart: CartModel) {
     this.cartService.DeleteItemCart(cart).subscribe({
       next: (response: any) => {
-        if (response.code === 200) {
+        if (response.message === 'Xóa sản phẩm khỏi giỏ hàng thành công') {
           this.toastr.success(response.message, 'Thông báo');
           this.getCartByUserId();
         } else {
@@ -112,10 +112,11 @@ export class CartComponent implements OnInit {
       cart.quantity = newQuantity;
       this.cartService.UpdateQuantityCart(cart).subscribe({
         next: (response: any) => {
-          if (response.code === 200) {
+          if (response.message === 'Cập nhật giỏ hàng thành công') {
             this.getCartByUserId();
           } else {
             this.toastr.error(response.message, 'Thông báo');
+            this.getCartByUserId();
           }
         },
         error: (error: any) => {
@@ -188,5 +189,9 @@ export class CartComponent implements OnInit {
     totalPrice -= this.getTotalDiscount(); // Giảm giá
     totalPrice += this.priceShip; // Giá vận chuyển
     return totalPrice;
+  }
+
+  dataShow() {
+    this.router.navigate(['/product/cart']);
   }
 }
