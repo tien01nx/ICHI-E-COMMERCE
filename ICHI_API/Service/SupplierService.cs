@@ -1,6 +1,5 @@
 ﻿using ICHI.DataAccess.Repository.IRepository;
 using ICHI_API.Data;
-using ICHI_API.Helpers;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.NlogConfig;
@@ -27,7 +26,7 @@ namespace ICHI_API.Service
         var query = _db.Suppliers.AsQueryable().Where(u => u.isDeleted == false);
         if (!string.IsNullOrEmpty(name))
         {
-          query = query.Where(e => e.SupplierName.Contains(name) || e.PhoneNumber.Contains(name));
+          query = query.Where(e => e.SupplierName.Contains(name.Trim()) || e.PhoneNumber.Contains(name.Trim()));
         }
         var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
         query = query.OrderBy(orderBy);

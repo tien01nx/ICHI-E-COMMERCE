@@ -27,7 +27,8 @@ namespace ICHI_API.Service
         var query = _db.Categories.AsQueryable().Where(u => u.IsDeleted == false);
         if (!string.IsNullOrEmpty(name))
         {
-          query = query.Where(e => e.CategoryName.Contains(name));
+          //xử lý tìm kiếm  
+          query = query.Where(e => e.CategoryName.Contains(name.Trim()));
         }
         var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
         query = query.OrderBy(orderBy);
@@ -74,7 +75,13 @@ namespace ICHI_API.Service
           strMessage = "Danh mục sản phẩm đã tồn tại";
           return null;
         }
-
+        var categoryParentId = _unitOfWork.Category.Get(u => u.Id == category.ParentID);
+        if (categoryParentId == null)
+        {
+          strMessage = "Danh mục cha không tồn tại";
+          return null;
+        }
+        category.CategoryLevel = categoryParentId.CategoryLevel + 1;
         category.CreateBy = "Admin";
         category.ModifiedBy = "Admin";
         _unitOfWork.Category.Add(category);
@@ -102,7 +109,20 @@ namespace ICHI_API.Service
           strMessage = "Danh mục sản phẩm không tồn tại";
           return null;
         }
+        var checkCategory = _unitOfWork.Category.Get(u => u.CategoryName == category.CategoryName && u.Id != category.Id);
+        if (checkCategory != null)
+        {
+          strMessage = "Danh mục sản phẩm đã tồn tại";
+          return null;
+        }
 
+        var categoryParentId = _unitOfWork.Category.Get(u => u.Id == category.ParentID);
+        if (categoryParentId == null)
+        {
+          strMessage = "Danh mục cha không tồn tại";
+          return null;
+        }
+        category.CategoryLevel = categoryParentId.CategoryLevel + 1;
         category.ModifiedBy = "Admin";
         _unitOfWork.Category.Update(category);
         _unitOfWork.Save();

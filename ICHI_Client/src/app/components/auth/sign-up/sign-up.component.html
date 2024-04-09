@@ -206,9 +206,9 @@
                             Mật khẩu không được vượt quá 40 ký tự
                           </span>
                           <span
-                            *ngIf="!(userForm['controls']['password'].errors?.['minlength'] || userForm['controls']['password'].errors?.['maxlength']) &&userForm['controls']['password'].errors?.['pattern']"
+                            *ngIf="!(userForm['controls']['password'].errors?.['minlength'] || userForm['controls']['password'].errors?.['maxlength']) && userForm['controls']['password'].errors?.['pattern']"
                           >
-                            Mật khẩu cần có chữ hoa, chữ thường và số
+                            Mật khẩu cần có chữ hoa, chữ thường và số và ký tự đặc biệt
                           </span>
                         </small>
                       </div>

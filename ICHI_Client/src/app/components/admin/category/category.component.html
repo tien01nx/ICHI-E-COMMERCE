@@ -397,40 +397,14 @@
               </ng-select>
               <small
                 class="text-danger mt-1"
-                *ngIf="
-                  categoryForm.get('parentID')?.invalid &&
-                  (categoryForm.get('parentID')?.dirty ||
-                    categoryForm.get('parentID')?.touched)
-                "
+                *ngIf="categoryForm.get('parentID')?.dirty"
               >
                 <span
                   *ngIf="categoryForm.get('parentID')?.errors?.['required']"
                 >
-                  Danh mục không được để trống
+                  Tên danh mục cha là bắt buộc
                 </span>
               </small>
-              <!-- <input
-                class="form-control"
-                id="parentID"
-                type="text"
-                formControlName="parentID"
-                placeholder="Tên danh mục"
-              /> -->
-              <!-- <small
-                class="text-danger mt-1"
-                *ngIf="categoryForm['controls']['parentID'].dirty"
-              >
-                <span
-                  *ngIf="categoryForm['controls']['parentID'].errors?.['required']"
-                >
-                  Tên danh mục không được để trống
-                </span>
-                <span
-                  *ngIf="categoryForm['controls']['parentID'].errors?.['maxlength']"
-                >
-                  Tên danh mục không được vượt quá 50 ký tự
-                </span>
-              </small> -->
             </div>
           </div>
           <div class="row mb-3">
@@ -452,41 +426,14 @@
               </ng-select>
               <small
                 class="text-danger mt-1"
-                *ngIf="
-                  categoryForm.get('categoryLevel')?.invalid &&
-                  (categoryForm.get('categoryLevel')?.dirty ||
-                    categoryForm.get('categoryLevel')?.touched)
-                "
+                *ngIf="categoryForm.get('categoryLevel')?.dirty"
               >
                 <span
                   *ngIf="categoryForm.get('categoryLevel')?.errors?.['required']"
                 >
-                  Danh mục không được để trống
+                  Cấp độ danh mục là bắt buộc
                 </span>
               </small>
-
-              <!-- <input
-                class="form-control"
-                id="categoryLevel"
-                type="text"
-                formControlName="categoryLevel"
-                placeholder="Tên danh mục"
-              /> -->
-              <!-- <small
-                class="text-danger mt-1"
-                *ngIf="categoryForm['controls']['categoryLevel'].dirty"
-              >
-                <span
-                  *ngIf="categoryForm['controls']['categoryLevel'].errors?.['required']"
-                >
-                  Tên danh mục không được để trống
-                </span>
-                <span
-                  *ngIf="categoryForm['controls']['categoryLevel'].errors?.['maxlength']"
-                >
-                  Tên danh mục không được vượt quá 50 ký tự
-                </span>
-              </small> -->
             </div>
           </div>
           <div class="row mb-3">
@@ -514,12 +461,6 @@
                   *ngIf="categoryForm['controls']['categoryName'].errors?.['maxlength']"
                 >
                   Tên danh mục không được vượt quá 50 ký tự
-                </span>
-
-                <span
-                  *ngIf="categoryForm['controls']['categoryName'].errors?.['pattern']"
-                >
-                  Tên danh mục không được chứa ký tự đặc biệt
                 </span>
               </small>
             </div>

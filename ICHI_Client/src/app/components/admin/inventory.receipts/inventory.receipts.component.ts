@@ -167,7 +167,7 @@ export class InventoryReceiptsComponent implements OnInit {
   updateTable() {
     this.isDisplayNone = false;
     this.errorMessage = '';
-    this.findAll(this.paginationModel.pageSize, 1, '', '', '');
+    this.findAll(this.paginationModel.pageSize, 1, 'CreateDate', 'DESC', '');
   }
   insertinventory() {
     this.router.navigate(['/admin/insert_inventory_receipts']);

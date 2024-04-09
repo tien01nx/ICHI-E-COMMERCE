@@ -58,8 +58,8 @@ export class TrademarkComponent implements OnInit {
       const search = params['search'] || '';
       const pageSize = +params['page-size'] || 10;
       const pageNumber = +params['page-number'] || 1;
-      const sortDir = params['sort-direction'] || 'ASC';
-      const sortBy = params['sort-by'] || '';
+      const sortDir = params['sort-direction'] || 'DESC';
+      const sortBy = params['sort-by'] || 'CreateDate';
       this.findAll(pageSize, pageNumber, sortBy, sortDir, search);
     });
   }
@@ -157,7 +157,7 @@ export class TrademarkComponent implements OnInit {
         } else {
           this.errorMessage = response.message;
           this.isDisplayNone = false;
-          this.toastr.error(response.message, 'Thông báo');
+          // this.toastr.error(response.message, 'Thông báo');
         }
       },
       error: (error: any) => {
@@ -172,7 +172,7 @@ export class TrademarkComponent implements OnInit {
     this.trademarkService.update(this.trademarkForm.value).subscribe({
       next: (response: any) => {
         debugger;
-        if (response.message === 'Cập nhật thành công') {
+        if (response.message === 'Cập nhật thương hiệu thành công') {
           this.trademarkForm.reset();
           this.btnCloseModal.nativeElement.click();
           this.updateTable();
@@ -230,13 +230,6 @@ export class TrademarkComponent implements OnInit {
     this.trademarkForm.patchValue({
       id: trademark.id,
       trademarkName: trademark.trademarkName,
-      // phoneNumber: trademark.phoneNumber,
-      // address: trademark.address,
-      // email: trademark.email,
-      // taxCode: trademark.taxCode,
-      // bankAccount: trademark.bankAccount,
-      // trademarkCode: trademark.trademarkCode,
-      // trademarkName: trademark.trademarkName,
     });
     this.titleModal = 'Cập nhật thương hiệu';
     this.btnSave = 'Cập nhật';
@@ -245,6 +238,6 @@ export class TrademarkComponent implements OnInit {
   updateTable() {
     this.isDisplayNone = false;
     this.errorMessage = '';
-    this.findAll(this.paginationModel.pageSize, 1, '', '', '');
+    this.findAll(this.paginationModel.pageSize, 1, 'CreateDate', 'DESC', '');
   }
 }

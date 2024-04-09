@@ -46,7 +46,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
   employeeName: string = '';
   receiptForm: FormGroup = new FormGroup({
     id: new FormControl(0),
-    notes: new FormControl('', [Validators.required]),
+    notes: new FormControl(''),
     supplierId: new FormControl(null, [Validators.required]),
     employeeId: new FormControl('', [Validators.required]),
     isActive: new FormControl(false),
@@ -64,7 +64,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
           Validators.min(1),
           Validators.max(1000),
         ]),
-        productId: new FormControl(null),
+        productId: new FormControl(null, [Validators.required]),
         batchNumber: new FormControl(0),
       }),
     ]),
@@ -134,18 +134,6 @@ export class InsertInventoryReceiptsComponent implements OnInit {
       }));
       console.log(respon.data);
     });
-  }
-
-  addProductDetails() {
-    const productDetails = this.receiptForm.get('productDetails') as FormArray;
-    productDetails.push(
-      new FormGroup({
-        id: new FormControl(null),
-        color: new FormControl('', [Validators.required]),
-        quantity: new FormControl(0),
-        batchNumber: new FormControl(0),
-      })
-    );
   }
 
   removeProductDetails(index: number) {
@@ -265,7 +253,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
           this.customTotalValidator.bind(this),
         ],
       ],
-      productId: [null],
+      productId: [null, [Validators.required]],
       batchNumber: new FormControl(0),
     });
   }

@@ -70,8 +70,8 @@ export class ProductComponent implements OnInit {
       const search = params['search'] || '';
       const pageSize = +params['page-size'] || 10;
       const pageNumber = +params['page-number'] || 1;
-      const sortDir = params['sort-direction'] || 'ASC';
-      const sortBy = params['sort-by'] || '';
+      const sortDir = params['sort-direction'] || 'DESC';
+      const sortBy = params['sort-by'] || 'CreateDate';
       this.findAll(pageSize, pageNumber, sortBy, sortDir, search);
     });
   }
@@ -164,6 +164,7 @@ export class ProductComponent implements OnInit {
       if (result.isConfirmed) {
         this.productService.deleteProductDetails(id).subscribe({
           next: (response: any) => {
+            this.updateTable();
             this.toastr.success('Xóa nhà cung cấp thành công', 'Thông báo');
           },
           error: (error: any) => {
@@ -176,7 +177,7 @@ export class ProductComponent implements OnInit {
   updateTable() {
     this.isDisplayNone = false;
     this.errorMessage = '';
-    this.findAll(this.paginationModel.pageSize, 1, '', '', '');
+    this.findAll(this.paginationModel.pageSize, 1, 'Id', 'DESC', '');
   }
   insertProduct() {
     this.router.navigate(['/admin/product/insert']);

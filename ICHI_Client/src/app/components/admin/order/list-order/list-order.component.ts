@@ -85,8 +85,8 @@ export class ListOrderComponent implements OnInit {
       const order = params['order-status'] || '';
       const pageSize = +params['page-size'] || 10;
       const pageNumber = +params['page-number'] || 1;
-      const sortDir = params['sort-direction'] || 'ASC';
-      const sortBy = params['sort-by'] || '';
+      const sortDir = params['sort-direction'] || 'DESC';
+      const sortBy = params['sort-by'] || 'CreateDate';
       this.findAll(pageSize, pageNumber, sortBy, sortDir, search, order);
     });
   }
@@ -297,7 +297,14 @@ export class ListOrderComponent implements OnInit {
   updateTable() {
     this.isDisplayNone = false;
     this.errorMessage = '';
-    this.findAll(this.paginationModel.pageSize, 1, '', '', '', '');
+    this.findAll(
+      this.paginationModel.pageSize,
+      1,
+      'CreateDate',
+      'DESC',
+      '',
+      ''
+    );
   }
   clearUrl() {
     this.router.navigate(['/admin/list_order']);

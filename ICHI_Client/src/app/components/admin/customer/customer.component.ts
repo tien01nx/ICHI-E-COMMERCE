@@ -84,8 +84,27 @@ export class CustomerComponent {
   }
 
   onFileSelected(event: any) {
+    debugger;
+    const maxFileSize = 5 * 1024 * 1024; // 5MB
     this.file = event.target.files[0];
+
+    // Kiểm tra xem tệp đã được chọn chưa
     if (this.file) {
+      // Kiểm tra kích thước của tệp
+      if (this.file.size > maxFileSize) {
+        // Hiển thị thông báo lỗi về kích thước của tệp
+        this.toastr.error('Kích thước của tệp lớn hơn 5MB', 'Lỗi');
+        return; // Ngưng xử lý tiếp theo
+      }
+
+      // Kiểm tra kiểu MIME của tệp
+      if (!this.file.type.startsWith('image/')) {
+        // Hiển thị thông báo lỗi về kiểu MIME của tệp
+        this.toastr.error('Tệp không phải là ảnh', 'Lỗi');
+        return; // Ngưng xử lý tiếp theo
+      }
+
+      // Tiếp tục xử lý tệp nếu không có lỗi
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.avatarSrc = e.target.result;
@@ -100,6 +119,7 @@ export class CustomerComponent {
       .UpdateImage(this.customerForm.value, this.file)
       .subscribe({
         next: (response: any) => {
+          this.isDisplayNone = false;
           this.customerForm.reset();
           this.btnCloseModal.nativeElement.click();
           this.updateTable();
@@ -281,8 +301,8 @@ export class CustomerComponent {
   }
   lockAccount(id: number, status: boolean) {
     Swal.fire({
-      title: 'Bạn có chắc chắn muốn xóa?',
-      text: 'Dữ liệu sẽ không thể phục hồi sau khi xóa!',
+      title: 'Thông báo',
+      text: 'Bạn có chắc chắn muốn khóa tài khoản này không?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Xác nhận',

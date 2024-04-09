@@ -81,13 +81,9 @@ export class SignUpComponent implements OnInit {
 
   onKeyPress(event: KeyboardEvent) {
     const inputValue = event.key.trim();
-
-    // Kiểm tra nếu ký tự nhập vào không phù hợp với biểu thức chính quy
-    if (
-      !/[^a-z0-9A-Z_ÀÁÂÃÈÉÊẾÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêếìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỂưăạảấầẩẫậắằẳẵặẹẻẽềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]/u.test(
-        inputValue
-      )
-    ) {
+    const regex =
+      /^[a-zA-Z_ÀÁÂÃÈÉÊẾÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêếìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/;
+    if (!regex.test(inputValue)) {
       event.preventDefault(); // Ngăn chặn sự kiện mặc định của phím được nhập
     }
   }

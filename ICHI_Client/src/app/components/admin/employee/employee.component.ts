@@ -66,10 +66,10 @@ export class EmployeeComponent {
     ]),
     address: new FormControl('', [Validators.required]),
     userId: new FormControl(null),
-    password: new FormControl(
-      ''
-      // [Validators.required]
-    ),
+    password: new FormControl('', [
+      Validators.minLength(6),
+      Validators.required,
+    ]),
   });
 
   constructor(

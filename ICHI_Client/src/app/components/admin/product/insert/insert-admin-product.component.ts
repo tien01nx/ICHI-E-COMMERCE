@@ -60,7 +60,7 @@ export class InsertAdminProductComponent implements OnInit {
     description: new FormControl('', [Validators.required]),
     price: new FormControl(0),
     imageProductFiles: new FormControl(null, [Validators.required]),
-    color: new FormControl('', [Validators.maxLength(30)]),
+    color: new FormControl('', [Validators.required, Validators.maxLength(30)]),
     priorityLevel: new FormControl(0, [Validators.required]),
     notes: new FormControl('', [Validators.maxLength(200)]),
     isActive: new FormControl(true, [Validators.required]),
@@ -93,6 +93,7 @@ export class InsertAdminProductComponent implements OnInit {
     } else {
       this.titleString = 'Cập nhật sản phẩm';
       this.btnSave = 'Cập nhật';
+      this.isDisplayNone = true;
       // thumbnailFileControl?.setValidators([Validators.nullValidator]);
       imageProductFilesControl?.setValidators([Validators.nullValidator]);
       this.findProductById(this.activatedRoute.snapshot.params['id']);
@@ -101,11 +102,6 @@ export class InsertAdminProductComponent implements OnInit {
     imageProductFilesControl?.updateValueAndValidity();
 
     this.title.setTitle(this.titleString);
-    this.findAllCategory();
-    this.findAllOrigin();
-    this.findAllBrand();
-    this.findAllShape();
-    this.findAllMaterial();
     this.getDatacombobox();
   }
 
@@ -121,10 +117,49 @@ export class InsertAdminProductComponent implements OnInit {
     this.color = Utils.createColorList();
   }
 
+  // onFileSelected(event: any) {
+  //   const maxFileSize = 5 * 1024 * 1024; // 5MB
+  //   this.file = event.target.files[0];
+
+  //   // Kiểm tra xem tệp đã được chọn chưa
+  //   if (this.file) {
+  //     // Kiểm tra kích thước của tệp
+  //     if (this.file.size > maxFileSize) {
+  //       // Hiển thị thông báo lỗi về kích thước của tệp
+  //       this.toastr.error('Kích thước của tệp lớn hơn 5MB', 'Lỗi');
+  //       return; // Ngưng xử lý tiếp theo
+  //     }
+
+  //     // Kiểm tra kiểu MIME của tệp
+  //     if (!this.file.type.startsWith('image/')) {
+  //       // Hiển thị thông báo lỗi về kiểu MIME của tệp
+  //       this.toastr.error('Tệp không phải là ảnh', 'Lỗi');
+  //       return; // Ngưng xử lý tiếp theo
+  //     }
+
+  //     // Tiếp tục xử lý tệp nếu không có lỗi
+  //     const reader = new FileReader();
+  //     reader.onload = (e: any) => {
+  //       this.avatarSrc = e.target.result;
+  //     };
+  //     reader.readAsDataURL(this.file);
+  //   }
+  // }
+
   onFileChange(event: any) {
     const file = event.target.files[0];
+    const maxFile = 5 * 1024 * 1024;
     this.selectedImageFile = file;
+    debugger;
     if (file) {
+      if (file.size > maxFile) {
+        this.toastr.error('Kích thước ảnh lớn hơn 5MB', 'Thất bại');
+        return;
+      }
+      if (!file.type.startsWith('image/')) {
+        this.toastr.error('Tệp không phải là ảnh', 'Thất bại');
+        return;
+      }
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.selectedImageUrl = e.target.result;
@@ -134,6 +169,16 @@ export class InsertAdminProductComponent implements OnInit {
   }
 
   onSelect(event: any) {
+    // xử lý khi chọn ảnh từ  dropzone nếu ảnh > 5MB và không phải là ảnh thì thông báo lỗi
+    if (event.addedFiles[0].size > 5 * 1024 * 1024) {
+      this.toastr.error('Kích thước ảnh lớn hơn 5MB', 'Thất bại');
+      return;
+    }
+    if (!event.addedFiles[0].type.startsWith('image/')) {
+      this.toastr.error('Tệp không phải là ảnh', 'Thất bại');
+      return;
+    }
+
     this.selectedImageProductFiles.push(...event.addedFiles);
     this.productForm
       .get('imageProductFiles')
@@ -210,38 +255,6 @@ export class InsertAdminProductComponent implements OnInit {
     // }
   }
 
-  findAllCategory() {
-    // this.categoryService
-    //   .findAllByName('', true, 100, 1, 'ASC', 'name')
-    //   .subscribe((data: any) => {
-    //     this.categories = data.content;
-    //   });
-  }
-
-  findAllOrigin() {
-    // this.originService.findAll().subscribe((data: any) => {
-    //   this.origins = data;
-    // });
-  }
-
-  findAllBrand() {
-    // this.brandService.findAll().subscribe((data: any) => {
-    //   this.brands = data;
-    // });
-  }
-
-  findAllShape() {
-    // this.shapeService.findAll().subscribe((data: any) => {
-    //   this.shapes = data;
-    // });
-  }
-
-  findAllMaterial() {
-    // this.materialService.findAll().subscribe((data: any) => {
-    //   this.materials = data;
-    // });
-  }
-
   findProductById(id: number) {
     this.productService.findById(id).subscribe({
       next: (respon: any) => {
@@ -289,7 +302,6 @@ export class InsertAdminProductComponent implements OnInit {
   }
 
   createProduct() {
-    debugger;
     if (
       this.selectedImageProductFiles.length === 0 &&
       this.productImage.length === 0
@@ -303,7 +315,7 @@ export class InsertAdminProductComponent implements OnInit {
       .subscribe({
         next: (respon: any) => {
           if (
-            respon.message === 'Tạo mới thành công' ||
+            respon.message === 'Thêm sản phẩm thành công' ||
             respon.message === 'Cập nhật sản phẩm thành công'
           ) {
             this.toastr.success(respon.message, 'Thành công');
@@ -319,10 +331,9 @@ export class InsertAdminProductComponent implements OnInit {
   }
 
   updateProduct() {
-    debugger;
     // this.productForm.value.id = 0;
     if (this.productForm.value.productImages === null) {
-      this.toastr.error('Chưa chọn ảnh sản phẩm', 'Thất bại');
+      this.toastr.error('Yêu cầu chọn thêm hình ảnh sản phẩm', 'Thất bại');
       return;
     }
     this.productService

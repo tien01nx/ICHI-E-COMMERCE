@@ -17,7 +17,11 @@
     </div>
     <!-- <div class="col-auto" *ngIf="!isDisplayNone"> -->
     <div class="col-auto">
-      <button class="btn btn-primary mb-2 mb-sm-0 me-8" type="submit">
+      <button
+        class="btn btn-primary mb-2 mb-sm-0 me-8"
+        type="submit"
+        [disabled]="promotionForm.invalid"
+      >
         {{ btnSave }}
       </button>
     </div>
@@ -212,6 +216,16 @@
                       {{ item.product.productName }}
                     </ng-option>
                   </ng-select>
+                  <small
+                    class="text-danger mt-1"
+                    *ngIf="receiptDetails.get('productId')?.dirty"
+                  >
+                    <span
+                      *ngIf="receiptDetails.get('productId')?.errors?.['required']"
+                    >
+                      Sản phẩm là bắt buộc
+                    </span>
+                  </small>
                 </td>
 
                 <td class="pt-2 pb-2">
@@ -231,7 +245,7 @@
                     <span
                       *ngIf="receiptDetails.get('quantity')?.errors?.['required']"
                     >
-                      Số lượng khuyến mãi không được để trống
+                      Số lượng là bắt buộc
                     </span>
                     <span
                       *ngIf="receiptDetails.get('quantity')?.errors?.['min']"

@@ -19,14 +19,22 @@
       </h5>
     </div>
     <div class="col-auto">
+      <span class="btn btn-info mb-2 mb-sm-0 me-8" routerLink="/admin/products">
+        Quay lại
+      </span>
       <span
         class="btn btn-danger mb-2 mb-sm-0 me-8"
         (click)="deleteProduct(productForm.value.id)"
+        *ngIf="isDisplayNone"
       >
         Xóa
       </span>
-      <button class="btn btn-primary mb-2 mb-sm-0 me-8" type="submit">
-        Thêm
+      <button
+        class="btn btn-primary mb-2 mb-sm-0 me-8"
+        type="submit"
+        [disabled]="productForm.invalid"
+      >
+        {{ btnSave }}
       </button>
     </div>
   </div>
@@ -219,6 +227,11 @@
                       class="text-danger mt-1"
                       *ngIf="productForm['controls']['color'].dirty"
                     >
+                      <span
+                        *ngIf="productForm['controls']['color'].errors?.['required']"
+                      >
+                        Màu sắc là bắt buộc
+                      </span>
                       <span
                         *ngIf="productForm['controls']['color'].errors?.['maxLength']"
                       >

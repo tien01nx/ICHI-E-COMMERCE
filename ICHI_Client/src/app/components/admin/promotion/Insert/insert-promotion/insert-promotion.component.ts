@@ -55,7 +55,6 @@ export class InsertPromotionComponent implements OnInit {
     startTime: new FormControl(Date, [Validators.required]),
     endTime: new FormControl(Date, [Validators.required]),
     discount: new FormControl('', [Validators.required]),
-
     isActive: new FormControl(true),
     isDeleted: new FormControl(false),
     promotionDetails: new FormArray([

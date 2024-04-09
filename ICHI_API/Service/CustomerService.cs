@@ -31,7 +31,7 @@ namespace ICHI_API.Service
         var query = _db.Customers.Include(u => u.User).OrderByDescending(u => u.ModifiedDate).AsQueryable().Where(u => u.isDeleted == false);
         if (!string.IsNullOrEmpty(name))
         {
-          query = query.Where(e => e.FullName.Contains(name) || e.PhoneNumber.Contains(name));
+          query = query.Where(e => e.FullName.Contains(name.Trim()) || e.PhoneNumber.Contains(name.Trim()));
         }
         var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
         query = query.OrderBy(orderBy);

@@ -14,6 +14,8 @@ import { Utils } from '../../../Utils.ts/utils';
 })
 export class ResetPasswordComponent {
   strMessage: string = '';
+  passwordsNotMatching: boolean = false;
+
   userForm: FormGroup = new FormGroup({
     userName: new FormControl(''),
     oldPassword: new FormControl('', [Validators.required]),
@@ -32,6 +34,17 @@ export class ResetPasswordComponent {
     private toastr: ToastrService,
     private router: Router
   ) {}
+
+  checkPasswordMatch() {
+    const password = this.userForm.get('password')?.value;
+    const confirmPassword = this.userForm.get('confirmPassword')?.value;
+
+    if (password !== confirmPassword) {
+      this.passwordsNotMatching = true;
+    } else {
+      this.passwordsNotMatching = false;
+    }
+  }
   changePassword() {
     // set username from token
 

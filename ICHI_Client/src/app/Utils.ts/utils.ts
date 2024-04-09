@@ -147,23 +147,26 @@ export class Utils {
   static PaymentOnDelivery = 'PaymentOnDelivery';
   static PaymentViaCard = 'PaymentViaCard';
 
+  // Trạng thái đơn hàng
+  // Chưa xác nhận - Pending
+  // Chờ xác nhận - On hold
+  // Chờ lấy hàng - WaitingForPickup
+  // Chờ giao hàng - WaitingForDelivery
+  // Đã giao hàng - Delivered
+  // Đã hủy - Cancelled
+
   static statusOrder = [
-    { name: 'Pending', value: 'Chưa xác nhận' }, // Chưa xác nhận
-    { name: 'Processing', value: 'Đang xử lý' }, // Đang xử lý
-    { name: 'Shipped', value: 'Đã vận chuyển' }, // Đã vận chuyển
+    { name: 'Pending', value: 'Chưa xác nhận' },
+    { name: 'On hold', value: 'Chờ xác nhận' },
+    { name: 'WaitingForPickup', value: 'Chờ lấy hàng' },
+    { name: 'WaitingForDelivery', value: 'Chờ giao hàng' },
     { name: 'Delivered', value: 'Đã giao hàng' },
     { name: 'Cancelled', value: 'Đã hủy' },
-    { name: 'Refunded', value: 'Đã hoàn lại' },
-    { name: 'On hold', value: 'Đang chờ' },
-    { name: 'Completed', value: 'Đã hoàn thành' }, // Đã hoàn thành
-    { name: 'Failed', value: 'Thất bại' },
-    { name: 'Returned', value: 'Đã trả lại' },
   ];
 
   static paymentStatus = [
     { name: 'Pending', value: 'Chưa thanh toán' },
     { name: 'Approved', value: 'Đã thanh toán' },
-    { name: 'Cancelled', value: 'Đã hủy' },
   ];
 
   static getOrdersStatus(status: string): string {

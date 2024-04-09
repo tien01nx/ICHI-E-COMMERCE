@@ -45,12 +45,11 @@ export class CategoryComponent implements OnInit {
   errorMessage: string = '';
   categoryForm: FormGroup = new FormGroup({
     id: new FormControl('0'),
-    parentID: new FormControl('0'),
-    categoryLevel: new FormControl('0'),
+    parentID: new FormControl('0', Validators.required),
+    categoryLevel: new FormControl('0', Validators.required),
     categoryName: new FormControl('', [
       Validators.required,
       Validators.maxLength(50),
-      Validators.pattern(Utils.textPattern),
     ]),
   });
 
@@ -92,8 +91,8 @@ export class CategoryComponent implements OnInit {
       const search = params['search'] || '';
       const pageSize = +params['page-size'] || 10;
       const pageNumber = +params['page-number'] || 1;
-      const sortDir = params['sort-direction'] || 'ASC';
-      const sortBy = params['sort-by'] || '';
+      const sortDir = params['sort-direction'] || 'DESC';
+      const sortBy = params['sort-by'] || 'CreateDate';
       this.findAll(pageSize, pageNumber, sortBy, sortDir, search);
     });
     this.categoryService.findAll().subscribe((data: any) => {
@@ -158,7 +157,7 @@ export class CategoryComponent implements OnInit {
 
   changePageNumber(pageNumber: number): void {
     this.router
-      .navigate(['/admin/categoryproduct'], {
+      .navigate(['/admin/categories'], {
         queryParams: { 'page-number': pageNumber },
         queryParamsHandling: 'merge',
       })
@@ -167,7 +166,7 @@ export class CategoryComponent implements OnInit {
 
   changePageSize(pageSize: number): void {
     this.router
-      .navigate(['/admin/categoryproduct'], {
+      .navigate(['/admin/categories'], {
         queryParams: { 'page-size': pageSize, 'page-number': 1 },
         queryParamsHandling: 'merge',
       })
@@ -176,7 +175,7 @@ export class CategoryComponent implements OnInit {
 
   sortByField(sortBy: string): void {
     this.router
-      .navigate(['/admin/categoryproduct'], {
+      .navigate(['/admin/categories'], {
         queryParams: { 'sort-by': sortBy, 'sort-direction': this.sortDir },
         queryParamsHandling: 'merge',
       })
@@ -187,7 +186,7 @@ export class CategoryComponent implements OnInit {
 
   search() {
     this.router
-      .navigate(['/admin/categoryproduct'], {
+      .navigate(['/admin/categories'], {
         queryParams: { search: this.searchTemp, 'page-number': 1 },
         queryParamsHandling: 'merge',
       })
@@ -205,18 +204,23 @@ export class CategoryComponent implements OnInit {
 
   create() {
     this.isDisplayNone = true;
+    debugger;
     this.categoryForm.value.id = 0;
+    // lấy ra giá trị của parentID => categoryLevel = parentID + 1
+    this.categoryForm.value.categoryLevel =
+      this.categoryForm.value.parentID + 1;
     this.categoryService.create(this.categoryForm.value).subscribe({
       next: (response: any) => {
         if (response.message === 'Tạo mới danh mục thành công') {
+          debugger;
           this.categoryForm.reset();
           this.btnCloseModal.nativeElement.click();
-          this.updateTable();
+          this.isDisplayNone = false;
+          // this.updateTable();
           this.toastr.success(response.message, 'Thông báo');
         } else {
           this.errorMessage = response.message;
           this.isDisplayNone = false;
-          this.toastr.error(response.message, 'Thông báo');
         }
       },
       error: (error: any) => {
@@ -238,7 +242,8 @@ export class CategoryComponent implements OnInit {
           this.updateTable();
           this.toastr.success(response.message, 'Thông báo');
         } else {
-          this.toastr.error(response.message, 'Thông báo');
+          this.errorMessage = response.message;
+          this.isDisplayNone = false;
         }
       },
       error: (error: any) => {
@@ -297,7 +302,7 @@ export class CategoryComponent implements OnInit {
   updateTable() {
     this.isDisplayNone = false;
     this.errorMessage = '';
-    this.findAll(this.paginationModel.pageSize, 1, '', '', '');
+    this.findAll(this.paginationModel.pageSize, 1, 'CreateDate', 'DESC', '');
   }
 
   getCategories(

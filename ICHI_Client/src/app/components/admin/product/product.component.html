@@ -310,7 +310,10 @@
                   class="d-flex align-items-center text-body text-hover-1000"
                   routerLink="/admin/product/insert/{{ product.product.id }}"
                 >
-                  <div class="avatar avatar-m">
+                  <div
+                    class="avatar avatar-m"
+                    *ngIf="product.productImages.length > 0"
+                  >
                     <img
                       class="rounded-circle"
                       src="{{ Environment.apiBaseRoot }}{{
@@ -351,45 +354,6 @@
                   {{ product.product.isActive ? "Đang bán" : "Ngừng bán" }}
                 </span>
               </td>
-
-              <!-- <td class="align-middle white-space-nowrap text-600 ps-4">
-                {{ product.createDatetime | date : "dd/MM/yyyy HH:mm:ss" }}
-              </td> -->
-              <!-- <td class="align-middle white-space-nowrap text-600 ps-3">
-                {{ product.modifiedDate | date : "dd/MM/yyyy" }}
-              </td> -->
-              <!-- <td class="align-middle white-space-nowrap text-end pe-0">
-                <div class="font-sans-serif btn-reveal-trigger position-static">
-                  <button
-                    class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    data-boundary="window"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                    data-bs-reference="parent"
-                  >
-                    <span class="fas fa-ellipsis-h fs--2"></span>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-end py-2">
-                    <button
-                      class="dropdown-item"
-                      data-bs-target="#modalproduct"
-                      data-bs-toggle="modal"
-                      (click)="openModalUpdate(product)"
-                    >
-                      Cập nhật
-                    </button>
-                    <div class="dropdown-divider"></div>
-                    <button
-                      class="dropdown-item text-danger"
-                      (click)="delete(product.id)"
-                    >
-                      Xóa
-                    </button>
-                  </div>
-                </div>
-              </td> -->
 
               <td class="align-middle white-space-nowrap text-end pe-0">
                 <div class="position-relative">
@@ -454,25 +418,10 @@
                       </button>
                     </ng-container>
                     <ng-template #unlocked>
-                      <button class="btn btn-sm btn-phoenix-secondary fs-10">
-                        <!-- (click)="lockAccount(product.isDeleted, true)" -->
-
-                        <!-- <svg
-                          class="svg-inline--fa fa-trash text-body fs-5"
-                          aria-hidden="true"
-                          focusable="false"
-                          data-prefix="fas"
-                          data-icon="trash"
-                          role="img"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 448 512"
-                          data-fa-i2svg=""
-                        >
-                          <path
-                            fill="currentColor"
-                            d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM394.8 466.1C393.2 492.3 372.3 512 346.9 512H101.1C75.75 512 54.77 492.3 53.19 466.1L31.1 128H416L394.8 466.1z"
-                          ></path>
-                        </svg> -->
+                      <button
+                        class="btn btn-sm btn-phoenix-secondary fs-10"
+                        (click)="delete(product.product.id)"
+                      >
                         <span class="fas fa-trash-alt"></span>
                       </button>
                     </ng-template>

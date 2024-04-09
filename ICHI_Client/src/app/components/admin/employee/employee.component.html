@@ -918,7 +918,7 @@
 
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="email"
-              >Email</label
+              >Email <sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">
               <input
@@ -949,7 +949,7 @@
           <!-- Nếu là trường hợp update thì ẩn nhập mật khẩu -->
           <div class="row mb-3" *ngIf="showPassword">
             <label class="col-sm-4 col-form-label fs-9" for="password"
-              >Mật khẩu</label
+              >Mật khẩu <sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">
               <input
@@ -957,9 +957,9 @@
                 id="password"
                 type="password"
                 placeholder="Password"
-                formControlName="password"
+                formControlName="Mật khẩu"
               />
-              <!-- <small
+              <small
                 class="text-danger mt-1"
                 *ngIf="employeeForm['controls']['password'].dirty"
               >
@@ -969,17 +969,17 @@
                   Mật khẩu không được để trống
                 </span>
                 <span
-                  *ngIf="employeeForm['controls']['password'].errors?.['maxlength']"
+                  *ngIf="employeeForm['controls']['password'].errors?.['minlength']"
                 >
-                  Mật khẩu không được vượt quá 100 ký tự
+                  Mật khẩu tối thiểu 6 ký tự
                 </span>
-              </small> -->
+              </small>
             </div>
           </div>
 
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="fullName"
-              >Họ và Tên</label
+              >Họ và Tên <sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">
               <input
@@ -1021,7 +1021,7 @@
 
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="phoneNumber"
-              >Số điện thoại</label
+              >Số điện thoại <sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">
               <input
@@ -1058,7 +1058,7 @@
           </div>
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="gender"
-              >Giới tính</label
+              >Giới tính <sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">
               <select
@@ -1078,14 +1078,14 @@
                 <span
                   *ngIf="employeeForm['controls']['gender'].errors?.['required']"
                 >
-                  Số điện thoại không được để trống
+                  Giới tính là bắt buộc!
                 </span>
               </small>
             </div>
           </div>
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="birthday"
-              >Ngày sinh</label
+              >Ngày sinh <sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">
               <input
@@ -1111,7 +1111,7 @@
           </div>
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="address"
-              >Địa chỉ</label
+              >Địa chỉ <sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">
               <input

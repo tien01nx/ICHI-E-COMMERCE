@@ -40,7 +40,7 @@
 
         if (!string.IsNullOrEmpty(name))
         {
-          query = query.Where(e => e.ProductName.Contains(name));
+          query = query.Where(e => e.ProductName.Contains(name.Trim()));
         }
 
         var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
@@ -124,6 +124,13 @@
           {
             foreach (var file in files)
             {
+              if (!ImageHelper.CheckImage(file))
+              {
+                strMessage = "File không đúng định dạng hoặc dung lượng lớn hơn 10MB";
+                _unitOfWork.Rollback();
+                return null;
+              }
+
               var image = new ProductImages();
               image.ProductId = product.Id;
               image.ImageName = file.FileName;
@@ -138,7 +145,7 @@
             _unitOfWork.Save();
           }
 
-          strMessage = "Tạo mới thành công";
+          strMessage = "Thêm sản phẩm thành công";
           _unitOfWork.Commit(); // Commit giao dịch
           return product;
         }
