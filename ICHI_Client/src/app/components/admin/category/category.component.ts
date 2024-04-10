@@ -199,17 +199,20 @@ export class CategoryComponent implements OnInit {
     if (this.categoryForm.invalid) {
       return;
     }
-    if (this.categoryForm.value.id == null) this.create();
+    if (this.categoryForm.value.id === null) this.create();
     else this.update();
   }
 
   create() {
     this.isDisplayNone = true;
-    debugger;
+    //debugger;
     this.categoryForm.value.id = 0;
     // lấy ra giá trị của parentID => categoryLevel = parentID + 1
-    this.categoryForm.value.categoryLevel =
-      this.categoryForm.value.parentID + 1;
+    // this.categoryForm.value.categoryLevel =
+    //   this.categoryForm.value.parentID + 1;
+
+    console.log('data', this.categoryForm.value);
+
     this.categoryService.create(this.categoryForm.value).subscribe({
       next: (response: any) => {
         if (response.message === 'Tạo mới danh mục thành công') {
@@ -220,16 +223,13 @@ export class CategoryComponent implements OnInit {
           this.toastr.success(response.message, 'Thông báo');
         } else {
           this.errorMessage = response.message;
-          console.log('dataa', response);
-          this.categoryForm.patchValue({
-            parentID: this.categoryForm.value.parentID,
-            categoryName: this.categoryForm.value.categoryName,
-          });
-          console.log('id lv', this.categoryLevel);
-          this.categoryForm
-            .get('categoryLevel')
-            ?.setValue(this.categoriesLevel[this.categoryLevel]?.id);
+          // console.log('dataa', response);
+          // console.log('id lv', this.categoryLevel);
+          // this.categoryForm
+          //   .get('categoryLevel')
+          //   ?.setValue(this.categoriesLevel[this.categoryLevel]?.id);
           this.isDisplayNone = false;
+          this.categoryForm.value.id = null;
         }
       },
       error: (error: any) => {
