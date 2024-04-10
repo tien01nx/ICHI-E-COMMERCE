@@ -32,7 +32,7 @@ export class CheckoutComponent implements OnInit {
   titleStatus: string = '';
   isDisplayNone: boolean = false;
   trxTransacForm = new FormGroup({
-    userId: new FormControl(''),
+    customerId: new FormControl(''),
     fullName: new FormControl('', [
       Validators.required,
       Validators.maxLength(50),
@@ -73,7 +73,7 @@ export class CheckoutComponent implements OnInit {
         console.log('dataPay', response.data);
         this.shoppingcartdto = response.data;
         this.trxTransacForm.setValue({
-          userId: this.tokenService.getUserEmail(),
+          customerId: this.tokenService.getUserEmail(),
           phoneNumber: this.shoppingcartdto.trxTransaction.phoneNumber,
           fullName: this.shoppingcartdto.trxTransaction.fullName,
           address: this.shoppingcartdto.trxTransaction.address,
@@ -113,7 +113,7 @@ export class CheckoutComponent implements OnInit {
         this.shoppingcartdto = response.data;
 
         this.trxTransacForm.setValue({
-          userId: this.tokenService.getUserEmail(),
+          customerId: this.tokenService.getUserEmail(),
           phoneNumber: this.shoppingcartdto.trxTransaction.phoneNumber,
           fullName: this.shoppingcartdto.trxTransaction.fullName,
           address: this.shoppingcartdto.trxTransaction.address,
@@ -173,6 +173,7 @@ export class CheckoutComponent implements OnInit {
       this.trxTransactionDTO = new TrxTransactionDTO(
         0,
         this.tokenService.getUserEmail(),
+        '',
         this.trxTransacForm.value?.fullName || '',
         this.trxTransacForm.value?.phoneNumber || '',
         this.trxTransacForm.value?.address || '',

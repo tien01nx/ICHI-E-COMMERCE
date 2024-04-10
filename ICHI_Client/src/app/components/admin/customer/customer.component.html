@@ -613,6 +613,7 @@
                 type="tel"
                 placeholder="Số điện thoại"
                 formControlName="phoneNumber"
+                (keypress)="Utils.onKeyPressNumber($event)"
               />
               <small
                 class="text-danger mt-1"
@@ -715,7 +716,7 @@
                   Email là bắt buộc
                 </span>
                 <span
-                  *ngIf="customerForm['controls']['email'].errors?.['email']"
+                  *ngIf="customerForm['controls']['email'].errors?.['pattern']"
                 >
                   Email không đúng định dạng
                 </span>

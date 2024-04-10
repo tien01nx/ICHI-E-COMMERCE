@@ -32,6 +32,8 @@ export class CategoryComponent implements OnInit {
 
   categories: any;
 
+  categoryLevel: number = 0;
+
   parentIds: CategoryProduct[] = [];
 
   categoriesLevel: CategoryProduct[] = [];
@@ -194,7 +196,6 @@ export class CategoryComponent implements OnInit {
   }
 
   onSubmit() {
-    debugger;
     if (this.categoryForm.invalid) {
       return;
     }
@@ -212,14 +213,22 @@ export class CategoryComponent implements OnInit {
     this.categoryService.create(this.categoryForm.value).subscribe({
       next: (response: any) => {
         if (response.message === 'Tạo mới danh mục thành công') {
-          debugger;
           this.categoryForm.reset();
           this.btnCloseModal.nativeElement.click();
           this.isDisplayNone = false;
-          // this.updateTable();
+          this.updateTable();
           this.toastr.success(response.message, 'Thông báo');
         } else {
           this.errorMessage = response.message;
+          console.log('dataa', response);
+          this.categoryForm.patchValue({
+            parentID: this.categoryForm.value.parentID,
+            categoryName: this.categoryForm.value.categoryName,
+          });
+          console.log('id lv', this.categoryLevel);
+          this.categoryForm
+            .get('categoryLevel')
+            ?.setValue(this.categoriesLevel[this.categoryLevel]?.id);
           this.isDisplayNone = false;
         }
       },
@@ -235,7 +244,6 @@ export class CategoryComponent implements OnInit {
     this.categoryService.update(this.categoryForm.value).subscribe({
       next: (response: any) => {
         console.log(response);
-        debugger;
         if (response.message === 'Cập nhật danh mục thành công') {
           this.categoryForm.reset();
           this.btnCloseModal.nativeElement.click();
@@ -297,6 +305,7 @@ export class CategoryComponent implements OnInit {
     });
     this.titleModal = 'Cập nhật ndanh mục sản phẩm';
     this.btnSave = 'Cập nhật';
+    this.errorMessage = '';
   }
 
   updateTable() {
@@ -339,9 +348,16 @@ export class CategoryComponent implements OnInit {
       //   }
       // });
       this.categoriesLevel = this.getCategories(this.parentIds, id);
-      this.categoryForm
-        .get('categoryLevel')
-        ?.setValue(this.categoriesLevel[0]?.id); // Đảm bảo mảng districts không rỗng trước khi gán giá trị
+      //nếu categoeyLevel không có giá trị thì gán giá trị mặc định là 0 còn có giá trị thì gán giá trị là id của categoryLevel
+      if (this.categoryForm.get('categoryLevel')?.value === null) {
+        this.categoryForm
+          .get('categoryLevel')
+          ?.setValue(this.categoriesLevel[this.categoryLevel]?.id);
+      } else {
+        this.categoryForm
+          .get('categoryLevel')
+          ?.setValue(this.categoriesLevel[this.categoryLevel]?.id);
+      }
     });
     return cityControl;
   }

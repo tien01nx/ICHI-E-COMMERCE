@@ -33,6 +33,7 @@ import { InsertPromotionComponent } from './components/admin/promotion/Insert/in
 import { ListOrderComponent } from './components/admin/order/list-order/list-order.component';
 import { ProfileComponent } from './components/client/profile/profile.component';
 import { OrderTrackingComponent } from './components/client/order-tracking/order-tracking.component';
+import { InvoiceComponent } from './components/client/invoice/invoice.component';
 
 export const routes: Routes = [
   {
@@ -89,6 +90,7 @@ export const routes: Routes = [
   { path: 'forgot_password', component: ForgotPasswordComponent },
   { path: 'verify_email', component: VerificationCodeComponent },
   { path: 'access-denied', component: AccessForbiddenComponent },
+  { path: 'invoice', component: InvoiceComponent },
   {
     path: 'profile',
     component: ProfileComponent,

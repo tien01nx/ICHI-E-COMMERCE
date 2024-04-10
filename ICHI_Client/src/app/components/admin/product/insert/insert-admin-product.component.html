@@ -85,6 +85,11 @@
           >
             Mô tả sản phẩm không được để trống
           </span>
+          <span
+            *ngIf="productForm['controls']['description'].errors?.['minlength']"
+          >
+            Mô tả sản phẩm cần >100 ký tự
+          </span>
         </small>
       </div>
       <h4 class="mb-3">Hiển thị hình ảnh <sup class="text-danger">*</sup></h4>
@@ -233,9 +238,14 @@
                         Màu sắc là bắt buộc
                       </span>
                       <span
-                        *ngIf="productForm['controls']['color'].errors?.['maxLength']"
+                        *ngIf="productForm['controls']['color'].errors?.['maxlength']"
                       >
-                        Màu sắc tối đa 30 kí tự
+                        Màu sắc nhập tối đa 30 ký tự
+                      </span>
+                      <span
+                        *ngIf="productForm['controls']['color'].errors?.['pattern']"
+                      >
+                        Màu sắc không đúng định dạng
                       </span>
                     </small>
                   </div>
@@ -251,6 +261,7 @@
                       max="4"
                       placeholder="Thứ tự hiển thị"
                       formControlName="priorityLevel"
+                      (keypress)="Utils.handleKeyPress($event, 0, 4)"
                     />
                   </div>
                 </div>
@@ -291,6 +302,17 @@
                       style="height: 100px"
                     >
                     </textarea>
+
+                    <small
+                      class="text-danger mt-1"
+                      *ngIf="productForm['controls']['notes'].dirty"
+                    >
+                      <span
+                        *ngIf="productForm['controls']['notes'].errors?.['maxlength']"
+                      >
+                        Ghi chú được nhập tối đa là 200 ký tự
+                      </span>
+                    </small>
                   </div>
                 </div>
               </div>
@@ -318,6 +340,7 @@
                         type="number"
                         placeholder="0"
                         formControlName="price"
+                        (keypress)="Utils.handleKeyPressNguyen($event)"
                       />
 
                       <span class="input-group-text">vnđ</span>

@@ -1,5 +1,4 @@
 ﻿using ICHI_CORE.Domain;
-using ICHI_CORE.Domain.MasterModel;
 
 namespace ICHI_API.Model
 {

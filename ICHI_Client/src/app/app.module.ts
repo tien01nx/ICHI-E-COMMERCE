@@ -55,6 +55,7 @@ import { OrderComponent } from './components/admin/order/order.component';
 import { ListOrderComponent } from './components/admin/order/list-order/list-order.component';
 import { ProfileComponent } from './components/client/profile/profile.component';
 import { OrderTrackingComponent } from './components/client/order-tracking/order-tracking.component';
+import { InvoiceComponent } from './components/client/invoice/invoice.component';
 
 register();
 
@@ -99,6 +100,7 @@ register();
     ListOrderComponent,
     ProfileComponent,
     OrderTrackingComponent,
+    InvoiceComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),

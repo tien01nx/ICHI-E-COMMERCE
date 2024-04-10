@@ -55,6 +55,7 @@ namespace ICHI_API.Service
       try
       {
         _unitOfWork.BeginTransaction();
+        trxTransactionDTO.CustomerId = trxTransactionDTO.Carts.FirstOrDefault().UserId;
         int checkPromotion = trxTransactionDTO.Carts.Where(x => x.Discount > 0).Count();
         // kiểm tra thông tin product trong carts để kiểm tra còn trong chương trình khuyến mãi không
         var promotion = _promotionService.CheckPromotionActive().Select(x => x.ProductId);
@@ -69,7 +70,7 @@ namespace ICHI_API.Service
         // từ userId lấy ra xem là employee hay customer từ bảng UserRole
         TrxTransaction trxTransaction = new TrxTransaction();
 
-        var user = _unitOfWork.UserRole.Get(u => u.UserId == trxTransactionDTO.UserId, "Role");
+        var user = _unitOfWork.UserRole.Get(u => u.UserId == trxTransactionDTO.CustomerId, "Role");
         if (user == null)
         {
           strMessage = "Không tìm thấy thông tin người dùng";
@@ -77,7 +78,8 @@ namespace ICHI_API.Service
         }
         if (user.Role.RoleName == AppSettings.USER)
         {
-          trxTransaction.CustomerId = _unitOfWork.Customer.Get(u => u.UserId == trxTransactionDTO.UserId).Id;
+          var data3 = _unitOfWork.Customer.Get(u => u.UserId == trxTransactionDTO.CustomerId);
+          trxTransaction.CustomerId = _unitOfWork.Customer.Get(u => u.UserId == trxTransactionDTO.CustomerId).Id;
         }
         else
         {
@@ -85,10 +87,10 @@ namespace ICHI_API.Service
           return null;
         }
 
-        var cart = _unitOfWork.Cart.GetAll(u => u.UserId == trxTransactionDTO.UserId);
-        trxTransaction.FullName = trxTransactionDTO.FullName;
-        trxTransaction.PhoneNumber = trxTransactionDTO.PhoneNumber;
-        trxTransaction.Address = trxTransactionDTO.Address;
+        var cart = _unitOfWork.Cart.GetAll(u => u.UserId == trxTransactionDTO.CustomerId);
+        trxTransaction.FullName = trxTransactionDTO?.FullName;
+        trxTransaction.PhoneNumber = trxTransactionDTO?.PhoneNumber;
+        trxTransaction.Address = trxTransactionDTO?.Address;
         trxTransaction.OrderDate = DateTime.Now;
         trxTransaction.OrderStatus = AppSettings.StatusOrderPending;
         trxTransaction.PaymentTypes = trxTransactionDTO.PaymentTypes;

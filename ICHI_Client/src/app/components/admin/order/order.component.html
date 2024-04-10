@@ -1,22 +1,22 @@
 <nav class="mb-2" aria-label="breadcrumb">
   <ol class="breadcrumb mb-0">
-    <li class="breadcrumb-item"><a href="#!">Trang 1</a></li>
-    <li class="breadcrumb-item"><a href="#!">Trang 2</a></li>
-    <li class="breadcrumb-item active">Mặc định</li>
+    <li class="breadcrumb-item"><a href="#!">Quản lý bán hàng</a></li>
+    <li class="breadcrumb-item"><a href="#!">Tạo hóa đơn bán hàng</a></li>
+    <!-- <li class="breadcrumb-item active">Mặc định</li> -->
   </ol>
 </nav>
 <form
   class="mb-9"
-  [formGroup]="productForm"
+  [formGroup]="trxTransactionForm"
   enctype="multipart/form-data"
   (submit)="onSubmit()"
 >
   <div class="row g-3 flex-between-end mb-5">
     <div class="col-auto">
-      <h2 class="mb-2">Thêm một sản phẩm</h2>
-      <h5 class="text-body-tertiary fw-semibold">
+      <h2 class="mb-2">Tạo hóa đơn bán hàng</h2>
+      <!-- <h5 class="text-body-tertiary fw-semibold">
         Đơn đặt hàng được đặt trên cửa hàng của bạn
-      </h5>
+      </h5> -->
     </div>
     <div class="col-auto">
       <button class="btn btn-primary mb-2 mb-sm-0 me-8" type="submit">
@@ -32,16 +32,10 @@
         <div class="col-12 col-xl-12">
           <div class="card mb-3">
             <div class="card-body">
-              <h4 class="card-title mb-4">Thông tin đơn hàng</h4>
+              <h4 class="card-title">Thông tin đơn hàng</h4>
               <div class="row gx-3">
                 <div class="col-12 col-sm-6 col-xl-12">
-                  <div class="mb-4">
-                    <div class="d-flex flex-wrap mb-2">
-                      <a class="fw-bold fs-9" href="/admin/categories"
-                        >Thêm mới sản phẩm</a
-                      >
-                    </div>
-                  </div>
+                  <div class=""></div>
                   <div class="table-responsive-x scrollbar-overlay mx-n1 px-1">
                     <table class="table table-sm fs-9 mb-0">
                       <thead>
@@ -87,10 +81,10 @@
                           ></th>
                         </tr>
                       </thead>
-                      <tbody formArrayName="inventoryReceiptDetails">
+                      <tbody formArrayName="carts">
                         <tr
                           *ngFor="
-                            let receiptDetails of inventoryReceiptDetails.controls;
+                            let receiptDetails of carts.controls;
                             let i = index
                           "
                           [formGroupName]="i"
@@ -251,33 +245,39 @@
                   </button>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-6 white-space-nowrap pe-5 fw-bold pb-3 pt-3">
+                  Phương thức thanh toán<span class="text-danger">*</span>
+                </div>
 
-              <ng-select
-                style="height: 16px; width: 400px"
-                [items]="Utils.paymentTypes"
-                bindValue="paymentTypes"
-                bindLabel="name"
-                placeholder="Chọn phương thức thanh toán"
-                formControlName="paymentTypes"
-              ></ng-select>
-              <!-- <small
-                class="text-danger mt-1"
-              >
-                *ngIf="trxTransacForm['controls']['paymentTypes'].dirty"
-
-                <span
-                  *ngIf="trxTransacForm['controls']['paymentTypes'].errors?.['required']"
-                >
-                  Phương thức thanh toán không được để trống
-                </span>
-              </small> -->
+                <div class="col-6 pe-5 pb-3 pt-3">
+                  <ng-select
+                    style="height: 16px"
+                    [items]="Utils.paymentTypes"
+                    bindValue="paymentTypes"
+                    bindLabel="name"
+                    placeholder="Chọn phương thức thanh toán"
+                    formControlName="paymentTypes"
+                  ></ng-select>
+                  <small
+                    class="text-danger mt-1"
+                    *ngIf="trxTransactionForm['controls']['paymentTypes'].dirty"
+                  >
+                    <span
+                      *ngIf="trxTransactionForm['controls']['paymentTypes'].errors?.['required']"
+                    >
+                      Phương thức thanh toán không được để trống
+                    </span>
+                  </small>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div class="col-12 col-xl-12">
           <div class="card">
             <div class="card-body">
-              <h4 class="card-title mb-4">Thông tin sản phẩm chi tiết</h4>
+              <h4 class="card-title">Thông tin sản phẩm chi tiết</h4>
               <div class="row g-3">
                 <div class="col-12 col-sm-6 col-xl-12">
                   <div
@@ -294,7 +294,6 @@
                         class="form-control"
                         type="number"
                         placeholder="0"
-                        formControlName="price"
                       />
 
                       <span class="input-group-text">vnđ</span>
@@ -308,7 +307,6 @@
                         class="form-control"
                         type="text"
                         placeholder="0"
-                        formControlName="quantity"
                         readonly
                       />
                     </div>
@@ -333,15 +331,15 @@
                   <div class="mb-2">
                     <div class="d-flex flex-wrap mb-2">
                       <h5 class="mb-0 text-body-highlight me-2">
-                        Loại <sup class="text-danger">*</sup>
+                        Khách hàng <sup class="text-danger">*</sup>
                       </h5>
                       <a class="fw-bold fs-9" href="/admin/categories"
-                        >Thêm danh mục mới</a
+                        >Thêm mới khách hàng</a
                       >
                     </div>
                     <ng-select
-                      formControlName="userId"
-                      placeholder="Chọn danh mục"
+                      formControlName="customerId"
+                      placeholder="Chọn khách hàng"
                       [formControl]="getDistrictsControl()"
                     >
                       <ng-option
@@ -351,20 +349,20 @@
                         {{ category.fullName + " - " + category.phoneNumber }}
                       </ng-option>
                     </ng-select>
-                    <small
+                    <!-- <small
                       class="text-danger mt-1"
                       *ngIf="
-                        productForm.get('userId')?.invalid &&
-                        (productForm.get('userId')?.dirty ||
-                          productForm.get('userId')?.touched)
+                        trxTransactionForm.get('customerId')?.invalid &&
+                        (trxTransactionForm.get('customerId')?.dirty ||
+                          trxTransactionForm.get('customerId')?.touched)
                       "
                     >
                       <span
-                        *ngIf="productForm.get('userId')?.errors?.['required']"
+                        *ngIf="trxTransactionForm.get('customerId')?.errors?.['required']"
                       >
                         Tên người mua
                       </span>
-                    </small>
+                    </small> -->
                   </div>
                 </div>
                 <div
@@ -396,10 +394,15 @@
                     </h5> -->
                   </div>
                   <div class="d-flex justify-content-between mb-3">
+                    <h5 class="text-body fw-semibold mt-2">Số điện thoại:</h5>
                     <h5 class="text-body fw-semibold">
-                      {{ customer.userId }}
+                      <input
+                        class="form-control"
+                        type="text"
+                        placeholder="Không có địa chỉ"
+                        [value]="customer.phoneNumber"
+                      />
                     </h5>
-                    <h5 class="text-body fw-semibold">Số điện thoại</h5>
                   </div>
                   <hr class="bg-body-secondary mb-2 mt-2" />
                   <div class="d-flex justify-content-between mb-3">
@@ -418,6 +421,7 @@
                       type="text"
                       placeholder="Không có địa chỉ"
                       [value]="customer.address"
+                      formControlName="address"
                     ></textarea>
                   </div>
                 </div>

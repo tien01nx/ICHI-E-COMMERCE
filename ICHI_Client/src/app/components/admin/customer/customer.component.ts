@@ -1,3 +1,4 @@
+import { Utils } from './../../../Utils.ts/utils';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CustomerModel } from '../../../models/customer.model';
 import { PaginationDTO } from '../../../dtos/pagination.dto';
@@ -8,7 +9,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Utils } from '../../../Utils.ts/utils';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -55,7 +55,10 @@ export class CustomerComponent {
     ]),
     gender: new FormControl('', [Validators.required]),
     birthday: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.pattern(Utils.checkEmail),
+    ]),
     address: new FormControl('', [
       Validators.required,
       Validators.maxLength(100),

@@ -1,3 +1,5 @@
+import { TrxTransactionService } from './../../../service/trx-transaction.service';
+import { TokenService } from './../../../service/token.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Utils } from '../../../Utils.ts/utils';
@@ -35,11 +37,6 @@ export class OrderComponent implements OnInit {
   product: ProductModel | undefined = undefined;
   totalMoney: number = 0;
   titleString: string = '';
-  selectedImageUrl: string = '';
-  selectedImageFile: File = new File([''], 'filename');
-  selectedImageProductUrl: string[] = [];
-  selectedImageProductFiles: File[] = [];
-  trademarks: TrademarkModel[] = [];
   productImage: ProductImage[] = [];
 
   // data gốc
@@ -50,31 +47,22 @@ export class OrderComponent implements OnInit {
   customers: CustomerModel[] = [];
   customer: CustomerModel | undefined;
 
-  color: any;
-  selectedItem: any; // Biến để lưu trữ giá trị được chọn
-
   isDisplayNone: boolean = false;
   btnSave: string = '';
-  productForm: FormGroup = new FormGroup({
-    id: new FormControl(0),
-    trademarkId: new FormControl(null, [Validators.required]),
-    userId: new FormControl(null, [Validators.required]),
-    productName: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(50),
-    ]),
-    description: new FormControl('', [Validators.required]),
-    price: new FormControl(0),
-    imageProductFiles: new FormControl(null, [Validators.required]),
-    color: new FormControl('', [Validators.maxLength(30)]),
-    priorityLevel: new FormControl(0, [Validators.required]),
-    notes: new FormControl('', [Validators.maxLength(200)]),
-    isActive: new FormControl(true, [Validators.required]),
-    quantity: new FormControl(0, [Validators.required]),
-    inventoryReceiptDetails: new FormArray([
+  trxTransactionForm: FormGroup = new FormGroup({
+    trxTransactionId: new FormControl(0),
+    customerId: new FormControl(''),
+    employeeId: new FormControl('', [Validators.required]),
+    fullName: new FormControl(''),
+    phoneNumber: new FormControl(''),
+    address: new FormControl(''),
+    orderStatus: new FormControl(''),
+    paymentTypes: new FormControl('', [Validators.required]),
+    notes: new FormControl(''),
+    carts: new FormArray([
       new FormGroup({
         id: new FormControl(0),
-        inventoryReceiptId: new FormControl(0),
+        userId: new FormControl(0),
         price: new FormControl(null, [
           Validators.required,
           Validators.min(0),
@@ -88,38 +76,40 @@ export class OrderComponent implements OnInit {
         productId: new FormControl(null),
       }),
     ]),
-    // isActive: new FormControl('false', [Validators.required]),
   });
 
   constructor(
     private title: Title,
     private productService: ProductsService,
-    private categoryService: CategoryService,
+    private tokenService: TokenService,
+    private trxTransactionService: TrxTransactionService,
     private customerService: CustomerService,
-    private trademarkService: TrademarkService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private toastr: ToastrService,
     private fb: FormBuilder
   ) {
-    // this.receiptForm = this.fb.group({
-    //   id: [0],
-    //   notes: ['', Validators.required],
-    //   employeeId: [null, Validators.required],
-    //   supplierId: [null, Validators.required],
-    //   inventoryReceiptDetails: this.fb.array([this.createReceiptDetail()]),
-    // });
+    this.trxTransactionForm = this.fb.group({
+      trxTransactionId: new FormControl(0),
+      customerId: new FormControl(''),
+      employeeId: new FormControl('', [Validators.required]),
+      fullName: new FormControl(''),
+      phoneNumber: new FormControl(''),
+      address: new FormControl(''),
+      orderStatus: new FormControl(''),
+      paymentTypes: new FormControl('', [Validators.required]),
+      notes: new FormControl(''),
+      carts: this.fb.array([this.createReceiptDetail()]),
+    });
   }
   ngOnInit(): void {
     this.titleString = 'Thêm sản phẩm';
     this.btnSave = 'Thêm mới';
     this.getDatacombobox();
 
-    const inventoryReceiptDetailsArray = this.productForm.get(
-      'inventoryReceiptDetails'
-    ) as FormArray;
+    const cartsArray = this.trxTransactionForm.get('carts') as FormArray;
 
-    inventoryReceiptDetailsArray.valueChanges.subscribe(() => {
+    cartsArray.valueChanges.subscribe(() => {
       this.totalMoney = this.getTotalMoney();
     });
   }
@@ -139,49 +129,36 @@ export class OrderComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.productForm.invalid) {
+    // set giá trị cho các trường trong form trước khi submit
+    this.trxTransactionForm
+      .get('employeeId')
+      ?.setValue(this.tokenService.getUserEmail());
+    console.log(this.trxTransactionForm.value);
+    if (this.trxTransactionForm.invalid) {
       return;
     }
+    console.log('qua day');
     this.createProduct();
   }
 
-  createProduct() {
-    this.productService
-      .create(this.productForm.value, this.selectedImageProductFiles)
-      .subscribe({
-        next: (respon: any) => {
-          if (
-            respon.message === 'Tạo mới thành công' ||
-            respon.message === 'Cập nhật sản phẩm thành công'
-          ) {
-            this.toastr.success(respon.message, 'Thành công');
-            this.router.navigateByUrl('/admin/products');
-          } else {
-            this.toastr.error(respon.message, 'Thất bại');
-          }
-        },
-        error: (err: any) => {
-          this.toastr.error(err.error, 'Thất bại');
-        },
-      });
-  }
+  createProduct() {}
 
   getDistrictsControl(): FormControl {
-    const customerId = this.productForm.get('userId') as FormControl;
+    const customerId = this.trxTransactionForm.get('customerId') as FormControl;
 
     customerId.valueChanges.pipe().subscribe((id: any) => {
       this.customer = this.customers.find((customer) => customer.id === id);
     });
     return customerId;
   }
-  get inventoryReceiptDetails() {
-    return this.productForm.get('inventoryReceiptDetails') as FormArray;
+  get carts() {
+    return this.trxTransactionForm.get('carts') as FormArray;
   }
 
   createReceiptDetail(): FormGroup {
     return this.fb.group({
       id: [0],
-      inventoryReceiptId: [0],
+      userId: ['khachle@gmail.com'],
       price: [
         null,
         [Validators.required, Validators.min(0), Validators.max(1000000000)],
@@ -208,21 +185,19 @@ export class OrderComponent implements OnInit {
 
   addProduct() {
     // Kiểm tra tất cả các trường có giá trị không
-    const allFieldsFilled = this.inventoryReceiptDetails.controls.every(
-      (control) => {
-        const productId = control.get('productId')?.value;
-        const price = control.get('price')?.value;
-        const total = control.get('total')?.value;
-        return productId && price && total;
-      }
-    );
+    const allFieldsFilled = this.carts.controls.every((control) => {
+      const productId = control.get('productId')?.value;
+      const price = control.get('price')?.value;
+      const total = control.get('total')?.value;
+      return productId && price && total;
+    });
     this.updateProductSelect();
-    this.inventoryReceiptDetails.push(this.createReceiptDetail());
+    this.carts.push(this.createReceiptDetail());
   }
 
   updateProductSelect() {
-    // lấy ra sản phẩm được chọn trong inventoryReceiptDetails
-    let selectedProducts = this.productForm.value.inventoryReceiptDetails.map(
+    // lấy ra sản phẩm được chọn trong carts
+    let selectedProducts = this.trxTransactionForm.value.carts.map(
       (detail: { productId: any }) => detail.productId
     );
     console.log('listItemId: ', selectedProducts.toString());
@@ -253,7 +228,7 @@ export class OrderComponent implements OnInit {
   // onProductSelection(event: any) {
   //   // Xử lý sự kiện khi người dùng chọn một sản phẩm từ ng-select
   //   const unselectedProducts = this.products.filter((product) =>
-  //     this.productForm.value.promotionDetails.every(
+  //     this.trxTransactionForm.value.promotionDetails.every(
   //       (detail: { productId: any }) => detail.productId !== product.id
   //     )
   //   );
@@ -262,44 +237,34 @@ export class OrderComponent implements OnInit {
   //   this.products = unselectedProducts;
   // }
   getTotalMoney(): number {
-    const inventoryReceiptDetails = this.productForm.get(
-      'inventoryReceiptDetails'
-    ) as FormArray;
+    const carts = this.trxTransactionForm.get('carts') as FormArray;
     let total = 0;
 
-    inventoryReceiptDetails.controls.forEach(
-      (control: AbstractControl<any, any>) => {
-        const price = (control.get('price') as FormControl)?.value || 0;
-        const quantity = (control.get('total') as FormControl)?.value || 0;
-        total += price * quantity;
-      }
-    );
+    carts.controls.forEach((control: AbstractControl<any, any>) => {
+      const price = (control.get('price') as FormControl)?.value || 0;
+      const quantity = (control.get('total') as FormControl)?.value || 0;
+      total += price * quantity;
+    });
 
     return total;
   }
   getTotalPrice(): number[] {
-    const inventoryReceiptDetails = this.productForm.get(
-      'inventoryReceiptDetails'
-    ) as FormArray;
+    const carts = this.trxTransactionForm.get('carts') as FormArray;
     const totals: number[] = [];
 
-    inventoryReceiptDetails.controls.forEach(
-      (control: AbstractControl<any, any>) => {
-        const price = (control.get('price') as FormControl)?.value || 0;
-        const quantity = (control.get('total') as FormControl)?.value || 0;
-        const total = price * quantity;
-        totals.push(total);
-      }
-    );
+    carts.controls.forEach((control: AbstractControl<any, any>) => {
+      const price = (control.get('price') as FormControl)?.value || 0;
+      const quantity = (control.get('total') as FormControl)?.value || 0;
+      const total = price * quantity;
+      totals.push(total);
+    });
 
     return totals;
   }
 
   onProductSelection(event: any, index: number) {
     let pricePromotion;
-    const receiptDetails = this.productForm.get(
-      'inventoryReceiptDetails'
-    ) as FormArray;
+    const receiptDetails = this.trxTransactionForm.get('carts') as FormArray;
     const formGroup = receiptDetails.at(index) as FormGroup;
     if (event.discount > 0) {
       pricePromotion = event.price - event.price * (event.discount / 100);
@@ -315,8 +280,8 @@ export class OrderComponent implements OnInit {
   }
 
   removeProduct(index: number) {
-    if (this.inventoryReceiptDetails.length > 1) {
-      this.inventoryReceiptDetails.removeAt(index);
+    if (this.carts.length > 1) {
+      this.carts.removeAt(index);
       this.updateProductSelect();
     }
   }

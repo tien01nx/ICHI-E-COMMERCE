@@ -20,6 +20,7 @@ import { Utils } from '../../../Utils.ts/utils';
 export class ForgotPasswordComponent {
   errorMessage: string = '';
   protected readonly Utils = Utils;
+  passwordsNotMatching: boolean = false;
   constructor(
     private authServer: AuthService,
     private activatedRoute: ActivatedRoute,
@@ -45,7 +46,8 @@ export class ForgotPasswordComponent {
             this.router.navigate(['/login']);
             this.toastr.success(response.message, 'Thông báo');
           } else {
-            this.toastr.error(response.message, 'Thông báo');
+            this.passwordsNotMatching = true;
+            this.errorMessage = response.message;
           }
         }
       },

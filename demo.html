@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu Hóa Đơn Nhập Hàng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+			max-width:80%;
+			padding:20px;
+			border:1px solid #333;
+			margin: 0 auto;
+			margin-top:50px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .store-info {
+            width: 50%;
+            text-align: left;
+        }
+        .invoice-info {
+            width: 50%;
+            text-align: right;
+        }
+        .content {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        .total {
+            font-weight: bold;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="store-info">
+            <div class="store-name">Tên cửa hàng</div>
+        </div>
+        <div class="invoice-info">
+            <div>Mã hóa đơn: HD001</div>
+            <div>Ngày tạo: 09/04/2024</div>
+        </div>
+    </div>
+    <h2 style="text-align: center;">HÓA ĐƠN NHẬP HÀNG</h2>
+    <div class="content">
+        <div class="employee-info">
+            <div class="employee-name">Tên nhân viên: John Doe</div>
+            <div class="supplier-info">
+                <div class="supplier-name">Tên nhà cung cấp: ABC Company</div>
+                <div class="supplier-address">Địa chỉ: 123 Supplier Street, Supplier City</div>
+                <div class="supplier-phone">Số điện thoại: 0123456789</div>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Số Lô</th>
+                    <th>Tên Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>SL001</td>
+                    <td>Product A</td>
+                    <td>10</td>
+                    <td>100,000</td>
+                    <td>1,000,000</td>
+                </tr>
+                <!-- Thêm hàng hóa khác ở đây nếu cần -->
+            </tbody>
+        </table>
+        <div class="total">Tổng cộng: 1,000,000</div>
+    </div>
+</body>
+</html>

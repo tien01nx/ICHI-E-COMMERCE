@@ -30,6 +30,7 @@
 
     public static string PASSWORDSUCCESS = "Đổi mật khẩu thành công";
     public static string ERROR = "Có lỗi xảy ra";
+    public static string PASSWORDOLDPFAILOLD = "Mật khẩu cũ không đúng";
     public static string PASSWORDOLDPFAIL = "Mật khẩu cũ không đúng";
     public static string ACCOUNTNOTFOUNF = "Tài khoản không tồn tại";
     public static string ACCOUNTLOCK = "Tài khoản đã bị khóa";

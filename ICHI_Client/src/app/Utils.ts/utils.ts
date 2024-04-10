@@ -86,6 +86,52 @@ export class Utils {
       event.preventDefault();
     }
   }
+
+  static handleKeyPress(
+    event: KeyboardEvent,
+    minValue: number,
+    maxValue: number
+  ) {
+    const keyPressed = event.key;
+
+    // Kiểm tra xem phím được nhấn có phải là số từ 0-9 hoặc không
+    const isNumberKey = /^\d$/.test(keyPressed);
+
+    if (!isNumberKey) {
+      event.preventDefault(); // Ngăn chặn sự kiện keypress nếu không phải là số từ 0-9
+      return;
+    }
+
+    const currentValue = +(event.target as HTMLInputElement).value;
+    const newValue = +(currentValue.toString() + keyPressed);
+
+    // Kiểm tra xem newValue có nằm trong khoảng min và max không
+    if (newValue < minValue || newValue > maxValue) {
+      event.preventDefault(); // Ngăn chặn sự kiện keypress
+    }
+  }
+
+  // nguyên dương
+
+  static handleKeyPressNguyen(event: KeyboardEvent) {
+    const keyPressed = event.key;
+
+    // Kiểm tra xem phím được nhấn có phải là số từ 0-9 hoặc không
+    const isNumberKey = /^\d$/.test(keyPressed);
+
+    if (!isNumberKey) {
+      event.preventDefault(); // Ngăn chặn sự kiện keypress nếu không phải là số từ 0-9
+      return;
+    }
+
+    // Kiểm tra xem giá trị sau khi nhập vào có phải là số nguyên dương hay không
+    const currentValue = +(event.target as HTMLInputElement).value;
+    const newValue = +(currentValue.toString() + keyPressed);
+
+    if (newValue <= 0) {
+      event.preventDefault(); // Ngăn chặn sự kiện keypress nếu không phải là số nguyên dương
+    }
+  }
   //   sách https://theme.hstatic.net/1000230347/1000782290/14/menu_icon_8.png?v=20386
   // buts https://theme.hstatic.net/1000230347/1000782290/14/menu_icon_1.png?v=20386
   // dungj cuj hoc tap

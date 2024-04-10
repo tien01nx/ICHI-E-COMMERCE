@@ -6,6 +6,7 @@ using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Helpers;
 using ICHI_CORE.NlogConfig;
+using iText.Html2pdf;
 using System.Linq.Dynamic.Core;
 
 
@@ -251,6 +252,16 @@ namespace ICHI_API.Service
         strMessage = ex.Message;
         NLogger.log.Error(ex.ToString());
         return null;
+      }
+    }
+
+
+    static void ConvertHtmlToPdf(string htmlFile, string pdfFile)
+    {
+      using (FileStream htmlSource = File.Open("http://localhost:4200/invoice", FileMode.Open))
+      using (FileStream pdfDest = File.Open(pdfFile, FileMode.Create))
+      {
+        HtmlConverter.ConvertToPdf(htmlSource, pdfDest);
       }
     }
   }

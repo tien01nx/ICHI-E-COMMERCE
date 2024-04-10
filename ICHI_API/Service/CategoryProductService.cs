@@ -74,7 +74,7 @@ namespace ICHI_API.Service
         if (checkCategory != null)
         {
           strMessage = "Danh mục sản phẩm đã tồn tại";
-          return null;
+          return category;
         }
         var categoryParentId = _unitOfWork.Category.Get(u => u.Id == category.ParentID);
         if (categoryParentId == null)

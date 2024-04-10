@@ -12,7 +12,8 @@ import { CustomerModel } from '../models/customer.model';
 
 export class TrxTransactionDTO {
   trxTransactionId: number;
-  userId: string;
+  customerId: string;
+  employeeId: string;
   fullName: string;
   phoneNumber: string;
   address: string;
@@ -21,7 +22,8 @@ export class TrxTransactionDTO {
   carts: any;
   constructor(
     trxTransactionId: number,
-    userId: string,
+    customerId: string,
+    employeeId: string,
     fullName: string,
     phoneNumber: string,
     address: string,
@@ -30,7 +32,8 @@ export class TrxTransactionDTO {
     carts: any
   ) {
     this.trxTransactionId = trxTransactionId;
-    this.userId = userId;
+    this.customerId = customerId;
+    this.employeeId = employeeId;
     this.fullName = fullName;
     this.phoneNumber = phoneNumber;
     this.address = address;

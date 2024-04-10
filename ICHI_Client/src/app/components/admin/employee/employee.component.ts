@@ -57,6 +57,7 @@ export class EmployeeComponent {
       Validators.maxLength(10),
       Validators.minLength(10),
       Validators.pattern(Utils.textPhoneNumber),
+      
     ]),
     gender: new FormControl('', [Validators.required]),
     birthday: new FormControl('', [Validators.required]),
