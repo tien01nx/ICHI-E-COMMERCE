@@ -19,6 +19,7 @@ export class TrxTransactionDTO {
   address: string;
   amount: number;
   paymentTypes: string;
+  checkOrder: boolean;
   carts: any;
   constructor(
     trxTransactionId: number,
@@ -29,6 +30,7 @@ export class TrxTransactionDTO {
     address: string,
     amount: number,
     paymentTypes: string,
+    checkOrder: boolean,
     carts: any
   ) {
     this.trxTransactionId = trxTransactionId;
@@ -39,6 +41,7 @@ export class TrxTransactionDTO {
     this.address = address;
     this.amount = amount;
     this.paymentTypes = paymentTypes;
+    this.checkOrder = checkOrder;
     this.carts = carts;
   }
 }

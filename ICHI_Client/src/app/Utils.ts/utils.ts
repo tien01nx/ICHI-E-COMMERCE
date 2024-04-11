@@ -185,9 +185,9 @@ export class Utils {
 
   // Các loại thanh toán
   static paymentTypes = [
-    { paymentTypes: 'PAYMENTONDELIVERY', name: 'Thanh toán khi nhận hàng' },
-    { paymentTypes: 'PAYMENTVIACARD', name: 'Thanh toán qua thẻ' },
-    { paymentTypes: 'CASH', name: 'Tiền mặt' },
+    { name: 'PAYMENTONDELIVERY', value: 'Thanh toán khi nhận hàng' },
+    { name: 'PAYMENTVIACARD', value: 'Thanh toán qua thẻ' },
+    { name: 'CASH', value: 'Tiền mặt' },
   ];
 
   static PaymentOnDelivery = 'PAYMENTONDELIVERY';
@@ -225,9 +225,7 @@ export class Utils {
     return paymentStatus ? paymentStatus.value : '';
   }
   static getPaymentType(paymentType: string): string {
-    const paymentTypes = this.paymentTypes.find(
-      (x) => x.paymentTypes === paymentType
-    );
+    const paymentTypes = this.paymentTypes.find((x) => x.name === paymentType);
     return paymentTypes ? paymentTypes.name : '';
   }
 }

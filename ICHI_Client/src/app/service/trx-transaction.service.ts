@@ -165,15 +165,17 @@ export class TrxTransactionService {
     );
   }
 
-  AddTrxTransaction(model: TrxTransactionDTO) {
+  AddTrxTransaction(model: any) {
     return this.http.post(
       this.baseUrl + '/TrxTransaction/InsertTxTransaction',
       model
     );
   }
+
   vnpaydto!: VnPaymentRequestDTO;
 
   PaymentExecute(model: TrxTransactionDTO): Observable<any> {
+    debugger;
     return this.http
       .post(this.baseUrl + '/TrxTransaction/InsertTxTransaction', model)
       .pipe(
@@ -182,13 +184,62 @@ export class TrxTransactionService {
             response.data &&
             response.data.paymentTypes === Utils.PaymentViaCard
           ) {
-            const vnpaydto = new VnPaymentRequestDTO(
-              response.data.trxTransactionId,
-              response.data.fullName,
-              response.data.amount,
-              new Date()
-            );
-            return this.createPaymentUrl(vnpaydto);
+            if (response.data.checkOrder !== null) {
+              const vnpaydto = new VnPaymentRequestDTO(
+                response.data.trxTransactionId,
+                response.data.fullName,
+                response.data.amount,
+                'EMPLOYEE_CREATED',
+                new Date()
+              );
+              return this.createPaymentUrl(vnpaydto);
+            } else {
+              const vnpaydto = new VnPaymentRequestDTO(
+                response.data.trxTransactionId,
+                response.data.fullName,
+                response.data.amount,
+                'USER_CREATED',
+                new Date()
+              );
+              return this.createPaymentUrl(vnpaydto);
+            }
+          } else {
+            // Return data for routing to another page if payment type is not via card
+            return of(response.data);
+          }
+        })
+      );
+  }
+
+  PaymentExecuteOrder(model: TrxTransactionDTO): Observable<any> {
+    debugger;
+    return this.http
+      .post(this.baseUrl + '/TrxTransaction/InsertTxTransaction', model)
+      .pipe(
+        mergeMap((response: any) => {
+          if (
+            response.data &&
+            response.data.paymentTypes === Utils.PaymentViaCard
+          ) {
+            if (response.data.checkOrder === true) {
+              const vnpaydto = new VnPaymentRequestDTO(
+                response.data.trxTransactionId,
+                response.data.fullName,
+                response.data.amount,
+                'EMPLOYEE_CREATED',
+                new Date()
+              );
+              return this.createPaymentUrl(vnpaydto);
+            } else {
+              const vnpaydto = new VnPaymentRequestDTO(
+                response.data.trxTransactionId,
+                response.data.fullName,
+                response.data.amount,
+                'USER_CREATED',
+                new Date()
+              );
+              return this.createPaymentUrl(vnpaydto);
+            }
           } else {
             // Return data for routing to another page if payment type is not via card
             return of(response.data);

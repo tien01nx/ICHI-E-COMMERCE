@@ -27,6 +27,7 @@ namespace ICHI_API.Service
       vnpay.AddRequestData("vnp_Command", _configuration["Vnpay:Command"]);
       vnpay.AddRequestData("vnp_TmnCode", _configuration["Vnpay:TmnCode"]);
       vnpay.AddRequestData("vnp_Amount", (model.Amount * 100).ToString()); //Số tiền thanh toán. Số tiền không mang các ký tự phân tách thập phân, phần nghìn, ký tự tiền tệ. Để gửi số tiền thanh toán là 100,000 VND (một trăm nghìn VNĐ) thì merchant cần nhân thêm 100 lần (khử phần thập phân), sau đó gửi sang VNPAY là: 10000000
+      //vnpay.AddRequestData("vnp_BankCode", "INTCARD");
 
       vnpay.AddRequestData("vnp_CreateDate", model.CreateDate.ToString("yyyyMMddHHmmss"));
       vnpay.AddRequestData("vnp_CurrCode", "VND");
@@ -34,7 +35,12 @@ namespace ICHI_API.Service
       vnpay.AddRequestData("vnp_Locale", _configuration["Vnpay:Locale"]);
       vnpay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang:" + model.TrxTransactionId);
       vnpay.AddRequestData("vnp_OrderType", "other"); //default value: other
-      vnpay.AddRequestData("vnp_ReturnUrl", _configuration["Vnpay:PaymentBackReturnUrl"]);
+      if (model.OrderStatus == "EMPLOYEE_CREATED")
+      {
+        vnpay.AddRequestData("vnp_ReturnUrl", _configuration["Vnpay:PaymentBackReturnUrlOrder"]);
+      }
+      else
+        vnpay.AddRequestData("vnp_ReturnUrl", _configuration["Vnpay:PaymentBackReturnUrl"]);
 
       vnpay.AddRequestData("vnp_TxnRef", model.TrxTransactionId.ToString()); // Mã tham chiếu của giao dịch tại hệ thống của merchant. Mã này là duy nhất dùng để phân biệt các đơn hàng gửi sang VNPAY. Không được trùng lặp trong ngày
                                                                              //Add Params of 2.1.0 Version
@@ -77,7 +83,7 @@ namespace ICHI_API.Service
         PaymentId = vnp_transactionId.ToString(),
         TransactionId = vnp_transactionId.ToString(),
         Token = vnp_transactionId.ToString(),
-        VnPayResponseCode = vnp_ResponseCode
+        VnPayResponseCode = vnp_ResponseCode,
       };
     }
 
@@ -92,6 +98,7 @@ namespace ICHI_API.Service
           strMessage = "Thanh toán không thành công";
           return respon;
         }
+
         // cập nhật trạng thái thanh toán của đơn hàng
         var trxTransaction = _unitOfWork.TrxTransaction.Get(u => u.Id == Convert.ToInt32(respon.OrderId));
         if (trxTransaction == null)

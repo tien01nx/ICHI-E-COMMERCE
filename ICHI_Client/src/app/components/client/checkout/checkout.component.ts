@@ -82,13 +82,13 @@ export class CheckoutComponent implements OnInit {
         console.log('object11', this.trxTransacForm.value);
         if (
           this.shoppingcartdto &&
-          this.shoppingcartdto.trxTransaction.paymentStatus === 'Approved'
+          this.shoppingcartdto.trxTransaction.paymentStatus === 'APPROVED'
         ) {
           this.titleStatus = 'Đã thanh toán';
         }
         if (
           this.shoppingcartdto &&
-          this.shoppingcartdto.trxTransaction.paymentStatus === 'Pending'
+          this.shoppingcartdto.trxTransaction.paymentStatus === 'PENDING'
         ) {
           this.isDisplayNone = true;
           this.titleStatus = 'Thanh toán không thành công vui lòng thử lại';
@@ -179,6 +179,7 @@ export class CheckoutComponent implements OnInit {
         this.trxTransacForm.value?.address || '',
         this.getTotalPrice(),
         this.trxTransacForm.value?.paymentTypes || '',
+        false,
         this.shoppingcartdto.cart
       );
     }
@@ -194,7 +195,7 @@ export class CheckoutComponent implements OnInit {
         ) {
           window.location.href = response.data;
           this.cartService.removeCarts();
-          this.router.navigate(['/login']);
+          // this.titleStatus='Đã thanh toán';
         } else {
           this.toastr.success(
             'Đặt hàng thành công vui lòng đợi phê duyệt!',

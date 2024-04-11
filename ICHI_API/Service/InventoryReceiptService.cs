@@ -204,7 +204,7 @@ namespace ICHI_API.Service
         var products = _unitOfWork.Product.GetAll().ToList();
         foreach (var item in products)
         {
-          var inventoryReceiptDetail = _unitOfWork.InventoryReceiptDetail.Get(u => u.ProductId == item.Id);
+          var inventoryReceiptDetail = _unitOfWork.InventoryReceiptDetail.GetAll(u => u.ProductId == item.Id).OrderByDescending(u => u.BatchNumber).FirstOrDefault();
           item.BatchNumber = inventoryReceiptDetail?.BatchNumber ?? 1;
         }
         return products;
@@ -214,22 +214,19 @@ namespace ICHI_API.Service
         strMessage = ex.ToString();
         return null;
       }
-
-
     }
 
-    public double IncrementVersion(double version)
-    {
-      if (version <= 1.19)
-      {
-        // Tăng phiên bản lên 0.01
-        return version += 0.01;
-      }
-      else
-      {
-        return version = Math.Ceiling(version) + 0.0;
-      }
-    }
-
+    //public double IncrementVersion(double version)
+    //{
+    //  if (version <= 1.19)
+    //  {
+    //    // Tăng phiên bản lên 0.01
+    //    return version += 0.01;
+    //  }
+    //  else
+    //  {
+    //    return version = Math.Ceiling(version) + 0.0;
+    //  }
+    //}
   }
 }

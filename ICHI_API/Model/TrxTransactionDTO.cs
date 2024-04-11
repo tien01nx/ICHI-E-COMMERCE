@@ -23,5 +23,7 @@ namespace ICHI_API.Model
     public List<Cart> Carts { get; set; }
 
     public decimal? Amount { get; set; }
+
+    public bool? CheckOrder { get; set; }
   }
 }

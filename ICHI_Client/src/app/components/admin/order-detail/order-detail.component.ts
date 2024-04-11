@@ -27,11 +27,11 @@ import { CustomerModel } from '../../../models/customer.model';
 import { CustomerService } from '../../../service/customer.service';
 
 @Component({
-  selector: 'app-order',
-  templateUrl: './order.component.html',
-  styleUrl: './order.component.css',
+  selector: 'app-order-detail',
+  templateUrl: './order-detail.component.html',
+  styleUrl: './order-detail.component.css',
 })
-export class OrderComponent implements OnInit {
+export class OrderDetailComponent implements OnInit {
   protected readonly Environment = Environment;
   protected readonly Utils = Utils;
   product: ProductModel | undefined = undefined;

@@ -89,7 +89,6 @@ namespace ICHI_API.Service
       try
       {
         var promotionDetail = _promotionService.CheckPromotionActive();
-
         foreach (var item in carts)
         {
           item.ProductImage = _unitOfWork.ProductImages.Get(u => u.ProductId == item.ProductId).ImagePath;

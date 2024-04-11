@@ -34,6 +34,7 @@ import { ListOrderComponent } from './components/admin/order/list-order/list-ord
 import { ProfileComponent } from './components/client/profile/profile.component';
 import { OrderTrackingComponent } from './components/client/order-tracking/order-tracking.component';
 import { InvoiceComponent } from './components/client/invoice/invoice.component';
+import { OrderDetailComponent } from './components/admin/order-detail/order-detail.component';
 
 export const routes: Routes = [
   {
@@ -62,6 +63,7 @@ export const routes: Routes = [
         component: InsertInventoryReceiptsComponent,
       },
       { path: 'order', component: OrderComponent },
+      { path: 'order_detail/:id', component: OrderDetailComponent },
       { path: 'list_order', component: ListOrderComponent },
       {
         path: 'insert_inventory_receipts/:id',

@@ -56,6 +56,7 @@ import { ListOrderComponent } from './components/admin/order/list-order/list-ord
 import { ProfileComponent } from './components/client/profile/profile.component';
 import { OrderTrackingComponent } from './components/client/order-tracking/order-tracking.component';
 import { InvoiceComponent } from './components/client/invoice/invoice.component';
+import { OrderDetailComponent } from './components/admin/order-detail/order-detail.component';
 
 register();
 
@@ -97,6 +98,7 @@ register();
     ResetPasswordComponent,
     InsertPromotionComponent,
     OrderComponent,
+    OrderDetailComponent,
     ListOrderComponent,
     ProfileComponent,
     OrderTrackingComponent,
