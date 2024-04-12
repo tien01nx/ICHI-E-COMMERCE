@@ -73,8 +73,8 @@
       return result;
     }
 
-    [HttpPost("GetTrxTransactionFindById")]
-    public async Task<ApiResponse<ShoppingCartVM>> GetTrxTransactionFindById([FromBody] int id)
+    [HttpGet("GetTrxTransactionFindById")]
+    public async Task<ApiResponse<ShoppingCartVM>> GetTrxTransactionFindById(int id)
     {
       ApiResponse<ShoppingCartVM> result;
       string strMessage = string.Empty;

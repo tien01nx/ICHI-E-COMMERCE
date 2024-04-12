@@ -3,7 +3,9 @@ import { MasterEntity } from './master.entity';
 import { ProductModel } from './product.model';
 
 export interface TrxTransactionModel extends MasterEntity {
-  userId: string;
+  // userId: string;
+  customerId: string;
+  employeeId: string;
   orderDate: Date;
   shoppingDate: Date;
   orderTotal: number;

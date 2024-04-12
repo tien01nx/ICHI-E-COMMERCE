@@ -57,7 +57,6 @@ export class EmployeeComponent {
       Validators.maxLength(10),
       Validators.minLength(10),
       Validators.pattern(Utils.textPhoneNumber),
-      
     ]),
     gender: new FormControl('', [Validators.required]),
     birthday: new FormControl('', [Validators.required]),
@@ -179,7 +178,7 @@ export class EmployeeComponent {
 
   changePageNumber(pageNumber: number): void {
     this.router
-      .navigate(['/admin/customer'], {
+      .navigate(['/admin/employee'], {
         queryParams: { 'page-number': pageNumber },
         queryParamsHandling: 'merge',
       })
@@ -188,7 +187,7 @@ export class EmployeeComponent {
 
   changePageSize(pageSize: number): void {
     this.router
-      .navigate(['/admin/customer'], {
+      .navigate(['/admin/employee'], {
         queryParams: { 'page-size': pageSize, 'page-number': 1 },
         queryParamsHandling: 'merge',
       })
@@ -197,7 +196,7 @@ export class EmployeeComponent {
 
   sortByField(sortBy: string): void {
     this.router
-      .navigate(['/admin/customer'], {
+      .navigate(['/admin/employee'], {
         queryParams: { 'sort-by': sortBy, 'sort-direction': this.sortDir },
         queryParamsHandling: 'merge',
       })
@@ -208,7 +207,7 @@ export class EmployeeComponent {
 
   search() {
     this.router
-      .navigate(['/admin/customer'], {
+      .navigate(['/admin/employee'], {
         queryParams: { search: this.searchTemp, 'page-number': 1 },
         queryParamsHandling: 'merge',
       })
@@ -299,7 +298,7 @@ export class EmployeeComponent {
     this.showPassword = true;
   }
 
-  // openModalUpdate(customer: CustomerModel) {
+  // openModalUpdate(employee: CustomerModel) {
   //   this.showPassword = false;
   //   this.employeeForm.patchValue({
   //     id: customer.id,
@@ -330,16 +329,8 @@ export class EmployeeComponent {
       address: user.address,
       phoneNumber: user.phoneNumber,
     });
-    // this.employeeForm.value.id = user.user.id;
-    // const selectedRole = this.Environment.roles.find(
-    //   (role) => role.name === user.role
-    // );
-    // if (selectedRole) {
-    //   // this.employeeForm.get('role').setValue(selectedRole.name);
-    //   this.employeeForm.value.role = selectedRole.name;
-    // }
-    // this.avatarSrc = Environment.apiBaseRoot + user.user.avatar;
     this.birthday = user.birthday;
+    this.errorMessage = '';
     this.titleModal = 'Cập nhật nhân viên';
     this.btnSave = 'Cập nhật';
   }
@@ -404,7 +395,7 @@ export class EmployeeComponent {
 
     this.authService.register(userdto).subscribe({
       next: (response: any) => {
-        if (response.code === 200) {
+        if (response.message === 'Đăng ký tài khoản thành công') {
           this.employeeForm.reset();
           this.btnCloseModal.nativeElement.click();
           this.updateTable();
@@ -412,11 +403,13 @@ export class EmployeeComponent {
         } else {
           this.errorMessage = response.message;
           this.isDisplayNone = false;
+          this.employeeForm.value.id = null;
         }
       },
       error: (error: any) => {
         this.errorMessage = error.error;
         this.isDisplayNone = false;
+        this.employeeForm.value.id = null;
       },
     });
   }

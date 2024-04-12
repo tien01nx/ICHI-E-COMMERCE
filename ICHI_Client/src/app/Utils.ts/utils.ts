@@ -226,6 +226,6 @@ export class Utils {
   }
   static getPaymentType(paymentType: string): string {
     const paymentTypes = this.paymentTypes.find((x) => x.name === paymentType);
-    return paymentTypes ? paymentTypes.name : '';
+    return paymentTypes ? paymentTypes.value : '';
   }
 }

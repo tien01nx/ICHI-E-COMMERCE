@@ -27,10 +27,7 @@ export class TrxTransactionService {
   baseUrl = Environment.apiBaseUrl;
   private cartItems: any[] = [];
   private cartItemCount = new BehaviorSubject<number>(0);
-  constructor(
-    private http: HttpClient,
-    private apiService: ApiServiceService
-  ) {}
+  constructor(private http: HttpClient) {}
 
   getFindAllTransaction(
     PageNumber: number,
@@ -157,11 +154,8 @@ export class TrxTransactionService {
   }
 
   GetTrxTransactionFindById(id: number) {
-    return this.apiService.callApi<ShoppingCartDTO>(
-      '/TrxTransaction/GetTrxTransactionFindById',
-      'post',
-      null,
-      id
+    return this.http.get(
+      this.baseUrl + '/TrxTransaction/GetTrxTransactionFindById?id=' + id
     );
   }
 
@@ -184,7 +178,7 @@ export class TrxTransactionService {
             response.data &&
             response.data.paymentTypes === Utils.PaymentViaCard
           ) {
-            if (response.data.checkOrder !== null) {
+            if (response.data.checkOrder === true) {
               const vnpaydto = new VnPaymentRequestDTO(
                 response.data.trxTransactionId,
                 response.data.fullName,

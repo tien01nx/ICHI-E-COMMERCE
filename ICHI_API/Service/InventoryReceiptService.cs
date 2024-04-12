@@ -220,7 +220,6 @@ namespace ICHI_API.Service
     //{
     //  if (version <= 1.19)
     //  {
-    //    // Tăng phiên bản lên 0.01
     //    return version += 0.01;
     //  }
     //  else

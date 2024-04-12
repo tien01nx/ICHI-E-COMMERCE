@@ -1,29 +1,17 @@
 <nav class="mb-2" aria-label="breadcrumb">
   <ol class="breadcrumb mb-0">
     <li class="breadcrumb-item"><a href="#!">Quản lý bán hàng</a></li>
-    <li class="breadcrumb-item"><a href="#!">Tạo hóa đơn bán hàng</a></li>
+    <li class="breadcrumb-item"><a href="#!">Chi tiết hóa đơn bán hàng</a></li>
     <!-- <li class="breadcrumb-item active">Mặc định</li> -->
   </ol>
 </nav>
-<form
-  class="mb-9"
-  [formGroup]="trxTransactionForm"
-  enctype="multipart/form-data"
-  (submit)="onSubmit()"
->
+<div class="mb-9" (submit)="onSubmit()">
   <div class="row g-3 flex-between-end mb-5">
     <div class="col-auto">
-      <h2 class="mb-2">Tạo hóa đơn bán hàng</h2>
-      <!-- <h5 class="text-body-tertiary fw-semibold">
-        Đơn đặt hàng được đặt trên cửa hàng của bạn
-      </h5> -->
+      <h2 class="mb-2">Chi tiết hóa đơn bán hàng</h2>
     </div>
     <div class="col-auto">
-      <button
-        class="btn btn-primary mb-2 mb-sm-0 me-8"
-        type="submit"
-        [disabled]="trxTransactionForm.invalid"
-      >
+      <button class="btn btn-primary mb-2 mb-sm-0 me-8" type="submit">
         Tạo đơn hàng
       </button>
     </div>
@@ -31,7 +19,12 @@
 
   <div class="row g-5">
     <!-- Thông tin sản phẩm -->
-    <div class="col-12 col-xl-9">
+    <div
+      class="col-12 col-xl-7"
+      *ngIf="
+        shoppingcartdto?.transactionDetail && shoppingcartdto?.trxTransaction
+      "
+    >
       <div class="row g-2">
         <div class="col-12 col-xl-12">
           <div class="card mb-3">
@@ -42,274 +35,113 @@
               <div class="row gx-3">
                 <div class="col-12 col-sm-6 col-xl-12">
                   <div class=""></div>
-                  <div class="table-responsive-x scrollbar-overlay mx-n1 px-1">
-                    <table class="table table-sm fs-9 mb-0">
-                      <thead>
-                        <tr>
-                          <th
-                            class="sort align-middle pe-5 text-start pb-3 pt-3"
-                            scope="col"
-                            style="width: 40%"
-                            nowrap
-                          >
-                            Sản phẩm <span class="text-danger">*</span>
-                          </th>
-                          <th
-                            class="sort align-middle pe-5 text-center pb-3 pt-3"
-                            scope="col"
-                            style="width: 8%"
-                            nowrap
-                          >
-                            Số lượng <span class="text-danger">*</span>
-                          </th>
-                          <th
-                            class="sort align-middle pe-5 text-start pb-3 pt-3"
-                            scope="col"
-                            style="width: 15%"
-                            nowrap
-                          >
-                            Đơn giá <span class="text-danger">*</span>
-                          </th>
+                  <div class="mx-n1 px-1">
+                    <!-- hiện thị thông tin đơn hàng  theo các cột div -->
+                    <div class="row align-items-center mb-2 g-3">
+                      <div class="col-8 col-md-7 col-lg-8">
+                        <div class="d-flex align-items-center">
+                          <h6 class="fs-16 mb-0">Tên sản phẩm</h6>
+                        </div>
+                      </div>
+                      <div class="col-2 col-md-3 col-lg-2">
+                        <h6 class="fs-16 mb-0">Số lượng</h6>
+                      </div>
+                      <div class="col-2 ps-0">
+                        <h5 class="mb-0 fw-semibold text-end">Giá</h5>
+                      </div>
+                    </div>
 
-                          <th
-                            class="sort align-middle pe-5 text-start pb-3 pt-3"
-                            scope="col"
-                            style="width: 25%"
-                            nowrap
-                          >
-                            Thành tiền
-                          </th>
-                          <th
-                            class="sort align-middle pe-5 text-center pb-3 pt-3"
-                            scope="col"
-                            style="width: 5%"
-                            nowrap
-                          ></th>
-                        </tr>
-                      </thead>
-                      <tbody formArrayName="carts">
-                        <tr
-                          *ngFor="
-                            let receiptDetails of carts.controls;
-                            let i = index
-                          "
-                          [formGroupName]="i"
-                        >
-                          <!-- productId -->
-                          <td class="pt-2 pb-2">
-                            <ng-select
-                              appendTo="body"
-                              [items]="products"
-                              bindLabel="productName"
-                              bindValue="id"
-                              formControlName="productId"
-                              (change)="onProductSelection($event, i)"
-                            >
-                              <ng-template ng-option-tmp let-item="item">
-                                <div class="container">
-                                  <div class="row">
-                                    <div class="col-md-2">
-                                      <img
-                                        *ngIf="item.image"
-                                        [src]="item.image"
-                                        alt="Product Image"
-                                        class="img-fluid"
-                                        style="
-                                          max-width: 50px;
-                                          max-height: 50px;
-                                        "
-                                      />
-                                    </div>
-                                    <div class="col-md-10 text-start">
-                                      <p>{{ item.productName }}</p>
-                                    </div>
-                                  </div>
-                                </div>
-                              </ng-template>
-                            </ng-select>
-                          </td>
-                          <!-- total -->
-                          <td class="pt-2 pb-2">
-                            <input
-                              class="form-control"
-                              type="number"
-                              [value]="0"
-                              min="1"
-                              max="1000"
-                              formControlName="total"
-                              required
-                              (keypress)="Utils.handleKeyPressNguyen($event)"
+                    <div *ngFor="let item of shoppingcartdto.transactionDetail">
+                      <div class="row align-items-center mb-2 g-3">
+                        <div class="col-8 col-md-7 col-lg-8">
+                          <div class="d-flex align-items-center">
+                            <img
+                              class="me-2 ms-1"
+                              src="{{ Environment.apiBaseRoot }}/{{
+                                item.productImage
+                              }}"
+                              width="100"
+                              alt=""
                             />
-                            <!-- (keydown)="onKeyDown($event, false)" -->
-
-                            <div
-                              class="label-error mt-1"
-                              *ngIf="receiptDetails.get('total')?.dirty"
-                            >
-                              <span
-                                *ngIf="
-                                  receiptDetails
-                                    .get('total')
-                                    ?.hasError('required')
-                                "
-                              >
-                                <small>Số lượng là trường bắt buộc.</small>
-                              </span>
-                              <span
-                                *ngIf="
-                                  receiptDetails
-                                    .get('total')
-                                    ?.hasError('max') ||
-                                  receiptDetails.get('total')?.hasError('min')
-                                "
-                              >
-                                <small>Số lượng phải từ 1 đến 1000.</small>
-                              </span>
-                            </div>
-                          </td>
-                          <!-- price -->
-                          <td class="pt-2 pb-2">
-                            <input
-                              class="form-control"
-                              type="text"
-                              [value]="
-                                receiptDetails.get('price')?.value
-                                  | number : '1.0-0'
-                              "
-                              readonly
-                            />
-                            <!-- [value]="
-                                receiptDetails.get('price')?.value
-                                  | number : '1.0-0'
-                              " -->
-                            <!-- 
-                              (keydown)="onKeyDown($event, true)" -->
-
-                            <div
-                              class="label-error mt-1"
-                              *ngIf="receiptDetails.get('price')?.dirty"
-                            >
-                              <span
-                                *ngIf="
-                                  receiptDetails
-                                    .get('price')
-                                    ?.hasError('required')
-                                "
-                              >
-                                <small>Đơn giá là trường bắt buộc.</small>
-                              </span>
-                              <span
-                                *ngIf="
-                                  receiptDetails
-                                    .get('price')
-                                    ?.hasError('max') ||
-                                  receiptDetails.get('price')?.hasError('min')
-                                "
-                              >
-                                <small>Đơn giá phải từ 0 đến 1 tỷ.</small>
-                              </span>
-                            </div>
-                          </td>
-
-                          <td class="pt-2 pb-2">
-                            <div class="form-control text-end">
-                              {{ getTotalPrice()[i] | currencyFormat }}
-                            </div>
-                          </td>
-                          <td class="pt-2 pb-2">
-                            <button
-                              class="fw-bold fs-9 btn btn-phoenix-primary"
-                              href="javascript:void(0);"
-                              [disabled]="isDisplayNone"
-                              (click)="removeProduct(i)"
-                            >
-                              Xóa
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td
-                            class="align-middle white-space-nowrap pe-5 text-end fw-bold pb-3 pt-3"
-                          >
-                            <p class="mb-0 text-truncate fs-8 text-start">
-                              Tổng tiền:
-                            </p>
-                          </td>
-                          <td></td>
-                          <td></td>
-                          <td
-                            class="align-middle white-space-nowrap pe-1 text-end fw-bold text-success pb-3 pt-3"
-                            style="width: 10%"
-                          >
-                            <p class="mb-0 text-truncate fs-8 pe-3">
-                              {{ totalMoney | currencyFormat }}
-                              tiền
-                            </p>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                            <h6 class="fw-semibold text-body-highlight lh-base">
+                              {{ item.product.productName }}
+                            </h6>
+                          </div>
+                        </div>
+                        <div class="col-2 col-md-3 col-lg-2">
+                          <h6 class="fs-16 mb-0">
+                            {{ item.total }}
+                          </h6>
+                        </div>
+                        <div class="col-2 ps-0">
+                          <h5 class="mb-0 fw-semibold text-end">
+                            {{ item.total * item.price | number : "1.0-0" }}
+                          </h5>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <button
-                    class="btn btn-phoenix-primary w-100 mt-3"
-                    type="button"
-                    (click)="addProduct()"
-                  >
-                    Thêm sản phẩm
-                  </button>
+                  <!-- hiện tổng tiền theo các cột div -->
+                  <div class="row align-items-center mb-2 g-3">
+                    <div class="col-8 col-md-7 col-lg-8">
+                      <div class="d-flex align-items-center">
+                        <h6
+                          class="white-space-nowrap pe-5 fw-bold pb-3 pt-3"
+                          style="font-size: 16px"
+                        >
+                          Tổng tiền
+                        </h6>
+                      </div>
+                    </div>
+                    <div class="col-2 col-md-3 col-lg-2">
+                      <h6 class="fs-16 mb-0"></h6>
+                    </div>
+                    <div class="col-2 ps-0">
+                      <h5 class="mb-0 fw-semibold text-end">
+                        {{
+                          shoppingcartdto.trxTransaction.orderTotal
+                            | number : "1.0-0"
+                        }}
+                      </h5>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="row">
-                <div class="col-6 white-space-nowrap pe-5 fw-bold pb-3 pt-3">
-                  Phương thức thanh toán<span class="text-danger">*</span>
+                <div class="col-6 white-space-nowrap pe-5 fw-bold">
+                  Phương thức thanh toán
                 </div>
 
-                <div class="col-6 pe-5 pb-3 pt-3">
+                <div class="col-6 white-space-nowrap pe-5 fw-bold">
+                  <!-- {{
+                    Utils.getPaymentStatus(
+                      shoppingcartdto.trxTransaction.paymentStatus
+                    )
+                  }} -->
                   <ng-select
-                    style="height: 16px; width: 550px"
-                    [items]="Utils.paymentTypes"
+                    style="height: 16px"
+                    [items]="Utils.paymentStatus"
                     bindValue="name"
                     bindLabel="value"
-                    placeholder="Chọn phương thức thanh toán"
-                    formControlName="paymentTypes"
+                    [(ngModel)]="shoppingcartdto.trxTransaction.paymentStatus"
+                    placeholder="Chọn Trạng thái đơn hàng"
                   ></ng-select>
-                  <small
-                    class="text-danger mt-1"
-                    *ngIf="trxTransactionForm['controls']['paymentTypes'].dirty"
-                  >
-                    <span
-                      *ngIf="trxTransactionForm['controls']['paymentTypes'].errors?.['required']"
-                    >
-                      Phương thức thanh toán không được để trống
-                    </span>
-                  </small>
                 </div>
               </div>
 
-              <div class="row">
-                <div class="col-6 white-space-nowrap pe-5 fw-bold pb-3 pt-3">
-                  Trạng thái đơn hàng<span class="text-danger">*</span>
+              <div class="row mt-5">
+                <div class="col-6 white-space-nowrap pe-5 fw-bold">
+                  Tình trạng đơn hàng
                 </div>
-
-                <div class="col-6 pe-5 pb-3 pt-3">
+                <div class="col-6 white-space-nowrap pe-5 fw-bold">
                   <ng-select
-                    style="height: 16px; width: 550px"
+                    style="height: 16px"
                     [items]="Utils.statusOrder"
                     bindValue="name"
                     bindLabel="value"
-                    placeholder="Chọn Trạng thái đơn hàng"
-                    formControlName="orderStatus"
+                    [(ngModel)]="shoppingcartdto.trxTransaction.orderStatus"
+                    placeholder="Tình trạng đơn hàng"
                   ></ng-select>
-                  <small
-                    class="text-danger mt-1"
-                    *ngIf="trxTransactionForm['controls']['orderStatus'].dirty"
-                  >
-                    <span
-                      *ngIf="trxTransactionForm['controls']['orderStatus'].errors?.['required']"
-                    >
-                      Trạng thái đơn hàng không được để trống
-                    </span>
-                  </small>
                 </div>
               </div>
             </div>
@@ -318,38 +150,186 @@
         <div class="col-12 col-xl-12">
           <div class="card">
             <div class="card-body">
-              <h4 class="card-title">Thông tin sản phẩm chi tiết</h4>
-              <div class="row g-3">
-                <div class="col-12 col-sm-6 col-xl-12">
-                  <div
-                    class="border-bottom viền-đường viền mờ-đường viền nét đứt-sm-0 border-bottom-xl pb-4"
-                  >
-                    <div class="d-flex flex-wrap mb-2">
-                      <h5 class="text-body-highlight me-2">
-                        Giá <sup class="text-danger"></sup>
-                      </h5>
+              <h4 class="card-title">Lịch sử đơn hàng</h4>
+              <div class="timeline-vertical">
+                <div class="timeline-item">
+                  <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+                    <div class="col-12 col-md-auto d-flex">
+                      <div
+                        class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                      >
+                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">
+                          23 August, 2023<br class="d-none d-md-block" />
+                          10:30 AM
+                        </p>
+                      </div>
+                      <div
+                        class="timeline-item-bar position-relative me-3 me-md-0"
+                      >
+                        <div
+                          class="icon-item icon-item-sm bg-success"
+                          data-bs-theme="light"
+                        >
+                          <i class="fa-regular fa-clock"></i>
+                        </div>
+                        <span
+                          class="timeline-bar border-end border-success"
+                        ></span>
+                      </div>
                     </div>
-
-                    <div class="input-group">
-                      <input
-                        class="form-control"
-                        type="number"
-                        placeholder="0"
-                      />
-
-                      <span class="input-group-text">vnđ</span>
+                    <div class="col">
+                      <div class="timeline-item-content ps-6 ps-md-3">
+                        <h4>Đơn hàng đang được xử lý</h4>
+                        <p class="fs-9 văn bản-body-thứ cấp mb-0">
+                          Gói hàng của bạn đã sẵn sàng để người bán chuẩn bị.
+                        </p>
+                      </div>
                     </div>
-
-                    <div class="d-flex flex-wrap mb-2 mt-2">
-                      <h5 class="text-body-highlight me-2">Số lượng tồn</h5>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+                    <div class="col-12 col-md-auto d-flex">
+                      <div
+                        class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                      >
+                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">
+                          25 August, 2023<br class="d-none d-md-block" />
+                          11:30 AM
+                        </p>
+                      </div>
+                      <div
+                        class="timeline-item-bar position-relative me-3 me-md-0"
+                      >
+                        <div
+                          class="icon-item icon-item-sm bg-success"
+                          data-bs-theme="light"
+                        >
+                          <span
+                            class="fa-solid fa-check text-white fs-10"
+                          ></span>
+                        </div>
+                        <span
+                          class="timeline-bar border-end border-warning"
+                        ></span>
+                      </div>
                     </div>
-                    <div class="input-group">
-                      <input
-                        class="form-control"
-                        type="text"
-                        placeholder="0"
-                        readonly
-                      />
+                    <div class="col">
+                      <div class="timeline-item-content ps-6 ps-md-3">
+                        <h4>Đã xác nhận</h4>
+                        <p class="fs-9 văn bản-body-thứ cấp mb-0">
+                          Gói hàng của bạn đã được người bán nhận.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+                    <div class="col-12 col-md-auto d-flex">
+                      <div
+                        class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                      >
+                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">
+                          27 August, 2023<br class="d-none d-md-block" />
+                          6:30 AM
+                        </p>
+                      </div>
+                      <div
+                        class="timeline-item-bar position-relative me-3 me-md-0"
+                      >
+                        <div
+                          class="icon-item icon-item-sm bg-warning"
+                          data-bs-theme="light"
+                        >
+                          <span
+                            class="fa-solid fa-truck-ramp-box text-white fs-10"
+                          ></span>
+                        </div>
+                        <span
+                          class="timeline-bar border-end border-dashed"
+                        ></span>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="timeline-item-content ps-6 ps-md-3">
+                        <h4>Sẵn sàng giao hàng</h4>
+                        <p class="fs-9 văn bản-body-thứ cấp mb-0">
+                          Gói hàng của bạn bây giờ đã sẵn sàng để được vận
+                          chuyển.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
+                    <div class="col-12 col-md-auto d-flex">
+                      <div
+                        class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                      >
+                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">
+                          Estimated time<br class="d-none d-md-block" />
+                          29 August, 2023
+                        </p>
+                      </div>
+                      <div
+                        class="timeline-item-bar position-relative me-3 me-md-0"
+                      >
+                        <div
+                          class="icon-item icon-item-sm bg-body-quaternary"
+                          data-bs-theme="light"
+                        >
+                          <span
+                            class="fa-solid fa-truck text-white fs-10"
+                          ></span>
+                        </div>
+                        <span
+                          class="timeline-bar border-end border-dashed"
+                        ></span>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="timeline-item-content ps-6 ps-md-3">
+                        <h4>Đã giao hàng</h4>
+                        <p class="fs-9 text-body-secondary mb-0">
+                          Đang chờ xử lý
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="row g-md-3 align-items-center">
+                    <div class="col-12 col-md-auto d-flex">
+                      <div
+                        class="timeline-item-date text-end order-1 order-md-0 me-md-4"
+                      >
+                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">
+                          Estimated time<br class="d-none d-md-block" />
+                          30 August, 2023
+                        </p>
+                      </div>
+                      <div
+                        class="timeline-item-bar position-relative me-3 me-md-0"
+                      >
+                        <div
+                          class="icon-item icon-item-sm bg-body-quaternary"
+                          data-bs-theme="light"
+                        >
+                          <span
+                            class="fa-solid fa-truck-fast text-white fs-10"
+                          ></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="timeline-item-content ps-6 ps-md-3">
+                        <h4>Đã giao</h4>
+                        <p class="fs-9 text-body-secondary mb-0">
+                          Đang chờ xử lý
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -361,109 +341,38 @@
     </div>
 
     <!-- thông tin khách hàng -->
-    <div class="col-12 col-xl-3">
+    <div class="col-12 col-xl-5">
       <div class="row g-2">
         <div class="col-12 col-xl-12">
-          <div class="card mb-3">
+          <div class="card">
             <div class="card-body">
-              <h4 class="card-title mb-4">Thông tin khách hàng</h4>
+              <h4 class="card-title">Thông tin khách hàng</h4>
               <div class="row gx-3">
-                <div class="col-12 col-sm-6 col-xl-12">
-                  <div class="mb-2">
-                    <div class="d-flex flex-wrap mb-2">
-                      <h5 class="mb-0 text-body-highlight me-2">
-                        Khách hàng <sup class="text-danger">*</sup>
-                      </h5>
-                      <a class="fw-bold fs-9" href="/admin/categories"
-                        >Thêm mới khách hàng</a
-                      >
-                    </div>
-                    <ng-select
-                      [formControl]="getDistrictsControl()"
-                      placeholder="Chọn khách hàng"
-                      formControlName="customerId"
-                    >
-                      <ng-option
-                        *ngFor="let customer of customers"
-                        [value]="customer.userId"
-                      >
-                        {{ customer.fullName + " - " + customer.phoneNumber }}
-                      </ng-option>
-                    </ng-select>
-                    <!-- <small
-                      class="text-danger mt-1"
-                      *ngIf="
-                        trxTransactionForm.get('customerId')?.invalid &&
-                        (trxTransactionForm.get('customerId')?.dirty ||
-                          trxTransactionForm.get('customerId')?.touched)
-                      "
-                    >
-                      <span
-                        *ngIf="trxTransactionForm.get('customerId')?.errors?.['required']"
-                      >
-                        Tên người mua
-                      </span>
-                    </small> -->
-                  </div>
-                </div>
                 <div
-                  class="border-dashed border-bottom border-translucent mt-4"
-                  *ngIf="customer !== undefined"
+                  class="border-dashed border-bottom border-translucent mt"
+                  *ngIf="shoppingcartdto && shoppingcartdto.customer"
                 >
                   <div class="d-flex justify-content-between mb-2">
                     <h5 class="text-body fw-semibold">
-                      {{ customer.fullName }}
-                    </h5>
-                    <h5 class="text-body fw-semibold">
-                      <span class="fas fa-times"></span>
+                      {{ shoppingcartdto.customer.fullName }}
                     </h5>
                   </div>
-                  <!-- <div class="d-flex justify-content-between mb-2">
-                    <h5 class="text-body fw-semibold">Tổng chi tiêu</h5>
-                    <h5 class="text-body fw-semibold">Số tiền</h5>
-                  </div> -->
                   <hr class="bg-body-secondary mb-2 mt-2" />
-
                   <div class="d-flex justify-content-between mb-2">
                     <h5 class="text-body fw-semibold">Thông tin liên hệ:</h5>
-                    <!-- <h5 class="text-body fw-semibold">
-                      <button
-                        class="far fa-edit"
-                        type="button"
-                        aria-label="Close"
-                      ></button>
-                    </h5> -->
                   </div>
                   <div class="d-flex justify-content-between mb-3">
                     <h5 class="text-body fw-semibold mt-2">Số điện thoại:</h5>
                     <h5 class="text-body fw-semibold">
-                      <input
-                        class="form-control"
-                        type="number"
-                        placeholder="Số điện thoại"
-                        [value]="customer.phoneNumber"
-                      />
+                      <p>{{ shoppingcartdto.customer.phoneNumber }}</p>
                     </h5>
                   </div>
                   <hr class="bg-body-secondary mb-2 mt-2" />
                   <div class="d-flex justify-content-between mb-3">
                     <h5 class="text-body fw-semibold">Địa chỉ giao hàng</h5>
-                    <!-- <h5 class="text-body fw-semibold">
-                      <button
-                        class="far fa-edit"
-                        type="button"
-                        aria-label="Close"
-                      ></button>
-                    </h5> -->
                   </div>
                   <div class="input-group mb-3">
-                    <textarea
-                      class="form-control"
-                      type="text"
-                      placeholder="Không có địa chỉ"
-                      [value]="customer.address"
-                      formControlName="address"
-                    ></textarea>
+                    <p>{{ shoppingcartdto.customer.address }}</p>
                   </div>
                 </div>
               </div>
@@ -473,17 +382,16 @@
         <div class="col-12 col-xl-12">
           <div class="card">
             <div class="card-body">
-              <h4 class="card-title mb-4">Ghi chú</h4>
-              <div class="row g-3">
+              <h4 class="card-title">Ghi chú</h4>
+              <div class="row">
                 <div class="col-12 col-sm-6 col-xl-12">
                   <div class="mb-2">
-                    <textarea
-                      class="form-control"
-                      placeholder="VD: Giao hàng trong giờ hành chính cho khách"
-                      formControlName="notes"
-                      style="height: 100px"
-                    >
-                    </textarea>
+                    <span class="form-control">
+                      {{
+                        shoppingcartdto.trxTransaction.notes ||
+                          "Không có ghi chú"
+                      }}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -493,5 +401,5 @@
       </div>
     </div>
   </div>
-</form>
+</div>
 <footer class="footer position-absolute"></footer>
