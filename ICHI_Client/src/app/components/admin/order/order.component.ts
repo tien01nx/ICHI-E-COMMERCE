@@ -70,7 +70,7 @@ export class OrderComponent implements OnInit {
           Validators.min(0),
           Validators.max(1000000000),
         ]),
-        total: new FormControl(null, [
+        quantity: new FormControl(null, [
           Validators.required,
           Validators.min(1),
           Validators.max(1000),
@@ -225,7 +225,7 @@ export class OrderComponent implements OnInit {
         null,
         [Validators.required, Validators.min(0), Validators.max(1000000000)],
       ],
-      total: [
+      quantity: [
         null,
         [
           Validators.required,
@@ -249,7 +249,7 @@ export class OrderComponent implements OnInit {
     const allFieldsFilled = this.carts.controls.every((control) => {
       const productId = control.get('productId')?.value;
       const price = control.get('price')?.value;
-      const total = control.get('total')?.value;
+      const total = control.get('quantity')?.value;
       return productId && price && total;
     });
     // kiểm tra xem các trường đã được điền đầy đủ chưa
@@ -289,7 +289,7 @@ export class OrderComponent implements OnInit {
 
     carts.controls.forEach((control: AbstractControl<any, any>) => {
       const price = (control.get('price') as FormControl)?.value || 0;
-      const quantity = (control.get('total') as FormControl)?.value || 0;
+      const quantity = (control.get('quantity') as FormControl)?.value || 0;
       total += price * quantity;
     });
 
@@ -301,7 +301,7 @@ export class OrderComponent implements OnInit {
 
     carts.controls.forEach((control: AbstractControl<any, any>) => {
       const price = (control.get('price') as FormControl)?.value || 0;
-      const quantity = (control.get('total') as FormControl)?.value || 0;
+      const quantity = (control.get('quantity') as FormControl)?.value || 0;
       const total = price * quantity;
       totals.push(total);
     });
@@ -321,7 +321,7 @@ export class OrderComponent implements OnInit {
 
     if (formGroup !== null) {
       formGroup.get('price')?.setValue(pricePromotion);
-      formGroup.get('total')?.setValue(1);
+      formGroup.get('quantity')?.setValue(1);
     }
   }
 

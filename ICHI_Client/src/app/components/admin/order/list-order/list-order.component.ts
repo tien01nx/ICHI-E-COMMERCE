@@ -24,6 +24,7 @@ export class ListOrderComponent implements OnInit {
   selectAll: boolean = false;
   sortDir: string = 'ASC';
   SortBy: string = 'id';
+  titleOrder: string = 'Trạng thái đơn hàng';
 
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   titleModal: string = '';
@@ -187,6 +188,7 @@ export class ListOrderComponent implements OnInit {
         queryParamsHandling: 'merge',
       })
       .then((r) => {});
+    this.titleOrder = Utils.getPaymentStatus(order);
   }
 
   onSubmit() {
@@ -307,6 +309,7 @@ export class ListOrderComponent implements OnInit {
     );
   }
   clearUrl() {
+    this.titleOrder = 'Trạng thái đơn hàng';
     this.router.navigate(['/admin/list_order']);
   }
   shouldDisplayClearButton(): boolean {

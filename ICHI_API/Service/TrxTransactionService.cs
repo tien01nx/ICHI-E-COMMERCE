@@ -92,9 +92,17 @@ namespace ICHI_API.Service
         trxTransaction.PhoneNumber = trxTransactionDTO?.PhoneNumber;
         trxTransaction.Address = trxTransactionDTO?.Address;
         trxTransaction.OrderDate = DateTime.Now;
-        trxTransaction.OrderStatus = AppSettings.StatusOrderPending;
+        trxTransaction.OrderStatus = trxTransactionDTO.OrderStatus ?? "PENDING";
         trxTransaction.PaymentTypes = trxTransactionDTO.PaymentTypes;
-        trxTransaction.PaymentStatus = AppSettings.PaymentStatusPending;
+        // nếu PaymentTypes = CASH thì trạng thái thanh toán là đã thanh toán
+        if (trxTransaction.PaymentTypes == AppSettings.Cash)
+        {
+          trxTransaction.PaymentStatus = AppSettings.PaymentStatusApproved;
+        }
+        else
+        {
+          trxTransaction.PaymentStatus = AppSettings.PaymentStatusPending;
+        }
         trxTransaction.OrderTotal = trxTransactionDTO.Amount ?? 0;
         _unitOfWork.TrxTransaction.Add(trxTransaction);
         _unitOfWork.Save();
@@ -102,7 +110,7 @@ namespace ICHI_API.Service
         trxTransactionDTO.TrxTransactionId = trxTransaction.Id;
         trxTransactionDTO.Amount = trxTransaction.OrderTotal;
         // lấy thông tin đơn hàng theo userid từ cart
-        foreach (var item in cart)
+        foreach (var item in trxTransactionDTO.Carts)
         {
           TransactionDetail trxTransactionDetail = new TransactionDetail();
           trxTransactionDetail.ProductId = item.ProductId;
@@ -127,6 +135,35 @@ namespace ICHI_API.Service
         _unitOfWork.Save();
         _unitOfWork.Commit();
         return trxTransactionDTO;
+      }
+      catch (Exception ex)
+      {
+        _unitOfWork.Rollback();
+        strMessage = ex.Message;
+        NLogger.log.Error(ex.ToString());
+        return null;
+      }
+    }
+
+    public ShoppingCartVM UpdateTrxTransaction(UpdateTrxTransaction model, out string strMessage)
+    {
+      strMessage = string.Empty;
+      try
+      {
+        _unitOfWork.BeginTransaction();
+        var data = _unitOfWork.TrxTransaction.Get(u => u.Id == model.TransactionId);
+        if (data == null)
+        {
+          strMessage = "Không tìm thấy đơn hàng";
+          return null;
+        }
+        data.OrderStatus = model.OrderStatus;
+        _unitOfWork.TrxTransaction.Update(data);
+        _unitOfWork.Save();
+        _unitOfWork.Commit();
+        ShoppingCartVM cartVM = new ShoppingCartVM();
+        cartVM.TrxTransaction = data;
+        return cartVM;
       }
       catch (Exception ex)
       {

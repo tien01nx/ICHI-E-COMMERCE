@@ -74,5 +74,21 @@ export class OrderDetailComponent implements OnInit {
     }
   }
 
+  // isDisabled(optionName: string): boolean {
+  //   const currentStatus = this.shoppingcartdto.trxTransaction.orderStatus;
+
+  //   // Vô hiệu hóa PENDING nếu trạng thái là ONHOLD
+  //   if (currentStatus === 'ONHOLD' && optionName === 'PENDING') {
+  //     return true;
+  //   }
+
+  //   // Vô hiệu hóa tất cả trừ DELIVERED nếu trạng thái là DELIVERED
+  //   if (currentStatus === 'DELIVERED' && optionName !== 'DELIVERED') {
+  //     return true;
+  //   }
+
+  //   return false;
+  // }
+
   onSubmit() {}
 }

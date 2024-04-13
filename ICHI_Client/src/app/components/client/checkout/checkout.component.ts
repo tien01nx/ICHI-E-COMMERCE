@@ -65,6 +65,8 @@ export class CheckoutComponent implements OnInit {
       this.getInitDataId(this.activatedRoute.snapshot.params['id']);
     }
     this.paymentsType = Utils.paymentTypes;
+
+    console.log('cart model', this.cartService.getCarts());
   }
 
   getInitDataId(id: number) {

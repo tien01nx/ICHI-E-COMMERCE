@@ -38,36 +38,36 @@
             aria-expanded="false"
             data-bs-reference="parent"
           >
-            Trạng thái đơn<span class="fas fa-angle-down ms-2"></span>
+            {{ titleOrder }}<span class="fas fa-angle-down ms-2"></span>
           </button>
           <ul class="dropdown-menu">
             <li>
-              <a class="dropdown-item" (click)="orderStatus('Pending')"
+              <a class="dropdown-item" (click)="orderStatus('PENDING')"
                 >Chưa xác nhận</a
               >
             </li>
             <li>
-              <a class="dropdown-item" (click)="orderStatus('Approved')"
+              <a class="dropdown-item" (click)="orderStatus('APPROVED')"
                 >Đã xác nhận</a
               >
             </li>
             <li>
-              <a class="dropdown-item" (click)="orderStatus('Processing')"
+              <a class="dropdown-item" (click)="orderStatus('PROCESSING')"
                 >Đang xử lý</a
               >
             </li>
             <li>
-              <a class="dropdown-item" (click)="orderStatus('Shipped')"
+              <a class="dropdown-item" (click)="orderStatus('SHIPPED')"
                 >Đã vận chuyển</a
               >
             </li>
             <li>
-              <a class="dropdown-item" (click)="orderStatus('Cancelled')"
+              <a class="dropdown-item" (click)="orderStatus('CANCELLED')"
                 >Đã hủy</a
               >
             </li>
             <li>
-              <a class="dropdown-item" (click)="orderStatus('Refunded')"
+              <a class="dropdown-item" (click)="orderStatus('REFUNDED')"
                 >Đã hoàn tiền</a
               >
             </li>
@@ -75,6 +75,9 @@
         </div>
       </div>
     </div>
+    <!-- <div class="scrollbar overflow-hidden-y">
+      <div class="btn-group position-static" role="group">hEHEHEHE</div>
+    </div> -->
     <div class="ms-xxl-auto">
       <button
         class="btn btn-link text-body me-4 px-0"
@@ -84,7 +87,7 @@
         <!-- <span class="fa-solid fa-file-export fs-9 me-2"></span> -->
         Xóa lọc
       </button>
-      <button class="btn btn-primary" id="addBtn">
+      <button class="btn btn-primary" id="addBtn" routerLink="/admin/order">
         <span class="fas fa-plus me-2"></span>Tạo hóa đơn bán
       </button>
     </div>
@@ -402,6 +405,20 @@
                     style="height: 12.8px; width: 12.8px"
                   ></span
                 ></span>
+
+                <span
+                  class="badge badge-phoenix fs-10 badge-phoenix-success"
+                  *ngIf="
+                    Utils.getOrdersStatus(transaction.orderStatus) ===
+                    'Đã giao hàng'
+                  "
+                  ><span class="badge-label">Đã giao hàng</span>
+                  <span
+                    class="ms-1"
+                    data-feather="x"
+                    style="height: 12.8px; width: 12.8px"
+                  ></span
+                ></span>
               </td>
               <td class="align-middle text-600 ps-4">
                 <span
@@ -448,7 +465,7 @@
                   <div class="dropdown-menu dropdown-menu-end py-2">
                     <button
                       class="dropdown-item"
-                      (click)="openModalUpdate(transaction)"
+                      routerLink="/admin/order_detail/{{ transaction.id }}"
                     >
                       Cập nhật
                     </button>

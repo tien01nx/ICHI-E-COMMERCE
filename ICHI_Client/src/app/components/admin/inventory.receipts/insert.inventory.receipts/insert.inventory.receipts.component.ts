@@ -87,7 +87,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
   ) {
     this.receiptForm = this.fb.group({
       id: [0],
-      notes: ['', Validators.required],
+      notes: [''],
       employeeId: [null, Validators.required],
       supplierId: [null, Validators.required],
       inventoryReceiptDetails: this.fb.array([this.createReceiptDetail()]),

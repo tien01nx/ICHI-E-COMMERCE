@@ -7,7 +7,11 @@ export interface TrxTransactionModel extends MasterEntity {
   customerId: string;
   employeeId: string;
   orderDate: Date;
-  shoppingDate: Date;
+  onholDate: Date;
+  waitingForPickupDate: Date;
+  waitingForDeliveryDate: Date;
+  deliveredDate: Date;
+  cancelledDate: Date;
   orderTotal: number;
   orderStatus: string;
   paymentTypes: string;

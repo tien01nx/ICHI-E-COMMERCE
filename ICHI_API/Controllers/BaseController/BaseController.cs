@@ -1,13 +1,5 @@
-﻿using API.Helpers;
-using ICHI_CORE.Model;
+﻿using ICHI_API.Data;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using ICHI_CORE.Helpers;
-using ICHI_CORE.NlogConfig;
-using System.Net;
-using ICHI_API;
-using Microsoft.EntityFrameworkCore;
-using ICHI_API.Data;
 
 namespace ICHI_CORE.Controllers.BaseController
 {

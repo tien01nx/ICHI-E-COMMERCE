@@ -55,7 +55,7 @@
       return result;
     }
     [HttpPost("InsertTxTransaction")]
-    public async Task<ApiResponse<TrxTransactionDTO>> InsertTxTransaction([FromBody] TrxTransactionDTO trxTransactionDTO)
+    public async Task<ApiResponse<TrxTransactionDTO>> Insert([FromBody] TrxTransactionDTO trxTransactionDTO)
     {
       ApiResponse<TrxTransactionDTO> result;
       string strMessage = string.Empty;
@@ -107,6 +107,25 @@
         strMessage = "Có lỗi xảy ra";
         NLogger.log.Error(ex.ToString());
         result = new ApiResponse<string>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+      }
+      return result;
+    }
+
+    [HttpPost("Update")]
+    public async Task<ApiResponse<ShoppingCartVM>> Update([FromBody] UpdateTrxTransaction model)
+    {
+      ApiResponse<ShoppingCartVM> result;
+      string strMessage = string.Empty;
+      try
+      {
+        var data = _trxTransactionService.UpdateTrxTransaction(model, out strMessage);
+        return new ApiResponse<ShoppingCartVM>(System.Net.HttpStatusCode.OK, strMessage, data);
+      }
+      catch (Exception ex)
+      {
+        strMessage = "Có lỗi xảy ra";
+        NLogger.log.Error(ex.ToString());
+        result = new ApiResponse<ShoppingCartVM>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
       }
       return result;
     }

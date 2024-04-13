@@ -45,6 +45,7 @@ export class CartComponent implements OnInit {
       this.selectedItems.includes(item.id)
     );
     this.selectAll = !this.selectAll;
+    console.log('cart: ', this.cartsOrder);
   }
 
   selectItem(itemId: number) {
@@ -66,6 +67,7 @@ export class CartComponent implements OnInit {
     // nếu cartsOrder có ít nhất 1 phần tử thì hiển thị isCheck = true
     this.isCheck = this.cartsOrder.length > 0;
     console.log(this.isCheck);
+    console.log('cart: ', this.cartsOrder);
   }
 
   getCartByUserId() {

@@ -33,7 +33,7 @@ namespace ICHI_CORE.Extension
           IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]))
         };
       });
-      services.AddScoped<IDbInitializer, DbInitializer>();
+      services.AddScoped<IDbInitializer, ICHI.API.DbInitializer.DbInitializer>();
       services.AddScoped<IUnitOfWork, UnitOfWork>();
       services.AddScoped<IUserService, UserService>();
       services.AddScoped<ISupplierService, SupplierService>();
