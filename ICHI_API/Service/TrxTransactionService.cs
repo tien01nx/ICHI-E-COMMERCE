@@ -128,8 +128,9 @@ namespace ICHI_API.Service
             _unitOfWork.PromotionDetail.Update(productId);
           }
         }
-        // xóa thông tin giỏ hàng theo userid
-        _unitOfWork.Cart.RemoveRange(trxTransactionDTO.Carts);
+        // xóa thông tin giỏ hàng theo list CarrtId
+        var listCartId = trxTransactionDTO.Carts.Select(x => x.Id).ToList();
+        _unitOfWork.Cart.RemoveRange(_unitOfWork.Cart.GetAll(u => listCartId.Contains(u.Id)));
         _unitOfWork.Save();
         _unitOfWork.Commit();
         return trxTransactionDTO;
