@@ -188,7 +188,7 @@ export class ListOrderComponent implements OnInit {
         queryParamsHandling: 'merge',
       })
       .then((r) => {});
-    this.titleOrder = Utils.getPaymentStatus(order);
+    this.titleOrder = Utils.getOrdersStatus(order);
   }
 
   onSubmit() {

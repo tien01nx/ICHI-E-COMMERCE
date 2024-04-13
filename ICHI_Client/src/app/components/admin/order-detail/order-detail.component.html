@@ -5,14 +5,14 @@
     <!-- <li class="breadcrumb-item active">Mặc định</li> -->
   </ol>
 </nav>
-<div class="mb-9" (submit)="onSubmit()">
+<form class="mb-9" [formGroup]="trxTransactionForm" (submit)="onSubmit()">
   <div class="row g-3 flex-between-end mb-5">
     <div class="col-auto">
       <h2 class="mb-2">Chi tiết hóa đơn bán hàng</h2>
     </div>
     <div class="col-auto">
       <button class="btn btn-primary mb-2 mb-sm-0 me-8" type="submit">
-        Tạo đơn hàng
+        Cập nhật đơn hàng
       </button>
     </div>
   </div>
@@ -123,9 +123,9 @@
                     [items]="Utils.paymentStatus"
                     bindValue="name"
                     bindLabel="value"
-                    [(ngModel)]="shoppingcartdto.trxTransaction.paymentStatus"
                     placeholder="Chọn Trạng thái đơn hàng"
                     [disabled]="true"
+                    formControlName="paymentStatus"
                   ></ng-select>
                 </div>
               </div>
@@ -148,7 +148,7 @@
                     [items]="Utils.statusOrder"
                     bindValue="name"
                     bindLabel="value"
-                    [(ngModel)]="shoppingcartdto.trxTransaction.orderStatus"
+                    formControlName="orderStatus"
                   >
                     <ng-option
                       *ngFor="let option of Utils.statusOrder"
@@ -1396,5 +1396,5 @@
       </div>
     </div>
   </div>
-</div>
+</form>
 <footer class="footer position-absolute"></footer>

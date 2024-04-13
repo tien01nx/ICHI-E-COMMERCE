@@ -57,6 +57,7 @@ import { ProfileComponent } from './components/client/profile/profile.component'
 import { OrderTrackingComponent } from './components/client/order-tracking/order-tracking.component';
 import { InvoiceComponent } from './components/client/invoice/invoice.component';
 import { OrderDetailComponent } from './components/admin/order-detail/order-detail.component';
+import { SwiperDirective } from './swiper.directive';
 
 register();
 
@@ -103,6 +104,7 @@ register();
     ProfileComponent,
     OrderTrackingComponent,
     InvoiceComponent,
+    SwiperDirective,
   ],
   imports: [
     RouterModule.forRoot(routes),

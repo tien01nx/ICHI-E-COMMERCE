@@ -46,6 +46,11 @@ export class OrderDetailComponent implements OnInit {
   isDisplayNone: boolean = false;
   btnSave: string = '';
   strMessage: string = '';
+  trxTransactionForm: FormGroup = new FormGroup({
+    transactionId: new FormControl('', [Validators.required]),
+    orderStatus: new FormControl('', [Validators.required]),
+    paymentStatus: new FormControl('', [Validators.required]),
+  });
 
   constructor(
     private title: Title,
@@ -65,7 +70,12 @@ export class OrderDetailComponent implements OnInit {
         next: (response: any) => {
           this.shoppingcartdto = response.data;
           console.log('shoppingcartdto', this.shoppingcartdto);
-          // thực hiện set data vào trxTransactionForm
+          // set data vào trxTransactionForm
+          this.trxTransactionForm.setValue({
+            transactionId: this.shoppingcartdto.trxTransaction.id.toString(),
+            paymentStatus: this.shoppingcartdto.trxTransaction.paymentStatus,
+            orderStatus: this.shoppingcartdto.trxTransaction.orderStatus,
+          });
         },
         error: (error: any) => {
           this.toastr.error('Lỗi lấy thông tin giỏ hàng', 'Thông báo');
@@ -90,5 +100,33 @@ export class OrderDetailComponent implements OnInit {
   //   return false;
   // }
 
-  onSubmit() {}
+  onSubmit() {
+    // Kiểm tra form đã hợp lệ chưa
+    if (this.trxTransactionForm.invalid) {
+      this.toastr.error('Vui lòng điền đầy đủ thông tin', 'Thông báo');
+      return;
+    }
+
+    // Lấy dữ liệu từ form
+    const trxTransactionFormValue = this.trxTransactionForm.value;
+
+    // Gọi API cập nhật trạng thái đơn hàng
+    this.trxTransactionService
+      .updateTrxTransaction(this.trxTransactionForm.value)
+      .subscribe({
+        next: (response: any) => {
+          this.toastr.success(
+            'Cập nhật trạng thái đơn hàng thành công',
+            'Thông báo'
+          );
+          this.router.navigate(['/admin/list_order']);
+        },
+        error: (error: any) => {
+          this.toastr.error(
+            'Cập nhật trạng thái đơn hàng thất bại',
+            'Thông báo'
+          );
+        },
+      });
+  }
 }

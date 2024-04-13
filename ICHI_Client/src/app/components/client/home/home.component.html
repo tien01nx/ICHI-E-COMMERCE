@@ -33,36 +33,60 @@
 <section class="py-0 px-xl-3">
   <div class="container px-xl-0 px-xxl-3">
     <div class="row g-3 mb-9"></div>
-    <!-- <div class="row g-4 mb-6">
-      <div class="col-12 col-lg-9 col-xxl-10">
+    <!-- 
+    <div class="row g-4 mb-6">
+      <div class="col-12 col-lg-12 col-xxl-12">
         <div class="d-flex flex-between-center mb-3">
           <div class="d-flex">
             <span class="fas fa-bolt text-warning fs-6"></span>
-            <h3 class="mx-2">Ưu đãi hàng đầu hôm nay</h3>
+            <h3 class="mx-2">Khuyễn mãi</h3>
             <span class="fas fa-bolt text-warning fs-6"></span>
           </div>
           <a class="btn btn-link btn-lg p-0 d-none d-md-block" href="#!"
-            >Tìm hiểu thêm <span class="fas fa-chevron-right fs-9 ms-1"></span>
+            >Xem thêm
+            <span class="fas fa-chevron-right fs-9 ms-1"></span>
           </a>
         </div>
         <div class="swiper-theme-container products-slider">
-          <div
-            class="swiper swiper-container theme-slider swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events"
-            data-swiper='{"slidesPerView":1,"spaceBetween":16,"breakpoints":{"450":{"slidesPerView":2,"spaceBetween":16},"768":{"slidesPerView":3,"spaceBetween":20},"1200":{"slidesPerView":4,"spaceBetween":16},"1540":{"slidesPerView":5,"spaceBetween":16}}}'
-          >
-            <div
-              class="swiper-wrapper"
-              id="swiper-wrapper-6ef1665a00a45fe3"
-              aria-live="polite"
-              style="transform: translate3d(0px, 0px, 0px)"
-            >
-              <ng-container *ngFor="let data of products; let i = index">
-                <div
-                  class="swiper-slide swiper-slide-active"
-                  role="group"
-                  [attr.aria-label]="i + 1 + ' / ' + 3"
-                  style="width: 216.667px; margin-right: 20px"
-                >
+          <div class="swiper swiper-container theme-slider">
+            <swiper-container appSwiper [config]="swiperNewestConfig">
+              <swiper-slide *ngFor="let data of products">
+                <div class="swiper-wrapper">
+                  <div class="swiper-slide"></div>
+                </div>
+              </swiper-slide>
+            </swiper-container>
+          </div>
+          <div class="swiper-nav">
+            <div class="swiper-button-next">
+              <span class="fas fa-chevron-right nav-icon"></span>
+            </div>
+            <div class="swiper-button-prev">
+              <span class="fas fa-chevron-left nav-icon"></span>
+            </div>
+          </div>
+        </div>
+        <a class="fw-bold d-md-none px-0" href="#!"
+          >Xem thêm
+          <span class="fas fa-chevron-right fs-9 ms-1"></span>
+        </a>
+      </div>
+    </div> -->
+
+    <div class="mb-6">
+      <div class="d-flex flex-between-center mb-3">
+        <h3>Sản phẩm mới</h3>
+        <a class="fw-bold d-none d-md-block" href="#!"
+          >Xem thêm
+          <span class="fas fa-chevron-right fs-9 ms-1"></span>
+        </a>
+      </div>
+      <div class="swiper-theme-container products-slider">
+        <div class="swiper swiper-container theme-slider">
+          <swiper-container appSwiper [config]="swiperNewestConfig">
+            <swiper-slide *ngFor="let data of products">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide">
                   <div
                     class="position-relative text-decoration-none product-card h-100"
                   >
@@ -73,7 +97,18 @@
                         <div
                           class="border border-1 border-translucent rounded-3 position-relative mb-3"
                         >
-                          <img
+                          <button
+                            class="btn rounded-circle p-0 d-flex flex-center btn-wish z-2 d-toggle-container btn-outline-primary"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            aria-label="Add to wishlist"
+                            data-bs-original-title="Add to wishlist"
+                          >
+                            <span class="fas fa-heart d-block-hover"></span>
+                            <span
+                              class="far fa-heart d-none-hover"
+                            ></span></button
+                          ><img
                             class="img-fluid"
                             src="{{ Environment.apiBaseRoot }}{{
                               data.productImages[0].imagePath
@@ -109,400 +144,200 @@
                     </div>
                   </div>
                 </div>
-              </ng-container>
-            </div>
-            <span
-              class="swiper-notification"
-              aria-live="assertive"
-              aria-atomic="true"
-            ></span>
-          </div>
-          <div class="swiper-nav swiper-product-nav">
-            <div
-              class="swiper-button-next"
-              tabindex="0"
-              role="button"
-              aria-label="Next slide"
-              aria-controls="swiper-wrapper-6ef1665a00a45fe3"
-              aria-disabled="false"
-            >
-              <span class="fas fa-chevron-right nav-icon"></span>
-            </div>
-            <div
-              class="swiper-button-prev swiper-button-disabled"
-              tabindex="-1"
-              role="button"
-              aria-label="Previous slide"
-              aria-controls="swiper-wrapper-6ef1665a00a45fe3"
-              aria-disabled="true"
-            >
-              <span class="fas fa-chevron-left nav-icon"></span>
-            </div>
-          </div>
-        </div>
-        <a class="fw-bold d-md-none px-0" href="#!"
-          >Tìm hiểu thêm
-          <span class="fas fa-chevron-right fs-9 ms-1"></span>
-        </a>
-      </div>
-      <div class="col-12 d-lg-none">
-        <a href="#!"
-          ><img
-            class="w-100 rounded-3"
-            src="../../../assets/img/e-commerce/6.png"
-            alt=""
-        /></a>
-      </div>
-    </div> -->
-
-    <div class="mb-6">
-      <div class="d-flex flex-between-center mb-3">
-        <h3>Ưu đãi hàng đầu hôm nay</h3>
-        <a class="fw-bold d-none d-md-block" href="#!"
-          >Tìm hiểu thêm <span class="fas fa-chevron-right fs-9 ms-1"></span>
-        </a>
-      </div>
-      <div class="swiper-theme-container products-slider">
-        <div
-          class="swiper swiper-container theme-slider swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events"
-          data-swiper='{"slidesPerView":1,"spaceBetween":16,"breakpoints":{"450":{"slidesPerView":2,"spaceBetween":16},"576":{"slidesPerView":3,"spaceBetween":20},"768":{"slidesPerView":4,"spaceBetween":20},"992":{"slidesPerView":5,"spaceBetween":20},"1200":{"slidesPerView":6,"spaceBetween":16}}}'
-        >
-          <div
-            class="swiper-wrapper"
-            id="swiper-wrapper-33db10573248a9f9a"
-            aria-live="polite"
-            style="transform: translate3d(0px, 0px, 0px)"
-          >
-            <ng-container *ngFor="let data of products; let i = index">
-              <!-- đổ data -->
-              <div
-                class="swiper-slide swiper-slide-active"
-                role="group"
-                [attr.aria-label]="i + 1 + ' / ' + 3"
-                style="width: 216.667px; margin-right: 20px"
-              >
-                <div
-                  class="position-relative text-decoration-none product-card h-100"
-                >
-                  <div class="d-flex flex-column justify-content-between h-100">
-                    <div>
-                      <div
-                        class="border border-1 border-translucent rounded-3 position-relative mb-3"
-                      >
-                        <button
-                          class="btn rounded-circle p-0 d-flex flex-center btn-wish z-2 d-toggle-container btn-outline-primary"
-                          data-bs-toggle="tooltip"
-                          data-bs-placement="top"
-                          aria-label="Add to wishlist"
-                          data-bs-original-title="Add to wishlist"
-                        >
-                          <span class="fas fa-heart d-block-hover"></span>
-                          <span
-                            class="far fa-heart d-none-hover"
-                          ></span></button
-                        ><img
-                          class="img-fluid"
-                          src="{{ Environment.apiBaseRoot }}{{
-                            data.productImages[0].imagePath
-                          }}"
-                          alt=""
-                        />
-                      </div>
-                      <a
-                        class="stretched-link"
-                        routerLink="product_detail/{{ data.product.id }}"
-                      >
-                        <h6 class="mb-2 lh-sm line-clamp-3 product-name">
-                          {{ data.product.productName }}
-                        </h6>
-                      </a>
-                    </div>
-
-                    <div class="d-flex align-items-center mb-1">
-                      <p
-                        class="me-2 text-body text-decoration-line-through mb-0"
-                        *ngIf="data.product.discount > 0"
-                      >
-                        {{ data.product.price | number : "1.0-0" }}
-                      </p>
-                      <h3 class="text-body-emphasis mb-0">
-                        {{
-                          data.product.price * (1 - data.product.discount / 100)
-                            | number : "1.0-0"
-                        }}
-                      </h3>
-                    </div>
-                  </div>
-                </div>
               </div>
-            </ng-container>
-
-            <!-- đổ data -->
-          </div>
-          <span
-            class="swiper-notification"
-            aria-live="assertive"
-            aria-atomic="true"
-          ></span>
+            </swiper-slide>
+          </swiper-container>
         </div>
         <div class="swiper-nav">
-          <div
-            class="swiper-button-next"
-            tabindex="0"
-            role="button"
-            aria-label="Next slide"
-            aria-controls="swiper-wrapper-33db10573248a9f9a"
-            aria-disabled="false"
-          >
+          <div class="swiper-button-next">
             <span class="fas fa-chevron-right nav-icon"></span>
           </div>
-          <div
-            class="swiper-button-prev swiper-button-disabled"
-            tabindex="-1"
-            role="button"
-            aria-label="Previous slide"
-            aria-controls="swiper-wrapper-33db10573248a9f9a"
-            aria-disabled="true"
-          >
+          <div class="swiper-button-prev">
             <span class="fas fa-chevron-left nav-icon"></span>
           </div>
         </div>
       </div>
       <a class="fw-bold d-md-none" href="#!"
-        >Tìm hiểu thêm <span class="fas fa-chevron-right fs-9 ms-1"></span>
+        >Xem thêm
+        <span class="fas fa-chevron-right fs-9 ms-1"></span>
       </a>
     </div>
     <div class="mb-6">
       <div class="d-flex flex-between-center mb-3">
         <h3>Sản phẩm mới</h3>
         <a class="fw-bold d-none d-md-block" href="#!"
-          >Tìm hiểu thêm <span class="fas fa-chevron-right fs-9 ms-1"></span>
+          >Xem thêm
+          <span class="fas fa-chevron-right fs-9 ms-1"></span>
         </a>
       </div>
       <div class="swiper-theme-container products-slider">
-        <div
-          class="swiper swiper-container theme-slider swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events"
-          data-swiper='{"slidesPerView":1,"spaceBetween":16,"breakpoints":{"450":{"slidesPerView":2,"spaceBetween":16},"576":{"slidesPerView":3,"spaceBetween":20},"768":{"slidesPerView":4,"spaceBetween":20},"992":{"slidesPerView":5,"spaceBetween":20},"1200":{"slidesPerView":6,"spaceBetween":16}}}'
-        >
-          <div
-            class="swiper-wrapper"
-            id="swiper-wrapper-33db10573248a9f9a"
-            aria-live="polite"
-            style="transform: translate3d(0px, 0px, 0px)"
-          >
-            <ng-container *ngFor="let data of products; let i = index">
-              <!-- đổ data -->
-              <div
-                class="swiper-slide swiper-slide-active"
-                role="group"
-                [attr.aria-label]="i + 1 + ' / ' + 3"
-                style="width: 216.667px; margin-right: 20px"
-              >
-                <div
-                  class="position-relative text-decoration-none product-card h-100"
-                >
-                  <div class="d-flex flex-column justify-content-between h-100">
-                    <div>
-                      <div
-                        class="border border-1 border-translucent rounded-3 position-relative mb-3"
-                      >
-                        <button
-                          class="btn rounded-circle p-0 d-flex flex-center btn-wish z-2 d-toggle-container btn-outline-primary"
-                          data-bs-toggle="tooltip"
-                          data-bs-placement="top"
-                          aria-label="Add to wishlist"
-                          data-bs-original-title="Add to wishlist"
+        <div class="swiper swiper-container theme-slider">
+          <swiper-container appSwiper [config]="swiperNewestConfig">
+            <swiper-slide *ngFor="let data of products">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                  <div
+                    class="position-relative text-decoration-none product-card h-100"
+                  >
+                    <div
+                      class="d-flex flex-column justify-content-between h-100"
+                    >
+                      <div>
+                        <div
+                          class="border border-1 border-translucent rounded-3 position-relative mb-3"
                         >
-                          <span class="fas fa-heart d-block-hover"></span>
-                          <span
-                            class="far fa-heart d-none-hover"
-                          ></span></button
-                        ><img
-                          class="img-fluid"
-                          src="{{ Environment.apiBaseRoot }}{{
-                            data.productImages[0].imagePath
-                          }}"
-                          alt=""
-                        />
+                          <button
+                            class="btn rounded-circle p-0 d-flex flex-center btn-wish z-2 d-toggle-container btn-outline-primary"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            aria-label="Add to wishlist"
+                            data-bs-original-title="Add to wishlist"
+                          >
+                            <span class="fas fa-heart d-block-hover"></span>
+                            <span
+                              class="far fa-heart d-none-hover"
+                            ></span></button
+                          ><img
+                            class="img-fluid"
+                            src="{{ Environment.apiBaseRoot }}{{
+                              data.productImages[0].imagePath
+                            }}"
+                            alt=""
+                          />
+                        </div>
+                        <a
+                          class="stretched-link"
+                          routerLink="product_detail/{{ data.product.id }}"
+                        >
+                          <h6 class="mb-2 lh-sm line-clamp-3 product-name">
+                            {{ data.product.productName }}
+                          </h6>
+                        </a>
                       </div>
-                      <a
-                        class="stretched-link"
-                        routerLink="product_detail/{{ data.product.id }}"
-                      >
-                        <h6 class="mb-2 lh-sm line-clamp-3 product-name">
-                          {{ data.product.productName }}
-                        </h6>
-                      </a>
-                    </div>
 
-                    <div class="d-flex align-items-center mb-1">
-                      <p
-                        class="me-2 text-body text-decoration-line-through mb-0"
-                        *ngIf="data.product.discount > 0"
-                      >
-                        {{ data.product.price | number : "1.0-0" }}
-                      </p>
-                      <h3 class="text-body-emphasis mb-0">
-                        {{
-                          data.product.price * (1 - data.product.discount / 100)
-                            | number : "1.0-0"
-                        }}
-                      </h3>
+                      <div class="d-flex align-items-center mb-1">
+                        <p
+                          class="me-2 text-body text-decoration-line-through mb-0"
+                          *ngIf="data.product.discount > 0"
+                        >
+                          {{ data.product.price | number : "1.0-0" }}
+                        </p>
+                        <h3 class="text-body-emphasis mb-0">
+                          {{
+                            data.product.price *
+                              (1 - data.product.discount / 100)
+                              | number : "1.0-0"
+                          }}
+                        </h3>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </ng-container>
-
-            <!-- đổ data -->
-          </div>
-          <span
-            class="swiper-notification"
-            aria-live="assertive"
-            aria-atomic="true"
-          ></span>
+            </swiper-slide>
+          </swiper-container>
         </div>
         <div class="swiper-nav">
-          <div
-            class="swiper-button-next"
-            tabindex="0"
-            role="button"
-            aria-label="Next slide"
-            aria-controls="swiper-wrapper-33db10573248a9f9a"
-            aria-disabled="false"
-          >
+          <div class="swiper-button-next">
             <span class="fas fa-chevron-right nav-icon"></span>
           </div>
-          <div
-            class="swiper-button-prev swiper-button-disabled"
-            tabindex="-1"
-            role="button"
-            aria-label="Previous slide"
-            aria-controls="swiper-wrapper-33db10573248a9f9a"
-            aria-disabled="true"
-          >
+          <div class="swiper-button-prev">
             <span class="fas fa-chevron-left nav-icon"></span>
           </div>
         </div>
       </div>
       <a class="fw-bold d-md-none" href="#!"
-        >Tìm hiểu thêm <span class="fas fa-chevron-right fs-9 ms-1"></span>
+        >Xem thêm
+        <span class="fas fa-chevron-right fs-9 ms-1"></span>
       </a>
     </div>
-
     <div class="mb-6">
       <div class="d-flex flex-between-center mb-3">
-        <h3>Bán chạy</h3>
+        <h3>Sản phẩm mới</h3>
         <a class="fw-bold d-none d-md-block" href="#!"
-          >Tìm hiểu thêm <span class="fas fa-chevron-right fs-9 ms-1"></span
-        ></a>
+          >Xem thêm
+          <span class="fas fa-chevron-right fs-9 ms-1"></span>
+        </a>
       </div>
       <div class="swiper-theme-container products-slider">
-        <div
-          class="swiper swiper-container theme-slider swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events"
-          data-swiper='{"slidesPerView":1,"spaceBetween":16,"breakpoints":{"450":{"slidesPerView":2,"spaceBetween":16},"576":{"slidesPerView":3,"spaceBetween":20},"768":{"slidesPerView":4,"spaceBetween":20},"992":{"slidesPerView":5,"spaceBetween":20},"1200":{"slidesPerView":6,"spaceBetween":16}}}'
-        >
-          <div
-            class="swiper-wrapper"
-            id="swiper-wrapper-91b59c7fd106152c8"
-            aria-live="polite"
-            style="transform: translate3d(0px, 0px, 0px)"
-          >
-            <!-- đổ data -->
-            <ng-container *ngFor="let data of products; let i = index">
-              <!-- đổ data -->
-              <div
-                class="swiper-slide swiper-slide-active"
-                role="group"
-                [attr.aria-label]="i + 1 + ' / ' + 3"
-                style="width: 216.667px; margin-right: 20px"
-              >
-                <div
-                  class="position-relative text-decoration-none product-card h-100"
-                >
-                  <div class="d-flex flex-column justify-content-between h-100">
-                    <div>
-                      <div
-                        class="border border-1 border-translucent rounded-3 position-relative mb-3"
-                      >
-                        <button
-                          class="btn rounded-circle p-0 d-flex flex-center btn-wish z-2 d-toggle-container btn-outline-primary"
-                          data-bs-toggle="tooltip"
-                          data-bs-placement="top"
-                          aria-label="Add to wishlist"
-                          data-bs-original-title="Add to wishlist"
+        <div class="swiper swiper-container theme-slider">
+          <swiper-container appSwiper [config]="swiperNewestConfig">
+            <swiper-slide *ngFor="let data of products">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                  <div
+                    class="position-relative text-decoration-none product-card h-100"
+                  >
+                    <div
+                      class="d-flex flex-column justify-content-between h-100"
+                    >
+                      <div>
+                        <div
+                          class="border border-1 border-translucent rounded-3 position-relative mb-3"
                         >
-                          <span class="fas fa-heart d-block-hover"></span>
-                          <span
-                            class="far fa-heart d-none-hover"
-                          ></span></button
-                        ><img
-                          class="img-fluid"
-                          src="{{ Environment.apiBaseRoot }}{{
-                            data.productImages[0].imagePath
-                          }}"
-                          alt=""
-                        />
+                          <button
+                            class="btn rounded-circle p-0 d-flex flex-center btn-wish z-2 d-toggle-container btn-outline-primary"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            aria-label="Add to wishlist"
+                            data-bs-original-title="Add to wishlist"
+                          >
+                            <span class="fas fa-heart d-block-hover"></span>
+                            <span
+                              class="far fa-heart d-none-hover"
+                            ></span></button
+                          ><img
+                            class="img-fluid"
+                            src="{{ Environment.apiBaseRoot }}{{
+                              data.productImages[0].imagePath
+                            }}"
+                            alt=""
+                          />
+                        </div>
+                        <a
+                          class="stretched-link"
+                          routerLink="product_detail/{{ data.product.id }}"
+                        >
+                          <h6 class="mb-2 lh-sm line-clamp-3 product-name">
+                            {{ data.product.productName }}
+                          </h6>
+                        </a>
                       </div>
-                      <a
-                        class="stretched-link"
-                        routerLink="product_detail/{{ data.product.id }}"
-                      >
-                        <h6 class="mb-2 lh-sm line-clamp-3 product-name">
-                          {{ data.product.productName }}
-                        </h6>
-                      </a>
-                    </div>
-                    <div class="d-flex align-items-center mb-1">
-                      <p
-                        class="me-2 text-body text-decoration-line-through mb-0"
-                        *ngIf="data.product.discount > 0"
-                      >
-                        {{ data.product.price | number : "1.0-0" }}
-                      </p>
-                      <h3 class="text-body-emphasis mb-0">
-                        {{
-                          data.product.price * (1 - data.product.discount / 100)
-                            | number : "1.0-0"
-                        }}
-                      </h3>
+
+                      <div class="d-flex align-items-center mb-1">
+                        <p
+                          class="me-2 text-body text-decoration-line-through mb-0"
+                          *ngIf="data.product.discount > 0"
+                        >
+                          {{ data.product.price | number : "1.0-0" }}
+                        </p>
+                        <h3 class="text-body-emphasis mb-0">
+                          {{
+                            data.product.price *
+                              (1 - data.product.discount / 100)
+                              | number : "1.0-0"
+                          }}
+                        </h3>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </ng-container>
-          </div>
-          <span
-            class="swiper-notification"
-            aria-live="assertive"
-            aria-atomic="true"
-          ></span>
+            </swiper-slide>
+          </swiper-container>
         </div>
         <div class="swiper-nav">
-          <div
-            class="swiper-button-next"
-            tabindex="0"
-            role="button"
-            aria-label="Next slide"
-            aria-controls="swiper-wrapper-91b59c7fd106152c8"
-            aria-disabled="false"
-          >
+          <div class="swiper-button-next">
             <span class="fas fa-chevron-right nav-icon"></span>
           </div>
-          <div
-            class="swiper-button-prev swiper-button-disabled"
-            tabindex="-1"
-            role="button"
-            aria-label="Previous slide"
-            aria-controls="swiper-wrapper-91b59c7fd106152c8"
-            aria-disabled="true"
-          >
+          <div class="swiper-button-prev">
             <span class="fas fa-chevron-left nav-icon"></span>
           </div>
         </div>
       </div>
       <a class="fw-bold d-md-none" href="#!"
-        >Tìm hiểu thêm <span class="fas fa-chevron-right fs-9 ms-1"></span>
+        >Xem thêm
+        <span class="fas fa-chevron-right fs-9 ms-1"></span>
       </a>
     </div>
 

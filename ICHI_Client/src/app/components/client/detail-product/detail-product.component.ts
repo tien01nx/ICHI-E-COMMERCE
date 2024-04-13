@@ -16,6 +16,7 @@ import { TokenService } from '../../../service/token.service';
 import { TrxTransactionService } from '../../../service/trx-transaction.service';
 import { ToastrService } from 'ngx-toastr';
 import { CategoryService } from '../../../service/category-product.service';
+import { SwiperOptions } from 'swiper';
 
 @Component({
   selector: 'app-detail-product',
@@ -30,6 +31,8 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
   quantity: number = 1;
   category!: CategoryProduct;
   categories: CategoryProduct[] = [];
+  image: string = '';
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private productService: ProductsService,
@@ -54,6 +57,7 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
       next: (respon: any) => {
         this.productdto = respon.data;
         this.category = respon.data.categoryProduct;
+        this.image = respon.data?.productImages[0].imagePath;
         this.getParent();
       },
     });
@@ -138,5 +142,48 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
 
   productCategory(category: CategoryProduct) {
     this.router.navigate(['/product_filter', category.categoryName]);
+  }
+
+  // Swiper
+  swiperThumbsConfig: SwiperOptions = {
+    slidesPerView: 1, // Số lượng slide hiển thị trên một lần trượt
+    spaceBetween: 20, // Khoảng cách giữa các slide
+    speed: 500, // Tốc độ chuyển slide (milliseconds)
+    autoplay: {
+      // Tự động chuyển slide
+      delay: 3000, // Thời gian delay giữa các slide (milliseconds)
+      disableOnInteraction: false, // Tạm dừng tự động chuyển slide khi người dùng tương tác
+    },
+    navigation: {
+      // Hiển thị nút điều hướng
+      nextEl: '.swiper-button-next', // Nút next
+      prevEl: '.swiper-button-prev', // Nút prev
+    },
+    breakpoints: {
+      450: { slidesPerView: 2, spaceBetween: 16 },
+      768: { slidesPerView: 3, spaceBetween: 16 },
+      992: { slidesPerView: 4, spaceBetween: 16 },
+      1200: { slidesPerView: 5, spaceBetween: 16 },
+    },
+  };
+
+  swiperImageConfig: SwiperOptions = {
+    slidesPerView: 1, // Số lượng slide hiển thị trên một lần trượt
+    spaceBetween: 16, // Khoảng cách giữa các slide
+    navigation: {
+      // Hiển thị nút điều hướng
+      nextEl: '.swiper-next', // Nút next
+      prevEl: '.swiper-prev', // Nút prev
+    },
+    breakpoints: {
+      200: { slidesPerView: 3, spaceBetween: 16 },
+      450: { slidesPerView: 4, spaceBetween: 16 },
+      768: { slidesPerView: 4, spaceBetween: 16 },
+      992: { slidesPerView: 4, spaceBetween: 16 },
+      1200: { slidesPerView: 4, spaceBetween: 16 },
+    },
+  };
+  chooseImage(image: any) {
+    this.image = image.imagePath;
   }
 }

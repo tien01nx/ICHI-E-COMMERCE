@@ -12,6 +12,7 @@ import { PaginationDTO } from '../../../dtos/pagination.dto';
 import { ProductDTO } from '../../../dtos/product.dto';
 import { CategoryProduct } from '../../../models/category.product';
 import { CategoryService } from '../../../service/category-product.service';
+import { identifierName } from '@angular/compiler';
 
 @Component({
   selector: 'app-products-filter',
@@ -20,6 +21,7 @@ import { CategoryService } from '../../../service/category-product.service';
 })
 export class ProductsFilterComponent implements OnInit {
   paginationDTO: PaginationDTO<ProductDTO> = PaginationDTO.createEmpty();
+  protected readonly Utils = Utils;
   Environment = Environment;
   trademarks: TrademarkModel[] = [];
   categories: CategoryProduct[] = [];
@@ -63,8 +65,8 @@ export class ProductsFilterComponent implements OnInit {
     console.log(this.colors);
 
     this.activatedRoute.queryParams.subscribe((params) => {
-      const pageSize = +params['page-size'] || 10;
-      const pageNumber = +params['trang'] || 1;
+      const pageSize = +params['page-size'] || 2;
+      const pageNumber = +params['page-number'] || 1;
 
       let colors: string[] = [];
       let trademarks: string[] = [];
@@ -121,7 +123,6 @@ export class ProductsFilterComponent implements OnInit {
         pageNumber
       )
       .subscribe((response: any) => {
-        console.log(response.data);
         this.paginationDTO.content = response.data.items;
         this.paginationDTO.totalPages = response.data.pageCount;
         this.paginationDTO.totalElements = response.data.totalCount;
@@ -132,6 +133,8 @@ export class ProductsFilterComponent implements OnInit {
         this.paginationDTO.lastElementOnPage = response.lastElementOnPage;
         this.paginationDTO.sortBy = response.sortBy;
         this.paginationDTO.sortDirection = response.sortDirection;
+        console.log(response.data);
+        console.log('pageSize', this.paginationDTO.pageSize);
       });
   }
 
@@ -199,5 +202,35 @@ export class ProductsFilterComponent implements OnInit {
   }
   productDetail(id: number) {
     this.router.navigate(['/product_detail/' + id]);
+  }
+
+  changePageNumber(pageNumber: number): void {
+    this.router
+      .navigate(
+        [
+          `/product_filter/` +
+            this.activatedRoute.snapshot.params['categoryName'],
+        ],
+        {
+          queryParams: { 'page-number': pageNumber },
+          queryParamsHandling: 'merge',
+        }
+      )
+      .then((r) => {});
+  }
+
+  changePageSize(pageSize: number): void {
+    this.router
+      .navigate(
+        [
+          '/product_filter' +
+            this.activatedRoute.snapshot.params['categoryName'],
+        ],
+        {
+          queryParams: { 'page-size': pageSize, 'page-number': 1 },
+          queryParamsHandling: 'merge',
+        }
+      )
+      .then((r) => {});
   }
 }

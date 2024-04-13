@@ -201,6 +201,23 @@ export class Utils {
   // Đã giao hàng - Delivered
   // Đã hủy - Cancelled
   // sửa thành name có có giá trị viết hoa  hết
+  static PENDING = 'PENDING';
+  static ONHOLD = 'ONHOLD';
+  static WAITINGFORPICKUP = 'WAITINGFORPICKUP';
+  static WAITINGFORDELIVERY = 'WAITINGFORDELIVERY';
+  static DELIVERED = 'DELIVERED';
+  static CANCELLED = 'CANCELLED';
+
+  static PENDING_VALUE = 'Chưa xác nhận';
+  static ONHOLD_VALUE = 'Đã xác nhận';
+  static WAITINGFORPICKUP_VALUE = 'Chờ lấy hàng';
+  static WAITINGFORDELIVERY_VALUE = 'Chờ giao hàng';
+  static DELIVERED_VALUE = 'Đã giao hàng';
+  static CANCELLED_VALUE = 'Đã hủy';
+  
+
+
+
   static statusOrder = [
     { name: 'PENDING', value: 'Chưa xác nhận' },
     { name: 'ONHOLD', value: 'Đã xác nhận' },

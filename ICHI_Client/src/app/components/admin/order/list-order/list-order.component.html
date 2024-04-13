@@ -47,27 +47,29 @@
               >
             </li>
             <li>
-              <a class="dropdown-item" (click)="orderStatus('APPROVED')"
+              <a class="dropdown-item" (click)="orderStatus('ONHOLD')"
                 >Đã xác nhận</a
               >
             </li>
             <li>
-              <a class="dropdown-item" (click)="orderStatus('PROCESSING')"
+              <a class="dropdown-item" (click)="orderStatus('WAITINGFORPICKUP')"
                 >Đang xử lý</a
               >
             </li>
             <li>
-              <a class="dropdown-item" (click)="orderStatus('SHIPPED')"
+              <a
+                class="dropdown-item"
+                (click)="orderStatus('WAITINGFORDELIVERY')"
                 >Đã vận chuyển</a
               >
             </li>
             <li>
-              <a class="dropdown-item" (click)="orderStatus('CANCELLED')"
-                >Đã hủy</a
+              <a class="dropdown-item" (click)="orderStatus('DELIVERED')"
+                >Đã giao hàng</a
               >
             </li>
             <li>
-              <a class="dropdown-item" (click)="orderStatus('REFUNDED')"
+              <a class="dropdown-item" (click)="orderStatus('CANCELLED')"
                 >Đã hoàn tiền</a
               >
             </li>
@@ -332,7 +334,7 @@
                   class="badge badge-phoenix fs-10 badge-phoenix-primary"
                   *ngIf="
                     Utils.getOrdersStatus(transaction.orderStatus) ===
-                    'Chưa xác nhận'
+                    Utils.PENDING_VALUE
                   "
                   ><span class="badge-label">Chưa xác nhận</span
                   ><span
@@ -345,7 +347,7 @@
                   class="badge badge-phoenix fs-10 badge-phoenix-secondary"
                   *ngIf="
                     Utils.getOrdersStatus(transaction.orderStatus) ===
-                    'Đã xác nhận'
+                    Utils.ONHOLD_VALUE
                   "
                   ><span class="badge-label">Đã xác nhận</span
                   ><span
@@ -358,7 +360,7 @@
                   class="badge badge-phoenix fs-10 badge-phoenix-success"
                   *ngIf="
                     Utils.getOrdersStatus(transaction.orderStatus) ===
-                    'Đang xử lý'
+                    Utils.WAITINGFORPICKUP_VALUE
                   "
                   ><span class="badge-label">Đang xử lý</span
                   ><span
@@ -371,7 +373,7 @@
                   class="badge badge-phoenix fs-10 badge-phoenix-info"
                   *ngIf="
                     Utils.getOrdersStatus(transaction.orderStatus) ===
-                    'Đã vận chuyển'
+                    Utils.WAITINGFORDELIVERY_VALUE
                   "
                   ><span class="badge-label">Đã vận chuyển</span
                   ><span

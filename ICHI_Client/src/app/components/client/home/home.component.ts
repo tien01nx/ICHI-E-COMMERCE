@@ -20,13 +20,14 @@ import { SwiperOptions } from 'swiper/types/swiper-options';
 import { SwiperContainer } from 'swiper/element/swiper-element';
 import { CategoryService } from '../../../service/category-product.service';
 import { Utils } from '../../../Utils.ts/utils';
+import { PaginationDTO } from '../../../dtos/pagination.dto';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
-export class HomeComponent implements OnInit, AfterViewInit {
+export class HomeComponent implements OnInit {
   Environment = Environment;
   ngOnInit(): void {
     this.getDataProduct();
@@ -40,31 +41,23 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private router: Router
   ) {}
 
-  @ViewChild('swiper') swiper!: ElementRef<SwiperContainer>;
-
-  index = 0;
-
   // Swiper
-  swiperThumbsConfig: SwiperOptions = {
+  swiperNewestConfig: SwiperOptions = {
     slidesPerView: 1,
-    spaceBetween: 16,
-    breakpoints: {
-      450: { slidesPerView: 2, spaceBetween: 16 },
-      768: { slidesPerView: 3, spaceBetween: 20 },
-      1200: { slidesPerView: 4, spaceBetween: 16 },
+    spaceBetween: 20,
+    speed: 500,
+    navigation: {
+      // Hiển thị nút điều hướng
+      nextEl: '.swiper-button-next', // Nút next
+      prevEl: '.swiper-button-prev', // Nút prev
     },
-    freeMode: true,
-    watchSlidesProgress: true,
+    breakpoints: {
+      450: { slidesPerView: 1, spaceBetween: 16 },
+      768: { slidesPerView: 1, spaceBetween: 16 },
+      992: { slidesPerView: 5, spaceBetween: 16 },
+      1200: { slidesPerView: 6, spaceBetween: 16 },
+    },
   };
-
-  ngAfterViewInit() {
-    this.swiper.nativeElement.swiper.activeIndex = this.index;
-  }
-
-  slideChange(swiper: any) {
-    this.index = swiper.detail[0].activeIndex;
-  }
-  // End Swiper
 
   getDataProduct() {
     this.productService.findAllByName(1, 10, 'ASC', 'id', '').subscribe({
@@ -94,15 +87,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
       },
     });
   }
-  swiperConfig: SwiperConfigInterface = {
-    direction: 'horizontal',
-    slidesPerView: 1,
-    spaceBetween: 10,
-    pagination: {
-      el: '.swiper-pagination',
-      clickable: true,
-    },
-  };
 
   productFilter(categoryName: string) {
     this.router.navigate(['/product_filter/' + categoryName]);

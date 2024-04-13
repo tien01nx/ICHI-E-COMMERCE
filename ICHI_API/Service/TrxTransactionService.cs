@@ -47,9 +47,7 @@ namespace ICHI_API.Service
         return null;
       }
     }
-
-
-    public TrxTransactionDTO InsertTxTransaction(TrxTransactionDTO trxTransactionDTO, out string strMessage)
+    public TrxTransactionDTO Insert(TrxTransactionDTO trxTransactionDTO, out string strMessage)
     {
       strMessage = string.Empty;
       try
@@ -87,7 +85,7 @@ namespace ICHI_API.Service
           return null;
         }
 
-        var cart = _unitOfWork.Cart.GetAll(u => u.UserId == trxTransactionDTO.CustomerId);
+        //var cart = _unitOfWork.Cart.GetAll(u => u.UserId == trxTransactionDTO.CustomerId);
         trxTransaction.FullName = trxTransactionDTO?.FullName;
         trxTransaction.PhoneNumber = trxTransactionDTO?.PhoneNumber;
         trxTransaction.Address = trxTransactionDTO?.Address;
@@ -131,7 +129,7 @@ namespace ICHI_API.Service
           }
         }
         // xóa thông tin giỏ hàng theo userid
-        _unitOfWork.Cart.RemoveRange(cart);
+        _unitOfWork.Cart.RemoveRange(trxTransactionDTO.Carts);
         _unitOfWork.Save();
         _unitOfWork.Commit();
         return trxTransactionDTO;
@@ -144,8 +142,7 @@ namespace ICHI_API.Service
         return null;
       }
     }
-
-    public ShoppingCartVM UpdateTrxTransaction(UpdateTrxTransaction model, out string strMessage)
+    public ShoppingCartVM Update(UpdateTrxTransaction model, out string strMessage)
     {
       strMessage = string.Empty;
       try
@@ -173,7 +170,6 @@ namespace ICHI_API.Service
         return null;
       }
     }
-
     public ShoppingCartVM GetTrxTransactionFindById(int id, out string strMessage)
     {
       strMessage = string.Empty;
@@ -203,7 +199,6 @@ namespace ICHI_API.Service
         return null;
       }
     }
-
     // lấy thông tin khách hàng theo customerid và email
     public CustomerTransactionDTO GetCustomerTransaction(string userid, out string strMessage)
     {

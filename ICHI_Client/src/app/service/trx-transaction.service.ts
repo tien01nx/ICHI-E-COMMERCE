@@ -160,86 +160,83 @@ export class TrxTransactionService {
   }
 
   AddTrxTransaction(model: any) {
-    return this.http.post(
-      this.baseUrl + '/TrxTransaction/InsertTxTransaction',
-      model
-    );
+    return this.http.post(this.baseUrl + '/TrxTransaction/Insert', model);
   }
 
   vnpaydto!: VnPaymentRequestDTO;
 
   PaymentExecute(model: TrxTransactionDTO): Observable<any> {
     debugger;
-    return this.http
-      .post(this.baseUrl + '/TrxTransaction/InsertTxTransaction', model)
-      .pipe(
-        mergeMap((response: any) => {
-          if (
-            response.data &&
-            response.data.paymentTypes === Utils.PaymentViaCard
-          ) {
-            if (response.data.checkOrder === true) {
-              const vnpaydto = new VnPaymentRequestDTO(
-                response.data.trxTransactionId,
-                response.data.fullName,
-                response.data.amount,
-                'EMPLOYEE_CREATED',
-                new Date()
-              );
-              return this.createPaymentUrl(vnpaydto);
-            } else {
-              const vnpaydto = new VnPaymentRequestDTO(
-                response.data.trxTransactionId,
-                response.data.fullName,
-                response.data.amount,
-                'USER_CREATED',
-                new Date()
-              );
-              return this.createPaymentUrl(vnpaydto);
-            }
+    return this.http.post(this.baseUrl + '/TrxTransaction/Insert', model).pipe(
+      mergeMap((response: any) => {
+        if (
+          response.data &&
+          response.data.paymentTypes === Utils.PaymentViaCard
+        ) {
+          if (response.data.checkOrder === true) {
+            const vnpaydto = new VnPaymentRequestDTO(
+              response.data.trxTransactionId,
+              response.data.fullName,
+              response.data.amount,
+              'EMPLOYEE_CREATED',
+              new Date()
+            );
+            return this.createPaymentUrl(vnpaydto);
           } else {
-            // Return data for routing to another page if payment type is not via card
-            return of(response.data);
+            const vnpaydto = new VnPaymentRequestDTO(
+              response.data.trxTransactionId,
+              response.data.fullName,
+              response.data.amount,
+              'USER_CREATED',
+              new Date()
+            );
+            return this.createPaymentUrl(vnpaydto);
           }
-        })
-      );
+        } else {
+          // Return data for routing to another page if payment type is not via card
+          return of(response.data);
+        }
+      })
+    );
   }
 
   PaymentExecuteOrder(model: TrxTransactionDTO): Observable<any> {
     debugger;
-    return this.http
-      .post(this.baseUrl + '/TrxTransaction/InsertTxTransaction', model)
-      .pipe(
-        mergeMap((response: any) => {
-          if (
-            response.data &&
-            response.data.paymentTypes === Utils.PaymentViaCard
-          ) {
-            if (response.data.checkOrder === true) {
-              const vnpaydto = new VnPaymentRequestDTO(
-                response.data.trxTransactionId,
-                response.data.fullName,
-                response.data.amount,
-                'EMPLOYEE_CREATED',
-                new Date()
-              );
-              return this.createPaymentUrl(vnpaydto);
-            } else {
-              const vnpaydto = new VnPaymentRequestDTO(
-                response.data.trxTransactionId,
-                response.data.fullName,
-                response.data.amount,
-                'USER_CREATED',
-                new Date()
-              );
-              return this.createPaymentUrl(vnpaydto);
-            }
+    return this.http.post(this.baseUrl + '/TrxTransaction/Insert', model).pipe(
+      mergeMap((response: any) => {
+        if (
+          response.data &&
+          response.data.paymentTypes === Utils.PaymentViaCard
+        ) {
+          if (response.data.checkOrder === true) {
+            const vnpaydto = new VnPaymentRequestDTO(
+              response.data.trxTransactionId,
+              response.data.fullName,
+              response.data.amount,
+              'EMPLOYEE_CREATED',
+              new Date()
+            );
+            return this.createPaymentUrl(vnpaydto);
           } else {
-            // Return data for routing to another page if payment type is not via card
-            return of(response.data);
+            const vnpaydto = new VnPaymentRequestDTO(
+              response.data.trxTransactionId,
+              response.data.fullName,
+              response.data.amount,
+              'USER_CREATED',
+              new Date()
+            );
+            return this.createPaymentUrl(vnpaydto);
           }
-        })
-      );
+        } else {
+          // Return data for routing to another page if payment type is not via card
+          return of(response.data);
+        }
+      })
+    );
+  }
+
+  updateTrxTransaction(model: any) {
+    return this.http.put(this.baseUrl + '/TrxTransaction/Update', model);
   }
 
   private createPaymentUrl(vnpaydto: VnPaymentRequestDTO): Observable<any> {
@@ -259,53 +256,4 @@ export class TrxTransactionService {
       this.baseUrl + '/Cart/CheckTransactionPromotion?transactionId=' + orderId
     );
   }
-  // PaymentExecute(model: TrxTransactionDTO) {
-  //   if (model.trxTransactionId === 0) {
-  //     return this.http
-  //       .post(this.baseUrl + '/TrxTransaction/InsertTxTransaction', model)
-  //       .pipe(
-  //         mergeMap((response: any) => {
-  //           // Tạo và gửi request tới /TrxTransaction/CreatePaymentUrl
-  //           const vnpaydto = new VnPaymentRequestDTO(
-  //             response.data.trxTransactionId,
-  //             response.data.fullName,
-  //             response.data.amount,
-  //             new Date()
-  //           );
-  //           return this.http
-  //             .post(this.baseUrl + '/TrxTransaction/CreatePaymentUrl', vnpaydto)
-  //             .pipe(
-  //               map((paymentResponse: any) => {
-  //                 // Xử lý kết quả từ /TrxTransaction/CreatePaymentUrl ở đây
-  //                 // Ví dụ: Trả về kết quả hoặc thực hiện các thao tác khác
-
-  //                 return paymentResponse;
-  //               })
-  //             );
-  //         }),
-  //         catchError((error: any) => {
-  //           // Xử lý lỗi ở đây, nếu cần
-  //           return throwError(error);
-  //         })
-  //       );
-  //   }
-
-  //   // Nếu model.trxTransactionId !== 0, thực hiện các thao tác khác
-  //   const vnpaydto = new VnPaymentRequestDTO(
-  //     model.trxTransactionId,
-  //     model.fullName,
-  //     model.amount,
-  //     new Date()
-  //   );
-  //   return this.http
-  //     .post(this.baseUrl + '/TrxTransaction/CreatePaymentUrl', vnpaydto)
-  //     .pipe(
-  //       map((paymentResponse: any) => {
-  //         // Xử lý kết quả từ /TrxTransaction/CreatePaymentUrl ở đây
-  //         // Ví dụ: Trả về kết quả hoặc thực hiện các thao tác khác
-
-  //         return paymentResponse;
-  //       })
-  //     );
-  // }
 }

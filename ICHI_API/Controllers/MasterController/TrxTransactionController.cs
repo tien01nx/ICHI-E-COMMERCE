@@ -23,8 +23,6 @@
       _httpContextAccessor = httpContextAccessor;
       _vnPayService = vnPayService;
     }
-
-
     [HttpGet("FindAllPaged")]
     public async Task<ActionResult<ApiResponse<ICHI_API.Helpers.PagedResult<TrxTransaction>>>> GetAll(
             [FromQuery(Name = "search")] string name = "",
@@ -54,14 +52,14 @@
       }
       return result;
     }
-    [HttpPost("InsertTxTransaction")]
+    [HttpPost("Insert")]
     public async Task<ApiResponse<TrxTransactionDTO>> Insert([FromBody] TrxTransactionDTO trxTransactionDTO)
     {
       ApiResponse<TrxTransactionDTO> result;
       string strMessage = string.Empty;
       try
       {
-        var data = _trxTransactionService.InsertTxTransaction(trxTransactionDTO, out strMessage);
+        var data = _trxTransactionService.Insert(trxTransactionDTO, out strMessage);
         return new ApiResponse<TrxTransactionDTO>(System.Net.HttpStatusCode.OK, strMessage, data);
       }
       catch (Exception ex)
@@ -72,7 +70,24 @@
       }
       return result;
     }
-
+    [HttpPut("Update")]
+    public async Task<ApiResponse<ShoppingCartVM>> Update([FromBody] UpdateTrxTransaction model)
+    {
+      ApiResponse<ShoppingCartVM> result;
+      string strMessage = string.Empty;
+      try
+      {
+        var data = _trxTransactionService.Update(model, out strMessage);
+        return new ApiResponse<ShoppingCartVM>(System.Net.HttpStatusCode.OK, strMessage, data);
+      }
+      catch (Exception ex)
+      {
+        strMessage = "Có lỗi xảy ra";
+        NLogger.log.Error(ex.ToString());
+        result = new ApiResponse<ShoppingCartVM>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+      }
+      return result;
+    }
     [HttpGet("GetTrxTransactionFindById")]
     public async Task<ApiResponse<ShoppingCartVM>> GetTrxTransactionFindById(int id)
     {
@@ -91,7 +106,6 @@
       }
       return result;
     }
-
     [HttpPost("CreatePaymentUrl")]
     public async Task<ApiResponse<string>> CreatePaymentUrl([FromBody] VnPaymentRequestModel model)
     {
@@ -110,26 +124,6 @@
       }
       return result;
     }
-
-    [HttpPost("Update")]
-    public async Task<ApiResponse<ShoppingCartVM>> Update([FromBody] UpdateTrxTransaction model)
-    {
-      ApiResponse<ShoppingCartVM> result;
-      string strMessage = string.Empty;
-      try
-      {
-        var data = _trxTransactionService.UpdateTrxTransaction(model, out strMessage);
-        return new ApiResponse<ShoppingCartVM>(System.Net.HttpStatusCode.OK, strMessage, data);
-      }
-      catch (Exception ex)
-      {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<ShoppingCartVM>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
-      }
-      return result;
-    }
-
     [HttpGet("PaymentExecute")]
     public async Task<ApiResponse<VnPaymentResponseModel>> PaymentExecute([FromQuery] IQueryCollection collections)
     {
@@ -148,7 +142,6 @@
       }
       return result;
     }
-
     [HttpGet("GetTransaction")]
     public async Task<ApiResponse<string>> GetTransaction()
     {
@@ -177,7 +170,6 @@
       var data = _vnPayService.PaymentCallBack(request, out strMessage);
       return Redirect($"http://localhost:4200/checkout/{data.OrderId}");
     }
-
     // viết url khi thanh toán thành công
     [HttpGet("CheckPaymentOrder")]
     public async Task<IActionResult> CheckPaymentOrder()
@@ -187,8 +179,6 @@
       var data = _vnPayService.PaymentCallBack(request, out strMessage);
       return Redirect($"http://localhost:4200/admin/list_order");
     }
-
-
     [HttpGet("GetCustomerTransaction")]
     public async Task<ApiResponse<CustomerTransactionDTO>> GetTransactionByOrderId(string email)
     {
