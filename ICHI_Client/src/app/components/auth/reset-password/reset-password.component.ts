@@ -64,7 +64,9 @@ export class ResetPasswordComponent {
       (res: any) => {
         debugger;
         if (res.message === 'Đổi mật khẩu thành công') {
-          this.router.navigate(['/']);
+          // xóa token đã lưu trên local storage
+          this.tokenService.removeToken();
+          this.router.navigate(['/login']);
           this.toastr.success('Đổi mật khẩu thành công', 'Thông báo');
           return;
         }
