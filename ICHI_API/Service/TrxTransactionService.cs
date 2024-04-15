@@ -53,7 +53,7 @@ namespace ICHI_API.Service
       try
       {
         _unitOfWork.BeginTransaction();
-        trxTransactionDTO.CustomerId = trxTransactionDTO.Carts.FirstOrDefault().UserId;
+        //trxTransactionDTO.CustomerId = trxTransactionDTO.Carts.FirstOrDefault().UserId;
         int checkPromotion = trxTransactionDTO.Carts.Where(x => x.Discount > 0).Count();
         // kiểm tra thông tin product trong carts để kiểm tra còn trong chương trình khuyến mãi không
         var promotion = _promotionService.CheckPromotionActive().Select(x => x.ProductId);

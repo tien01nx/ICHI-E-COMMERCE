@@ -17,6 +17,7 @@ import { TrxTransactionService } from '../../../service/trx-transaction.service'
 import { ToastrService } from 'ngx-toastr';
 import { CategoryService } from '../../../service/category-product.service';
 import { SwiperOptions } from 'swiper';
+import { Utils } from '../../../Utils.ts/utils';
 
 @Component({
   selector: 'app-detail-product',
@@ -142,6 +143,14 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
 
   productCategory(category: CategoryProduct) {
     this.router.navigate(['/product_filter', category.categoryName]);
+  }
+
+  // Hàm mua ngay sản phẩm lấy thông tin sản phẩm và số lượng và lưu vào local storage và chuyển hướng đến trang thanh toán
+  buyNow() {
+    this.cart.productId = this.productdto.product.id;
+    this.cart.price = this.productdto.product.price;
+    this.cart.quantity = this.quantity;
+    localStorage.setItem(Utils.cartBuyNow, JSON.stringify(this.cart));
   }
 
   // Swiper

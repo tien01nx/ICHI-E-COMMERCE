@@ -32,6 +32,8 @@ export class Utils {
     ];
   }
 
+  static cartBuyNow = 'cartBuyNow';
+
   static passwordPattern =
     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
@@ -214,9 +216,6 @@ export class Utils {
   static WAITINGFORDELIVERY_VALUE = 'Chờ giao hàng';
   static DELIVERED_VALUE = 'Đã giao hàng';
   static CANCELLED_VALUE = 'Đã hủy';
-  
-
-
 
   static statusOrder = [
     { name: 'PENDING', value: 'Chưa xác nhận' },

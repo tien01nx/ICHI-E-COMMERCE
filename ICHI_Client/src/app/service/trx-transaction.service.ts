@@ -25,9 +25,14 @@ import { CartProductDTO } from '../dtos/cart.product.dto';
 })
 export class TrxTransactionService {
   baseUrl = Environment.apiBaseUrl;
+  private jsonUrl = 'assets/data.json';
   private cartItems: any[] = [];
   private cartItemCount = new BehaviorSubject<number>(0);
   constructor(private http: HttpClient) {}
+
+  getJsonDataAddress(): Observable<any> {
+    return this.http.get<any>(this.jsonUrl);
+  }
 
   getFindAllTransaction(
     PageNumber: number,

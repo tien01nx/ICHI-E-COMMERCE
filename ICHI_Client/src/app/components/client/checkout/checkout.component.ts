@@ -1,6 +1,6 @@
 import { CartModel } from './../../../models/cart.model';
 import { Environment } from './../../../environment/environment';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ClientFooterComponent } from '../client-footer/client-footer.component';
 import { ClientMenuComponent } from '../client-menu/client-menu.component';
 import { ClientHeaderComponent } from '../client-header/client-header.component';
@@ -23,6 +23,8 @@ export class CheckoutComponent implements OnInit {
   protected readonly Utils = Utils;
   shoppingcartdto!: ShoppingCartDTO;
   cartProductDTO!: CartProductDTO;
+  @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
+
   carts: CartModel[] = [];
   priceDiscount: number = 0;
   priceShip = 30000;
@@ -43,12 +45,24 @@ export class CheckoutComponent implements OnInit {
       Validators.minLength(10),
       Validators.pattern('^0[0-9]{9}$'),
     ]),
-    address: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(100),
-    ]),
+    address: new FormControl(''),
     paymentTypes: new FormControl('', [Validators.required]),
   });
+
+  addressForm: FormGroup = new FormGroup({
+    city: new FormControl(null, [Validators.required]),
+    district: new FormControl(null, [Validators.required]),
+    ward: new FormControl(null, [Validators.required]),
+    addressDetail: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(100),
+    ]),
+  });
+
+  cities: any;
+  districts: any;
+  wards: any;
 
   constructor(
     private cartService: TrxTransactionService,
@@ -57,6 +71,62 @@ export class CheckoutComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {}
+
+  onAddress() {
+    console.log('addressForm', this.addressForm.value);
+    // update địa chỉ cho trxTransacForm sau khi chọn địa chỉ address =  addressDetail + ward + district + city
+    this.trxTransacForm
+      .get('address')
+      ?.setValue(
+        this.addressForm.value.addressDetail +
+          ', ' +
+          this.addressForm.value.ward +
+          ', ' +
+          this.addressForm.value.district +
+          ', ' +
+          this.addressForm.value.city
+      );
+    this.addressForm.reset();
+    this.btnCloseModal.nativeElement.click();
+  }
+
+  getJsonDataAddress() {
+    this.cartService.getJsonDataAddress().subscribe({
+      next: (response) => {
+        this.cities = response;
+        console.log('địa chỉ:', response);
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  }
+
+  getDistrictsControl(): FormControl {
+    const cityControl = this.addressForm.get('city') as FormControl;
+    cityControl.valueChanges.pipe().subscribe((id: any) => {
+      this.cities?.forEach((city: any) => {
+        if (city.name === id) {
+          this.districts = city.districts;
+          this.addressForm.get('district')?.setValue(this.districts[0]?.name); // Đảm bảo mảng districts không rỗng trước khi gán giá trị
+        }
+      });
+    });
+    return cityControl;
+  }
+
+  getWardsControl(): FormControl {
+    const districtControl = this.addressForm.get('district') as FormControl;
+    districtControl.valueChanges.pipe().subscribe((name: any) => {
+      this.districts?.forEach((district: any) => {
+        if (district.name === name) {
+          this.wards = district.wards;
+          this.addressForm.get('ward')?.setValue(this.wards[0]?.name); // Đảm bảo mảng wards không rỗng trước khi gán giá trị
+        }
+      });
+    });
+    return districtControl;
+  }
 
   ngOnInit(): void {
     if (this.activatedRoute.snapshot.params['id'] === undefined) {
@@ -67,6 +137,7 @@ export class CheckoutComponent implements OnInit {
     this.paymentsType = Utils.paymentTypes;
 
     console.log('cart model', this.cartService.getCarts());
+    this.getJsonDataAddress();
   }
 
   getInitDataId(id: number) {

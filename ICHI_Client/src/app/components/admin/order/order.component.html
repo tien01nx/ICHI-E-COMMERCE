@@ -343,7 +343,7 @@
                       >
                     </div>
                     <ng-select
-                      [formControl]="getDistrictsControl()"
+                      [formControl]="getCustomer()"
                       placeholder="Chọn khách hàng"
                       formControlName="customerId"
                     >
@@ -420,14 +420,41 @@
                       ></button>
                     </h5> -->
                   </div>
-                  <div class="input-group mb-3">
-                    <textarea
+                  <div class="mb-3">
+                    <!-- <textarea
                       class="form-control"
                       type="text"
                       placeholder="Không có địa chỉ"
                       [value]="customer.address"
                       formControlName="address"
-                    ></textarea>
+                    ></textarea> -->
+
+                    <div style="position: relative">
+                      <textarea
+                        class="form-control"
+                        id="address"
+                        [value]="customer.address"
+                        formControlName="address"
+                        placeholder="Địa chỉ giao hàng"
+                        readonly
+                        style="padding-right: 30px"
+                      ></textarea>
+                      <!-- Biểu tượng trong thẻ nhập -->
+
+                      <button
+                        data-bs-target="#modalAddress"
+                        data-bs-toggle="modal"
+                        type="button"
+                        style="
+                          position: absolute;
+                          right: 10px;
+                          top: 50%;
+                          transform: translateY(-50%);
+                        "
+                      >
+                        <i class="fa-regular fa-pen-to-square"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -459,3 +486,156 @@
   </div>
 </form>
 <footer class="footer position-absolute"></footer>
+<div class="modal fade" id="modalAddress" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAddressLabel">
+          Thông tin địa chỉ nhận hàng
+        </h5>
+        <button
+          class="btn p-1"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          #btnCloseModal
+        >
+          <span class="fas fa-times fs-9"></span>
+        </button>
+      </div>
+      <form class="form" [formGroup]="addressForm" (ngSubmit)="onAddress()">
+        <!-- [formGroup]="categoryForm" (submit)="onSubmit()" -->
+        <div class="modal-body">
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="parentID"
+              >Tỉnh/Thành phố<sup class="text-danger">*</sup></label
+            >
+            <div class="col-sm-8">
+              <ng-select
+                placeholder="Tỉnh/Thành phố"
+                formControlName="city"
+                [formControl]="getDistrictsControl()"
+              >
+                <ng-option *ngFor="let city of cities" [value]="city.name">
+                  {{ city.name }}
+                </ng-option>
+              </ng-select>
+              <div
+                class="label-error mt-1"
+                *ngIf="addressForm['controls']['city'].dirty"
+              >
+                <div
+                  *ngIf="addressForm.get('city')?.hasError('required')"
+                  class="text-danger"
+                >
+                  <small>Trường bắt buộc.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="categoryLevel"
+              >Quận/Huyện<sup class="text-danger">*</sup></label
+            >
+            <div class="col-sm-8">
+              <ng-select
+                placeholder="Quận/Huyện"
+                formControlName="district"
+                [formControl]="getWardsControl()"
+              >
+                <ng-option
+                  *ngFor="let district of districts"
+                  [value]="district.name"
+                >
+                  {{ district.name }}
+                </ng-option>
+              </ng-select>
+              <div
+                class="label-error mt-1"
+                *ngIf="addressForm['controls']['district'].dirty"
+              >
+                <span
+                  *ngIf="addressForm['controls']['district'].errors?.['required']"
+                >
+                  <small class="text-danger">Trường bắt buộc.</small>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="categoryName"
+              >Phường/Xã/Thị trấn <sup class="text-danger">*</sup></label
+            >
+            <div class="col-sm-8">
+              <ng-select
+                placeholder="Phường/Xã/Thị trấn"
+                formControlName="ward"
+              >
+                <ng-option *ngFor="let ward of wards" [value]="ward.name">
+                  {{ ward.name }}
+                </ng-option>
+              </ng-select>
+              <div
+                class="label-error mt-1"
+                *ngIf="addressForm['controls']['ward'].dirty"
+              >
+                <span
+                  *ngIf="addressForm['controls']['ward'].errors?.['required']"
+                >
+                  <small class="text-danger">Trường bắt buộc.</small>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="categoryName"
+              >Số nhà, Tên đường <sup class="text-danger">*</sup></label
+            >
+            <div class="col-sm-8">
+              <input
+                class="form-control"
+                id="address"
+                type="text"
+                placeholder="Số nhà, Tên đường"
+                formControlName="addressDetail"
+              />
+              <div
+                class="label-error mt-1 text-danger"
+                *ngIf="addressForm['controls']['addressDetail'].dirty"
+              >
+                <span
+                  *ngIf="addressForm['controls']['addressDetail'].errors?.['required']"
+                >
+                  <small>Trường bắt buộc.</small>
+                </span>
+                <span
+                  *ngIf="addressForm['controls']['addressDetail'].errors?.['maxlength']"
+                >
+                  <small>Tối đa 100 ký tự.</small>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-primary"
+            type="submit"
+            [disabled]="addressForm.invalid"
+          >
+            <span>Lưu</span>
+          </button>
+
+          <button
+            class="btn btn-outline-primary"
+            type="button"
+            data-bs-dismiss="modal"
+          >
+            Quay lại
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

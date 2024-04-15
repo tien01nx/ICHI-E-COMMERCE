@@ -1,7 +1,13 @@
 import { TrxTransactionService } from './../../../service/trx-transaction.service';
 import { TokenService } from './../../../service/token.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Utils } from '../../../Utils.ts/utils';
 import { Environment } from '../../../environment/environment';
 import { ProductModel } from '../../../models/product.model';
@@ -35,6 +41,8 @@ export class OrderComponent implements OnInit {
   protected readonly Environment = Environment;
   protected readonly Utils = Utils;
   product: ProductModel | undefined = undefined;
+  @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
+
   totalMoney: number = 0;
   titleString: string = '';
   productImage: ProductImage[] = [];
@@ -79,6 +87,80 @@ export class OrderComponent implements OnInit {
       }),
     ]),
   });
+
+  addressForm: FormGroup = new FormGroup({
+    city: new FormControl(null, [Validators.required]),
+    district: new FormControl(null, [Validators.required]),
+    ward: new FormControl(null, [Validators.required]),
+    addressDetail: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(100),
+    ]),
+  });
+
+  cities: any;
+  districts: any;
+  wards: any;
+  onAddress() {
+    console.log('addressForm', this.addressForm.value);
+    // update địa chỉ cho trxTransacForm sau khi chọn địa chỉ address =  addressDetail + ward + district + city
+    this.trxTransactionForm
+      .get('address')
+      ?.setValue(
+        this.addressForm.value.addressDetail +
+          ', ' +
+          this.addressForm.value.ward +
+          ', ' +
+          this.addressForm.value.district +
+          ', ' +
+          this.addressForm.value.city
+      ) ?? '';
+    console.log(
+      'dịa chỉ sau khi chọn',
+      this.trxTransactionForm.get('address')?.value
+    );
+    this.addressForm.reset();
+    this.btnCloseModal.nativeElement.click();
+  }
+
+  getJsonDataAddress() {
+    this.trxTransactionService.getJsonDataAddress().subscribe({
+      next: (response) => {
+        this.cities = response;
+        console.log('địa chỉ:', response);
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  }
+
+  getDistrictsControl(): FormControl {
+    const cityControl = this.addressForm.get('city') as FormControl;
+    cityControl.valueChanges.pipe().subscribe((id: any) => {
+      this.cities?.forEach((city: any) => {
+        if (city.name === id) {
+          this.districts = city.districts;
+          this.addressForm.get('district')?.setValue(this.districts[0]?.name); // Đảm bảo mảng districts không rỗng trước khi gán giá trị
+        }
+      });
+    });
+    return cityControl;
+  }
+
+  getWardsControl(): FormControl {
+    const districtControl = this.addressForm.get('district') as FormControl;
+    districtControl.valueChanges.pipe().subscribe((name: any) => {
+      this.districts?.forEach((district: any) => {
+        if (district.name === name) {
+          this.wards = district.wards;
+          this.addressForm.get('ward')?.setValue(this.wards[0]?.name); // Đảm bảo mảng wards không rỗng trước khi gán giá trị
+        }
+      });
+    });
+    return districtControl;
+  }
 
   isOptionDisabled(option: any) {
     debugger;
@@ -129,6 +211,7 @@ export class OrderComponent implements OnInit {
     cartsArray.valueChanges.subscribe(() => {
       this.totalMoney = this.getTotalMoney();
     });
+    this.getJsonDataAddress();
   }
 
   getDatacombobox() {
@@ -149,7 +232,7 @@ export class OrderComponent implements OnInit {
     // set giá trị cho các trường trong form trước khi submit
 
     // nếu trxTransactionForm.get('customerId') có giá trị là khachle@gmail.com thì set các giá trị từ customer
-
+    debugger;
     if (
       this.trxTransactionForm.get('customerId')?.value !== 'khachle@gmail.com'
     ) {
@@ -159,9 +242,6 @@ export class OrderComponent implements OnInit {
       this.trxTransactionForm
         .get('phoneNumber')
         ?.setValue(this.customer?.phoneNumber) ?? '';
-      this.trxTransactionForm
-        .get('address')
-        ?.setValue(this.customer?.address) ?? '';
     }
 
     this.trxTransactionForm.get('amount')?.setValue(this.getTotalMoney());
@@ -202,7 +282,7 @@ export class OrderComponent implements OnInit {
       });
   }
 
-  getDistrictsControl(): FormControl {
+  getCustomer(): FormControl {
     const customerId = this.trxTransactionForm.get('customerId') as FormControl;
     // trả customerId = customer.userId trong
 
