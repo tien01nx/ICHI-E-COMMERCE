@@ -155,6 +155,58 @@
                       style="height: 16px; width: 16px"
                     >
                     </span>
+                    <h5 class="lh-sm me-4">Phương thức vận chuyển</h5>
+                  </div>
+                </td>
+                <td class="py-2 fw-bold lh-sm">:</td>
+                <td class="py-2 px-3">
+                  <ng-select
+                    appendTo="body"
+                    bindLabel="carrierName"
+                    bindValue="id"
+                    [items]="shipData"
+                    formControlName="shipData"
+                     (change)="onProductSelection($event)"
+                  >
+                    <!--  (change)="onProductSelection($event, i)" -->
+                    <ng-template ng-option-tmp let-item="item">
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-md-2">
+                            <img
+                              *ngIf="item.carrierLogo"
+                              [src]="item.carrierLogo"
+                              alt="Product Image"
+                              class="img-fluid"
+                              style="max-width: 50px; max-height: 50px"
+                            />
+                          </div>
+                          <div class="col-md-7 text-start">
+                            <p>{{ item.carrierName }} ({{ item.service }})</p>
+                            <p>
+                              {{ item.expected }}
+                            </p>
+                          </div>
+                          <div class="col-md-3 text-start">
+                            <p>
+                              {{ item.totalAmount | number : "1.0-0" }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </td>
+              </tr>
+              <tr>
+                <td class="py-2 ps-0">
+                  <div class="d-flex">
+                    <span
+                      class="fs-3 me-2"
+                      data-feather="phone"
+                      style="height: 16px; width: 16px"
+                    >
+                    </span>
                     <h5 class="lh-sm me-4">Phương thức thanh toán</h5>
                   </div>
                 </td>
@@ -334,12 +386,8 @@
               >Tỉnh/Thành phố<sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">
-              <ng-select
-                placeholder="Tỉnh/Thành phố"
-                formControlName="city"
-                [formControl]="getDistrictsControl()"
-              >
-                <ng-option *ngFor="let city of cities" [value]="city.name">
+              <ng-select placeholder="Tỉnh/Thành phố" formControlName="city">
+                <ng-option *ngFor="let city of Utils.city" [value]="city.id">
                   {{ city.name }}
                 </ng-option>
               </ng-select>
@@ -361,14 +409,10 @@
               >Quận/Huyện<sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">
-              <ng-select
-                placeholder="Quận/Huyện"
-                formControlName="district"
-                [formControl]="getWardsControl()"
-              >
+              <ng-select placeholder="Quận/Huyện" formControlName="district">
                 <ng-option
                   *ngFor="let district of districts"
-                  [value]="district.name"
+                  [value]="district.id"
                 >
                   {{ district.name }}
                 </ng-option>
@@ -395,7 +439,7 @@
                 placeholder="Phường/Xã/Thị trấn"
                 formControlName="ward"
               >
-                <ng-option *ngFor="let ward of wards" [value]="ward.name">
+                <ng-option *ngFor="let ward of wards" [value]="ward.id">
                   {{ ward.name }}
                 </ng-option>
               </ng-select>

@@ -10,6 +10,4 @@ import { ProductImage } from '../models/product.image';
 import { CartModel } from '../models/cart.model';
 import { CustomerModel } from '../models/customer.model';
 
-export class CustomerTransactionDTO {
-Cus
-}
+export class CustomerTransactionDTO {}

@@ -29,7 +29,6 @@ export class CartComponent implements OnInit {
     private router: Router
   ) {}
 
-  priceShip: number = 30000;
   ngOnInit(): void {
     this.getCartByUserId();
     this.cartService.getCartItemCount(this.tokenService.getUserEmail());
@@ -189,7 +188,6 @@ export class CartComponent implements OnInit {
     let totalPrice = 0;
     totalPrice += this.getTotalPrice(); // Tổng giá trị hàng hóa
     totalPrice -= this.getTotalDiscount(); // Giảm giá
-    totalPrice += this.priceShip; // Giá vận chuyển
     return totalPrice;
   }
 

@@ -1,6 +1,13 @@
+import { ShipmentDTO } from './../../../dtos/go.ship.dto';
 import { CartModel } from './../../../models/cart.model';
 import { Environment } from './../../../environment/environment';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  DEFAULT_CURRENCY_CODE,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ClientFooterComponent } from '../client-footer/client-footer.component';
 import { ClientMenuComponent } from '../client-menu/client-menu.component';
 import { ClientHeaderComponent } from '../client-header/client-header.component';
@@ -13,21 +20,26 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TrxTransactionDTO } from '../../../dtos/trxtransaction.dto';
 import { CartProductDTO } from '../../../dtos/cart.product.dto';
 import { Utils } from '../../../Utils.ts/utils';
-
+import { createShipmentDTO, Address } from '../../../dtos/go.ship.dto';
+import { ShipmentData } from '../../../models/shipment.data';
+import { __makeTemplateObject } from 'tslib';
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css',
 })
 export class CheckoutComponent implements OnInit {
+  shipment: ShipmentDTO | null = null;
+
   protected readonly Utils = Utils;
   shoppingcartdto!: ShoppingCartDTO;
   cartProductDTO!: CartProductDTO;
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
-
+  shipData: ShipmentData[] = [];
   carts: CartModel[] = [];
+  // shipdata : ShipmentData[] = [];
   priceDiscount: number = 0;
-  priceShip = 30000;
+  priceShip = 0;
   paymentsType: any;
   Environment = Environment;
   trxTransactionDTO!: TrxTransactionDTO;
@@ -46,6 +58,7 @@ export class CheckoutComponent implements OnInit {
       Validators.pattern('^0[0-9]{9}$'),
     ]),
     address: new FormControl(''),
+    shipData: new FormControl(''),
     paymentTypes: new FormControl('', [Validators.required]),
   });
 
@@ -61,8 +74,12 @@ export class CheckoutComponent implements OnInit {
   });
 
   cities: any;
+  cityName: any;
   districts: any;
+  districtsName: any;
   wards: any;
+  wardsName: any;
+  districId: any;
 
   constructor(
     private cartService: TrxTransactionService,
@@ -74,18 +91,9 @@ export class CheckoutComponent implements OnInit {
 
   onAddress() {
     console.log('addressForm', this.addressForm.value);
+    // từ city, district, ward lấy ra tên của thành phố, quận, xã
     // update địa chỉ cho trxTransacForm sau khi chọn địa chỉ address =  addressDetail + ward + district + city
-    this.trxTransacForm
-      .get('address')
-      ?.setValue(
-        this.addressForm.value.addressDetail +
-          ', ' +
-          this.addressForm.value.ward +
-          ', ' +
-          this.addressForm.value.district +
-          ', ' +
-          this.addressForm.value.city
-      );
+
     this.addressForm.reset();
     this.btnCloseModal.nativeElement.click();
   }
@@ -138,6 +146,72 @@ export class CheckoutComponent implements OnInit {
 
     console.log('cart model', this.cartService.getCarts());
     this.getJsonDataAddress();
+
+    this.cities = this.addressForm
+      .get('city')
+      ?.valueChanges.subscribe((cityId) => {
+        if (cityId) {
+          // Lọc danh sách các quận, huyện dựa trên giá trị của thành phố
+          this.districts = Utils.district.filter(
+            (district) => district.city_id === cityId
+          );
+          console.log('Danh sách quận, huyện liên quan:', this.districts);
+        } else {
+          // Nếu cityId là null hoặc undefined, đặt districts là một mảng rỗng hoặc xử lý phù hợp
+          this.districts = [];
+          console.log('Không có ID thành phố hợp lệ');
+        }
+      });
+
+    this.districts = this.addressForm
+      .get('district')
+      ?.valueChanges.subscribe((districtId) => {
+        if (districtId) {
+          console.log('Danh sách xã , thôn:' + districtId, this.wards);
+
+          this.cartService.GetDatawards(districtId).subscribe({
+            next: (response: any) => {
+              this.wards = response.data;
+              console.log('Danh sách xã , thôn:', this.wards);
+              if (this.wards) {
+                this.wards.find((ward: any) => {
+                  if (ward.id === this.addressForm.value.ward) {
+                    this.wardsName = ward.name;
+                  }
+                });
+              }
+              this.setDataAddress();
+            },
+            error: (error) => {
+              console.log(error);
+            },
+          });
+          console.log('Danh sách xã , thôn:', this.wards);
+        } else {
+          // Nếu districtId là null hoặc undefined, đặt districts là một mảng rỗng hoặc xử lý phù hợp
+          console.log('Không có ID thành phố hợp lệ');
+        }
+      });
+
+    this.addressForm.get('addressDetail')?.valueChanges.subscribe((value) => {
+      debugger;
+      this.setDataAddress();
+    });
+  }
+
+  setDataAddress() {
+    this.trxTransacForm
+      .get('address')
+      ?.setValue(
+        this.addressForm.value.addressDetail +
+          ', ' +
+          this.wardsName +
+          ', ' +
+          this.districtsName +
+          ', ' +
+          this.cityName
+      );
+    this.priceGoShip();
   }
 
   getInitDataId(id: number) {
@@ -150,6 +224,7 @@ export class CheckoutComponent implements OnInit {
           phoneNumber: this.shoppingcartdto.trxTransaction.phoneNumber,
           fullName: this.shoppingcartdto.trxTransaction.fullName,
           address: this.shoppingcartdto.trxTransaction.address,
+          shipData: '',
           paymentTypes: this.shoppingcartdto.trxTransaction.paymentTypes,
         });
         console.log('object11', this.trxTransacForm.value);
@@ -190,8 +265,33 @@ export class CheckoutComponent implements OnInit {
           phoneNumber: this.shoppingcartdto.trxTransaction.phoneNumber,
           fullName: this.shoppingcartdto.trxTransaction.fullName,
           address: this.shoppingcartdto.trxTransaction.address,
+          shipData: '',
           paymentTypes: this.shoppingcartdto.trxTransaction.paymentTypes,
         });
+
+        // set data Address vào form
+        this.addressForm
+          .get('city')
+          ?.setValue(this.shoppingcartdto.customer.city);
+        this.addressForm
+          .get('district')
+          ?.setValue(this.shoppingcartdto.customer.district);
+        this.addressForm
+          .get('ward')
+          ?.setValue(this.shoppingcartdto.customer.ward);
+
+        this.addressForm
+          .get('addressDetail')
+          ?.setValue(this.shoppingcartdto.customer.address);
+
+        this.cityName = Utils.city.find(
+          (city) => city.id === this.addressForm.value.city
+        )?.name;
+        this.districtsName = Utils.district.find(
+          (district) => district.id === this.addressForm.value.district
+        )?.name;
+        // lấy data từ wards theo this.addressForm.value.district từ api
+
         // tính ra số tiền giảm giá của sản phẩm trong giỏ hàng bằng khi discount > 0 => sản phẩm cần tính giảm giá => số tiền giảm giá sản phẩm đó
         // duyệt qua từng sản phẩm trong giỏ hàng
         this.shoppingcartdto.cart.forEach((item) => {
@@ -259,7 +359,6 @@ export class CheckoutComponent implements OnInit {
 
     this.cartService.PaymentExecute(this.trxTransactionDTO).subscribe({
       next: (response: any) => {
-        debugger;
         if (
           response.data &&
           typeof response.data === 'string' &&
@@ -284,5 +383,28 @@ export class CheckoutComponent implements OnInit {
         this.toastr.error('Lỗi đặt hàng', 'Thông báo');
       },
     });
+  }
+
+  priceGoShip() {
+    const userAddressTo: Address = {
+      city: this.addressForm.value.city,
+      district: this.addressForm.value.district,
+      wards: this.addressForm.value.ward,
+    };
+
+    this.shipment = createShipmentDTO(userAddressTo);
+    this.cartService.listGoShip(this.shipment).subscribe({
+      next: (response: any) => {
+        this.shipData = response.data;
+        console.log('shipData', this.shipData);
+      },
+      error: (error: any) => {
+        console.log(error);
+      },
+    });
+  }
+
+  onProductSelection(event: any) {
+    this.priceShip = event.totalAmount;
   }
 }

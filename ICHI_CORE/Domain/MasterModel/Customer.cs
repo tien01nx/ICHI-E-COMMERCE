@@ -27,6 +27,12 @@
     [Phone(ErrorMessage = "Số điện thoại không hợp lệ")]
     public string? PhoneNumber { get; set; } = string.Empty;
 
+    public string? Ward { get; set; } = string.Empty;
+
+    public string? District { get; set; } = string.Empty;
+
+    public string? City { get; set; } = string.Empty;
+
     [StringLength(255, ErrorMessage = "Địa chỉ phải dài tối đa 255 ký tự")]
     public string? Address { get; set; } = string.Empty;
 

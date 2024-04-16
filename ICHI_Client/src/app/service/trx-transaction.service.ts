@@ -72,6 +72,9 @@ export class TrxTransactionService {
       params: params,
     });
   }
+  GetDatawards(id: number) {
+    return this.http.get(this.baseUrl + '/TrxTransaction/GetWards?code=' + id);
+  }
 
   findAll() {
     return this.http.get(
@@ -260,5 +263,9 @@ export class TrxTransactionService {
     return this.http.get(
       this.baseUrl + '/Cart/CheckTransactionPromotion?transactionId=' + orderId
     );
+  }
+
+  listGoShip(data: any) {
+    return this.http.post(this.baseUrl + '/TrxTransaction/PriceGoShip', data);
   }
 }

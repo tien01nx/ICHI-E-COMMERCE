@@ -9,6 +9,9 @@ export interface CustomerModel extends MasterEntity {
   gender: string;
   birthday: Date;
   avatar: string;
+  ward: string;
+  district: string;
+  city: string;
   address: string;
   user: UserModel;
 }

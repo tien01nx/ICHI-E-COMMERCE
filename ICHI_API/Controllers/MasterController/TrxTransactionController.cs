@@ -4,10 +4,14 @@
   using ICHI_API.Model;
   using ICHI_API.Service.IService;
   using ICHI_CORE.Domain.MasterModel;
+  using ICHI_CORE.Helpers;
   using ICHI_CORE.Model;
   using ICHI_CORE.NlogConfig;
   using Microsoft.AspNetCore.Http;
   using Microsoft.AspNetCore.Mvc;
+  using Newtonsoft.Json;
+  using RestSharp;
+  using System.Collections.Generic;
 
   [ApiController]
   [Route("api/[controller]")]
@@ -194,6 +198,170 @@
         strMessage = "Có lỗi xảy ra";
         NLogger.log.Error(ex.ToString());
         result = new ApiResponse<CustomerTransactionDTO>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+      }
+      return result;
+    }
+
+    // getData Address 
+    [HttpGet("GetCity")]
+    public async Task<ApiResponseGoShip<List<Location>>> GetAddress()
+    {
+      ApiResponseGoShip<List<Location>> result;
+      string strMessage = string.Empty;
+      try
+      {
+        // Gọi phương thức CallPcsApi_NotRetry để lấy dữ liệu
+        var dataResponse = await AppSettings.CallPcsApi_NotRetry<List<Location>>("/v2/cities", Method.Get, null, null);
+
+        // Kiểm tra dữ liệu trả về và xử lý
+        if (dataResponse != null && dataResponse.Code == System.Net.HttpStatusCode.OK)
+        {
+          // Trả về kết quả thành công với dữ liệu
+          return new ApiResponseGoShip<List<Location>>(System.Net.HttpStatusCode.OK, dataResponse.Status, dataResponse.Data);
+        }
+        else
+        {
+          // Xử lý trường hợp có lỗi xảy ra
+          strMessage = dataResponse.Status ?? "Có lỗi xảy ra";
+          result = new ApiResponseGoShip<List<Location>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        }
+      }
+      catch (Exception ex)
+      {
+        // Xử lý ngoại lệ
+        strMessage = "Có lỗi xảy ra";
+        NLogger.log.Error(ex.ToString());
+        result = new ApiResponseGoShip<List<Location>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+      }
+      return result;
+    }
+
+    ////http://sandbox.goship.io/api/v2/cities/100000/districts
+    [HttpGet("GetDistricts")]
+    public async Task<ApiResponseGoShip<List<Districts>>> GetDistricts(string code)
+    {
+      ApiResponseGoShip<List<Districts>> result;
+      string strMessage = string.Empty;
+      try
+      {
+        // Gọi phương thức CallPcsApi_NotRetry để lấy dữ liệu
+        var dataResponse = await AppSettings.CallPcsApi_NotRetry<List<Districts>>($"/v2/cities/{code}/districts", Method.Get, null, null);
+
+        // Kiểm tra dữ liệu trả về và xử lý
+        if (dataResponse != null && dataResponse.Code == System.Net.HttpStatusCode.OK)
+        {
+          // Trả về kết quả thành công với dữ liệu
+          return new ApiResponseGoShip<List<Districts>>(System.Net.HttpStatusCode.OK, dataResponse.Status, dataResponse.Data);
+        }
+        else
+        {
+          // Xử lý trường hợp có lỗi xảy ra
+          strMessage = dataResponse.Status ?? "Có lỗi xảy ra";
+          result = new ApiResponseGoShip<List<Districts>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        }
+      }
+      catch (Exception ex)
+      {
+        // Xử lý ngoại lệ
+        strMessage = "Có lỗi xảy ra";
+        NLogger.log.Error(ex.ToString());
+        result = new ApiResponseGoShip<List<Districts>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+      }
+      return result;
+    }
+
+    [HttpGet("GetWards")]
+    public async Task<ApiResponseGoShip<List<Wards>>> GetWards(string code)
+    {
+      ApiResponseGoShip<List<Wards>> result;
+      string strMessage = string.Empty;
+      try
+      {
+        // Gọi phương thức CallPcsApi_NotRetry để lấy dữ liệu
+        var dataResponse = await AppSettings.CallPcsApi_NotRetry<List<Wards>>($"/v2/districts/{code}/wards", Method.Get, null, null);
+
+        // Kiểm tra dữ liệu trả về và xử lý
+        if (dataResponse != null && dataResponse.Code == System.Net.HttpStatusCode.OK)
+        {
+          // Trả về kết quả thành công với dữ liệu
+          return new ApiResponseGoShip<List<Wards>>(System.Net.HttpStatusCode.OK, dataResponse.Status, dataResponse.Data);
+        }
+        else
+        {
+          // Xử lý trường hợp có lỗi xảy ra
+          strMessage = dataResponse.Status ?? "Có lỗi xảy ra";
+          result = new ApiResponseGoShip<List<Wards>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        }
+      }
+      catch (Exception ex)
+      {
+        // Xử lý ngoại lệ
+        strMessage = "Có lỗi xảy ra";
+        NLogger.log.Error(ex.ToString());
+        result = new ApiResponseGoShip<List<Wards>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+      }
+      return result;
+    }
+
+    [HttpGet("GetShippingFee")]
+    public async Task<ApiResponseGoShip<List<Wards>>> GetWards(string city, string districts, string wards)
+    {
+      ApiResponseGoShip<List<Wards>> result;
+      string strMessage = string.Empty;
+      try
+      {
+        // từ name là city lấy ra id của nó
+        var dataResponse = await AppSettings.CallPcsApi_NotRetry<List<Location>>("/v2/cities", Method.Get, null, null);
+        var cityId = dataResponse.Data.Where(x => x.Name == city).FirstOrDefault().Id;
+        // từ id của city lấy ra id của districts
+        var dataResponse1 = await AppSettings.CallPcsApi_NotRetry<List<Districts>>($"/v2/cities/{cityId}/districts", Method.Get, null, null);
+        var districtsId = dataResponse1.Data.Where(x => x.Name.ToLower() == districts.ToLower()).FirstOrDefault().Id;
+        // từ id của districts lấy ra id của wards
+        var dataResponse2 = await AppSettings.CallPcsApi_NotRetry<List<Wards>>($"/v2/districts/{districtsId}/wards", Method.Get, null, null);
+        var wardsId = dataResponse2.Data.Where(x => x.Name.ToLower() == wards.ToLower()).FirstOrDefault().Id;
+
+      }
+      catch (Exception ex)
+      {
+        // Xử lý ngoại lệ
+        strMessage = "Có lỗi xảy ra";
+        NLogger.log.Error(ex.ToString());
+        result = new ApiResponseGoShip<List<Wards>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+      }
+      return null;
+    }
+
+    [HttpPost("PriceGoShip")]
+    public async Task<ApiResponseGoShip<List<ShipmentData>>> PriceGoShip([FromBody] ShipmentRequest goShip)
+    {
+      ApiResponseGoShip<List<ShipmentData>> result;
+      string strMessage = string.Empty;
+      try
+      {
+        string bodyInput = JsonConvert.SerializeObject(goShip);
+        var dataResponse = await AppSettings.CallPcsApi_NotRetry<List<ShipmentData>>("/v2/rates", Method.Post, null, bodyInput);
+
+        // Kiểm tra dữ liệu trả về và xử lý
+        if (dataResponse != null && dataResponse.Code == System.Net.HttpStatusCode.OK)
+        {
+          // Trả về kết quả thành công với dữ liệu
+          return new ApiResponseGoShip<List<ShipmentData>>(System.Net.HttpStatusCode.OK, dataResponse.Status, dataResponse.Data);
+        }
+        else
+        {
+          // Xử lý trường hợp có lỗi xảy ra
+          strMessage = dataResponse.Status ?? "Có lỗi xảy ra";
+          result = new ApiResponseGoShip<List<ShipmentData>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        }
+        result = new ApiResponseGoShip<List<ShipmentData>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+
+      }
+      catch (Exception ex)
+      {
+        // Xử lý ngoại lệ
+        strMessage = "Có lỗi xảy ra";
+        NLogger.log.Error(ex.ToString());
+        result = new ApiResponseGoShip<List<ShipmentData>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
       }
       return result;
     }
