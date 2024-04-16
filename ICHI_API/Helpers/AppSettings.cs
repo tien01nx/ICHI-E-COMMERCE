@@ -82,7 +82,7 @@ namespace ICHI_CORE.Helpers
       {
         RestClient client = new RestClient(strURL);
         var request = new RestRequest(actionAPI, method);
-        //request.Timeout = AppSetting.SYS_ERR_JUDGMENT_TIME * 1000;
+        request.Timeout = 2000;
         request.AddHeader("Authorization", "Bearer " + token);
         request.AddHeader("Content-Type", "application/json");
 
