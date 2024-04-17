@@ -135,7 +135,7 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
     }
   }
   onSubmit() {
-    if (this.quantity >= this.productdto.product.quantity) {
+    if (this.quantity > this.productdto.product.quantity) {
       this.toastr.warning('Số lượng sản phẩm trong kho không đủ', 'Thông báo');
       this.quantity = this.productdto.product.quantity;
       return;
