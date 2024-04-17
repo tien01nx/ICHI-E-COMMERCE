@@ -9,7 +9,6 @@ using ICHI_CORE.Domain;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Helpers;
 using ICHI_CORE.Model;
-using ICHI_CORE.NlogConfig;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq.Dynamic.Core;
@@ -19,6 +18,7 @@ using System.Text;
 
 namespace ICHI_API.Service
 {
+  using static ICHI_API.Helpers.Constants;
   public class AuthService : IAuthService
   {
     private readonly IUnitOfWork _unitOfWork;
@@ -53,15 +53,12 @@ namespace ICHI_API.Service
         }
         else
         {
-          strMessage = Constants.PASSWORDOLDPFAIL;
-          return null;
+          throw new BadRequestException(Constants.PASSWORDOLDPFAIL);
         }
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -81,7 +78,7 @@ namespace ICHI_API.Service
       return null;
     }
 
-    public string ForgotPassword(string email, out string strMessage)
+    public bool ForgotPassword(string email, out string strMessage)
     {
       strMessage = string.Empty;
       try
@@ -89,8 +86,7 @@ namespace ICHI_API.Service
         User loginUser = ExistsByUserNameOrEmail(email);
         if (loginUser == null)
         {
-          strMessage = "Tài khoản email không tồn tại";
-          return null;
+          throw new BadRequestException(Constants.ACCOUNTNOTFOUNF);
         }
         var emailService = new EmailService(_configuration);
         // random mật khẩu mới
@@ -105,19 +101,21 @@ namespace ICHI_API.Service
         user.ModifiedDate = DateTime.Now;
         _unitOfWork.User.Update(user);
         _unitOfWork.Save();
-        string url = "Mật khẩu mới của bạn là: " + randomString;
-        string body = "Click vào link sau để đổi mật khẩu: " + url;
-        emailService.SendEmail(email, "Reset password", url);
-        strMessage = "Gửi email thành công";
-        return "Gửi email thành công";
+        string url = SENDMAILSUCCESS + randomString;
+        string body = SENDMAILBODY + url;
+        emailService.SendEmail(email, SENDMAILSUBJECT, url);
+        strMessage = SENDMAILSUCCESS;
+        return true;
       }
-      catch (Exception ex)
+      catch (BadRequestException ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        strMessage = ex.Message;
+        return false;
       }
-
+      catch (Exception)
+      {
+        throw;
+      }
     }
 
     public string Login(UserLogin userLogin, out string strMessage)
@@ -128,15 +126,11 @@ namespace ICHI_API.Service
         User loginUser = ExistsByUserNameOrEmail(userLogin.UserName);
         if (loginUser == null)
         {
-          strMessage = Constants.ACCOUNTNOTFOUNF;
-          return null;
+          throw new BadRequestException(Constants.ACCOUNTNOTFOUNF);
         }
-        // nếu loginuser tồn tại thì kiểm tra mật khẩu
         if (!BCrypt.Net.BCrypt.Verify(userLogin.Password, loginUser.Password))
         {
-          // nếu người dùng đăng nhập sai thì thực hiện cập nhật số lần đăng nhập sai
           loginUser.FailedPassAttemptCount++;
-          // nếu đăng nhập sai quá 5 lần thì khóa tài khoản
           if (loginUser.FailedPassAttemptCount >= 5)
           {
             loginUser.IsLocked = true;
@@ -155,11 +149,9 @@ namespace ICHI_API.Service
         SetJWTCookie(accessToken);
         return accessToken;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -180,11 +172,9 @@ namespace ICHI_API.Service
         SetJWTCookie(newAccessToken);
         return newAccessToken;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -198,20 +188,17 @@ namespace ICHI_API.Service
           // kiểm tra người dùng có hợp lệ không
           if (ExistsByPhoneNumber(userRegister.PhoneNumber.Trim()))
           {
-            strMessage = Constants.PHONENUMBEREXIST;
-            return null;
+            throw new BadRequestException(Constants.PHONENUMBEREXIST);
           }
           if (ExistsByUserNameOrEmail(userRegister.Email.Trim()) != null)
           {
-            strMessage = Constants.USEREXIST;
-            return null;
+            throw new BadRequestException(Constants.USEREXIST);
           }
           // mật khẩu phải > 8 kí tự, 1 chữ hoa, 1 chữ thường, 1 kí tự đặc biệt
 
           if (!userRegister.Password.Any(char.IsUpper) || !userRegister.Password.Any(char.IsLower) || !userRegister.Password.Any(char.IsDigit) || userRegister.Password.Length < 8)
           {
-            strMessage = Constants.PASSWORDREGEX;
-            return null;
+            throw new BadRequestException(Constants.PASSWORDREGEX);
           }
           //userRegister.Role= AppSettings.EMPLOYEE;
           User user = new User();
@@ -277,15 +264,13 @@ namespace ICHI_API.Service
           return accessToken;
         }
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = Constants.ERROR;
-        return null;
+        throw;
       }
     }
 
-    public string LockAccount(string id, bool status, out string strMessage)
+    public bool LockAccount(string id, bool status, out string strMessage)
     {
       strMessage = string.Empty;
       try
@@ -293,8 +278,7 @@ namespace ICHI_API.Service
         var data = _unitOfWork.User.Get(u => u.Email == id);
         if (data == null)
         {
-          strMessage = Constants.ACCOUNTNOTFOUND;
-          return null;
+          throw new BadRequestException(Constants.ACCOUNTNOTFOUND);
         }
         data.IsLocked = status;
         data.ModifiedDate = DateTime.Now;
@@ -302,13 +286,11 @@ namespace ICHI_API.Service
         _unitOfWork.User.Update(data);
         _unitOfWork.Save();
         strMessage = Constants.ACCOUNTLOCKSUCCESS(status);
-        return null;
+        return true;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 

@@ -1,3 +1,4 @@
+import { Address } from './go.ship.dto';
 import { UserModel } from '../models/user.model';
 
 export class UpdateUserDTO {
@@ -9,6 +10,7 @@ export class UpdateUserDTO {
   birthday: Date;
   gender: string;
   phoneNumber: string;
+  address: string;
   constructor(
     id: number,
     fullName: string,
@@ -17,7 +19,8 @@ export class UpdateUserDTO {
     email: string,
     birthday: Date,
     gender: string,
-    phoneNumber: string
+    phoneNumber: string,
+    address : string
   ) {
     this.id = id;
     this.fullName = fullName;
@@ -27,5 +30,6 @@ export class UpdateUserDTO {
     this.birthday = birthday;
     this.gender = gender;
     this.phoneNumber = phoneNumber;
+    this.address = address;
   }
 }

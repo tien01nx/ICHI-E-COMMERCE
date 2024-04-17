@@ -1,11 +1,11 @@
 ﻿
 using ICHI.DataAccess.Repository.IRepository;
 using ICHI_API.Data;
+using ICHI_API.Helpers;
 using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Helpers;
-using ICHI_CORE.NlogConfig;
 using iText.Html2pdf;
 using System.Linq.Dynamic.Core;
 
@@ -38,19 +38,16 @@ namespace ICHI_API.Service
         }
         else
         {
-          strMessage = "Không tìm thấy sản phẩm trong giỏ hàng";
-          return null;
+          throw new BadRequestException(Constants.PRODUCTCCARTNOTFOUND);
         }
 
-        strMessage = "Xóa sản phẩm khỏi giỏ hàng thành công";
+        strMessage = Constants.DELETECARTSUCCESS;
         _unitOfWork.Save();
         return cart;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        strMessage = ex.Message;
-        NLogger.log.Error(ex.ToString());
-        return null;
+        throw;
       }
     }
 
@@ -75,11 +72,9 @@ namespace ICHI_API.Service
 
         return data;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -97,11 +92,9 @@ namespace ICHI_API.Service
         }
         return carts;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -122,9 +115,7 @@ namespace ICHI_API.Service
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -162,11 +153,9 @@ namespace ICHI_API.Service
 
         return cartVM;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -182,7 +171,7 @@ namespace ICHI_API.Service
           // nếu quantity > quantity trong product thì thông báo số lượng sản phẩm không đủ và set existingCartItem.Quantity = product.Quantity
           if (existingCartItem.Quantity + cart.Quantity > product.Quantity)
           {
-            strMessage = "Số lượng sản phẩm không đủ";
+            strMessage = Constants.PRODUCTNOTENOUGH;
             existingCartItem.Quantity = product.Quantity;
             _unitOfWork.Cart.Update(existingCartItem);
             return cart;
@@ -194,17 +183,13 @@ namespace ICHI_API.Service
         {
           _unitOfWork.Cart.Add(cart);
         }
-
-        strMessage = "Thêm vào giỏ hàng thành công";
+        strMessage = Constants.ADDCARTSUCCESS;
         _unitOfWork.Save();
         return cart;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-
-        strMessage = "Có lỗi xảy ra vui lòng thử lại sau!";
-        NLogger.log.Error(ex.ToString());
-        return null;
+        throw;
       }
     }
 
@@ -221,7 +206,7 @@ namespace ICHI_API.Service
         {
           if (cart.Quantity > product.Quantity)
           {
-            strMessage = "Số lượng sản phẩm không đủ/ hết hàng";
+            strMessage = Constants.PRODUCTNOTENOUGHOUT;
             if (product.Quantity == 0)
             {
               data.Quantity = 1;
@@ -236,21 +221,18 @@ namespace ICHI_API.Service
           }
           data.Quantity = cart.Quantity;
           _unitOfWork.Cart.Update(data);
-          strMessage = "Cập nhật giỏ hàng thành công";
+          strMessage = Constants.UPDATECARTSUCCESS;
           _unitOfWork.Save();
         }
         else
         {
-          strMessage = "Không tìm thấy sản phẩm trong giỏ hàng";
-          return null;
+          throw new BadRequestException(Constants.PRODUCTCCARTNOTFOUND);
         }
         return data;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        strMessage = ex.Message;
-        NLogger.log.Error(ex.ToString());
-        return null;
+        throw;
       }
     }
 

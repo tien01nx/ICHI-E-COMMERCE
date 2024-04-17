@@ -1,8 +1,9 @@
 ﻿using ICHI.DataAccess.Repository.IRepository;
 using ICHI_API.Data;
+using ICHI_API.Helpers;
+using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
-using ICHI_CORE.NlogConfig;
 using System.Data;
 using System.Linq.Dynamic.Core;
 
@@ -25,10 +26,9 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var query = _db.Categories.AsQueryable().Where(u => u.IsDeleted == false);
+        var query = _unitOfWork.Category.GetAll(u => !u.IsDeleted).AsQueryable();
         if (!string.IsNullOrEmpty(name))
         {
-          //xử lý tìm kiếm  
           query = query.Where(e => e.CategoryName.Contains(name.Trim()));
         }
         var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
@@ -38,9 +38,7 @@ namespace ICHI_API.Service
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -52,16 +50,13 @@ namespace ICHI_API.Service
         var data = _unitOfWork.Category.Get(u => u.Id == id);
         if (data == null)
         {
-          strMessage = "Nhà cung cấp không tồn tại";
-          return null;
+          throw new BadRequestException(Constants.CATEGORYNOTFOUND);
         }
         return data;
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -73,28 +68,24 @@ namespace ICHI_API.Service
         var checkCategory = _unitOfWork.Category.Get(u => u.CategoryName == category.CategoryName);
         if (checkCategory != null)
         {
-          strMessage = "Danh mục sản phẩm đã tồn tại";
-          return category;
+          throw new BadRequestException(Constants.CATEGORYEXIST);
         }
         var categoryParentId = _unitOfWork.Category.Get(u => u.Id == category.ParentID);
         if (categoryParentId == null)
         {
-          strMessage = "Danh mục cha không tồn tại";
-          return null;
+          throw new BadRequestException(Constants.CATEGORYPARENTNOTFOUND);
         }
         category.CategoryLevel = categoryParentId.CategoryLevel + 1;
         category.CreateBy = "Admin";
         category.ModifiedBy = "Admin";
         _unitOfWork.Category.Add(category);
         _unitOfWork.Save();
-        strMessage = "Tạo mới danh mục thành công";
+        strMessage = Constants.ADDCATEGORYSUCCESS;
         return category;
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -107,34 +98,30 @@ namespace ICHI_API.Service
         var data = _unitOfWork.Category.Get(u => u.Id == category.Id);
         if (data == null)
         {
-          strMessage = "Danh mục sản phẩm không tồn tại";
-          return null;
+          throw new BadRequestException(Constants.CATEGORYNOTFOUND);
         }
         var checkCategory = _unitOfWork.Category.Get(u => u.CategoryName == category.CategoryName && u.Id != category.Id);
         if (checkCategory != null)
         {
-          strMessage = "Danh mục sản phẩm đã tồn tại";
-          return null;
+
+          throw new BadRequestException(Constants.CATEGORYEXIST);
         }
 
         var categoryParentId = _unitOfWork.Category.Get(u => u.Id == category.ParentID);
         if (categoryParentId == null)
         {
-          strMessage = "Danh mục cha không tồn tại";
-          return null;
+          throw new BadRequestException(Constants.CATEGORYPARENTNOTFOUND);
         }
         category.CategoryLevel = categoryParentId.CategoryLevel + 1;
         category.ModifiedBy = "Admin";
         _unitOfWork.Category.Update(category);
         _unitOfWork.Save();
-        strMessage = "Cập nhật danh mục thành công";
+        strMessage = Constants.UPDATECATEGORYSUCCESS;
         return category;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -146,21 +133,18 @@ namespace ICHI_API.Service
         var data = _unitOfWork.Category.Get(u => u.Id == id && !u.IsDeleted);
         if (data == null)
         {
-          strMessage = "Nhà cung cấp không tồn tại";
-          return false;
+          throw new BadRequestException(Constants.CATEGORYNOTFOUND);
         }
         data.IsDeleted = true;
         data.ModifiedDate = DateTime.Now;
         _unitOfWork.Category.Update(data);
         _unitOfWork.Save();
-        strMessage = "Xóa nhà cung cấp thành công";
+        strMessage = Constants.DELETECATEGORYSUCCESS;
         return true;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return false;
+        throw;
       }
     }
 
@@ -203,11 +187,9 @@ namespace ICHI_API.Service
         return data;
 
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 

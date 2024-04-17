@@ -725,6 +725,81 @@
           </div>
           <div class="row mb-3">
             <label class="col-sm-4 col-form-label fs-9" for="address"
+              >Tỉnh/Thành phố <sup class="text-danger">*</sup></label
+            >
+            <div class="col-sm-8">
+              <ng-select placeholder="Tỉnh/Thành phố" formControlName="city">
+                <ng-option *ngFor="let city of Utils.city" [value]="city.id">
+                  {{ city.name }}
+                </ng-option>
+              </ng-select>
+              <div
+                class="label-error mt-1"
+                *ngIf="customerForm['controls']['city'].dirty"
+              >
+                <div
+                  *ngIf="customerForm.get('city')?.hasError('required')"
+                  class="text-danger"
+                >
+                  <small>Trường bắt buộc.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="address"
+              >Quận/Huyện <sup class="text-danger">*</sup></label
+            >
+            <div class="col-sm-8">
+              <ng-select placeholder="Quận/Huyện" formControlName="district">
+                <ng-option
+                  *ngFor="let district of districts"
+                  [value]="district.id"
+                >
+                  {{ district.name }}
+                </ng-option>
+              </ng-select>
+              <div
+                class="label-error mt-1"
+                *ngIf="customerForm['controls']['district'].dirty"
+              >
+                <span
+                  *ngIf="customerForm['controls']['district'].errors?.['required']"
+                >
+                  <small class="text-danger">Trường bắt buộc.</small>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="address"
+              >Phường/Xã/Thị trấn <sup class="text-danger">*</sup></label
+            >
+            <div class="col-sm-8">
+              <ng-select
+                placeholder="Phường/Xã/Thị trấn"
+                formControlName="ward"
+              >
+                <ng-option *ngFor="let ward of wards" [value]="ward.id">
+                  {{ ward.name }}
+                </ng-option>
+              </ng-select>
+              <div
+                class="label-error mt-1"
+                *ngIf="customerForm['controls']['ward'].dirty"
+              >
+                <span
+                  *ngIf="customerForm['controls']['ward'].errors?.['required']"
+                >
+                  <small class="text-danger">Trường bắt buộc.</small>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="address"
               >Địa chỉ <sup class="text-danger">*</sup></label
             >
             <div class="col-sm-8">

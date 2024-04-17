@@ -25,7 +25,6 @@ export class ClientHeaderComponent {
       .subscribe((count) => {
         this.cartItemCount = count;
       });
-    console.log('object111', this.email);
   }
 
   signout() {

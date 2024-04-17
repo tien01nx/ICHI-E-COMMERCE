@@ -100,8 +100,10 @@ export class CartComponent implements OnInit {
   }
 
   checkout() {
+    debugger;
     if (!this.isCheck) {
-      this.cartsOrder = this.carts;
+      this.toastr.warning('Vui lòng chọn sản phẩm cần mua', 'Thông báo');
+      return;
     }
     this.cartService.setCarts(this.cartsOrder);
     this.router.navigate(['/checkout']);
@@ -145,23 +147,27 @@ export class CartComponent implements OnInit {
   getTotalPrice(): number {
     let totalPrice = 0;
     if (!this.isCheck) {
-      console.log('object111', this.carts);
       // nếu discount ===0 thì => discount ===1 để tránh lỗi chia cho 0
       // suy ra totalPrice = quantity * price - (discount * price) / 100 ( xử lý nếu discount === 0 => discount === 1)
+      // bổ sung chỉ lấy các sản phẩm có quantity > 0
       this.carts.forEach((cart) => {
-        if (cart.discount === 0) {
-          totalPrice += cart.quantity * cart.product.price;
-        } else {
-          totalPrice += cart.quantity * cart.product.price;
+        if (cart.product.quantity > 0) {
+          if (cart.discount === 0) {
+            totalPrice += cart.quantity * cart.product.price;
+          } else {
+            totalPrice += cart.quantity * cart.product.price;
+          }
         }
       });
       return totalPrice;
     } else {
       this.cartsOrder?.forEach((cart) => {
-        if (cart.discount === 0) {
-          totalPrice += cart.quantity * cart.product.price;
-        } else {
-          totalPrice += cart.quantity * cart.product.price;
+        if (cart.product.quantity > 0) {
+          if (cart.discount === 0) {
+            totalPrice += cart.quantity * cart.product.price;
+          } else {
+            totalPrice += cart.quantity * cart.product.price;
+          }
         }
       });
       return totalPrice;

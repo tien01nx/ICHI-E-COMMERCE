@@ -1,11 +1,11 @@
 ﻿using ICHI.DataAccess.Repository.IRepository;
 using ICHI_API.Data;
+using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
-using ICHI_CORE.NlogConfig;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
-
+using static ICHI_API.Helpers.Constants;
 
 namespace ICHI_API.Service
 {
@@ -41,9 +41,7 @@ namespace ICHI_API.Service
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -55,8 +53,9 @@ namespace ICHI_API.Service
         var dataPromotion = _unitOfWork.Promotion.Get(u => u.Id == id);
         if (dataPromotion == null)
         {
-          strMessage = "Chương trình khuyến mãi không tồn tại";
-          return null;
+          //strMessage = PROMOTIONNOTFOUND;
+          //return null;
+          throw new BadRequestException(PROMOTIONNOTFOUND);
         }
 
         PromotionDTO model = new PromotionDTO
@@ -67,11 +66,9 @@ namespace ICHI_API.Service
 
         return model;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -84,26 +81,22 @@ namespace ICHI_API.Service
         var checkPromotion = _unitOfWork.Promotion.Get(u => u.PromotionName == model.PromotionName);
         if (checkPromotion != null)
         {
-          strMessage = "Mã chương trình khuyến mãi đã tồn tại";
-          return null;
+          throw new BadRequestException(PROMOTIONEXIST);
         }
 
         if (model.StartTime < DateTime.Today)
         {
-          strMessage = "Ngày bắt đầu phải lớn hơn hoặc bằng ngày hiện tại";
-          return null;
+          throw new BadRequestException(PROMOTIONSTARTDATE);
         }
 
         if (model.EndTime <= DateTime.Today)
         {
-          strMessage = "Ngày kết thúc phải lớn hơn hoặc bằng ngày hiện tại";
-          return null;
+          throw new BadRequestException(PROMOTIONENDDATE);
         }
 
         if (model.StartTime > model.EndTime)
         {
-          strMessage = "Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu";
-          return null;
+          throw new BadRequestException(PROMOTIONENDDATESTARTDATE);
         }
         Promotion promotion = new Promotion();
         promotion.PromotionName = model.PromotionName;
@@ -143,22 +136,18 @@ namespace ICHI_API.Service
           }
           if (existingProductIds.Any())
           {
-            strMessage = $"Sản phẩm với Id: {string.Join(",", existingProductIds)} :Đã tồn tại trong chương trình khuyến mãi";
-            return null;
+            throw new BadRequestException(PROMOTIONEXISTPRODUCT(existingProductIds));
           }
           _unitOfWork.Save();
         }
 
-        strMessage = "Tạo mới chương trình khuyến mãi thành công";
+        strMessage = ADDPROMOTIONSUCCESS;
         _unitOfWork.Commit();
         return model;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        _unitOfWork.Rollback();
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -172,15 +161,13 @@ namespace ICHI_API.Service
         var data = _unitOfWork.Promotion.Get(u => u.Id == model.Id);
         if (data == null)
         {
-          strMessage = "Có lỗi xảy ra";
-          return null;
+          throw new BadRequestException(PROMOTIONNOTFOUNDID);
         }
         // kiểm tra xem mã chương trình khuyến mãi đã tồn tại chưa
         var checkPromotion = _unitOfWork.Promotion.Get(u => u.PromotionName == model.PromotionName);
         if (checkPromotion != null && checkPromotion.Id != model.Id)
         {
-          strMessage = "Tên chương trình khuyến mãi đã tồn tại";
-          return null;
+          throw new BadRequestException(PROMOTIONEXISTNAME);
         }
         Promotion promotion = new Promotion();
         promotion.Id = model.Id;
@@ -248,20 +235,16 @@ namespace ICHI_API.Service
 
         if (existingProductIds.Any())
         {
-          strMessage = $"Sản phẩm với Id: {string.Join(",", existingProductIds)} :Đã tồn tại trong chương trình khuyến mãi";
-          return null;
+          throw new BadRequestException(PROMOTIONEXISTPRODUCT(existingProductIds));
         }
-        strMessage = "Cập nhật chương trình khuyến mãi thành công";
+        strMessage = UPDATEPROMOTIONSUCCESS;
         _unitOfWork.Save();
         _unitOfWork.Commit();
         return model;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        _unitOfWork.Rollback();
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -273,22 +256,16 @@ namespace ICHI_API.Service
         var data = _unitOfWork.Promotion.Get(u => u.Id == id && !u.isDeleted);
         if (data == null)
         {
-          strMessage = "Mã chương trình khuyến mãi không tồn tại";
-          return false;
+          throw new BadRequestException(PROMOTIONNOTFOUNDID);
         }
-        //data.isDeleted = true;
-        //data.ModifiedDate = DateTime.Now;
-        //_unitOfWork.Promotion.Update(data);
         _unitOfWork.Promotion.Remove(data);
         _unitOfWork.Save();
-        strMessage = "Xóa chương trình khuyến mãi thành công";
+        strMessage = DELETEPROMOTIONSUCCESS;
         return true;
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return false;
+        throw;
       }
     }
 
@@ -301,9 +278,9 @@ namespace ICHI_API.Service
              (EndTime >= u.Promotion.StartTime && EndTime <= u.Promotion.EndTime));
         return isOutsidePromotion;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        return false;
+        throw;
       }
     }
 
@@ -324,9 +301,9 @@ namespace ICHI_API.Service
         }
         return promotionDetailList;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        return null;
+        throw;
       }
     }
 
@@ -345,9 +322,9 @@ namespace ICHI_API.Service
         }
         return promotionDetailList;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        return null;
+        throw;
       }
     }
 
@@ -366,11 +343,10 @@ namespace ICHI_API.Service
         _unitOfWork.Save();
         return data;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        return null;
+        throw;
       }
     }
-
   }
 }

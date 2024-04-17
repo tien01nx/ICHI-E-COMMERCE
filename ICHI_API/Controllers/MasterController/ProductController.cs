@@ -3,7 +3,6 @@ using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Model;
-using ICHI_CORE.NlogConfig;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -41,9 +40,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<ICHI_API.Helpers.PagedResult<ProductDTO>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<ICHI_API.Helpers.PagedResult<ProductDTO>>(ex);
       }
       return result;
     }
@@ -61,9 +59,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<ProductDTO>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<ProductDTO>(ex);
       }
       return result;
     }
@@ -79,9 +76,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<Product>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<Product>(ex);
       }
       return result;
     }
@@ -99,9 +95,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<ProductImages>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<ProductImages>(ex);
       }
       return result;
     }
@@ -120,7 +115,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        return BadRequest(new ApiResponse<Product>(System.Net.HttpStatusCode.BadRequest, strMessage, null));
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<Product>(ex);
       }
     }
 
@@ -150,15 +146,10 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<ICHI_API.Helpers.PagedResult<ProductDTO>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<ICHI_API.Helpers.PagedResult<ProductDTO>>(ex);
       }
       return result;
     }
-
-
-
   }
-
 }

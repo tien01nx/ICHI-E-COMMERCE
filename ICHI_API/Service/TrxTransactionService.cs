@@ -4,8 +4,8 @@ using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Helpers;
-using ICHI_CORE.NlogConfig;
 using System.Linq.Dynamic.Core;
+using static ICHI_API.Helpers.Constants;
 
 
 namespace ICHI_API.Service
@@ -42,9 +42,7 @@ namespace ICHI_API.Service
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
     public TrxTransactionDTO Insert(TrxTransactionDTO trxTransactionDTO, out string strMessage)
@@ -61,8 +59,9 @@ namespace ICHI_API.Service
         var cartProduct = trxTransactionDTO.Carts.Where(x => x.Discount > 0 && promotion.Contains(x.ProductId)).ToList();
         if (cartProduct.Count == 0 && checkPromotion > 0)
         {
-          strMessage = "Mã khuyến mãi đã hết vui lòng thử lại sau!";
-          return null;
+          //strMessage = TRXTRANSACTIONPROMTION;
+          //return null;
+          throw new BadRequestException(TRXTRANSACTIONPROMTION);
         }
         // từ userId lấy ra customerId
         // từ userId lấy ra xem là employee hay customer từ bảng UserRole
@@ -71,8 +70,7 @@ namespace ICHI_API.Service
         var user = _unitOfWork.UserRole.Get(u => u.UserId == trxTransactionDTO.CustomerId, "Role");
         if (user == null)
         {
-          strMessage = "Không tìm thấy thông tin người dùng";
-          return null;
+          throw new BadRequestException(TRXTRANSACTIONNOTFOUNDUSER);
         }
         if (user.Role.RoleName == AppSettings.USER)
         {
@@ -81,8 +79,7 @@ namespace ICHI_API.Service
         }
         else
         {
-          strMessage = "Không tìm thấy thông tin người dùng";
-          return null;
+          throw new BadRequestException(TRXTRANSACTIONNOTFOUNDUSER);
         }
 
         //var cart = _unitOfWork.Cart.GetAll(u => u.UserId == trxTransactionDTO.CustomerId);
@@ -135,12 +132,9 @@ namespace ICHI_API.Service
         _unitOfWork.Commit();
         return trxTransactionDTO;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        _unitOfWork.Rollback();
-        strMessage = ex.Message;
-        NLogger.log.Error(ex.ToString());
-        return null;
+        throw;
       }
     }
     public ShoppingCartVM Update(UpdateTrxTransaction model, out string strMessage)
@@ -152,8 +146,7 @@ namespace ICHI_API.Service
         var data = _unitOfWork.TrxTransaction.Get(u => u.Id == model.TransactionId);
         if (data == null)
         {
-          strMessage = "Không tìm thấy đơn hàng";
-          return null;
+          throw new BadRequestException(TRXTRANSACTIONNOTFOUNDORDER);
         }
         if (model.OrderStatus == AppSettings.StatusOrderPending)
         {
@@ -180,8 +173,7 @@ namespace ICHI_API.Service
         // nếu data có orderStatus = DELIVERED thì mà người dùng update lại về các trạng thái khác thì sẽ không cho update
         if (data.OrderStatus == AppSettings.StatusOrderDelivered && model.OrderStatus != AppSettings.StatusOrderDelivered)
         {
-          strMessage = "Đơn hàng đã giao không thể cập nhật trạng thái khác";
-          return null;
+          throw new BadRequestException(TRXTRANSACTIONDELIVERED);
         }
         data.OrderStatus = model.OrderStatus;
         _unitOfWork.TrxTransaction.Update(data);
@@ -189,15 +181,12 @@ namespace ICHI_API.Service
         _unitOfWork.Commit();
         ShoppingCartVM cartVM = new ShoppingCartVM();
         cartVM.TrxTransaction = data;
-        strMessage = "Cập nhật đơn hàng thành công";
+        strMessage = UPDATETRXTRANSACTIONSUCCESS;
         return cartVM;
       }
       catch (Exception ex)
       {
-        _unitOfWork.Rollback();
-        strMessage = ex.Message;
-        NLogger.log.Error(ex.ToString());
-        return null;
+        throw;
       }
     }
     public ShoppingCartVM GetTrxTransactionFindById(int id, out string strMessage)
@@ -209,8 +198,7 @@ namespace ICHI_API.Service
         cartVM.TrxTransaction = _unitOfWork.TrxTransaction.Get(u => u.Id == id);
         if (cartVM.TrxTransaction == null)
         {
-          strMessage = "Không tìm thấy đơn hàng";
-          return null;
+          throw new BadRequestException(TRXTRANSACTIONNOTFOUNDORDEROUT);
         }
 
         cartVM.Customer = _unitOfWork.Customer.Get(u => u.Id == cartVM.TrxTransaction.CustomerId);
@@ -224,9 +212,7 @@ namespace ICHI_API.Service
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
     // lấy thông tin khách hàng theo customerid và email
@@ -239,8 +225,7 @@ namespace ICHI_API.Service
         var customer = _unitOfWork.Customer.Get(u => u.UserId == userid, "User");
         if (customer == null)
         {
-          strMessage = "Không tìm thấy thông tin khách hàng";
-          return null;
+          throw new BadRequestException(TRXTRANSACTIONNOTFOUNDUSEROUT);
         }
         customerTransactionDTO.Customer = customer;
         customerTransactionDTO.TrxTransactions = _unitOfWork.TrxTransaction.GetAll(u => u.CustomerId == customer.Id).OrderByDescending(u => u.OrderDate).ToList();
@@ -248,9 +233,7 @@ namespace ICHI_API.Service
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 

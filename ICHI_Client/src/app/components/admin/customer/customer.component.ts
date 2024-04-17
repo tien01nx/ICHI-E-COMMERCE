@@ -59,12 +59,18 @@ export class CustomerComponent {
       Validators.required,
       Validators.pattern(Utils.checkEmail),
     ]),
+    city: new FormControl(null, [Validators.required]),
+    district: new FormControl(null, [Validators.required]),
+    ward: new FormControl(null, [Validators.required]),
     address: new FormControl('', [
       Validators.required,
       Validators.maxLength(100),
     ]),
     userId: new FormControl(null),
   });
+  cities: any;
+  districts: any;
+  wards: any;
 
   constructor(
     private title: Title,
@@ -83,6 +89,26 @@ export class CustomerComponent {
       const sortDir = params['sort-direction'] || 'DESC';
       const sortBy = params['sort-by'] || 'CreateDate';
       this.findAll(pageSize, pageNumber, sortBy, sortDir, search);
+    });
+    this.customerForm.get('city')?.valueChanges.subscribe((id: any) => {
+      const filteredDistricts = Utils.district?.filter(
+        (district: any) => district.city_id === id
+      );
+      this.districts = filteredDistricts || [];
+      if (this.districts.length > 0) {
+        this.customerForm.get('district')?.setValue(this.districts[0]?.id);
+      }
+    });
+
+    this.customerForm.get('district')?.valueChanges.subscribe((id: any) => {
+      const filteredWards = Utils.wards?.filter(
+        (ward: any) => ward.district_id === id
+      );
+      this.wards = filteredWards || [];
+      // Đặt giá trị mặc định cho trường 'ward' trong form nếu cần
+      if (this.wards.length > 0) {
+        this.customerForm.get('ward')?.setValue(this.wards[0]?.id);
+      }
     });
   }
 
@@ -290,6 +316,9 @@ export class CustomerComponent {
       userId: customer.userId,
       email: customer.user.email,
       address: customer.address,
+      city: customer.city,
+      district: customer.district,
+      ward: customer.ward,
     });
     this.avatarSrc = Environment.apiBaseRoot + customer.user.avatar;
     this.birthday = customer.birthday;

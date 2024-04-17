@@ -5,7 +5,6 @@
   using ICHI_API.Service.IService;
   using ICHI_CORE.Domain.MasterModel;
   using ICHI_CORE.Model;
-  using ICHI_CORE.NlogConfig;
   using Microsoft.AspNetCore.Mvc;
   using System.Collections.Generic;
 
@@ -32,11 +31,10 @@
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<Cart>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<Cart>(ex);
       }
-      return result;
     }
 
     [HttpGet("GetCarts")]
@@ -51,11 +49,9 @@
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<IEnumerable<Cart>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<IEnumerable<Cart>>(ex);
       }
-      return result;
     }
 
 
@@ -72,11 +68,9 @@
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<Cart>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<Cart>(ex);
       }
-      return result;
     }
 
     [HttpPost("GetShoppingCart")]
@@ -91,11 +85,10 @@
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<ShoppingCartVM>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<ShoppingCartVM>(ex);
+
       }
-      return result;
     }
 
     [HttpPost("CheckCartPromotion")]
@@ -110,11 +103,12 @@
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<IEnumerable<Cart>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        //strMessage = "Có lỗi xảy ra";
+        //NLogger.log.Error(ex.ToString());
+        //result = new ApiResponse<IEnumerable<Cart>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<IEnumerable<Cart>>(ex);
       }
-      return result;
     }
 
     [HttpGet("CheckTransactionPromotion")]
@@ -129,11 +123,9 @@
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<IEnumerable<TransactionDetail>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<IEnumerable<TransactionDetail>>(ex);
       }
-      return result;
     }
 
     [HttpPut("UpdateCart")]
@@ -148,12 +140,10 @@
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<Cart>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<Cart>(ex);
       }
 
-      return result;
     }
 
   }

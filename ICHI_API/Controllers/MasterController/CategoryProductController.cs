@@ -2,7 +2,6 @@
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Model;
-using ICHI_CORE.NlogConfig;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 namespace ICHI_CORE.Controllers.MasterController
@@ -36,15 +35,13 @@ namespace ICHI_CORE.Controllers.MasterController
              "Retrieved successfully",
              data
          );
-
+        return result;
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<ICHI_API.Helpers.PagedResult<Category>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<ICHI_API.Helpers.PagedResult<Category>>(ex);
       }
-      return result;
     }
 
     [HttpGet("FindAll")]
@@ -59,11 +56,14 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<List<Category>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        //NLogger.log.Error(ex.ToString());
+        //strMessage = "Có lỗi xảy ra";
+        //result = new ApiResponse<List<Category>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<List<Category>>(ex);
       }
       return result;
+
     }
     [HttpGet("{id}")]
     public async Task<ActionResult<ApiResponse<Category>>> FindById(int id)
@@ -77,9 +77,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<Category>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<Category>(ex);
       }
       return result;
     }
@@ -96,9 +95,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<List<Category>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<List<Category>>(ex);
       }
       return result;
     }
@@ -115,9 +113,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<Category>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<Category>(ex);
       }
       return result;
     }
@@ -135,9 +132,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<List<Category>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<List<Category>>(ex);
       }
       return result;
     }
@@ -155,7 +151,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        result = new ApiResponse<Category>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<Category>(ex);
       }
       return result;
     }
@@ -172,9 +169,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        return BadRequest(new ApiResponse<Category>(System.Net.HttpStatusCode.BadRequest, strMessage, null));
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<Category>(ex);
       }
     }
 
@@ -190,9 +186,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<DataTable>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<DataTable>(ex);
       }
       return result;
     }

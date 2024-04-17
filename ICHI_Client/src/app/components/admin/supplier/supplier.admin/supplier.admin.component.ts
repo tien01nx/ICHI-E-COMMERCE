@@ -187,11 +187,13 @@ export class SupplierAdminComponent implements OnInit {
         } else {
           this.errorMessage = response.message;
           this.isDisplayNone = false;
+          this.supplierForm.value.id = null;
         }
       },
       error: (error: any) => {
         this.errorMessage = error.error;
         this.isDisplayNone = false;
+        this.supplierForm.value.id = null;
       },
     });
   }
@@ -253,6 +255,7 @@ export class SupplierAdminComponent implements OnInit {
     this.titleModal = 'Thêm nhà cung cấp';
     this.btnSave = 'Thêm mới';
     this.errorMessage = '';
+    this.isDisplayNone = false;
   }
 
   openModalUpdate(supplier: SupplierModel) {

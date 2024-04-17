@@ -105,6 +105,7 @@ export class AuthComponent implements OnInit {
       gender: this.userForm.value.gender,
       password: this.userForm.value.password,
       phoneNumber: this.userForm.value.phoneNumber,
+      address: '',
     };
 
     this.userService.UpdateImage(userdto).subscribe({
@@ -221,6 +222,7 @@ export class AuthComponent implements OnInit {
       birthday: this.userForm.value.birthday,
       gender: this.userForm.value.gender,
       phoneNumber: this.userForm.value.phoneNumber,
+      address: '',
     };
 
     this.authService.register(userdto).subscribe({

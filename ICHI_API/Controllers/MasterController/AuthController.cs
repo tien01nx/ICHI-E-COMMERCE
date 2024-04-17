@@ -4,12 +4,10 @@ using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Model;
-using ICHI_CORE.NlogConfig;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace ICHI_CORE.Controllers.MasterController
 {
-
   [ApiController]
   [Route("api/[controller]")]
   public class AuthController : ControllerBase
@@ -44,9 +42,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<ICHI_API.Helpers.PagedResult<UserDTO>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<ICHI_API.Helpers.PagedResult<UserDTO>>(ex);
       }
       return result;
     }
@@ -66,10 +63,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<String>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
-        return result;
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<string>(ex);
       }
     }
 
@@ -88,11 +83,9 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<String>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<string>(ex);
       }
-      return result;
     }
 
     // refresh token
@@ -111,12 +104,9 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<string>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<string>(ex);
       }
-
-      return result;
     }
 
     // viết hàm quên mật khẩu gửi về gmail
@@ -129,16 +119,14 @@ namespace ICHI_CORE.Controllers.MasterController
       string strMessage = string.Empty;
       try
       {
-        string data = _authService.ForgotPassword(email, out strMessage);
+        bool data = _authService.ForgotPassword(email, out strMessage);
         return new ApiResponse<string>(System.Net.HttpStatusCode.OK, strMessage, null);
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<string>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<string>(ex);
       }
-      return result;
     }
 
     // viết chức năng đổi mật khẩu
@@ -155,11 +143,9 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<string>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<string>(ex);
       }
-      return result;
     }
 
     [HttpDelete("{id}")]
@@ -174,12 +160,9 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        return BadRequest(new ApiResponse<Employee>(System.Net.HttpStatusCode.BadRequest, strMessage, null));
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<Employee>(ex);
       }
     }
-
-
   }
 }

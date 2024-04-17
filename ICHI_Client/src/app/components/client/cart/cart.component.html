@@ -79,7 +79,25 @@
                 id="cart-table-body"
                 *ngFor="let item of carts"
               >
-                <tr class="cart-table-row btn-reveal-trigger">
+                <!-- nếu quantity product ===0 => hết hàng thực hiện disable dòng data đó đi và không cho chọn   -->
+                <tr
+                  class="cart-table-row btn-reveal-trigger"
+                  [ngClass]="{ disabled: item.product.quantity === 0 }"
+                >
+                  <td class="fs--1 align-middle">
+                    <div class="form-check mb-0 fs-0">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        [value]="item.id"
+                        [checked]="selectAll"
+                        [checked]="selectedItems.includes(item.id)"
+                        (change)="selectItem(item.id)"
+                        [disabled]="item.product.quantity === 0"
+                      />
+                    </div>
+
+                    <!-- <tr class="cart-table-row btn-reveal-trigger">
                   <td class="fs--1 align-middle">
                     <div class="form-check mb-0 fs-0">
                       <input
@@ -91,7 +109,9 @@
                         (change)="selectItem(item.id)"
                       />
                     </div>
+                  </td> -->
                   </td>
+
                   <td class="align-middle white-space-nowrap py-0">
                     <a
                       class="d-block border border-translucent rounded-2"
@@ -105,11 +125,17 @@
                     /></a>
                   </td>
                   <td class="products align-middle">
+                    <!--  nếu quantity ===0 hiện thêm chữ hết hàng -->
                     <a
                       class="fw-semibold mb-0 line-clamp-2"
                       href="product-details.html"
-                      >{{ item.product.productName }}</a
-                    >
+                      >{{ item.product.productName }}
+                      <span
+                        class="badge bg-danger rounded-pill ms-2"
+                        *ngIf="item.product.quantity <= 0"
+                        >Hết hàng</span
+                      >
+                    </a>
                   </td>
                   <td
                     class="color align-middle white-space-nowrap fs-9 text-body"
@@ -133,26 +159,20 @@
                     </div>
                   </td>
                   <td class="quantity align-middle fs-8 ps-5">
-                    <div
-                      class="input-group input-group-sm flex-nowrap"
-                      data-quantity="data-quantity"
-                    >
+                    <div class="input-group input-group-sm flex-nowrap">
                       <button
                         class="btn btn-sm px-2"
-                        data-type="minus"
                         (click)="decreaseQuantity(item)"
                       >
                         -</button
                       ><input
                         class="form-control text-center input-spin-none bg-transparent border-0 px-0"
+                        style="width: 50px"
                         type="number"
                         min="1"
-                        value="2"
                         [value]="item.quantity"
-                        aria-label="Amount (to the nearest dollar)"
                       /><button
                         class="btn btn-sm px-2"
-                        data-type="plus"
                         (click)="increaseQuantity(item)"
                       >
                         +
@@ -206,7 +226,6 @@
               </div>
               <div
                 class="d-flex justify-content-between"
-                *ngIf="getTotalDiscount() > 0"
               >
                 <p class="text-body fw-semibold">Giảm giá :</p>
                 <p class="text-danger fw-semibold">
@@ -221,7 +240,6 @@
                 <p class="text-body fw-semibold">Tổng phụ :</p>
                 <p class="text-body-emphasis fw-semibold">$665</p>
               </div> -->
-           
             </div>
             <!-- <div class="input-group mb-3">
               <input

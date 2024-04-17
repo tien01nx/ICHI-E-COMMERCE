@@ -121,6 +121,7 @@ export class EmployeeComponent {
   }
 
   update() {
+    debugger;
     this.isDisplayNone = true;
     this.employeeService
       .UpdateImage(this.employeeForm.value, this.file)
@@ -318,21 +319,28 @@ export class EmployeeComponent {
 
   openModalUpdate(user: EmployeeModel) {
     debugger;
+    // hiện thị lỗi từ formGroup nếu không nhập đủ trường thông tin
+
     this.showPassword = false;
     this.employeeForm.patchValue({
       id: user.id,
-      email: user.user.email,
+      email: user.userId,
       fullName: user.fullName,
       birthday: user.birthday,
       gender: user.gender,
       userId: user.userId,
       address: user.address,
       phoneNumber: user.phoneNumber,
+      password: '1234567',
     });
     this.birthday = user.birthday;
     this.errorMessage = '';
     this.titleModal = 'Cập nhật nhân viên';
     this.btnSave = 'Cập nhật';
+    if (this.employeeForm.invalid) {
+      console.log('data invalid', this.employeeForm.value);
+      return;
+    }
   }
 
   updateTable() {
@@ -391,8 +399,10 @@ export class EmployeeComponent {
       birthday: this.employeeForm.value.birthday,
       gender: this.employeeForm.value.gender,
       phoneNumber: this.employeeForm.value.phoneNumber,
+      address: this.employeeForm.value.address,
     };
 
+    debugger;
     this.authService.register(userdto).subscribe({
       next: (response: any) => {
         if (response.message === 'Đăng ký tài khoản thành công') {

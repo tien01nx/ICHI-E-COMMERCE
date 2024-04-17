@@ -1,15 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ICHI_CORE.Controllers.BaseController;
+﻿using ICHI_API.Data;
+using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Model;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq.Dynamic.Core;
-using ICHI_API;
-using ICHI_API.Data;
-using ICHI_API.Service.IService;
-using ICHI_CORE.NlogConfig;
-using ICHI_API.Model;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace ICHI_CORE.Controllers.MasterController
 {
   [ApiController]
@@ -44,9 +38,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<ICHI_API.Helpers.PagedResult<Promotion>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<ICHI_API.Helpers.PagedResult<Promotion>>(ex);
       }
       return result;
     }
@@ -63,9 +56,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<PromotionDTO>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<PromotionDTO>(ex);
       }
       return result;
     }
@@ -81,7 +73,6 @@ namespace ICHI_CORE.Controllers.MasterController
         strMessage = "Yêu cầu phải có sản phẩm";
         return new ApiResponse<PromotionDTO>(System.Net.HttpStatusCode.BadRequest, strMessage, null);
       }
-
       try
       {
         var data = _PromotionService.Create(Promotion, out strMessage);
@@ -89,9 +80,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<PromotionDTO>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<PromotionDTO>(ex);
       }
       return result;
     }
@@ -107,7 +97,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        result = new ApiResponse<PromotionDTO>(System.Net.HttpStatusCode.ExpectationFailed, ex.ToString(), null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<PromotionDTO>(ex);
       }
       return result;
     }
@@ -123,9 +114,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        return BadRequest(new ApiResponse<Promotion>(System.Net.HttpStatusCode.BadRequest, strMessage, null));
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<Promotion>(ex);
       }
     }
   }

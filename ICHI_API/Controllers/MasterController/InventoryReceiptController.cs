@@ -3,7 +3,6 @@ using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Model;
-using ICHI_CORE.NlogConfig;
 using Microsoft.AspNetCore.Mvc;
 namespace ICHI_CORE.Controllers.MasterController
 {
@@ -40,9 +39,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<ICHI_API.Helpers.PagedResult<InventoryReceipt>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<ICHI_API.Helpers.PagedResult<InventoryReceipt>>(ex);
       }
       return result;
     }
@@ -59,9 +57,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<List<Product>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<List<Product>>(ex);
       }
       return result;
     }
@@ -78,9 +75,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<InventoryReceiptDTO>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<InventoryReceiptDTO>(ex);
       }
       return result;
     }
@@ -97,9 +93,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<InventoryReceiptDTO>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<InventoryReceiptDTO>(ex);
       }
       return result;
     }
@@ -116,9 +111,8 @@ namespace ICHI_CORE.Controllers.MasterController
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        result = new ApiResponse<InventoryReceiptDTO>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<InventoryReceiptDTO>(ex);
       }
       return result;
     }

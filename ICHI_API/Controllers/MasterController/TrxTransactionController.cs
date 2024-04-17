@@ -86,9 +86,8 @@
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<ShoppingCartVM>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<ShoppingCartVM>(ex);
       }
       return result;
     }
@@ -104,9 +103,8 @@
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<ShoppingCartVM>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<ShoppingCartVM>(ex);
       }
       return result;
     }
@@ -122,9 +120,8 @@
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<string>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<string>(ex);
       }
       return result;
     }
@@ -140,9 +137,8 @@
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<VnPaymentResponseModel>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<VnPaymentResponseModel>(ex);
       }
       return result;
     }
@@ -159,9 +155,8 @@
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<string>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<string>(ex);
       }
       return result;
     }
@@ -195,140 +190,9 @@
       }
       catch (Exception ex)
       {
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponse<CustomerTransactionDTO>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<CustomerTransactionDTO>(ex);
       }
-      return result;
-    }
-
-    // getData Address 
-    [HttpGet("GetCity")]
-    public async Task<ApiResponseGoShip<List<Location>>> GetAddress()
-    {
-      ApiResponseGoShip<List<Location>> result;
-      string strMessage = string.Empty;
-      try
-      {
-        // Gọi phương thức CallPcsApi_NotRetry để lấy dữ liệu
-        var dataResponse = await AppSettings.CallPcsApi_NotRetry<List<Location>>("/v2/cities", Method.Get, null, null);
-
-        // Kiểm tra dữ liệu trả về và xử lý
-        if (dataResponse != null && dataResponse.Code == System.Net.HttpStatusCode.OK)
-        {
-          // Trả về kết quả thành công với dữ liệu
-          return new ApiResponseGoShip<List<Location>>(System.Net.HttpStatusCode.OK, dataResponse.Status, dataResponse.Data);
-        }
-        else
-        {
-          // Xử lý trường hợp có lỗi xảy ra
-          strMessage = dataResponse.Status ?? "Có lỗi xảy ra";
-          result = new ApiResponseGoShip<List<Location>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
-        }
-      }
-      catch (Exception ex)
-      {
-        // Xử lý ngoại lệ
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponseGoShip<List<Location>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
-      }
-      return result;
-    }
-
-    ////http://sandbox.goship.io/api/v2/cities/100000/districts
-    [HttpGet("GetDistricts")]
-    public async Task<ApiResponseGoShip<List<Districts>>> GetDistricts(string code)
-    {
-      ApiResponseGoShip<List<Districts>> result;
-      string strMessage = string.Empty;
-      try
-      {
-        // Gọi phương thức CallPcsApi_NotRetry để lấy dữ liệu
-        var dataResponse = await AppSettings.CallPcsApi_NotRetry<List<Districts>>($"/v2/cities/{code}/districts", Method.Get, null, null);
-
-        // Kiểm tra dữ liệu trả về và xử lý
-        if (dataResponse != null && dataResponse.Code == System.Net.HttpStatusCode.OK)
-        {
-          // Trả về kết quả thành công với dữ liệu
-          return new ApiResponseGoShip<List<Districts>>(System.Net.HttpStatusCode.OK, dataResponse.Status, dataResponse.Data);
-        }
-        else
-        {
-          // Xử lý trường hợp có lỗi xảy ra
-          strMessage = dataResponse.Status ?? "Có lỗi xảy ra";
-          result = new ApiResponseGoShip<List<Districts>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
-        }
-      }
-      catch (Exception ex)
-      {
-        // Xử lý ngoại lệ
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponseGoShip<List<Districts>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
-      }
-      return result;
-    }
-
-    [HttpGet("GetWards")]
-    public async Task<ApiResponseGoShip<List<Wards>>> GetWards(string code)
-    {
-      ApiResponseGoShip<List<Wards>> result;
-      string strMessage = string.Empty;
-      try
-      {
-        // Gọi phương thức CallPcsApi_NotRetry để lấy dữ liệu
-        var dataResponse = await AppSettings.CallPcsApi_NotRetry<List<Wards>>($"/v2/districts/{code}/wards", Method.Get, null, null);
-
-        // Kiểm tra dữ liệu trả về và xử lý
-        if (dataResponse != null && dataResponse.Code == System.Net.HttpStatusCode.OK)
-        {
-          // Trả về kết quả thành công với dữ liệu
-          return new ApiResponseGoShip<List<Wards>>(System.Net.HttpStatusCode.OK, dataResponse.Status, dataResponse.Data);
-        }
-        else
-        {
-          // Xử lý trường hợp có lỗi xảy ra
-          strMessage = dataResponse.Status ?? "Có lỗi xảy ra";
-          result = new ApiResponseGoShip<List<Wards>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
-        }
-      }
-      catch (Exception ex)
-      {
-        // Xử lý ngoại lệ
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponseGoShip<List<Wards>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
-      }
-      return result;
-    }
-
-    [HttpGet("GetShippingFee")]
-    public async Task<ApiResponseGoShip<List<Wards>>> GetWards(string city, string districts, string wards)
-    {
-      ApiResponseGoShip<List<Wards>> result;
-      string strMessage = string.Empty;
-      try
-      {
-        // từ name là city lấy ra id của nó
-        var dataResponse = await AppSettings.CallPcsApi_NotRetry<List<Location>>("/v2/cities", Method.Get, null, null);
-        var cityId = dataResponse.Data.Where(x => x.Name == city).FirstOrDefault().Id;
-        // từ id của city lấy ra id của districts
-        var dataResponse1 = await AppSettings.CallPcsApi_NotRetry<List<Districts>>($"/v2/cities/{cityId}/districts", Method.Get, null, null);
-        var districtsId = dataResponse1.Data.Where(x => x.Name.ToLower() == districts.ToLower()).FirstOrDefault().Id;
-        // từ id của districts lấy ra id của wards
-        var dataResponse2 = await AppSettings.CallPcsApi_NotRetry<List<Wards>>($"/v2/districts/{districtsId}/wards", Method.Get, null, null);
-        var wardsId = dataResponse2.Data.Where(x => x.Name.ToLower() == wards.ToLower()).FirstOrDefault().Id;
-
-      }
-      catch (Exception ex)
-      {
-        // Xử lý ngoại lệ
-        strMessage = "Có lỗi xảy ra";
-        NLogger.log.Error(ex.ToString());
-        result = new ApiResponseGoShip<List<Wards>>(System.Net.HttpStatusCode.ExpectationFailed, strMessage, null);
-      }
-      return null;
     }
 
     [HttpPost("PriceGoShip")]
@@ -365,8 +229,6 @@
       }
       return result;
     }
-
-
 
   }
 }

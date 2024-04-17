@@ -283,7 +283,7 @@ export class InsertPromotionComponent implements OnInit {
               }
             });
           } else {
-            console.log('Không tìm thấy chuỗi số.');
+            this.toastr.error(respon.message, 'Thất bại');
           }
         }
       },

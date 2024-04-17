@@ -3,10 +3,9 @@ using ICHI_API.Data;
 using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
-using ICHI_CORE.NlogConfig;
 using System.Globalization;
 using System.Linq.Dynamic.Core;
-
+using static ICHI_API.Helpers.Constants;
 
 namespace ICHI_API.Service
 {
@@ -43,8 +42,8 @@ namespace ICHI_API.Service
           var productItem = product.FirstOrDefault(u => u.Id == item.ProductId);
           if (productItem == null)
           {
-            strMessage = "Không tìm thấy sản phẩm";
-            return null;
+
+            throw new BadRequestException(PRODUCTNOTFOUNDINVENTORY);
           }
           item.InventoryReceiptId = model.Id;
           item.BatchNumber = item.BatchNumber;
@@ -54,14 +53,12 @@ namespace ICHI_API.Service
           _unitOfWork.InventoryReceiptDetail.Add(item);
         }
         _unitOfWork.Save();
-        strMessage = "Tạo phiếu nhập thành công";
+        strMessage = CREATEINVENTORYSUCCESS;
         return model;
       }
       catch (Exception ex)
       {
-        strMessage = ex.Message;
-        NLogger.log.Error(ex.ToString());
-        return null;
+        throw;
       }
     }
 
@@ -73,8 +70,7 @@ namespace ICHI_API.Service
         var inventory = _unitOfWork.InventoryReceipt.Get(u => u.Id == data.Id);
         if (inventory == null)
         {
-          strMessage = "Không tìm thấy phiếu nhập";
-          return null;
+          throw new BadRequestException(INVENTORYNOTFOUND);
         }
         var user = _unitOfWork.Employee.Get(u => u.UserId == data.EmployeeId);
         inventory.SupplierId = data.SupplierId;
@@ -91,8 +87,7 @@ namespace ICHI_API.Service
           var productItem = product.FirstOrDefault(u => u.Id == item.ProductId);
           if (productItem == null)
           {
-            strMessage = "Không tìm thấy sản phẩm";
-            return null;
+            throw new BadRequestException(PRODUCTNOTFOUNDINVENTORY);
           }
           item.InventoryReceiptId = data.Id;
           item.BatchNumber = item.BatchNumber;
@@ -105,14 +100,12 @@ namespace ICHI_API.Service
         }
 
         _unitOfWork.Save();
-        strMessage = "Cập nhật hóa đơn nhập thành công";
+        strMessage = UPDATEINVENTORYSUCCESS;
         return inventory;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        strMessage = ex.Message;
-        NLogger.log.Error(ex.ToString());
-        return null;
+        throw;
       }
     }
 
@@ -129,8 +122,7 @@ namespace ICHI_API.Service
         var data = _unitOfWork.InventoryReceiptDetail.GetAll(u => u.InventoryReceiptId == id, includeProperties: "InventoryReceipt,Product").ToList();
         if (data == null)
         {
-          strMessage = "Không tìm thấy phiếu nhập";
-          return null;
+          throw new BadRequestException(PRODUCTNOTFOUNDINVENTORY);
         }
         var employee = _unitOfWork.Employee.Get(u => u.Id == data.FirstOrDefault().InventoryReceipt.EmployeeId);
         var supllier = _unitOfWork.Supplier.Get(u => u.Id == data.FirstOrDefault().InventoryReceipt.SupplierId);
@@ -147,11 +139,9 @@ namespace ICHI_API.Service
         };
         return model;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -187,11 +177,9 @@ namespace ICHI_API.Service
         var pagedResult = Helpers.PagedResult<InventoryReceipt>.CreatePagedResult(query, pageNumber, pageSize);
         return pagedResult;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -209,10 +197,9 @@ namespace ICHI_API.Service
         }
         return products;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 

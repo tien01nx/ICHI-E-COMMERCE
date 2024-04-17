@@ -1,9 +1,10 @@
 ﻿using ICHI.DataAccess.Repository.IRepository;
 using ICHI_API.Data;
+using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
-using ICHI_CORE.NlogConfig;
 using System.Linq.Dynamic.Core;
+using static ICHI_API.Helpers.Constants;
 
 
 namespace ICHI_API.Service
@@ -36,11 +37,9 @@ namespace ICHI_API.Service
         var pagedResult = Helpers.PagedResult<Trademark>.CreatePagedResult(query, pageNumber, pageSize);
         return pagedResult;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -52,16 +51,13 @@ namespace ICHI_API.Service
         var data = _unitOfWork.Trademark.Get(u => u.Id == id);
         if (data == null)
         {
-          strMessage = "Thương hiệu không tồn tại";
-          return null;
+          throw new BadRequestException(TRADEMARKNOTFOUND);
         }
         return data;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -74,21 +70,18 @@ namespace ICHI_API.Service
         var checkPhone = _unitOfWork.Trademark.Get(u => u.TrademarkName == trademark.TrademarkName.Trim());
         if (checkPhone != null)
         {
-          strMessage = "Tên thương hiệu đã tồn tại";
-          return null;
+          throw new BadRequestException(TRADEMARKEXIST);
         }
         trademark.CreateBy = "Admin";
         trademark.ModifiedBy = "Admin";
         _unitOfWork.Trademark.Add(trademark);
         _unitOfWork.Save();
-        strMessage = "Tạo mới thương hiệu thành công";
+        strMessage = ADDTRADEMARKSUCCESS;
         return trademark;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -101,28 +94,24 @@ namespace ICHI_API.Service
         var data = _unitOfWork.Trademark.Get(u => u.Id == trademark.Id);
         if (data == null)
         {
-          strMessage = "Thương hiệu không tồn tại";
-          return null;
+          throw new BadRequestException(TRADEMARKNOTFOUND);
         }
         // kiểm tra số điện thoại thương hiệu đã tồn tại chưa
         var trademarkName = _unitOfWork.Trademark.Get(u => u.TrademarkName == trademark.TrademarkName.Trim());
         if (trademarkName != null && trademarkName.Id != trademark.Id)
         {
-          strMessage = "Tên thương hiệu  đã tồn tại";
-          return null;
+          throw new BadRequestException(TRADEMARKEXIST);
         }
         // kiêm tra mã số thueé
         trademark.ModifiedBy = "Admin";
         _unitOfWork.Trademark.Update(trademark);
         _unitOfWork.Save();
-        strMessage = "Cập nhật thương hiệu thành công";
+        strMessage = UPDATETRADEMARKSUCCESS;
         return trademark;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        return null;
+        throw;
       }
     }
 
@@ -134,19 +123,16 @@ namespace ICHI_API.Service
         var data = _unitOfWork.Trademark.Get(u => u.Id == id);
         if (data == null)
         {
-          strMessage = "thương hiệu không tồn tại";
-          return false;
+          throw new BadRequestException(TRADEMARKNOTFOUND);
         }
         _unitOfWork.Trademark.Remove(data);
         _unitOfWork.Save();
-        strMessage = "Xóa thành công";
+        strMessage = DELETETRADEMARKSUCCESS;
         return true;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return false;
+        throw;
       }
     }
   }

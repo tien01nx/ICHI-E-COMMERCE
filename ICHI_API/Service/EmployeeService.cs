@@ -1,11 +1,13 @@
 ﻿using ICHI.DataAccess.Repository.IRepository;
 using ICHI_API.Data;
+using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Helpers;
 using ICHI_CORE.NlogConfig;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
+using static ICHI_API.Helpers.Constants;
 
 
 namespace ICHI_API.Service
@@ -40,9 +42,7 @@ namespace ICHI_API.Service
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -54,16 +54,13 @@ namespace ICHI_API.Service
         var data = _unitOfWork.Employee.Get(u => u.Id == id);
         if (data == null)
         {
-          strMessage = "Nhân viên không tồn tại";
-          return null;
+          throw new BadRequestException(EMPLOYEENOTFOUND);
         }
         return data;
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -76,20 +73,19 @@ namespace ICHI_API.Service
         var checkEmail = _unitOfWork.Employee.Get(u => u.UserId == model.UserId);
         if (checkEmail != null)
         {
-          strMessage = "Email đã tồn tại";
-          return null;
+          throw new BadRequestException(EMAILEXIST);
         }
         var checkPhone = _unitOfWork.Employee.Get(u => u.PhoneNumber == model.PhoneNumber);
         if (checkPhone != null)
         {
-          strMessage = "Số điện thoại đã tồn tại";
+          strMessage = PHONENUMBEREXISTCUSTOMER;
           return null;
         }
         model.CreateBy = "Admin";
         model.ModifiedBy = "Admin";
         _unitOfWork.Employee.Add(model);
         _unitOfWork.Save();
-        strMessage = "Tạo mới thành công";
+        strMessage = CREATECUSTOMERSUCCESS;
         return model;
       }
       catch (Exception ex)
@@ -109,21 +105,19 @@ namespace ICHI_API.Service
         var data = _unitOfWork.Employee.Get(u => u.Id == model.Id);
         if (data == null)
         {
-          strMessage = "Nhân viên không tồn tại";
-          return null;
+          throw new BadRequestException(EMPLOYEENOTFOUND);
         }
         // kiểm tra email Nhân viên đã tồn tại chưa
         var checkEmail = _unitOfWork.User.Get(u => u.Email == model.UserId);
         if (checkEmail != null && checkEmail.Email != model.UserId)
         {
-          strMessage = "Email đã tồn tại";
-          return null;
+          throw new BadRequestException(EMAILEXIST);
         }
         // kiểm tra số điện thoại Nhân viên đã tồn tại chưa
         var checkPhone = _unitOfWork.Employee.Get(u => u.PhoneNumber == model.PhoneNumber);
         if (checkPhone != null && checkPhone.Id != model.Id)
         {
-          strMessage = "Số điện thoại đã tồn tại";
+          strMessage = PHONENUMBEREXISTCUSTOMER;
           return null;
         }
         // nếu có file thì thực hiện lưu file mới và xóa file cũ đi
@@ -146,14 +140,12 @@ namespace ICHI_API.Service
         model.ModifiedBy = "Admin";
         _unitOfWork.Employee.Update(model);
         _unitOfWork.Save();
-        strMessage = "Cập nhật nhân viên thành công";
+        strMessage = UPDATEEMPLOYEESUCCESS;
         return model;
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -165,22 +157,19 @@ namespace ICHI_API.Service
         var data = _unitOfWork.Employee.Get(u => u.Id == id && !u.isDeleted);
         if (data == null)
         {
-          strMessage = "Nhân viên không tồn tại";
-          return false;
+          throw new BadRequestException(EMPLOYEENOTFOUND);
         }
 
         data.isDeleted = true;
         data.ModifiedDate = DateTime.Now;
         _unitOfWork.Employee.Update(data);
         _unitOfWork.Save();
-        strMessage = "Xóa thành công";
+        strMessage = DELETEEMPLOYEESUCCESS;
         return true;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return false;
+        throw;
       }
     }
   }

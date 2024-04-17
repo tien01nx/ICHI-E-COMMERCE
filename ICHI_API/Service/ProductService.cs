@@ -6,11 +6,13 @@
   using ICHI_API.Service.IService;
   using ICHI_CORE.Domain.MasterModel;
   using ICHI_CORE.Helpers;
-  using ICHI_CORE.NlogConfig;
   using Microsoft.AspNetCore.Hosting;
   using System.Data;
   using System.Linq;
   using System.Linq.Dynamic.Core;
+  using static ICHI_API.Helpers.Constants;
+
+
 
   public class ProductService : IProductService
   {
@@ -61,11 +63,9 @@
         }), pageNumber, pageSize);
         return pagedResult;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -82,19 +82,16 @@
         };
         if (productDTO == null)
         {
-          strMessage = "Sản phẩm không tồn tại";
-          return null;
+          throw new BadRequestException(PRODUCTNOTFOUND);
         }
         else
         {
           return productDTO;
         }
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -110,8 +107,8 @@
           var checkProduct = _unitOfWork.Product.Get(x => x.ProductName == product.ProductName);
           if (checkProduct != null)
           {
-            strMessage = "Sản phẩm đã tồn tại";
-            return null;
+
+            throw new BadRequestException(PRODUCTEXIST);
           }
 
           product.CreateBy = "Admin";
@@ -126,7 +123,7 @@
             {
               if (!ImageHelper.CheckImage(file))
               {
-                strMessage = "File không đúng định dạng hoặc dung lượng lớn hơn 10MB";
+                strMessage = FILEFORMAT;
                 _unitOfWork.Rollback();
                 return null;
               }
@@ -145,7 +142,7 @@
             _unitOfWork.Save();
           }
 
-          strMessage = "Thêm sản phẩm thành công";
+          strMessage = ADDPRODUCTSUCCESS;
           _unitOfWork.Commit(); // Commit giao dịch
           return product;
         }
@@ -169,7 +166,7 @@
           {
             if (!ImageHelper.CheckImage(file))
             {
-              strMessage = "File không đúng định dạng hoặc dung lượng lớn hơn 10MB";
+              strMessage = FILEFORMAT;
               _unitOfWork.Rollback();
               return null;
             }
@@ -188,16 +185,13 @@
         }
 
         _unitOfWork.Save();
-        strMessage = "Cập nhật sản phẩm thành công";
+        strMessage = UPDATEPRODUCTSUCCESS;
         _unitOfWork.Commit();
         return product;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        _unitOfWork.Rollback();
-        return null;
+        throw;
       }
     }
 
@@ -210,14 +204,12 @@
         customer.ModifiedBy = "Admin";
         _unitOfWork.Product.Update(customer);
         _unitOfWork.Save();
-        strMessage = "Cập nhật thành công";
+        strMessage = UPDATESUCCESS;
         return customer;
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -229,22 +221,19 @@
         var data = _unitOfWork.Product.Get(u => u.Id == id && !u.isDeleted);
         if (data == null)
         {
-          strMessage = "Sản phẩm không tồn tại";
-          return false;
+          throw new BadRequestException(PRODUCTNOTFOUND);
         }
 
         data.isDeleted = true;
         data.ModifiedDate = DateTime.Now;
         _unitOfWork.Product.Update(data);
         _unitOfWork.Save();
-        strMessage = "Xóa sản phẩm thành công";
+        strMessage = DELETEPRODUCTSUCCESS;
         return true;
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return false;
+        throw;
       }
     }
 
@@ -256,29 +245,24 @@
         var productImage = _unitOfWork.ProductImages.Get(x => x.ProductId == productId && x.ImageName == imageName);
         if (productImage == null)
         {
-          strMessage = "Hình ảnh sản phẩm không tồn tại!";
-          return false;
+          throw new BadRequestException(IMAGEPRODUCTNOTFOUND);
         }
 
         if (!ImageHelper.DeleteImage(_webHostEnvironment.WebRootPath, productImage.ImagePath))
         {
-          strMessage = "Xóa ảnh không thành công!";
-          return false;
+          throw new BadRequestException(DELETEIMAGESUCCESS);
         }
 
         _unitOfWork.ProductImages.Remove(productImage);
         _unitOfWork.Save();
+        strMessage = DELETEIMAGESUCCESS;
+        return true;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = "Có lỗi xảy ra";
-        return false;
+        throw;
       }
-
-      throw new NotImplementedException();
     }
-
 
     public IQueryable<Product> FilterProducts(IQueryable<Product> query, string categoryName, string category_parent, string color, string trademark, decimal? priceMin, decimal? priceMax)
     {
@@ -343,14 +327,8 @@
       }
       catch (Exception ex)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
-
-
     }
-
   }
-
 }

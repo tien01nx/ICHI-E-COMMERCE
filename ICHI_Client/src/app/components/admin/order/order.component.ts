@@ -148,18 +148,6 @@ export class OrderComponent implements OnInit {
     this.btnCloseModal.nativeElement.click();
   }
 
-  getJsonDataAddress() {
-    this.trxTransactionService.getJsonDataAddress().subscribe({
-      next: (response) => {
-        this.cities = response;
-        console.log('địa chỉ:', response);
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
-  }
-
   isOptionDisabled(option: any) {
     return option.name === 'PENDING';
   }
@@ -213,28 +201,13 @@ export class OrderComponent implements OnInit {
     this.getDatacombobox();
     this.totalPrice();
 
-    this.getJsonDataAddress();
-
     this.addressForm.get('city')?.valueChanges.subscribe((id: any) => {
       const filteredDistricts = Utils.district?.filter(
         (district: any) => district.city_id === id
       );
-
-      // Gán danh sách quận lọc được cho this.districts
       this.districts = filteredDistricts || [];
-
-      // Đặt giá trị mặc định cho trường 'district' trong form nếu cần
       if (this.districts.length > 0) {
         this.addressForm.get('district')?.setValue(this.districts[0]?.id);
-        // lấy ra các giá trị xã phường tương ứng với quận
-        // const filteredWards = Utils.wards?.filter(
-        //   (ward: any) => ward.district_id === this.districts[0]?.id
-        // );
-        // this.wards = filteredWards || [];
-        // // Đặt giá trị mặc định cho trường 'ward' trong form nếu cần
-        // if (this.wards.length > 0) {
-        //   this.addressForm.get('ward')?.setValue(this.wards[0]?.id);
-        // }
       }
     });
 

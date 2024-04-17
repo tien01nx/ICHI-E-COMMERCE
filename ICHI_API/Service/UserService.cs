@@ -3,8 +3,8 @@ using ICHI_API.Data;
 using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Helpers;
-using ICHI_CORE.NlogConfig;
 using System.Linq.Dynamic.Core;
+using static ICHI_API.Helpers.Constants;
 
 namespace ICHI_API.Service
 {
@@ -70,11 +70,9 @@ namespace ICHI_API.Service
         var pagedResult = Helpers.PagedResult<UserDTO>.CreatePagedResult(userDTOs.AsQueryable(), pageNumber, pageSize);
         return pagedResult;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 
@@ -88,8 +86,7 @@ namespace ICHI_API.Service
         var userRoleCu = _unitOfWork.UserRole.Get(ur => ur.UserId == userDTO.Email, "User,Role");
         if (userRole == null)
         {
-          strMessage = "Tài khoản không tồn tại";
-          return null;
+          throw new BadRequestException(USERNOTFOUND);
         }
         // so sánh tên role người dùng truyền lên với role trong db
         if (userRoleCu.Role.RoleName != userDTO.Role)
@@ -97,8 +94,7 @@ namespace ICHI_API.Service
           var role = _unitOfWork.Role.Get(r => r.RoleName == userDTO.Role);
           if (role == null)
           {
-            strMessage = "Role không tồn tại";
-            return null;
+            throw new BadRequestException(USERROLENOTFOUND);
           }
           userRole.RoleId = role.Id;
           _unitOfWork.UserRole.Update(userRole);
@@ -111,8 +107,7 @@ namespace ICHI_API.Service
           var customer = _unitOfWork.Customer.Get(c => c.UserId == userDTO.Email);
           if (customer == null)
           {
-            strMessage = "Khách hàng không tồn tại";
-            return null;
+            throw new BadRequestException(CUSTOMERNOTFOUND);
           }
           customer.FullName = userDTO.FullName;
           customer.Gender = userDTO.Gender;
@@ -125,7 +120,7 @@ namespace ICHI_API.Service
           var employee = _unitOfWork.Employee.Get(e => e.UserId == userDTO.Email);
           if (employee == null)
           {
-            strMessage = "Nhân viên không tồn tại";
+            strMessage = EMPLOYEENOTFOUND;
             return null;
           }
           employee.FullName = userDTO.FullName;
@@ -141,8 +136,7 @@ namespace ICHI_API.Service
           var user = _unitOfWork.User.Get(u => u.Email.ToLower().Equals(userDTO.Email) && u.Email != userRoleCu.User.Email);
           if (user != null)
           {
-            strMessage = "Email đã tồn tại";
-            return null;
+            throw new BadRequestException(EMAILEXIST);
           }
           userdb.Email = userDTO.Email;
           _unitOfWork.User.Update(userdb);
@@ -150,11 +144,9 @@ namespace ICHI_API.Service
         _unitOfWork.Save();
         return userDTO;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
   }

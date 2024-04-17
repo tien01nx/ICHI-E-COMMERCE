@@ -85,8 +85,11 @@ export class CustomerService {
     formData.append('phoneNumber', customer.phoneNumber.toString());
     formData.append('gender', customer.gender.toString());
     formData.append('birthday', customer.birthday.toString());
-    formData.append('address', customer.address);
     formData.append('userId', customer.userId.toString());
+    formData.append('address', customer.address);
+    formData.append('ward', customer.ward);
+    formData.append('district', customer.district);
+    formData.append('city', customer.city);
     if (files) {
       formData.append('file', files);
     }
