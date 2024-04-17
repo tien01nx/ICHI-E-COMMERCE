@@ -26,7 +26,7 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var query = _unitOfWork.Category.GetAll(u => !u.IsDeleted).AsQueryable();
+        var query = _unitOfWork.Category.GetAll().AsQueryable();
         if (!string.IsNullOrEmpty(name))
         {
           query = query.Where(e => e.CategoryName.Contains(name.Trim()));
@@ -76,8 +76,8 @@ namespace ICHI_API.Service
           throw new BadRequestException(Constants.CATEGORYPARENTNOTFOUND);
         }
         category.CategoryLevel = categoryParentId.CategoryLevel + 1;
-        category.CreateBy = "Admin";
-        category.ModifiedBy = "Admin";
+        //category.CreateBy = "Admin";
+        //category.ModifiedBy = "Admin";
         _unitOfWork.Category.Add(category);
         _unitOfWork.Save();
         strMessage = Constants.ADDCATEGORYSUCCESS;
@@ -130,14 +130,12 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var data = _unitOfWork.Category.Get(u => u.Id == id && !u.IsDeleted);
+        var data = _unitOfWork.Category.Get(u => u.Id == id);
         if (data == null)
         {
           throw new BadRequestException(Constants.CATEGORYNOTFOUND);
         }
-        data.IsDeleted = true;
-        data.ModifiedDate = DateTime.Now;
-        _unitOfWork.Category.Update(data);
+        _unitOfWork.Category.Remove(data);
         _unitOfWork.Save();
         strMessage = Constants.DELETECATEGORYSUCCESS;
         return true;

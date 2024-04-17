@@ -50,7 +50,7 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var data = _unitOfWork.Customer.Get(u => u.Id == id);
+        var data = _unitOfWork.Customer.Get(u => u.Id == id && !u.isDeleted);
         if (data == null)
         {
           throw new BadRequestException(Constants.CUSTOMERNOTFOUND);
@@ -79,8 +79,8 @@ namespace ICHI_API.Service
         {
           throw new BadRequestException(Constants.PHONENUMBEREXISTCUSTOMER);
         }
-        model.CreateBy = "Admin";
-        model.ModifiedBy = "Admin";
+        //model.CreateBy = "Admin";
+        //model.ModifiedBy = "Admin";
         _unitOfWork.Customer.Add(model);
         _unitOfWork.Save();
         strMessage = Constants.CREATECUSTOMERSUCCESS;
@@ -116,8 +116,8 @@ namespace ICHI_API.Service
           var user = _unitOfWork.User.Get(x => x.Email == customer.UserId);
           string oldFile = user.Avatar;
           user.Avatar = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, user.Email, file, AppSettings.PatchUser);
-          user.ModifiedBy = "Admin";
-          user.ModifiedDate = DateTime.Now;
+          //user.ModifiedBy = "Admin";
+          //user.ModifiedDate = DateTime.Now;
           _unitOfWork.User.Update(user);
           _unitOfWork.Save();
           // xóa file cũ
@@ -144,7 +144,7 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var data = _unitOfWork.Customer.Get(u => u.Id == id && !u.isDeleted);
+        var data = _unitOfWork.Customer.Get(u => u.Id == id);
         if (data == null)
         {
           throw new BadRequestException(Constants.CUSTOMERNOTFOUND);

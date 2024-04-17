@@ -1,15 +1,10 @@
-﻿using ICHI_API.Data;
-using ICHI.DataAccess.Repository.IRepository;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using ICHI_CORE.Model;
-using System.Data;
+﻿using ICHI.DataAccess.Repository.IRepository;
+using ICHI_API.Data;
 using ICHI_CORE.Helpers;
+using ICHI_CORE.Model;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Linq.Expressions;
 
 namespace ICHI.DataAccess.Repository
 {
@@ -96,11 +91,7 @@ namespace ICHI.DataAccess.Repository
 
     public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
     {
-
-
       IQueryable<T> query = tracked ? dbSet : dbSet.AsNoTracking();
-
-
 
       if (!string.IsNullOrEmpty(includeProperties))
       {
@@ -110,11 +101,7 @@ namespace ICHI.DataAccess.Repository
         }
       }
       query = query.Where(filter);
-
-
-
       return query.FirstOrDefault();
-
     }
 
     /// <summary>
@@ -132,7 +119,6 @@ namespace ICHI.DataAccess.Repository
         foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
         {
           query = query.Include(property);
-
         }
       }
 
@@ -140,8 +126,6 @@ namespace ICHI.DataAccess.Repository
       {
         query = query.Where(filter);
       }
-
-
       return query.ToList();
     }
 

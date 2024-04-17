@@ -13,13 +13,13 @@ namespace ICHI_API.Service.IService
 
     bool ForgotPassword(string email, out string strMessage);
 
-    string ChangePassword(UserChangePassword user, out string strMessage);
+    bool ChangePassword(UserChangePassword user, out string strMessage);
 
     bool LockAccount(string id, bool status, out string strMessage);
 
     string RefreshToken(UserRefreshToken user, out string strMessage);
 
-    User ExistsByUserNameOrEmail(string email);
+    User ExistsByEmail(string email);
 
     bool ExistsByPhoneNumber(string phoneNumber);
   }

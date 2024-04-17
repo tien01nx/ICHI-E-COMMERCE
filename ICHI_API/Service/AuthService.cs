@@ -32,98 +32,12 @@ namespace ICHI_API.Service
       _configuration = configuration;
       _httpContextAccessor = httpContextAccessor;
     }
-
-    public string ChangePassword(UserChangePassword user, out string strMessage)
-    {
-      strMessage = string.Empty;
-      try
-      {
-        var userExist = ExistsByUserNameOrEmail(user.UserName);
-        if (userExist != null && BCrypt.Net.BCrypt.Verify(user.oldPassword, userExist.Password))
-        {
-          string salt = BCrypt.Net.BCrypt.GenerateSalt();
-          string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password, salt);
-          userExist.Password = hashedPassword;
-          userExist.ModifiedBy = user.UserName;
-          userExist.ModifiedDate = DateTime.Now;
-          _unitOfWork.User.Update(userExist);
-          _unitOfWork.Save();
-          strMessage = Constants.PASSWORDSUCCESS;
-          return Constants.PASSWORDSUCCESS;
-        }
-        else
-        {
-          throw new BadRequestException(Constants.PASSWORDOLDPFAIL);
-        }
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
-
-    public bool ExistsByPhoneNumber(string phoneNumber)
-    {
-      return _unitOfWork.Customer.Get(c => c.PhoneNumber.Equals(phoneNumber)) != null || _unitOfWork.Employee.Get(e => e.PhoneNumber.Equals(phoneNumber)) != null;
-    }
-
-    public User ExistsByUserNameOrEmail(string email)
-    {
-      var data = _unitOfWork.User.Get(u => u.Email.ToLower().Equals(email) || u.Email.Equals(email));
-      if (data != null)
-      {
-        return data;
-      }
-
-      return null;
-    }
-
-    public bool ForgotPassword(string email, out string strMessage)
-    {
-      strMessage = string.Empty;
-      try
-      {
-        User loginUser = ExistsByUserNameOrEmail(email);
-        if (loginUser == null)
-        {
-          throw new BadRequestException(Constants.ACCOUNTNOTFOUNF);
-        }
-        var emailService = new EmailService(_configuration);
-        // random mật khẩu mới
-        Random random = new Random();
-        string randomString = new string(Enumerable.Repeat(AppSettings.Encode, random.Next(8, 16))
-                   .Select(s => s[random.Next(s.Length)]).ToArray());
-        string salt = BCrypt.Net.BCrypt.GenerateSalt();
-        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(randomString, salt);
-        User user = _unitOfWork.User.Get(u => u.Email == loginUser.Email || u.Email.Equals(email));
-        user.Password = hashedPassword;
-        user.ModifiedBy = loginUser.Email;
-        user.ModifiedDate = DateTime.Now;
-        _unitOfWork.User.Update(user);
-        _unitOfWork.Save();
-        string url = SENDMAILSUCCESS + randomString;
-        string body = SENDMAILBODY + url;
-        emailService.SendEmail(email, SENDMAILSUBJECT, url);
-        strMessage = SENDMAILSUCCESS;
-        return true;
-      }
-      catch (BadRequestException ex)
-      {
-        strMessage = ex.Message;
-        return false;
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
-
     public string Login(UserLogin userLogin, out string strMessage)
     {
       strMessage = string.Empty;
       try
       {
-        User loginUser = ExistsByUserNameOrEmail(userLogin.UserName);
+        User loginUser = ExistsByEmail(userLogin.UserName);
         if (loginUser == null)
         {
           throw new BadRequestException(Constants.ACCOUNTNOTFOUNF);
@@ -154,115 +68,150 @@ namespace ICHI_API.Service
         throw;
       }
     }
-
-    public string RefreshToken(UserRefreshToken user, out string strMessage)
+    public string Register(UserRegister userRegister, out string strMessage)
     {
       strMessage = string.Empty;
       try
       {
-        // check người dùng có hợp lệ không
-        User loginUser = ExistsByUserNameOrEmail(user.UserName);
-        if (loginUser == null)
+        _unitOfWork.BeginTransaction();
+        if (ExistsByPhoneNumber(userRegister.PhoneNumber.Trim()))
         {
-          strMessage = Constants.ACCOUNTNOTFOUNF;
-          return null;
+          throw new BadRequestException(Constants.PHONENUMBEREXIST);
         }
-        var oldClaims = GetClaimsFromToken(user.Token);
-        var newAccessToken = GenerateWebToken(oldClaims);
-        SetJWTCookie(newAccessToken);
-        return newAccessToken;
+        if (ExistsByEmail(userRegister.Email.Trim()) != null)
+        {
+          throw new BadRequestException(Constants.USEREXIST);
+        }
+        // mật khẩu phải > 8 kí tự, 1 chữ hoa, 1 chữ thường, 1 kí tự đặc biệt
+
+        if (!userRegister.Password.Any(char.IsUpper) || !userRegister.Password.Any(char.IsLower) || !userRegister.Password.Any(char.IsDigit) || userRegister.Password.Length < 8)
+        {
+          throw new BadRequestException(Constants.PASSWORDREGEX);
+        }
+        //userRegister.Role= AppSettings.EMPLOYEE;
+        User user = new User();
+        MapperHelper.Map<UserRegister, User>(userRegister, user);
+        string salt = BCrypt.Net.BCrypt.GenerateSalt();
+        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userRegister.Password.Trim(), salt);
+        user.Password = hashedPassword;
+        user.IsLocked = false;
+        user.Avatar = AppSettings.AvatarDefault;
+        user.CreateBy = userRegister.Email;
+        user.ModifiedBy = userRegister.Email;
+        user.Email = userRegister.Email.Trim();
+        _unitOfWork.User.Add(user);
+        _unitOfWork.Save();
+        if (userRegister.Role == AppSettings.EMPLOYEE)
+        {
+          // insert vào employee
+          Employee employee = new Employee()
+          {
+            PhoneNumber = userRegister.PhoneNumber,
+            FullName = userRegister.FullName,
+            UserId = user.Email,
+            Gender = userRegister.Gender,
+            Birthday = userRegister.Birthday,
+            Address = userRegister.Address,
+          };
+          _unitOfWork.Employee.Add(employee);
+          _unitOfWork.Save();
+          UserRole userRole = new UserRole()
+          {
+            RoleId = _unitOfWork.Role.Get(r => r.RoleName == AppSettings.EMPLOYEE).Id,
+            UserId = user.Email,
+          };
+          _unitOfWork.UserRole.Add(userRole);
+          _unitOfWork.Save();
+        }
+        else
+        {
+          // insert vào customer
+          Customer customer = new Customer()
+          {
+            PhoneNumber = userRegister.PhoneNumber,
+            FullName = userRegister.FullName,
+            UserId = user.Email,
+            Gender = userRegister.Gender,
+            Birthday = userRegister.Birthday,
+            //Address = userRegister.Address
+          };
+          _unitOfWork.Customer.Add(customer);
+          _unitOfWork.Save();
+          UserRole userRole = new UserRole()
+          {
+            RoleId = _unitOfWork.Role.Get(r => r.RoleName == AppSettings.USER).Id,
+            UserId = user.Email,
+          };
+          _unitOfWork.UserRole.Add(userRole);
+          _unitOfWork.Save();
+        }
+        _unitOfWork.Commit();
+        strMessage = Constants.REGISTERSUCCESS;
+        var accessToken = GenerateAccessToken(user);
+        SetJWTCookie(accessToken);
+        return accessToken;
+      }
+      catch (Exception)
+      {
+        _unitOfWork.Rollback();
+        throw;
+      }
+    }
+
+    public bool ChangePassword(UserChangePassword user, out string strMessage)
+    {
+      strMessage = string.Empty;
+      try
+      {
+        var userExist = ExistsByEmail(user.UserName);
+        if (userExist != null && BCrypt.Net.BCrypt.Verify(user.oldPassword, userExist.Password))
+        {
+          string salt = BCrypt.Net.BCrypt.GenerateSalt();
+          string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password, salt);
+          userExist.Password = hashedPassword;
+          _unitOfWork.User.Update(userExist);
+          _unitOfWork.Save();
+          strMessage = Constants.PASSWORDSUCCESS;
+          return true;
+        }
+        else
+        {
+          throw new BadRequestException(Constants.PASSWORDOLDPFAIL);
+        }
       }
       catch (Exception)
       {
         throw;
       }
     }
-
-    public string Register(UserRegister userRegister, out string strMessage)
+    public bool ForgotPassword(string email, out string strMessage)
     {
       strMessage = string.Empty;
       try
       {
-        using (var transaction = _db.Database.BeginTransaction())
+        User loginUser = ExistsByEmail(email);
+        if (loginUser == null)
         {
-          // kiểm tra người dùng có hợp lệ không
-          if (ExistsByPhoneNumber(userRegister.PhoneNumber.Trim()))
-          {
-            throw new BadRequestException(Constants.PHONENUMBEREXIST);
-          }
-          if (ExistsByUserNameOrEmail(userRegister.Email.Trim()) != null)
-          {
-            throw new BadRequestException(Constants.USEREXIST);
-          }
-          // mật khẩu phải > 8 kí tự, 1 chữ hoa, 1 chữ thường, 1 kí tự đặc biệt
-
-          if (!userRegister.Password.Any(char.IsUpper) || !userRegister.Password.Any(char.IsLower) || !userRegister.Password.Any(char.IsDigit) || userRegister.Password.Length < 8)
-          {
-            throw new BadRequestException(Constants.PASSWORDREGEX);
-          }
-          //userRegister.Role= AppSettings.EMPLOYEE;
-          User user = new User();
-          MapperHelper.Map<UserRegister, User>(userRegister, user);
-          string salt = BCrypt.Net.BCrypt.GenerateSalt();
-          string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userRegister.Password.Trim(), salt);
-          user.Password = hashedPassword;
-          user.IsLocked = false;
-          user.Avatar = AppSettings.AvatarDefault;
-          user.CreateBy = userRegister.Email;
-          user.ModifiedBy = userRegister.Email;
-          user.Email = userRegister.Email.Trim();
-          _unitOfWork.User.Add(user);
-          _unitOfWork.Save();
-          if (userRegister.Role == AppSettings.EMPLOYEE)
-          {
-            // insert vào employee
-            Employee employee = new Employee()
-            {
-              PhoneNumber = userRegister.PhoneNumber,
-              FullName = userRegister.FullName,
-              UserId = user.Email,
-              Gender = userRegister.Gender,
-              Birthday = userRegister.Birthday,
-              Address = userRegister.Address,
-            };
-            _unitOfWork.Employee.Add(employee);
-            _unitOfWork.Save();
-            UserRole userRole = new UserRole()
-            {
-              RoleId = _unitOfWork.Role.Get(r => r.RoleName == AppSettings.EMPLOYEE).Id,
-              UserId = user.Email,
-            };
-            _unitOfWork.UserRole.Add(userRole);
-            _unitOfWork.Save();
-          }
-          else
-          {
-            // insert vào customer
-            Customer customer = new Customer()
-            {
-              PhoneNumber = userRegister.PhoneNumber,
-              FullName = userRegister.FullName,
-              UserId = user.Email,
-              Gender = userRegister.Gender,
-              Birthday = userRegister.Birthday,
-              //Address = userRegister.Address
-            };
-            _unitOfWork.Customer.Add(customer);
-            _unitOfWork.Save();
-            UserRole userRole = new UserRole()
-            {
-              RoleId = _unitOfWork.Role.Get(r => r.RoleName == AppSettings.USER).Id,
-              UserId = user.Email,
-            };
-            _unitOfWork.UserRole.Add(userRole);
-            _unitOfWork.Save();
-          }
-          transaction.Commit();
-          strMessage = Constants.REGISTERSUCCESS;
-          var accessToken = GenerateAccessToken(user);
-          SetJWTCookie(accessToken);
-          return accessToken;
+          throw new BadRequestException(Constants.ACCOUNTNOTFOUNF);
         }
+        var emailService = new EmailService(_configuration);
+        // random mật khẩu mới
+        Random random = new Random();
+        string randomString = new string(Enumerable.Repeat(AppSettings.Encode, random.Next(8, 16))
+                   .Select(s => s[random.Next(s.Length)]).ToArray());
+        string salt = BCrypt.Net.BCrypt.GenerateSalt();
+        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(randomString, salt);
+        User user = _unitOfWork.User.Get(u => u.Email == loginUser.Email || u.Email.Equals(email));
+        user.Password = hashedPassword;
+        user.ModifiedBy = loginUser.Email;
+        user.ModifiedDate = DateTime.Now;
+        _unitOfWork.User.Update(user);
+        _unitOfWork.Save();
+        string url = SENDMAILSUCCESS + randomString;
+        string body = SENDMAILBODY + url;
+        emailService.SendEmail(email, SENDMAILSUBJECT, url);
+        strMessage = SENDMAILSUCCESS;
+        return true;
       }
       catch (Exception)
       {
@@ -294,6 +243,44 @@ namespace ICHI_API.Service
       }
     }
 
+    public bool ExistsByPhoneNumber(string phoneNumber)
+    {
+      return _unitOfWork.Customer.Get(c => c.PhoneNumber.Equals(phoneNumber)) != null || _unitOfWork.Employee.Get(e => e.PhoneNumber.Equals(phoneNumber)) != null;
+    }
+
+    public User ExistsByEmail(string email)
+    {
+      var data = _unitOfWork.User.Get(u => u.Email.ToLower().Equals(email) || u.Email.Equals(email));
+      if (data != null)
+      {
+        return data;
+      }
+
+      return null;
+    }
+
+    public string RefreshToken(UserRefreshToken user, out string strMessage)
+    {
+      strMessage = string.Empty;
+      try
+      {
+        // check người dùng có hợp lệ không
+        User loginUser = ExistsByEmail(user.UserName);
+        if (loginUser == null)
+        {
+          strMessage = Constants.ACCOUNTNOTFOUNF;
+          return null;
+        }
+        var oldClaims = GetClaimsFromToken(user.Token);
+        var newAccessToken = GenerateWebToken(oldClaims);
+        SetJWTCookie(newAccessToken);
+        return newAccessToken;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
 
     // kiểm tra token có hết hạn chưa
     private DateTime GetTokenExpirationTime(string token)

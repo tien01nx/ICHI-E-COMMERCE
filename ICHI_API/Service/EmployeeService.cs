@@ -4,7 +4,6 @@ using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Helpers;
-using ICHI_CORE.NlogConfig;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 using static ICHI_API.Helpers.Constants;
@@ -40,7 +39,7 @@ namespace ICHI_API.Service
         var pagedResult = Helpers.PagedResult<Employee>.CreatePagedResult(query, pageNumber, pageSize);
         return pagedResult;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         throw;
       }
@@ -51,14 +50,14 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var data = _unitOfWork.Employee.Get(u => u.Id == id);
+        var data = _unitOfWork.Employee.Get(u => u.Id == id && !u.isDeleted);
         if (data == null)
         {
           throw new BadRequestException(EMPLOYEENOTFOUND);
         }
         return data;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         throw;
       }
@@ -88,11 +87,9 @@ namespace ICHI_API.Service
         strMessage = CREATECUSTOMERSUCCESS;
         return model;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        NLogger.log.Error(ex.ToString());
-        strMessage = ex.ToString();
-        return null;
+        throw;
       }
     }
 

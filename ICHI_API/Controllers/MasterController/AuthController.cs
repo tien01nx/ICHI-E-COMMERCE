@@ -138,8 +138,8 @@ namespace ICHI_CORE.Controllers.MasterController
       string strMessage = string.Empty;
       try
       {
-        string data = _authService.ChangePassword(user, out strMessage);
-        return new ApiResponse<string>(System.Net.HttpStatusCode.OK, strMessage, data);
+        bool data = _authService.ChangePassword(user, out strMessage);
+        return new ApiResponse<string>(System.Net.HttpStatusCode.OK, strMessage, null);
       }
       catch (Exception ex)
       {

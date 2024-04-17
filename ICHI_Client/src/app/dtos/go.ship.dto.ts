@@ -32,7 +32,7 @@ export function createShipmentDTO(addressTo: Address): ShipmentDTO {
   const defaultAddressFrom: Address = {
     city: '170000',
     district: '170600',
-    wards: '1063',
+    wards: '1048',
   };
 
   const defaultParcel: Parcel = {
