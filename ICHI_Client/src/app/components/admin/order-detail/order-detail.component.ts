@@ -38,7 +38,7 @@ export class OrderDetailComponent implements OnInit {
   product: ProductModel | undefined = undefined;
   totalMoney: number = 0;
   titleString: string = '';
-
+  isReadOnly: boolean = true;
   shoppingcartdto!: ShoppingCartDTO;
 
   // getData khách hàng
@@ -115,11 +115,15 @@ export class OrderDetailComponent implements OnInit {
       .updateTrxTransaction(this.trxTransactionForm.value)
       .subscribe({
         next: (response: any) => {
-          this.toastr.success(
-            'Cập nhật trạng thái đơn hàng thành công',
-            'Thông báo'
-          );
-          this.router.navigate(['/admin/list_order']);
+          if (response.message === 'Cập nhật đơn hàng thành công') {
+            this.toastr.success(
+              'Cập nhật trạng thái đơn hàng thành công',
+              'Thông báo'
+            );
+            this.router.navigate(['/admin/list_order']);
+          } else {
+            this.toastr.error(response.message, 'Thông báo');
+          }
         },
         error: (error: any) => {
           this.toastr.error(

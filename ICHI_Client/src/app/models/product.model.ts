@@ -11,6 +11,7 @@ export interface ProductModel extends MasterEntity {
   priorityLevel: number;
   color: string;
   image: string;
+  quantity: number;
   isActive: boolean;
   isDeleted: boolean;
   productImages: any;

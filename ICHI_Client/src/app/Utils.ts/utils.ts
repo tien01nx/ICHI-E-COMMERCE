@@ -194,6 +194,8 @@ export class Utils {
 
   static PaymentOnDelivery = 'PAYMENTONDELIVERY';
   static PaymentViaCard = 'PAYMENTVIACARD';
+  static PaymentStatusPenDing ='PENDING'
+  static PaymentStatusApproved ='APPROVED'
 
   // Trạng thái đơn hàng
   // Chưa xác nhận - Pending
@@ -213,7 +215,7 @@ export class Utils {
   static PENDING_VALUE = 'Chưa xác nhận';
   static ONHOLD_VALUE = 'Đã xác nhận';
   static WAITINGFORPICKUP_VALUE = 'Chờ lấy hàng';
-  static WAITINGFORDELIVERY_VALUE = 'Chờ giao hàng';
+  static WAITINGFORDELIVERY_VALUE = 'Đang giao hàng';
   static DELIVERED_VALUE = 'Đã giao hàng';
   static CANCELLED_VALUE = 'Đã hủy';
 
@@ -221,7 +223,7 @@ export class Utils {
     { name: 'PENDING', value: 'Chưa xác nhận' },
     { name: 'ONHOLD', value: 'Đã xác nhận' },
     { name: 'WAITINGFORPICKUP', value: 'Chờ lấy hàng' },
-    { name: 'WAITINGFORDELIVERY', value: 'Chờ giao hàng' },
+    { name: 'WAITINGFORDELIVERY', value: 'Đang giao hàng' },
     { name: 'DELIVERED', value: 'Đã giao hàng' },
     { name: 'CANCELLED', value: 'Đã hủy' },
   ];

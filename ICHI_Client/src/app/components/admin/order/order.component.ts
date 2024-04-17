@@ -31,6 +31,12 @@ import Swal from 'sweetalert2';
 import { ProductDTO } from '../../../dtos/product.dto';
 import { CustomerModel } from '../../../models/customer.model';
 import { CustomerService } from '../../../service/customer.service';
+import { ShipmentData } from '../../../models/shipment.data';
+import {
+  Address,
+  ShipmentDTO,
+  createShipmentDTO,
+} from '../../../dtos/go.ship.dto';
 
 @Component({
   selector: 'app-order',
@@ -41,12 +47,14 @@ export class OrderComponent implements OnInit {
   protected readonly Environment = Environment;
   protected readonly Utils = Utils;
   product: ProductModel | undefined = undefined;
+  shipment: ShipmentDTO | null = null;
+
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
 
   totalMoney: number = 0;
   titleString: string = '';
   productImage: ProductImage[] = [];
-
+  statusShip: boolean = false;
   // data gốc
   productdtos: ProductDTO[] = [];
   products: ProductModel[] = [];
@@ -57,6 +65,8 @@ export class OrderComponent implements OnInit {
   isDisplayNone: boolean = false;
   btnSave: string = '';
   strMessage: string = '';
+  shipData: ShipmentData[] = [];
+  priceShip = 0;
   trxTransactionForm: FormGroup = new FormGroup({
     trxTransactionId: new FormControl(0),
     customerId: new FormControl(''),
@@ -99,27 +109,41 @@ export class OrderComponent implements OnInit {
     ]),
   });
 
+  // static paymentTypes = [
+  //   { name: 'PAYMENTONDELIVERY', value: 'Thanh toán khi nhận hàng' },
+  //   { name: 'PAYMENTVIACARD', value: 'Thanh toán qua thẻ' },
+  //   { name: 'CASH', value: 'Tiền mặt' },
+  // ];
+  // paymentTypes: any;
+
+  paymentTypes = Utils.paymentTypes.filter(
+    (x) => x.name !== 'PAYMENTONDELIVERY'
+  );
+  // nếu trạng thái là
+  // lấy ra paymentTypes và không lấy ra PAYMENTONDELIVERY
+  // get paymentTypes() {
+  //   return OrderComponent.paymentTypes.filter(
+  //     (paymentType) => paymentType.name !== 'PAYMENTONDELIVERY'
+  //   );
+  // }
+
   cities: any;
   districts: any;
   wards: any;
   onAddress() {
-    console.log('addressForm', this.addressForm.value);
-    // update địa chỉ cho trxTransacForm sau khi chọn địa chỉ address =  addressDetail + ward + district + city
     this.trxTransactionForm
       .get('address')
       ?.setValue(
-        this.addressForm.value.addressDetail +
+        this.addressForm.get('addressDetail')?.value +
           ', ' +
-          this.addressForm.value.ward +
-          ', ' +
-          this.addressForm.value.district +
-          ', ' +
-          this.addressForm.value.city
-      ) ?? '';
-    console.log(
-      'dịa chỉ sau khi chọn',
-      this.trxTransactionForm.get('address')?.value
-    );
+          this.getAddressFull(
+            this.addressForm.get('city')?.value,
+            this.addressForm.get('district')?.value,
+            this.addressForm.get('ward')?.value
+          )
+      );
+    console.log('address: ', this.addressForm.value);
+    this.priceGoShip();
     this.addressForm.reset();
     this.btnCloseModal.nativeElement.click();
   }
@@ -136,34 +160,7 @@ export class OrderComponent implements OnInit {
     });
   }
 
-  getDistrictsControl(): FormControl {
-    const cityControl = this.addressForm.get('city') as FormControl;
-    cityControl.valueChanges.pipe().subscribe((id: any) => {
-      this.cities?.forEach((city: any) => {
-        if (city.name === id) {
-          this.districts = city.districts;
-          this.addressForm.get('district')?.setValue(this.districts[0]?.name); // Đảm bảo mảng districts không rỗng trước khi gán giá trị
-        }
-      });
-    });
-    return cityControl;
-  }
-
-  getWardsControl(): FormControl {
-    const districtControl = this.addressForm.get('district') as FormControl;
-    districtControl.valueChanges.pipe().subscribe((name: any) => {
-      this.districts?.forEach((district: any) => {
-        if (district.name === name) {
-          this.wards = district.wards;
-          this.addressForm.get('ward')?.setValue(this.wards[0]?.name); // Đảm bảo mảng wards không rỗng trước khi gán giá trị
-        }
-      });
-    });
-    return districtControl;
-  }
-
   isOptionDisabled(option: any) {
-    debugger;
     return option.name === 'PENDING';
   }
 
@@ -199,19 +196,128 @@ export class OrderComponent implements OnInit {
       .get('employeeId')
       ?.setValue(this.tokenService.getUserEmail());
   }
+
+  totalPrice() {
+    const cartsArray = this.trxTransactionForm.get('carts') as FormArray;
+    cartsArray.valueChanges.subscribe(() => {
+      this.totalMoney = this.getTotalMoney();
+    });
+    this.totalMoney += this.priceShip;
+  }
+
   ngOnInit(): void {
     this.titleString = 'Thêm sản phẩm';
     this.btnSave = 'Thêm mới';
     this.trxTransactionForm.get('customerId')?.setValue('khachle@gmail.com');
 
     this.getDatacombobox();
+    this.totalPrice();
 
-    const cartsArray = this.trxTransactionForm.get('carts') as FormArray;
-
-    cartsArray.valueChanges.subscribe(() => {
-      this.totalMoney = this.getTotalMoney();
-    });
     this.getJsonDataAddress();
+
+    this.addressForm.get('city')?.valueChanges.subscribe((id: any) => {
+      const filteredDistricts = Utils.district?.filter(
+        (district: any) => district.city_id === id
+      );
+
+      // Gán danh sách quận lọc được cho this.districts
+      this.districts = filteredDistricts || [];
+
+      // Đặt giá trị mặc định cho trường 'district' trong form nếu cần
+      if (this.districts.length > 0) {
+        this.addressForm.get('district')?.setValue(this.districts[0]?.id);
+        // lấy ra các giá trị xã phường tương ứng với quận
+        // const filteredWards = Utils.wards?.filter(
+        //   (ward: any) => ward.district_id === this.districts[0]?.id
+        // );
+        // this.wards = filteredWards || [];
+        // // Đặt giá trị mặc định cho trường 'ward' trong form nếu cần
+        // if (this.wards.length > 0) {
+        //   this.addressForm.get('ward')?.setValue(this.wards[0]?.id);
+        // }
+      }
+    });
+
+    this.addressForm.get('district')?.valueChanges.subscribe((id: any) => {
+      const filteredWards = Utils.wards?.filter(
+        (ward: any) => ward.district_id === id
+      );
+      this.wards = filteredWards || [];
+      // Đặt giá trị mặc định cho trường 'ward' trong form nếu cần
+      if (this.wards.length > 0) {
+        this.addressForm.get('ward')?.setValue(this.wards[0]?.id);
+      }
+    });
+
+    this.trxTransactionForm
+      .get('customerId')
+      ?.valueChanges.subscribe((id: any) => {
+        this.customer = this.customers.find(
+          (customer) => customer.userId === id
+        );
+        console.log('data address :', this.cities);
+        this.addressForm.get('city')?.setValue(this.customer?.city);
+
+        console.log('data districts :', this.districts);
+
+        this.addressForm.get('district')?.setValue(this.customer?.district);
+        console.log('data wards :', this.wards);
+        this.addressForm.get('ward')?.setValue(this.customer?.ward);
+
+        this.trxTransactionForm
+          .get('address')
+          ?.setValue(
+            this.customer?.address +
+              ', ' +
+              this.getAddressFull(
+                this.customer?.city,
+                this.customer?.district,
+                this.customer?.ward
+              )
+          );
+        this.priceGoShip();
+
+        // khi paymentTypes thay đổi có giá trị là PAYMENTONDELIVERY thì statusShip = true
+        // this.trxTransactionForm
+        //   .get('paymentTypes')
+        //   ?.valueChanges.subscribe((paymentTypes: any) => {
+        //     if (paymentTypes === 'PAYMENTONDELIVERY') {
+        //       this.statusShip = true;
+        //     } else {
+        //       this.statusShip = false;
+        //     }
+        //   });
+      });
+
+    // this.addressForm.get('city')?.setValue(this.customer?.city);
+    // this.addressForm.get('district')?.setValue(this.customer?.district);
+    // this.addressForm.get('ward')?.setValue(this.customer?.ward);
+    // this.addressForm.get('addressDetail')?.setValue(this.customer?.address);
+
+    // this.addressForm.get('city')?.valueChanges.subscribe((id: any) => {
+    //   const filteredDistricts = Utils.district?.filter(
+    //     (district: any) => district.city_id === id
+    //   );
+
+    //   // Gán danh sách quận lọc được cho this.districts
+    //   this.districts = filteredDistricts || [];
+
+    //   // Đặt giá trị mặc định cho trường 'district' trong form nếu cần
+    //   if (this.wards.length > 0) {
+    //     this.addressForm.get('ward')?.setValue(this.wards[0]?.id);
+    //   }
+    // });
+  }
+  onChangePaymentTypes(event: any) {
+    console.log('change payment type', event.name);
+    if (event.name === 'PAYMENTONDELIVERY') {
+      this.statusShip = true;
+      this.totalPrice();
+    } else {
+      this.statusShip = false;
+      this.priceShip = 0;
+      this.totalPrice();
+    }
   }
 
   getDatacombobox() {
@@ -228,11 +334,19 @@ export class OrderComponent implements OnInit {
     });
   }
 
+  // viết hàm từ id ra name của các city, district, ward trả về string để hiển thị các tham số truyền vào là city: any district: any ward: any
+  getAddressFull(city: any, district: any, ward: any): string {
+    const cityName = Utils.city?.find((c) => c.id === city)?.name;
+    const districtName = Utils.district?.find((d) => d.id === district)?.name;
+    const wardName = Utils.wards?.find((w) => w.id === ward)?.name;
+    return `${wardName}, ${districtName}, ${cityName}`;
+  }
+
   onSubmit() {
     // set giá trị cho các trường trong form trước khi submit
 
     // nếu trxTransactionForm.get('customerId') có giá trị là khachle@gmail.com thì set các giá trị từ customer
-    debugger;
+
     if (
       this.trxTransactionForm.get('customerId')?.value !== 'khachle@gmail.com'
     ) {
@@ -246,7 +360,7 @@ export class OrderComponent implements OnInit {
 
     this.trxTransactionForm.get('amount')?.setValue(this.getTotalMoney());
     console.log(this.trxTransactionForm.value);
-    debugger;
+
     if (this.trxTransactionForm.invalid) {
       return;
     }
@@ -259,7 +373,6 @@ export class OrderComponent implements OnInit {
       .PaymentExecute(this.trxTransactionForm.value)
       .subscribe({
         next: (response: any) => {
-          debugger;
           if (
             response.data &&
             typeof response.data === 'string' &&
@@ -269,6 +382,7 @@ export class OrderComponent implements OnInit {
             window.location.href = response.data;
             // this.titleStatus='Đã thanh toán';
           } else {
+            debugger;
             this.toastr.success('Thêm hóa đơn thành công!', 'Thông báo');
             this.isDisplayNone = false;
             this.router.navigate(['/admin/list_order']);
@@ -285,12 +399,12 @@ export class OrderComponent implements OnInit {
   getCustomer(): FormControl {
     const customerId = this.trxTransactionForm.get('customerId') as FormControl;
     // trả customerId = customer.userId trong
-
     customerId.valueChanges.pipe().subscribe((userId: any) => {
       this.customer = this.customers.find(
         (customer) => customer.userId === userId
       );
     });
+
     return customerId;
   }
   get carts() {
@@ -375,10 +489,10 @@ export class OrderComponent implements OnInit {
 
     return total;
   }
+
   getTotalPrice(): number[] {
     const carts = this.trxTransactionForm.get('carts') as FormArray;
     const totals: number[] = [];
-
     carts.controls.forEach((control: AbstractControl<any, any>) => {
       const price = (control.get('price') as FormControl)?.value || 0;
       const quantity = (control.get('quantity') as FormControl)?.value || 0;
@@ -404,11 +518,32 @@ export class OrderComponent implements OnInit {
       formGroup.get('quantity')?.setValue(1);
     }
   }
+  priceGoShip() {
+    const userAddressTo: Address = {
+      city: this.addressForm.value.city,
+      district: this.addressForm.value.district,
+      wards: this.addressForm.value.ward,
+    };
+    console.log('userAddressTo', userAddressTo);
 
+    this.shipment = createShipmentDTO(userAddressTo);
+    this.trxTransactionService.listGoShip(this.shipment).subscribe({
+      next: (response: any) => {
+        this.shipData = response.data;
+        console.log('shipData', this.shipData);
+      },
+      error: (error: any) => {
+        console.log(error);
+      },
+    });
+  }
   removeProduct(index: number) {
     if (this.carts.length > 1) {
       this.carts.removeAt(index);
       this.updateProductSelect();
     }
+  }
+  onGoShip(event: any) {
+    this.priceShip = event.totalAmount;
   }
 }

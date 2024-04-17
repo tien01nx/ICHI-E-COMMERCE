@@ -17,6 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 export class ProfileComponent implements OnInit {
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   customerTransaction: CustomerTransaction | undefined;
+  trxTransaction: any;
   totalPrice: number = 0;
   totalorder: number = 0;
   protected readonly Utils = Utils;
@@ -78,9 +79,23 @@ export class ProfileComponent implements OnInit {
     this.update();
   }
 
+  selectStatusOrder(status: string) {
+    console.log('data gốc', this.customerTransaction);
+
+    if (status === 'ALL') {
+      this.trxTransaction = this.customerTransaction?.trxTransactions;
+      return;
+    }
+
+    this.trxTransaction = this.customerTransaction?.trxTransactions?.filter(
+      (order) => order.orderStatus === status
+    );
+  }
+
   getProfile() {
     this.profileService.getProfile().subscribe((respon: any) => {
       this.customerTransaction = respon.data;
+      this.trxTransaction = respon.data.trxTransactions;
       this.getTotalPrice();
       console.log('profile', this.customerTransaction);
       console.log('trxTransactions', this.customerTransaction?.trxTransactions);
@@ -108,7 +123,10 @@ export class ProfileComponent implements OnInit {
   getTotalPrice() {
     if (this.customerTransaction && this.customerTransaction.trxTransactions) {
       this.customerTransaction.trxTransactions.forEach((order) => {
-        if (order.paymentStatus === 'Approved') {
+        if (
+          order.orderStatus === Utils.DELIVERED ||
+          order.paymentStatus === Utils.PaymentStatusApproved
+        ) {
           this.totalPrice += order.orderTotal;
           this.totalorder += 1;
         }

@@ -44,10 +44,7 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
     private cartService: TrxTransactionService,
     private sanitizer: DomSanitizer
   ) {}
-  ngAfterViewInit(): void {
-    // this.ratingInit();
-    console.log('object', this.category);
-  }
+  ngAfterViewInit(): void {}
 
   ngOnInit(): void {
     this.findProductById(this.activatedRoute.snapshot.params['id']);
@@ -56,6 +53,7 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
   findProductById(id: number) {
     this.productService.findById(id).subscribe({
       next: (respon: any) => {
+        console.log('data product', respon.data);
         this.productdto = respon.data;
         this.category = respon.data.categoryProduct;
         this.image = respon.data?.productImages[0].imagePath;
@@ -103,8 +101,30 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
 
   // Hàm tăng số lượng khi người dùng nhấn nút plus
   increaseQuantity() {
+    // nếu  số lượng thêm vào giỏ lớn hơn số lương sản phẩm thì thông báo lỗi
+    if (this.quantity >= this.productdto.product.quantity) {
+      this.toastr.warning('Số lượng sản phẩm trong kho không đủ', 'Thông báo');
+      this.quantity = this.productdto.product.quantity;
+      return;
+    }
     if (this.cart) {
       this.quantity++;
+      console.log('quantity', this.quantity);
+      return;
+    }
+  }
+  changeQuantity(envent: any) {
+    this.quantity = envent.target.value;
+    if (this.quantity >= this.productdto.product.quantity) {
+      // this.toastr = 'Số lượng sản phẩm trong kho không đủ';
+      this.toastr.warning('Số lượng sản phẩm trong kho không đủ', 'Thông báo');
+      return;
+    }
+    // nếu số lượng nhập vào nhỏ hơn 1 thì thông báo lỗi
+    if (this.quantity < 1) {
+      this.toastr.warning('Số lượng sản phẩm phải lớn hơn 0', 'Thông báo');
+      this.quantity = 1;
+      return;
     }
   }
 
@@ -115,6 +135,16 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
     }
   }
   onSubmit() {
+    if (this.quantity >= this.productdto.product.quantity) {
+      this.toastr.warning('Số lượng sản phẩm trong kho không đủ', 'Thông báo');
+      this.quantity = this.productdto.product.quantity;
+      return;
+    }
+    if (this.quantity < 1) {
+      this.toastr.warning('Số lượng sản phẩm phải lớn hơn 0', 'Thông báo');
+      this.quantity = 1;
+      return;
+    }
     this.cart.productId = this.productdto.product.id;
     this.cart.price = this.productdto.product.price;
     this.cart.userId = this.tokenService.getUserEmail();

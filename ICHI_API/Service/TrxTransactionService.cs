@@ -155,12 +155,41 @@ namespace ICHI_API.Service
           strMessage = "Không tìm thấy đơn hàng";
           return null;
         }
+        if (model.OrderStatus == AppSettings.StatusOrderPending)
+        {
+          data.OrderDate = DateTime.Now;
+        }
+        if (model.OrderStatus == AppSettings.StatusOrderDelivered)
+        {
+          data.OnholDate = DateTime.Now;
+        }
+
+        if (model.OrderStatus == AppSettings.StatusOrderWaitingForPickup || (model.OrderStatus == AppSettings.StatusOrderWaitingForDelivery))
+        {
+          data.WaitingForPickupDate = DateTime.Now;
+          data.WaitingForDeliveryDate = DateTime.Now;
+        }
+        if (model.OrderStatus == AppSettings.StatusOrderDelivered)
+        {
+          data.DeliveredDate = DateTime.Now;
+        }
+        if (model.OrderStatus == AppSettings.StatusOrderCancelled)
+        {
+          data.CancelledDate = DateTime.Now;
+        }
+        // nếu data có orderStatus = DELIVERED thì mà người dùng update lại về các trạng thái khác thì sẽ không cho update
+        if (data.OrderStatus == AppSettings.StatusOrderDelivered && model.OrderStatus != AppSettings.StatusOrderDelivered)
+        {
+          strMessage = "Đơn hàng đã giao không thể cập nhật trạng thái khác";
+          return null;
+        }
         data.OrderStatus = model.OrderStatus;
         _unitOfWork.TrxTransaction.Update(data);
         _unitOfWork.Save();
         _unitOfWork.Commit();
         ShoppingCartVM cartVM = new ShoppingCartVM();
         cartVM.TrxTransaction = data;
+        strMessage = "Cập nhật đơn hàng thành công";
         return cartVM;
       }
       catch (Exception ex)

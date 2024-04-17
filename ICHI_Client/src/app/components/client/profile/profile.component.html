@@ -104,7 +104,7 @@
                 </div>
                 <div class="col-auto">
                   <p class="text-body-secondary">
-                    {{ customerTransaction?.customer?.address }}
+                    {{ trxTransaction?.customer?.address }}
                   </p>
                 </div>
               </div>
@@ -116,7 +116,7 @@
                 </div>
                 <div class="col-auto">
                   <a class="lh-1" href="mailto:shatinon@jeemail.com">{{
-                    customerTransaction?.customer?.user?.email
+                    trxTransaction?.customer?.user?.email
                   }}</a>
                 </div>
               </div>
@@ -126,7 +126,7 @@
                 </div>
                 <div class="col-auto">
                   <a href="tel:+1234567890">{{
-                    customerTransaction?.customer?.phoneNumber
+                    trxTransaction?.customer?.phoneNumber
                   }}</a>
                 </div>
               </div>
@@ -145,28 +145,18 @@
           <li class="nav-item me-3">
             <a
               class="nav-link text-nowrap active"
-              id="orders-tab"
-              data-bs-toggle="tab"
-              href="#tab-orders"
-              role="tab"
-              aria-controls="tab-orders"
-              aria-selected="true"
-              ><span class="fas fa-shopping-cart me-2"></span>Đơn hàng
+              (click)="selectStatusOrder('ALL')"
+              ><span class="fas fa-shopping-cart me-2"></span>Tổng đơn hàng
               <span class="text-body-tertiary fw-normal">
-                {{ customerTransaction?.trxTransactions?.length }}</span
+                {{ trxTransaction?.trxTransactions?.length }}</span
               ></a
             >
           </li>
-          <!-- <li class="nav-item me-3">
+          <li class="nav-item me-3">
             <a
               class="nav-link text-nowrap"
-              id="reviews-tab"
-              data-bs-toggle="tab"
-              href="#tab-reviews"
-              role="tab"
-              aria-controls="tab-orders"
-              aria-selected="true"
-              ><span class="fas fa-star me-2"></span>Reviews<span
+              (click)="selectStatusOrder('PENDING')"
+              ><span class="fas fa-star me-2"></span>Chưa xác nhận<span
                 class="text-body-tertiary fw-normal"
               >
                 (24)</span
@@ -176,39 +166,38 @@
           <li class="nav-item me-3">
             <a
               class="nav-link text-nowrap"
-              id="wishlist-tab"
-              data-bs-toggle="tab"
-              href="#tab-wishlist"
-              role="tab"
-              aria-controls="tab-orders"
-              aria-selected="true"
-              ><span class="fas fa-heart me-2"></span>Wishlist</a
+              (click)="selectStatusOrder('ONHOLD')"
+              ><span class="fas fa-heart me-2"></span>Đã xác nhận</a
             >
           </li>
           <li class="nav-item me-3">
             <a
               class="nav-link text-nowrap"
-              id="stores-tab"
-              data-bs-toggle="tab"
-              href="#tab-stores"
-              role="tab"
-              aria-controls="tab-stores"
-              aria-selected="true"
-              ><span class="fas fa-home me-2"></span>Stores</a
+              (click)="selectStatusOrder('WAITINGFORPICKUP')"
+              ><span class="fas fa-home me-2"></span>Chờ lấy hàng</a
             >
           </li>
           <li class="nav-item">
             <a
               class="nav-link text-nowrap"
-              id="personal-info-tab"
-              data-bs-toggle="tab"
-              href="#tab-personal-info"
-              role="tab"
-              aria-controls="tab-personal-info"
-              aria-selected="true"
-              ><span class="fas fa-user me-2"></span>Personal info</a
+              (click)="selectStatusOrder('WAITINGFORDELIVERY')"
+              ><span class="fas fa-user me-2"></span>Đang giao hàng</a
             >
-          </li> -->
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link text-nowrap"
+              (click)="selectStatusOrder('DELIVERED')"
+              ><span class="fas fa-user me-2"></span>Đã giao hàng</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link text-nowrap"
+              (click)="selectStatusOrder('CANCELLED')"
+              ><span class="fas fa-user me-2"></span>Đã hủy</a
+            >
+          </li>
         </ul>
       </div>
       <div class="tab-content" id="profileTabContent">
@@ -277,9 +266,7 @@
                 <tbody class="list" id="profile-order-table-body">
                   <tr
                     class="hover-actions-trigger btn-reveal-trigger position-static"
-                    *ngFor="
-                      let trxTransaction of customerTransaction?.trxTransactions
-                    "
+                    *ngFor="let trxTransaction of trxTransaction"
                   >
                     <td class="order align-middle white-space-nowrap py-2 ps-0">
                       <a
@@ -294,10 +281,10 @@
                       <span
                         class="badge badge-phoenix fs-10 badge-phoenix-success"
                         *ngIf="
-                          Utils.getOrdersStatus(trxTransaction.orderStatus) ===
-                          'Đã vận chuyển'
+                          trxTransaction.orderStatus ===
+                          Utils.WAITINGFORDELIVERY
                         "
-                        ><span class="badge-label">Đã vận chuyển</span
+                        ><span class="badge-label">Đang giao hàng</span
                         ><svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="16px"
@@ -316,11 +303,8 @@
 
                       <span
                         class="badge badge-phoenix fs-10 badge-phoenix-info"
-                        *ngIf="
-                          Utils.getOrdersStatus(trxTransaction.orderStatus) ===
-                          'Đang xử lý'
-                        "
-                        ><span class="badge-label">Đang xử lý</span>
+                        *ngIf="trxTransaction.orderStatus === Utils.ONHOLD"
+                        ><span class="badge-label">Đã xác nhận</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="16px"
@@ -339,10 +323,12 @@
                           <line x1="12" y1="8" x2="12.01" y2="8"></line></svg
                       ></span>
 
-                      <!-- <span
+                      <span
                         class="badge badge-phoenix fs-10 badge-phoenix-warning"
-                        *ngIf="Utils.getOrdersStatus('Đã vận chuyển')"
-                        ><span class="badge-label">Partially fulfilled</span
+                        *ngIf="
+                          trxTransaction.orderStatus === Utils.WAITINGFORPICKUP
+                        "
+                        ><span class="badge-label">Chờ lấy hàng</span
                         ><svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="16px"
@@ -358,14 +344,11 @@
                         >
                           <circle cx="12" cy="12" r="10"></circle>
                           <polyline points="12 6 12 12 16 14"></polyline></svg
-                      ></span> -->
+                      ></span>
 
                       <span
                         class="badge badge-phoenix fs-10 badge-phoenix-secondary"
-                        *ngIf="
-                          Utils.getOrdersStatus(trxTransaction.orderStatus) ===
-                          'Đã hủy'
-                        "
+                        *ngIf="trxTransaction.orderStatus === Utils.CANCELLED"
                         ><span class="badge-label">Đã hủy</span
                         ><svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -386,10 +369,7 @@
 
                       <span
                         class="badge badge-phoenix fs-10 badge-phoenix-success"
-                        *ngIf="
-                          Utils.getOrdersStatus(trxTransaction.orderStatus) ===
-                          'Hoàn thành'
-                        "
+                        *ngIf="trxTransaction.orderStatus === Utils.DELIVERED"
                         ><span class="badge-label">Hoàn thành</span
                         ><svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -409,10 +389,7 @@
 
                       <span
                         class="badge badge-phoenix fs-10 badge-phoenix-danger"
-                        *ngIf="
-                          Utils.getOrdersStatus(trxTransaction.orderStatus) ===
-                          'Chưa xác nhận'
-                        "
+                        *ngIf="trxTransaction.orderStatus === Utils.PENDING"
                         ><span class="badge-label">Chưa xác nhận</span
                         ><svg
                           xmlns="http://www.w3.org/2000/svg"

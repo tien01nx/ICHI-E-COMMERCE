@@ -126,6 +126,7 @@
                     placeholder="Chọn Trạng thái đơn hàng"
                     [disabled]="true"
                     formControlName="paymentStatus"
+                    [readonly]="isReadOnly"
                   ></ng-select>
                 </div>
               </div>
@@ -1365,7 +1366,7 @@
                   <hr class="bg-body-secondary mb-2 mt-2" />
                   <div class="d-flex justify-content-between mb-3">
                     <h5 class="text-body fw-semibold">Địa chỉ giao hàng</h5>
-                     <h5 class="text-body fw-semibold">
+                    <h5 class="text-body fw-semibold">
                       <p>{{ shoppingcartdto.trxTransaction.address }}</p>
                     </h5>
                   </div>

@@ -30,9 +30,9 @@ export interface ShipmentDTO {
 export function createShipmentDTO(addressTo: Address): ShipmentDTO {
   // Các giá trị mặc định cho address_from và parcel
   const defaultAddressFrom: Address = {
-    city: '100000',
-    district: '100900',
-    wards: '100900',
+    city: '170000',
+    district: '170600',
+    wards: '1063',
   };
 
   const defaultParcel: Parcel = {

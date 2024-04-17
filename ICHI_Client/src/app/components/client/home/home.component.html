@@ -95,6 +95,27 @@
                     >
                       <div>
                         <div
+                          class="border border-1 border-translucent position-relative mb-3"
+                          style="min-height: 342px; background: #ffffff"
+                        >
+                          <div class="p-1">
+                            <span
+                              *ngIf="data.product.quantity === 0"
+                              class="badge text-bg-danger fs-9 fw-normal pt-1 pb-1 ms-auto"
+                              >Hết hàng</span
+                            >
+                          </div>
+                          <div class="image-container">
+                            <img
+                              class="img-fluid image-custom"
+                              src="{{ Environment.apiBaseRoot }}{{
+                                data.productImages[0].imagePath
+                              }}"
+                              alt=""
+                            />
+                          </div>
+                        </div>
+                        <!-- <div
                           class="border border-1 border-translucent rounded-3 position-relative mb-3"
                         >
                           <button
@@ -104,6 +125,10 @@
                             aria-label="Add to wishlist"
                             data-bs-original-title="Add to wishlist"
                           >
+                            <span
+                              class="badge text-bg-success fs-10 product-verified-badge"
+                              >Verified<span class="fas fa-check ms-1"></span
+                            ></span>
                             <span class="fas fa-heart d-block-hover"></span>
                             <span
                               class="far fa-heart d-none-hover"
@@ -114,8 +139,11 @@
                               data.productImages[0].imagePath
                             }}"
                             alt=""
-                          />
-                        </div>
+                          /><span
+                            class="badge text-bg-success fs-10 product-verified-badge"
+                            >Verified<span class="fas fa-check ms-1"></span
+                          ></span>
+                        </div> -->
                         <a
                           class="stretched-link"
                           routerLink="product_detail/{{ data.product.id }}"
