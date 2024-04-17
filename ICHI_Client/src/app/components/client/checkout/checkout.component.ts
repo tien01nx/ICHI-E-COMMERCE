@@ -73,14 +73,6 @@ export class CheckoutComponent implements OnInit {
     ]),
   });
 
-  cities: any;
-  cityName: any;
-  districts: any;
-  districtsName: any;
-  wards: any;
-  wardsName: any;
-  districId: any;
-
   constructor(
     private cartService: TrxTransactionService,
     private toastr: ToastrService,
@@ -88,52 +80,34 @@ export class CheckoutComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {}
+  cities: any;
+  districts: any;
+  wards: any;
 
   onAddress() {
-    console.log('addressForm', this.addressForm.value);
-    // từ city, district, ward lấy ra tên của thành phố, quận, xã
-    // update địa chỉ cho trxTransacForm sau khi chọn địa chỉ address =  addressDetail + ward + district + city
-
+    console.log('test dataa');
+    this.trxTransacForm
+      .get('address')
+      ?.setValue(
+        this.addressForm.get('addressDetail')?.value +
+          ', ' +
+          this.getAddressFull(
+            this.addressForm.get('city')?.value,
+            this.addressForm.get('district')?.value,
+            this.addressForm.get('ward')?.value
+          )
+      );
+    console.log('address: ', this.addressForm.value);
+    this.priceGoShip();
     this.addressForm.reset();
     this.btnCloseModal.nativeElement.click();
   }
 
-  getJsonDataAddress() {
-    this.cartService.getJsonDataAddress().subscribe({
-      next: (response) => {
-        this.cities = response;
-        console.log('địa chỉ:', response);
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
-  }
-
-  getDistrictsControl(): FormControl {
-    const cityControl = this.addressForm.get('city') as FormControl;
-    cityControl.valueChanges.pipe().subscribe((id: any) => {
-      this.cities?.forEach((city: any) => {
-        if (city.name === id) {
-          this.districts = city.districts;
-          this.addressForm.get('district')?.setValue(this.districts[0]?.name); // Đảm bảo mảng districts không rỗng trước khi gán giá trị
-        }
-      });
-    });
-    return cityControl;
-  }
-
-  getWardsControl(): FormControl {
-    const districtControl = this.addressForm.get('district') as FormControl;
-    districtControl.valueChanges.pipe().subscribe((name: any) => {
-      this.districts?.forEach((district: any) => {
-        if (district.name === name) {
-          this.wards = district.wards;
-          this.addressForm.get('ward')?.setValue(this.wards[0]?.name); // Đảm bảo mảng wards không rỗng trước khi gán giá trị
-        }
-      });
-    });
-    return districtControl;
+  getAddressFull(city: any, district: any, ward: any): string {
+    const cityName = Utils.city?.find((c) => c.id === city)?.name;
+    const districtName = Utils.district?.find((d) => d.id === district)?.name;
+    const wardName = Utils.wards?.find((w) => w.id === ward)?.name;
+    return `${wardName}, ${districtName}, ${cityName}`;
   }
 
   ngOnInit(): void {
@@ -145,73 +119,30 @@ export class CheckoutComponent implements OnInit {
     this.paymentsType = Utils.paymentTypes;
 
     console.log('cart model', this.cartService.getCarts());
-    this.getJsonDataAddress();
 
-    this.cities = this.addressForm
-      .get('city')
-      ?.valueChanges.subscribe((cityId) => {
-        if (cityId) {
-          // Lọc danh sách các quận, huyện dựa trên giá trị của thành phố
-          this.districts = Utils.district.filter(
-            (district) => district.city_id === cityId
-          );
-          console.log('Danh sách quận, huyện liên quan:', this.districts);
-        } else {
-          // Nếu cityId là null hoặc undefined, đặt districts là một mảng rỗng hoặc xử lý phù hợp
-          this.districts = [];
-          console.log('Không có ID thành phố hợp lệ');
-        }
-      });
-
-    this.districts = this.addressForm
-      .get('district')
-      ?.valueChanges.subscribe((districtId) => {
-        if (districtId) {
-          console.log('Danh sách xã , thôn:' + districtId, this.wards);
-
-          this.cartService.GetDatawards(districtId).subscribe({
-            next: (response: any) => {
-              this.wards = response.data;
-              console.log('Danh sách xã , thôn:', this.wards);
-              if (this.wards) {
-                this.wards.find((ward: any) => {
-                  if (ward.id === this.addressForm.value.ward) {
-                    this.wardsName = ward.name;
-                  }
-                });
-              }
-              this.setDataAddress();
-            },
-            error: (error) => {
-              console.log(error);
-            },
-          });
-          console.log('Danh sách xã , thôn:', this.wards);
-        } else {
-          // Nếu districtId là null hoặc undefined, đặt districts là một mảng rỗng hoặc xử lý phù hợp
-          console.log('Không có ID thành phố hợp lệ');
-        }
-      });
-
-    this.addressForm.get('addressDetail')?.valueChanges.subscribe((value) => {
-      debugger;
-      this.setDataAddress();
-    });
-  }
-
-  setDataAddress() {
-    this.trxTransacForm
-      .get('address')
-      ?.setValue(
-        this.addressForm.value.addressDetail +
-          ', ' +
-          this.wardsName +
-          ', ' +
-          this.districtsName +
-          ', ' +
-          this.cityName
+    this.addressForm.get('city')?.valueChanges.subscribe((id: any) => {
+      const filteredDistricts = Utils.district?.filter(
+        (district: any) => district.city_id === id
       );
-    this.priceGoShip();
+      this.districts = filteredDistricts || [];
+      if (this.districts.length > 0) {
+        this.addressForm.get('district')?.setValue(this.districts[0]?.id);
+      }
+    });
+
+    this.addressForm.get('district')?.valueChanges.subscribe((id: any) => {
+      const filteredWards = Utils.wards?.filter(
+        (ward: any) => ward.district_id === id
+      );
+      this.wards = filteredWards || [];
+      // Đặt giá trị mặc định cho trường 'ward' trong form nếu cần
+      if (this.wards.length > 0) {
+        this.addressForm.get('ward')?.setValue(this.wards[0]?.id);
+      }
+    });
+
+    // this.addressForm.get('addressDetail')?.valueChanges.subscribe((value) => {
+    // });
   }
 
   getInitDataId(id: number) {
@@ -284,12 +215,6 @@ export class CheckoutComponent implements OnInit {
           .get('addressDetail')
           ?.setValue(this.shoppingcartdto.customer.address);
 
-        this.cityName = Utils.city.find(
-          (city) => city.id === this.addressForm.value.city
-        )?.name;
-        this.districtsName = Utils.district.find(
-          (district) => district.id === this.addressForm.value.district
-        )?.name;
         // lấy data từ wards theo this.addressForm.value.district từ api
 
         // tính ra số tiền giảm giá của sản phẩm trong giỏ hàng bằng khi discount > 0 => sản phẩm cần tính giảm giá => số tiền giảm giá sản phẩm đó
