@@ -140,9 +140,6 @@ export class CheckoutComponent implements OnInit {
         this.addressForm.get('ward')?.setValue(this.wards[0]?.id);
       }
     });
-
-    // this.addressForm.get('addressDetail')?.valueChanges.subscribe((value) => {
-    // });
   }
 
   getInitDataId(id: number) {
@@ -214,6 +211,18 @@ export class CheckoutComponent implements OnInit {
         this.addressForm
           .get('addressDetail')
           ?.setValue(this.shoppingcartdto.customer.address);
+
+        this.trxTransacForm
+          .get('address')
+          ?.setValue(
+            this.addressForm.get('addressDetail')?.value +
+              ', ' +
+              this.getAddressFull(
+                this.addressForm.get('city')?.value,
+                this.addressForm.get('district')?.value,
+                this.addressForm.get('ward')?.value
+              )
+          );
 
         // lấy data từ wards theo this.addressForm.value.district từ api
 
