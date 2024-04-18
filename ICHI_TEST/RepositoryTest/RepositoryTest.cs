@@ -1,19 +1,68 @@
 ﻿using ICHI.DataAccess.Repository;
+using ICHI.DataAccess.Repository.IRepository;
 using ICHI_API.Data;
 using ICHI_CORE.Domain.MasterModel;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace ICHI_TEST.RepositoryTest
 {
   public class RepositoryTest
   {
+    private readonly PcsApiContext _context;
+    private readonly IUnitOfWork _unitOfWork;
+
+    public RepositoryTest()
+    {
+      _context = ContextGenerator.Generator();
+      _unitOfWork = new UnitOfWork(_context);
+      CreateData();
+
+    }
+
+    // Tạo data mẫu
+    private void CreateData()
+    {
+      for (int i = 0; i < 30; i++)
+      {
+        _unitOfWork.Category.Add(new Category
+        {
+          CategoryName = $"Category {i}",
+          ParentID = 0,
+          CategoryLevel = 1,
+          Notes = "Notes",
+          IsDeleted = false,
+          CreateBy = "Admin",
+          ModifiedBy = "Admin"
+        });
+      }
+      _unitOfWork.Save();
+    }
+    /// <summary>
+    ///  test case kiểm tra việc create category thành công
+    /// </summary>
+    [Fact]
+    public void Create_Success()
+    {
+      // Arrange
+      Category category = new Category
+      {
+        CategoryName = "Test Category Create",
+        ParentID = 0,
+        CategoryLevel = 1,
+        Notes = "Notes",
+        IsDeleted = false,
+        CreateBy = "Admin",
+        ModifiedBy = "Admin"
+      };
+
+      // Act
+      _unitOfWork.Category.Add(category);
+      _unitOfWork.Save();
+
+      // Assert
+      var updatedCategory = _unitOfWork.Category.Get(u => u.CategoryName == "Test Category Create");
+      Assert.NotNull(updatedCategory);
+      Assert.Equal("Test Category Create", updatedCategory.CategoryName);
+    }
     /// <summary>
     ///  test case kiểm tra việc update category thành công
     /// </summary>
@@ -21,21 +70,17 @@ namespace ICHI_TEST.RepositoryTest
     public void Update_Success()
     {
       // Arrange
-      var context = ContextGenerator.Generator();
-      var repository = new CategoryRepository(context);
-      var category = new Category { ParentID = 1, CategoryLevel = 2, CategoryName = "Test Category" };
-      context.Categories.Add(category);
-      context.SaveChanges();
+      var model = _unitOfWork.Category.Get(u => u.Id == 1, tracked: true);
 
       // Act
-      category.CategoryName = "Updated Category";
-      repository.Update(category);
-      context.SaveChanges();
+      model.CategoryName = "Updated Category Sussess";
+      _unitOfWork.Category.Update(model);
+      _unitOfWork.Save();
 
       // Assert
-      var updatedCategory = context.Categories.FirstOrDefault(c => c.Id == category.Id);
+      var updatedCategory = _unitOfWork.Category.Get(u => u.Id == 1);
       Assert.NotNull(updatedCategory);
-      Assert.Equal("Updated Category", updatedCategory.CategoryName);
+      Assert.Equal("Updated Category Sussess", updatedCategory.CategoryName);
     }
     /// <summary>
     /// test case kiểm tra việc update category không thành công
@@ -44,19 +89,15 @@ namespace ICHI_TEST.RepositoryTest
     public void Update_Fail()
     {
       // Arrange
-      var context = ContextGenerator.Generator();
-      var repository = new CategoryRepository(context);
-      var category = new Category { ParentID = 1, CategoryLevel = 2, CategoryName = "Test Category" };
-      context.Categories.Add(category);
-      context.SaveChanges();
+      var data = _unitOfWork.Category.Get(u => u.Id == 1, tracked: true);
 
       // Act
-      category.CategoryName = "Updated Category";
-      repository.Update(category);
-      context.SaveChanges();
+      data.CategoryName = "Update category Faild";
+      _unitOfWork.Category.Update(data);
+      _unitOfWork.Save();
 
       // Assert
-      var updatedCategory = context.Categories.FirstOrDefault(c => c.Id == category.Id);
+      var updatedCategory = _unitOfWork.Category.Get(u => u.Id == 1, tracked: true);
       Assert.NotNull(updatedCategory);
       Assert.NotEqual("Test Category", updatedCategory.CategoryName);
     }
@@ -67,26 +108,8 @@ namespace ICHI_TEST.RepositoryTest
     [Fact]
     public async Task ExistsByNameSuccess()
     {
-      // Arrange
-
-      var dbContext = ContextGenerator.Generator();
-
-      var categoryRepository = new CategoryRepository(dbContext);
-
-      var category = new Category
-      {
-        Id = 1,
-        ParentID = 0,
-        CategoryLevel = 1,
-        CategoryName = "Test Category",
-        Notes = "Test notes",
-        IsDeleted = false
-      };
-      await dbContext.Categories.AddAsync(category);
-      await dbContext.SaveChangesAsync();
-
       // Act
-      var exists = categoryRepository.ExistsBy(c => c.CategoryName == "Test Category");
+      var exists = _unitOfWork.Category.ExistsBy(c => c.CategoryName == "Category 4");
 
       // Assert
       Assert.True(exists);
@@ -98,23 +121,8 @@ namespace ICHI_TEST.RepositoryTest
     [Fact]
     public async Task ExistsByNameFail()
     {
-      // Arrange
-      var dbContext = ContextGenerator.Generator();
-      var categoryRepository = new CategoryRepository(dbContext);
-      var category = new Category
-      {
-        Id = 1,
-        ParentID = 0,
-        CategoryLevel = 1,
-        CategoryName = "Test Category",
-        Notes = "Test notes",
-        IsDeleted = false
-      };
-      await dbContext.Categories.AddAsync(category);
-      await dbContext.SaveChangesAsync();
-
       // Act
-      var exists = categoryRepository.ExistsBy(c => c.CategoryName == "Test Category 1");
+      var exists = _unitOfWork.Category.ExistsBy(c => c.CategoryName == "Test Category 32");
       Assert.False(exists);
     }
     /// <summary>
@@ -124,26 +132,11 @@ namespace ICHI_TEST.RepositoryTest
     [Fact]
     public async Task FindByIdSuccess()
     {
-      // Arrange
-      var dbContext = ContextGenerator.Generator();
-      var categoryRepository = new CategoryRepository(dbContext);
-      List<Category> categories = new List<Category>
-      {
-        new Category { Id = 1, ParentID = 0, CategoryLevel = 1, CategoryName = "Test Category 1", Notes = "Test notes 1", IsDeleted = false },
-        new Category { Id = 2, ParentID = 0, CategoryLevel = 1, CategoryName = "Test Category 2", Notes = "Test notes 2", IsDeleted = false },
-        new Category { Id = 3, ParentID = 0, CategoryLevel = 1, CategoryName = "Test Category 3", Notes = "Test notes 3", IsDeleted = false },
-        new Category { Id = 4, ParentID = 0, CategoryLevel = 1, CategoryName = "Test Category 4", Notes = "Test notes 4", IsDeleted = false },
-        new Category { Id = 5, ParentID = 0, CategoryLevel = 1, CategoryName = "Test Category 5", Notes = "Test notes 5", IsDeleted = false }
-      };
-      await dbContext.Categories.AddRangeAsync(categories);
-      await dbContext.SaveChangesAsync();
-
       // Act
-      var result = categoryRepository.Get(u => u.Id == 1);
-
+      var result = _unitOfWork.Category.Get(u => u.Id == 1);
       // Assert
       Assert.NotNull(result);
-      Assert.Equal("Test Category 1", result.CategoryName);
+      Assert.Equal("Category 0", result.CategoryName);
     }
     /// <summary>
     /// Test case thực hiện insert 5 bảng ghi category và kiểm tra lấy theo id  thất bại
@@ -152,22 +145,8 @@ namespace ICHI_TEST.RepositoryTest
     [Fact]
     public async Task FindByIdFail()
     {
-      // Arrange
-      var dbContext = ContextGenerator.Generator();
-      var categoryRepository = new CategoryRepository(dbContext);
-      List<Category> categories = new List<Category>
-      {
-        new Category { Id = 1, ParentID = 0, CategoryLevel = 1, CategoryName = "Test Category 1", Notes = "Test notes 1", IsDeleted = false },
-        new Category { Id = 2, ParentID = 0, CategoryLevel = 1, CategoryName = "Test Category 2", Notes = "Test notes 2", IsDeleted = false },
-        new Category { Id = 3, ParentID = 0, CategoryLevel = 1, CategoryName = "Test Category 3", Notes = "Test notes 3", IsDeleted = false },
-        new Category { Id = 4, ParentID = 0, CategoryLevel = 1, CategoryName = "Test Category 4", Notes = "Test notes 4", IsDeleted = false },
-        new Category { Id = 5, ParentID = 0, CategoryLevel = 1, CategoryName = "Test Category 5", Notes = "Test notes 5", IsDeleted = false }
-      };
-      await dbContext.Categories.AddRangeAsync(categories);
-      await dbContext.SaveChangesAsync();
-
       // Act
-      var result = categoryRepository.Get(u => u.Id == 6);
+      var result = _unitOfWork.Category.Get(u => u.Id == 50);
 
       // Assert
       Assert.Null(result);
@@ -179,26 +158,12 @@ namespace ICHI_TEST.RepositoryTest
     public async Task DeleteSuccess()
     {
       // Arrange
-      var dbContext = ContextGenerator.Generator();
-      var categoryRepository = new CategoryRepository(dbContext);
-      var category = new Category
-      {
-        Id = 1,
-        ParentID = 0,
-        CategoryLevel = 1,
-        CategoryName = "Test Category",
-        Notes = "Test notes",
-        IsDeleted = false
-      };
-      await dbContext.Categories.AddAsync(category);
-      await dbContext.SaveChangesAsync();
-
+      var data = _unitOfWork.Category.Get(u => u.Id == 1, tracked: true);
       // Act
-      categoryRepository.Remove(category);
-      await dbContext.SaveChangesAsync();
-
+      _unitOfWork.Category.Remove(data);
+      _unitOfWork.Save();
       // Assert
-      var deletedCategory = dbContext.Categories.FirstOrDefault(c => c.Id == category.Id);
+      var deletedCategory = _unitOfWork.Category.Get(u => u.Id == 1);
       Assert.Null(deletedCategory);
     }
     /// <summary>
@@ -207,28 +172,18 @@ namespace ICHI_TEST.RepositoryTest
     [Fact]
     public async Task DeleteFaild()
     {
-      // Arrange
-      var dbContext = ContextGenerator.Generator();
-      var categoryRepository = new CategoryRepository(dbContext);
-      var category = new Category
-      {
-        Id = 1,
-        ParentID = 0,
-        CategoryLevel = 1,
-        CategoryName = "Test Category",
-        Notes = "Test notes",
-        IsDeleted = false
-      };
-      await dbContext.Categories.AddAsync(category);
-      await dbContext.SaveChangesAsync();
-
       // Act
-      categoryRepository.Remove(category);
-      await dbContext.SaveChangesAsync();
+      var data = _unitOfWork.Category.Get(u => u.Id == 50, tracked: true);
+
+      if (data != null)
+      {
+        _unitOfWork.Category.Remove(data);
+        _unitOfWork.Save();
+      }
 
       // Assert
-      var deletedCategory = dbContext.Categories.FirstOrDefault(c => c.Id == category.Id);
-      Assert.Null(deletedCategory);
+      var categoryAfterDelete = _unitOfWork.Category.Get(u => u.Id == 50);
+      Assert.Null(categoryAfterDelete);
     }
     /// <summary>
     /// test case lấy danh sách category thành công
@@ -236,31 +191,12 @@ namespace ICHI_TEST.RepositoryTest
     [Fact]
     public async Task GetAllSuccess()
     {
-      // Arrange
-      var dbContext = ContextGenerator.Generator();
-      var categoryRepository = new CategoryRepository(dbContext);
-
-      // Tạo ra danh sách category
-      List<Category> categories = new List<Category>
-      {
-        new Category { Id = 1, ParentID = 0, CategoryLevel = 1, CategoryName = "Test Category 1", Notes = "Test notes 1", IsDeleted = false },
-        new Category { Id = 2, ParentID = 0, CategoryLevel = 1, CategoryName = "Test Category 2", Notes = "Test notes 2", IsDeleted = false },
-        new Category { Id = 3, ParentID = 0, CategoryLevel = 1, CategoryName = "Test Category 3", Notes = "Test notes 3", IsDeleted = false },
-        new Category { Id = 4, ParentID = 0, CategoryLevel = 1, CategoryName = "Test Category 4", Notes = "Test notes 4", IsDeleted = false },
-        new Category { Id = 5, ParentID = 0, CategoryLevel = 1, CategoryName = "Test Category 5", Notes = "Test notes 5", IsDeleted = false }
-      };
-
-      await dbContext.Categories.AddRangeAsync(categories);
-      await dbContext.SaveChangesAsync();
-
-      // kiểm tra có trả về 5 bảng ghi hay không
-
       // Act
-      var result = categoryRepository.GetAll(null, null);
+      var data = _unitOfWork.Category.GetAll().Take(5);
 
       // Assert
-      Assert.NotNull(result);
-      Assert.Equal(5, result.Count());
+      Assert.NotNull(data);
+      Assert.Equal(5, data.Count());
     }
     /// <summary>
     /// test case lấy danh sách category  thất bại
@@ -268,17 +204,17 @@ namespace ICHI_TEST.RepositoryTest
     [Fact]
     public async Task GetAllFaild()
     {
-      // Arrange
-      var dbContext = ContextGenerator.Generator();
-      var categoryRepository = new CategoryRepository(dbContext);
-
+      _unitOfWork.Category.GetAll().ToList().ForEach(c =>
+      {
+        _unitOfWork.Category.Remove(c);
+      });
+      _unitOfWork.Save();
       // Act
-      var result = categoryRepository.GetAll(null, null);
+      var result = _unitOfWork.Category.GetAll();
 
       // Assert
       Assert.NotNull(result);
       Assert.Empty(result);
     }
-
   }
 }
