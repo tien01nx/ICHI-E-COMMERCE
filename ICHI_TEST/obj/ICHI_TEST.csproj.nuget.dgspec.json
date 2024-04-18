@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_TEST\\ICHI_TEST.csproj": {}
+    "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_TEST\\ICHI_TEST.csproj": {}
   },
   "projects": {
-    "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj": {
+    "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj",
+        "projectUniqueName": "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj",
         "projectName": "ICHI_API",
-        "projectPath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj",
+        "projectPath": "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj",
         "packagesPath": "C:\\Users\\tien0\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\obj\\",
+        "outputPath": "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages"
@@ -33,8 +33,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj": {
-                "projectPath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj"
+              "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj": {
+                "projectPath": "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj"
               }
             }
           }
@@ -43,6 +43,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -60,6 +65,10 @@
             "BCrypt.Net-Next": {
               "target": "Package",
               "version": "[4.0.3, )"
+            },
+            "BouncyCastle.NetCore": {
+              "target": "Package",
+              "version": "[2.2.1, )"
             },
             "FluentFTP": {
               "target": "Package",
@@ -113,6 +122,10 @@
               "target": "Package",
               "version": "[13.0.3, )"
             },
+            "RestSharp": {
+              "target": "Package",
+              "version": "[110.2.0, )"
+            },
             "StyleCop.Analyzers": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
@@ -134,6 +147,10 @@
             "X.PagedList": {
               "target": "Package",
               "version": "[8.4.7, )"
+            },
+            "itext7.pdfhtml": {
+              "target": "Package",
+              "version": "[5.0.3, )"
             }
           },
           "imports": [
@@ -155,18 +172,18 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj": {
+    "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj",
+        "projectUniqueName": "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj",
         "projectName": "ICHI_CORE",
-        "projectPath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj",
+        "projectPath": "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj",
         "packagesPath": "C:\\Users\\tien0\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_CORE\\obj\\",
+        "outputPath": "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_CORE\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages"
@@ -194,6 +211,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -227,18 +249,18 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_TEST\\ICHI_TEST.csproj": {
+    "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_TEST\\ICHI_TEST.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_TEST\\ICHI_TEST.csproj",
+        "projectUniqueName": "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_TEST\\ICHI_TEST.csproj",
         "projectName": "ICHI_TEST",
-        "projectPath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_TEST\\ICHI_TEST.csproj",
+        "projectPath": "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_TEST\\ICHI_TEST.csproj",
         "packagesPath": "C:\\Users\\tien0\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_TEST\\obj\\",
+        "outputPath": "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_TEST\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages"
@@ -260,11 +282,11 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj": {
-                "projectPath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj"
+              "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj": {
+                "projectPath": "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_API\\ICHI_API.csproj"
               },
-              "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj": {
-                "projectPath": "C:\\Users\\tien0\\source\\repos\\Code\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj"
+              "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj": {
+                "projectPath": "C:\\Users\\tien0\\source\\repos\\tien01nx\\ICHI-E-COMMERCE\\ICHI_CORE\\ICHI_CORE.csproj"
               }
             }
           }
@@ -273,6 +295,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -324,7 +351,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     }

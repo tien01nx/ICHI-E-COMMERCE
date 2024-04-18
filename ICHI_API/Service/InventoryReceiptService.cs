@@ -42,7 +42,6 @@ namespace ICHI_API.Service
           var productItem = product.FirstOrDefault(u => u.Id == item.ProductId);
           if (productItem == null)
           {
-
             throw new BadRequestException(PRODUCTNOTFOUNDINVENTORY);
           }
           item.InventoryReceiptId = model.Id;
@@ -67,6 +66,7 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
+        _unitOfWork.BeginTransaction();
         var inventory = _unitOfWork.InventoryReceipt.Get(u => u.Id == data.Id);
         if (inventory == null)
         {
@@ -78,9 +78,8 @@ namespace ICHI_API.Service
         inventory.isActive = true;
         inventory.Notes = data.Notes;
         _unitOfWork.InventoryReceipt.Update(inventory);
-        _unitOfWork.Save();
         // lấy ra danh sách productId trong product
-        _unitOfWork.InventoryReceiptDetail.RemoveRange(_unitOfWork.InventoryReceiptDetail.GetAll(u => u.InventoryReceiptId == data.Id));
+        //_unitOfWork.InventoryReceiptDetail.RemoveRange(_unitOfWork.InventoryReceiptDetail.GetAll(u => u.InventoryReceiptId == data.Id));
         var product = _unitOfWork.Product.GetAll();
         foreach (var item in data.InventoryReceiptDetails)
         {
@@ -100,11 +99,13 @@ namespace ICHI_API.Service
         }
 
         _unitOfWork.Save();
+        _unitOfWork.Commit();
         strMessage = UPDATEINVENTORYSUCCESS;
         return inventory;
       }
       catch (Exception)
       {
+        _unitOfWork.Rollback();
         throw;
       }
     }

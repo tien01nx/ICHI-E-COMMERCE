@@ -51,45 +51,27 @@ namespace ICHI_API.Service
       try
       {
         _unitOfWork.BeginTransaction();
-        //trxTransactionDTO.CustomerId = trxTransactionDTO.Carts.FirstOrDefault().UserId;
+        TrxTransaction trxTransaction = new TrxTransaction();
         int checkPromotion = trxTransactionDTO.Carts.Where(x => x.Discount > 0).Count();
+
         // kiểm tra thông tin product trong carts để kiểm tra còn trong chương trình khuyến mãi không
         var promotion = _promotionService.CheckPromotionActive().Select(x => x.ProductId);
 
         var cartProduct = trxTransactionDTO.Carts.Where(x => x.Discount > 0 && promotion.Contains(x.ProductId)).ToList();
         if (cartProduct.Count == 0 && checkPromotion > 0)
         {
-          //strMessage = TRXTRANSACTIONPROMTION;
-          //return null;
           throw new BadRequestException(TRXTRANSACTIONPROMTION);
         }
-        // từ userId lấy ra customerId
-        // từ userId lấy ra xem là employee hay customer từ bảng UserRole
-        TrxTransaction trxTransaction = new TrxTransaction();
+        trxTransaction.CustomerId = GetCustomerId(trxTransactionDTO.CustomerId);
 
-        var user = _unitOfWork.UserRole.Get(u => u.UserId == trxTransactionDTO.CustomerId, "Role");
-        if (user == null)
-        {
-          throw new BadRequestException(TRXTRANSACTIONNOTFOUNDUSER);
-        }
-        if (user.Role.RoleName == AppSettings.USER)
-        {
-          var data3 = _unitOfWork.Customer.Get(u => u.UserId == trxTransactionDTO.CustomerId);
-          trxTransaction.CustomerId = _unitOfWork.Customer.Get(u => u.UserId == trxTransactionDTO.CustomerId).Id;
-        }
-        else
-        {
-          throw new BadRequestException(TRXTRANSACTIONNOTFOUNDUSER);
-        }
-
-        //var cart = _unitOfWork.Cart.GetAll(u => u.UserId == trxTransactionDTO.CustomerId);
         trxTransaction.FullName = trxTransactionDTO?.FullName;
         trxTransaction.PhoneNumber = trxTransactionDTO?.PhoneNumber;
         trxTransaction.Address = trxTransactionDTO?.Address;
         trxTransaction.OrderDate = DateTime.Now;
         trxTransaction.OrderStatus = trxTransactionDTO.OrderStatus ?? "PENDING";
         trxTransaction.PaymentTypes = trxTransactionDTO.PaymentTypes;
-        // nếu PaymentTypes = CASH thì trạng thái thanh toán là đã thanh toán
+
+        //nếu PaymentTypes = CASH thì trạng thái thanh toán là đã thanh toán
         if (trxTransaction.PaymentTypes == AppSettings.Cash)
         {
           trxTransaction.PaymentStatus = AppSettings.PaymentStatusApproved;
@@ -98,11 +80,12 @@ namespace ICHI_API.Service
         {
           trxTransaction.PaymentStatus = AppSettings.PaymentStatusPending;
         }
+        trxTransaction.PaymentStatus = AppSettings.PaymentStatusPending;
         trxTransaction.OrderTotal = trxTransactionDTO.Amount ?? 0;
         _unitOfWork.TrxTransaction.Add(trxTransaction);
         _unitOfWork.Save();
 
-        trxTransactionDTO.TrxTransactionId = trxTransaction.Id;
+        //trxTransactionDTO.TrxTransactionId = trxTransaction.Id;
         trxTransactionDTO.Amount = trxTransaction.OrderTotal;
         // lấy thông tin đơn hàng theo userid từ cart
         foreach (var item in trxTransactionDTO.Carts)
@@ -113,30 +96,84 @@ namespace ICHI_API.Service
           trxTransactionDetail.Price = item.Price;
           trxTransactionDetail.TrxTransactionId = trxTransaction.Id;
           _unitOfWork.TransactionDetail.Add(trxTransactionDetail);
-          _unitOfWork.Save();
         }
+
         if (checkPromotion > 0)
         {
-          // cập nhật discount promtionDetail cho productID
-          foreach (var item in cartProduct)
-          {
-            var productId = _unitOfWork.PromotionDetail.Get(u => u.ProductId == item.ProductId, tracked: true);
-            productId.UsedCodesCount += 1;
-            _unitOfWork.PromotionDetail.Update(productId);
-          }
+          UpdatePromotionDetail(cartProduct);
         }
-        // xóa thông tin giỏ hàng theo list CarrtId
+
         var listCartId = trxTransactionDTO.Carts.Select(x => x.Id).ToList();
         _unitOfWork.Cart.RemoveRange(_unitOfWork.Cart.GetAll(u => listCartId.Contains(u.Id)));
+        UpdateProductQuantity(trxTransactionDTO.Carts);
         _unitOfWork.Save();
         _unitOfWork.Commit();
         return trxTransactionDTO;
       }
       catch (Exception)
       {
+        _unitOfWork.Rollback();
         throw;
       }
     }
+
+    // giảm số lượng product khi đã mua
+    public void UpdateProductQuantity(List<Cart> carts)
+    {
+      try
+      {
+        foreach (var item in carts)
+        {
+          var product = _unitOfWork.Product.Get(u => u.Id == item.ProductId, tracked: true);
+          product.Quantity -= item.Quantity;
+          _unitOfWork.Product.Update(product);
+        }
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+    // update số lượng mã giảm giá khi đã dùng
+    public void UpdatePromotionDetail(List<Cart> carts)
+    {
+      try
+      {
+        foreach (var item in carts)
+        {
+          var productId = _unitOfWork.PromotionDetail.Get(u => u.ProductId == item.ProductId, tracked: true);
+          productId.UsedCodesCount += 1;
+          _unitOfWork.PromotionDetail.Update(productId);
+        }
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+
+    // tách hàm truyền vào userId lấy ra customerid khách hàng
+    public int GetCustomerId(string userId)
+    {
+      try
+      {
+        var role = _unitOfWork.UserRole.Get(u => u.UserId == userId, "Role");
+        if (role == null)
+        {
+          throw new BadRequestException(TRXTRANSACTIONNOTFOUNDUSER);
+        }
+        if (role.Role.RoleName == AppSettings.EMPLOYEE)
+        {
+          return _unitOfWork.Employee.Get(u => u.UserId == userId).Id;
+        }
+        return _unitOfWork.Customer.Get(u => u.UserId == userId).Id;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+
     public ShoppingCartVM Update(UpdateTrxTransaction model, out string strMessage)
     {
       strMessage = string.Empty;

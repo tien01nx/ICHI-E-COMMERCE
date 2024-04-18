@@ -25,7 +25,6 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-
         ////var query = _db.Promotions.AsQueryable().Where(u => u.isDeleted == false);
         var query = _unitOfWork.Promotion.GetAll(u => u.isDeleted == false).AsQueryable();
         // thực hiện update trạng thái chương trình khuyến mãi khi hết hạn
@@ -53,11 +52,8 @@ namespace ICHI_API.Service
         var dataPromotion = _unitOfWork.Promotion.Get(u => u.Id == id);
         if (dataPromotion == null)
         {
-          //strMessage = PROMOTIONNOTFOUND;
-          //return null;
           throw new BadRequestException(PROMOTIONNOTFOUND);
         }
-
         PromotionDTO model = new PromotionDTO
         {
           Promotion = dataPromotion,
@@ -125,7 +121,6 @@ namespace ICHI_API.Service
               existingProductIds.Add(item.ProductId);
               continue;
             }
-
             item.PromotionId = promotion.Id;
             item.ProductId = item.ProductId;
             item.Quantity = item.Quantity;

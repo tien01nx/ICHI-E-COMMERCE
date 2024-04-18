@@ -947,5 +947,1043 @@
     //  endif
     //@enduml
 
+
+
+    //public Employee Create(Employee model, out string strMessage)
+    //{
+    //  strMessage = string.Empty;
+    //  try
+    //  {
+
+    //    var checkEmail = _unitOfWork.Employee.Get(u => u.UserId == model.UserId);
+    //    if (checkEmail != null)
+    //    {
+    //      throw new BadRequestException(EMAILEXIST);
+    //    }
+    //    var checkPhone = _unitOfWork.Employee.Get(u => u.PhoneNumber == model.PhoneNumber);
+    //    if (checkPhone != null)
+    //    {
+    //      throw new BadRequestException(PHONENUMBEREXISTCUSTOMER);
+    //    }
+    //    model.CreateBy = "Admin";
+    //    model.ModifiedBy = "Admin";
+    //    _unitOfWork.Employee.Add(model);
+    //    _unitOfWork.Save();
+    //    strMessage = CREATECUSTOMERSUCCESS;
+    //    return model;
+    //  }
+    //  catch (Exception)
+    //  {
+    //    throw;
+    //  }
+    //}
+    //    @startuml
+    //(*) --> "Check if email exists"
+
+    //if "Email exists?" then
+    //  -->[yes] "Throw BadRequestException: EMAILEXIST"
+    //  --> (*)
+    //else
+    //  -->[no] "Check if phone number exists"
+    //if "Phone number exists?" then
+    //  -->[yes] "Throw BadRequestException: PHONENUMBEREXISTCUSTOMER"
+    //  --> (*)
+    //else
+    //  -->[no] "Set create and modified by"
+    //  --> "Add employee to database"
+    //  --> "Save changes"
+    //  --> "Set success message"
+    //  --> "Return created employee"
+    //  --> (*)
+    //endif
+    //@enduml
+
+    //public Employee Update(Employee model, IFormFile? file, out string strMessage)
+    //{
+    //  strMessage = string.Empty;
+    //  try
+    //  {
+    //    // lấy thông tin Nhân viên
+    //    var data = _unitOfWork.Employee.Get(u => u.Id == model.Id);
+    //    if (data == null)
+    //    {
+    //      throw new BadRequestException(EMPLOYEENOTFOUND);
+    //    }
+    //    // kiểm tra email Nhân viên đã tồn tại chưa
+    //    var checkEmail = _unitOfWork.User.Get(u => u.Email == model.UserId);
+    //    if (checkEmail != null && checkEmail.Email != model.UserId)
+    //    {
+    //      throw new BadRequestException(EMAILEXIST);
+    //    }
+    //    // kiểm tra số điện thoại Nhân viên đã tồn tại chưa
+    //    var checkPhone = _unitOfWork.Employee.Get(u => u.PhoneNumber == model.PhoneNumber);
+    //    if (checkPhone != null && checkPhone.Id != model.Id)
+    //    {
+    //      throw new BadRequestException(PHONENUMBEREXISTCUSTOMER);
+    //    }
+    //    // nếu có file thì thực hiện lưu file mới và xóa file cũ đi
+    //    // lấy đường dẫn ảnh file cũ
+    //    if (file != null)
+    //    {
+    //      var user = _unitOfWork.User.Get(x => x.Email == data.UserId);
+    //      string oldFile = user.Avatar;
+    //      user.Avatar = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, user.Email, file, AppSettings.PatchUser);
+    //      user.ModifiedBy = "Admin";
+    //      user.ModifiedDate = DateTime.Now;
+    //      _unitOfWork.User.Update(user);
+    //      // xóa file cũ
+    //      if (oldFile != AppSettings.AvatarDefault)
+    //      {
+    //        ImageHelper.DeleteImage(_webHostEnvironment.WebRootPath, oldFile);
+    //      }
+    //    }
+    //    model.ModifiedBy = "Admin";
+    //    _unitOfWork.Employee.Update(model);
+    //    _unitOfWork.Save();
+    //    strMessage = UPDATEEMPLOYEESUCCESS;
+    //    return model;
+    //  }
+    //  catch (Exception)
+    //  {
+    //    throw;
+    //  }
+    //}
+
+    //    @startuml
+    //(*) --> "Get employee information"
+
+    //if "Employee exists?" then
+    //  -->[yes] "Check if email exists"
+    //  if "Email exists?" then
+    //    --> [yes] "Throw BadRequestException: EMAILEXIST"
+    //    --> (*)
+    //  else
+    //    --> [no] "Check if phone number exists"
+    //    if "Phone number exists?" then
+    //      --> [yes] "Throw BadRequestException: PHONENUMBEREXISTCUSTOMER"
+    //      --> (*)
+    //    else
+    //      --> [no] "Check if file is null"
+    //      if "File exists?" then
+    //        -->[yes] "Update user avatar"
+    //        --> "Delete old avatar"
+    //        --> "Update employee"
+
+    //      else
+    //        -->[no] "updating employee"
+    //      endif
+    //      --> "Update employee"
+    //      --> "Save changes"
+    //      --> (*)
+    //    endif
+    //  endif
+    //else
+    //  -->[no] "Throw BadRequestException: EMPLOYEENOTFOUND"
+    //  --> (*)
+    //endif
+    //@enduml
+
+
+    //public bool Delete(int id, out string strMessage)
+    //{
+    //  strMessage = string.Empty;
+    //  try
+    //  {
+    //    var data = _unitOfWork.Employee.Get(u => u.Id == id && !u.isDeleted);
+    //    if (data == null)
+    //    {
+    //      throw new BadRequestException(EMPLOYEENOTFOUND);
+    //    }
+
+    //    data.isDeleted = true;
+    //    data.ModifiedDate = DateTime.Now;
+    //    _unitOfWork.Employee.Update(data);
+    //    _unitOfWork.Save();
+    //    strMessage = DELETEEMPLOYEESUCCESS;
+    //    return true;
+    //  }
+    //  catch (Exception)
+    //  {
+    //    throw;
+    //  }
+    //}
+
+    //    @startuml
+    //(*) --> "Get employee by ID and check if not deleted"
+    //if "Employee exists?" then
+    //  -->[yes] "Mark employee as deleted"
+    //  --> "Update employee's modified date"
+    //  --> "Update employee in database"
+    //  --> "Save changes"
+    //  --> "Set success message: DELETEEMPLOYEESUCCESS"
+    //  --> "Return true"
+    //  --> (*)
+    //else
+    //  -->[no] "Throw BadRequestException: EMPLOYEENOTFOUND"
+    //  --> (*)
+    //endif
+    //@enduml
+
+
+    //    public InventoryReceipt Create(InventoryReceiptDTO data, out string strMessage)
+    //    {
+    //      strMessage = string.Empty;
+    //      try
+    //      {
+    //        // lấy ra employeeId theo userId 
+    //        var employee = _unitOfWork.Employee.Get(u => u.UserId == data.EmployeeId);
+    //        InventoryReceipt model = new InventoryReceipt
+    //        {
+    //          SupplierId = data.SupplierId,
+    //          EmployeeId = employee.Id,
+    //          Notes = data.Notes,
+    //        };
+    //        _unitOfWork.InventoryReceipt.Add(model);
+    //        _unitOfWork.Save();
+    //        // lấy ra danh sách productId trong product
+    //        var product = _unitOfWork.Product.GetAll();
+    //        foreach (var item in data.InventoryReceiptDetails)
+    //        {
+    //          var productItem = product.FirstOrDefault(u => u.Id == item.ProductId);
+    //          if (productItem == null)
+    //          {
+    //            throw new BadRequestException(PRODUCTNOTFOUNDINVENTORY);
+    //          }
+    //          item.InventoryReceiptId = model.Id;
+    //          item.BatchNumber = item.BatchNumber;
+    //          item.ProductId = item.ProductId;
+    //          item.Total = item.Total;
+    //          item.Price = item.Price;
+    //          _unitOfWork.InventoryReceiptDetail.Add(item);
+    //        }
+    //        _unitOfWork.Save();
+    //        strMessage = CREATEINVENTORYSUCCESS;
+    //        return model;
+    //      }
+    //      catch (Exception ex)
+    //      {
+    //        throw;
+    //      }
+    //    }
+    //    @startuml
+    //(*) --> "Get employee by user ID"
+
+    //if "Employee found?" then
+    //  -->[yes] "Create InventoryReceipt model"
+    //  --> "Add InventoryReceipt model to database"
+    //  --> "Get list of all products"
+
+    //  --> "For each InventoryReceiptDetail in data"
+    //  --> "Check if product exists"
+    //  if "Product exists?" then
+    //    --> [yes] "Set InventoryReceiptDetail properties"
+    //    --> "Add InventoryReceiptDetail to database"
+    //    --> "Save changes"
+    //    --> "Set success message: CREATEINVENTORYSUCCESS"
+    //    --> "Return InventoryReceipt model"
+    //    --> (*)
+    //  else
+    //    --> [no] "Throw BadRequestException: PRODUCTNOTFOUNDINVENTORY"
+    //   --> (*)
+    //  endif
+
+    //else
+    //  -->[no] "Throw BadRequestException: EMPLOYEENOTFOUND"
+    //  --> (*)
+    //endif
+    //@enduml
+
+
+
+    //public InventoryReceipt Update(InventoryReceiptDTO data, out string strMessage)
+    //{
+    //  strMessage = string.Empty;
+    //  try
+    //  {
+    //    _unitOfWork.BeginTransaction();
+    //    var inventory = _unitOfWork.InventoryReceipt.Get(u => u.Id == data.Id);
+    //    if (inventory == null)
+    //    {
+    //      throw new BadRequestException(INVENTORYNOTFOUND);
+    //    }
+    //    var user = _unitOfWork.Employee.Get(u => u.UserId == data.EmployeeId);
+    //    inventory.SupplierId = data.SupplierId;
+    //    inventory.EmployeeId = user.Id;
+    //    inventory.isActive = true;
+    //    inventory.Notes = data.Notes;
+    //    _unitOfWork.InventoryReceipt.Update(inventory);
+    //    // lấy ra danh sách productId trong product
+    //    //_unitOfWork.InventoryReceiptDetail.RemoveRange(_unitOfWork.InventoryReceiptDetail.GetAll(u => u.InventoryReceiptId == data.Id));
+    //    var product = _unitOfWork.Product.GetAll();
+    //    foreach (var item in data.InventoryReceiptDetails)
+    //    {
+    //      var productItem = product.FirstOrDefault(u => u.Id == item.ProductId);
+    //      if (productItem == null)
+    //      {
+    //        throw new BadRequestException(PRODUCTNOTFOUNDINVENTORY);
+    //      }
+    //      item.InventoryReceiptId = data.Id;
+    //      item.BatchNumber = item.BatchNumber;
+    //      item.ProductId = item.ProductId;
+    //      item.Total = item.Total;
+    //      item.Price = item.Price;
+    //      _unitOfWork.InventoryReceiptDetail.Add(item);
+    //      productItem.Quantity += item.Total;
+    //      _unitOfWork.Product.Update(productItem);
+    //    }
+
+    //    _unitOfWork.Save();
+    //    _unitOfWork.Commit();
+    //    strMessage = UPDATEINVENTORYSUCCESS;
+    //    return inventory;
+    //  }
+    //  catch (Exception)
+    //  {
+    //    _unitOfWork.Rollback();
+    //    throw;
+    //  }
+    //}
+    //    @startuml
+    //(*) --> "BeginTransaction"
+    //    --> "Get InventoryReceipt by ID"
+
+    //if "InventoryReceipt found?" then
+    //  -->[yes] "Get employee by user ID"
+    //  --> "Update InventoryReceipt properties"
+    //  --> "Update InventoryReceipt in database"
+    //  --> "Remove existing InventoryReceiptDetails for InventoryReceipt"
+    //  --> "Get list of all products"
+
+    //  --> "For each InventoryReceiptDetail in data"
+    //  --> "Check if product exists"
+    //  if "Product exists?" then
+    //    --> [yes] "Set InventoryReceiptDetail properties"
+    //    --> "Add InventoryReceiptDetail to database"
+    //    --> "Update product quantity"
+    //      --> "Save changes"
+    //  --> "Set success message: UPDATEINVENTORYSUCCESS"
+    //  --> "CommitTran"
+    //  --> "Return updated InventoryReceipt"
+    // -->(*)
+    //  else
+    //    --> [no] "Throw BadRequestException: PRODUCTNOTFOUNDINVENTORY"
+    // --> "RollBack"
+    //  endif
+    //else
+    //  -->[no] "Throw BadRequestException: INVENTORYNOTFOUND"
+    //  --> "RollBack"
+    //  --> (*)
+    //endif
+    //@enduml
+
+
+    //public Helpers.PagedResult<InventoryReceipt> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
+    //{
+    //  strMessage = string.Empty;
+    //  try
+    //  {
+    //    var query = _unitOfWork.InventoryReceipt.GetAll(includeProperties: "Supplier,Employee").AsQueryable();
+
+    //    var trimmedName = name.Trim();
+
+    //    // Kiểm tra xem chuỗi tên có phải là ngày không
+    //    if (DateTime.TryParseExact(trimmedName, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+    //    {
+    //      // Nếu là ngày, thực hiện tìm kiếm theo ngày tạo
+    //      query = query.Where(e => e.CreateDate.Date == DateTime.ParseExact(trimmedName, "dd/MM/yyyy", CultureInfo.InvariantCulture).Date);
+    //    }
+    //    else
+    //    {
+    //      // Nếu không phải là ngày, thực hiện tìm kiếm theo tên của nhà cung cấp
+    //      query = query.Where(e => e.Supplier.SupplierName.Contains(trimmedName));
+    //    }
+    //    //var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
+    //    var orderBy = sortBy switch
+    //    {
+    //      "FullName" => $"Employee.{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}",
+    //      "SupplierName" => $"Supplier.{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}",
+    //      _ => $"Id {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}"
+    //    };
+
+    //    query = query.OrderBy(orderBy);
+    //    var pagedResult = Helpers.PagedResult<InventoryReceipt>.CreatePagedResult(query, pageNumber, pageSize);
+    //    return pagedResult;
+    //  }
+    //  catch (Exception)
+    //  {
+    //    throw;
+    //  }
+    //}
+
+    //    @startuml
+    //(*) --> "Get all inventory receipts from database"
+
+    //if (Is name a valid date?) then
+    //  -->[yes] "Search by create date"
+    //  --> "Apply search filter"
+    //else
+    //  -->[no] "Search by supplier name"
+    //  --> "Apply search filter"
+    //endif
+
+    //--> "Sort results by specified criteria"
+    //--> "Create paged result"
+    //--> (*)
+    //@enduml
+
+
+
+    //    public Helpers.PagedResult<ProductDTO> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
+    //    {
+    //      strMessage = string.Empty;
+    //      try
+    //      {
+    //        var query = _unitOfWork.Product.GetAll(u => u.isDeleted == false, "Category,Trademark").AsQueryable();
+
+    //        if (!string.IsNullOrEmpty(name))
+    //        {
+    //          query = query.Where(e => e.ProductName.Contains(name.Trim()));
+    //        }
+
+    //        var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
+    //        query = query.OrderBy(orderBy);
+    //        var promotion = _promotionService.CheckPromotionActive();
+    //        foreach (var item in query)
+    //        {
+    //          //item.Discount = _unitOfWork.PromotionDetail.Get(u => u.ProductId == item.Id, "Promotion")?.Promotion?.Discount ?? 0;
+    //          item.Discount = promotion.Where(u => u.ProductId == item.Id).FirstOrDefault()?.Promotion?.Discount ?? 0;
+    //          item.Image += _unitOfWork.ProductImages.GetAll(u => u.ProductId == item.Id).FirstOrDefault()?.ImagePath;
+    //        }
+
+    //        var pagedResult = Helpers.PagedResult<ProductDTO>.CreatePagedResult(query.Select(p => new ProductDTO
+    //        {
+    //          Product = p,
+    //          ProductImages = _unitOfWork.ProductImages.GetAll(u => u.ProductId == p.Id, null),
+    //          CategoryProduct = p.Category,
+    //        }), pageNumber, pageSize);
+    //        return pagedResult;
+    //      }
+    //      catch (Exception)
+    //      {
+    //        throw;
+    //      }
+    //    }
+    //    @startuml
+    //(*) --> "Retrieve all products from the database"
+
+    //if (Is name provided?) then
+    //  -->[yes] "Filter products by name"
+    //  --> "Apply name filter"
+    //  --> "Sort products by specified criteria"
+    //else
+    //  -->[no] "No name filter"
+    //  --> "Continue without name filter"
+    //endif
+
+    //--> "Sort products by specified criteria"
+    //--> "Check active promotions"
+    //--> "Apply discounts and images"
+    //--> "Create paged result"
+    //--> (*)
+    //@enduml
+
+
+    //    public ProductDTO FindById(int id, out string strMessage)
+    //    {
+    //      strMessage = string.Empty;
+    //      try
+    //      {
+    //        ProductDTO productDTO = new ProductDTO
+    //        {
+    //          Product = _unitOfWork.Product.Get(u => u.Id == id && u.isDeleted == false),
+    //          ProductImages = _unitOfWork.ProductImages.GetAll(u => u.ProductId == id).ToList(),
+    //          CategoryProduct = _unitOfWork.Category.Get(u => u.Id == id)
+    //        };
+    //        if (productDTO == null)
+    //        {
+    //          throw new BadRequestException(PRODUCTNOTFOUND);
+    //        }
+    //        else
+    //        {
+    //          return productDTO;
+    //        }
+    //      }
+    //      catch (Exception)
+    //      {
+    //        throw;
+    //      }
+    //    }
+    //    @startuml
+    //(*) --> "Retrieve product by ID from the database"
+
+    //if (Product found?) then
+    //  -->[yes] "Retrieve product images"
+    //  --> "Retrieve category of the product"
+    //  --> "Create ProductDTO object"
+    //  --> (*)
+    //else
+    //  -->[no] "Throw BadRequestException: PRODUCTNOTFOUND"
+    //  --> (*)
+    //endif
+    //@enduml
+
+
+
+
+    //public Product Create(Product product, List<IFormFile>? files, out string strMessage)
+    //{
+    //  strMessage = string.Empty;
+    //  _unitOfWork.BeginTransaction();
+
+    //  try
+    //  {
+    //    if (product.Id == 0)
+    //    {
+    //      var checkProduct = _unitOfWork.Product.Get(x => x.ProductName == product.ProductName);
+    //      if (checkProduct != null)
+    //      {
+    //        throw new BadRequestException(PRODUCTEXIST);
+    //      }
+    //      product.CreateBy = "Admin";
+    //      product.ModifiedBy = "Admin";
+
+    //      _unitOfWork.Product.Add(product);
+    //      _unitOfWork.Save();
+
+    //      if (files != null && files.Count > 0)
+    //      {
+    //        foreach (var file in files)
+    //        {
+    //          if (!ImageHelper.CheckImage(file))
+    //          {
+    //            _unitOfWork.Rollback();
+    //            throw new BadRequestException(FILEFORMAT);
+    //          }
+    //          var image = new ProductImages();
+    //          image.ProductId = product.Id;
+    //          image.ImageName = file.FileName;
+    //          image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id.ToString(), file, AppSettings.PatchProduct);
+    //          image.IsDefault = false;
+    //          image.IsActive = true;
+    //          image.IsDeleted = false;
+    //          image.CreateBy = "Admin";
+    //          image.ModifiedBy = "Admin";
+    //          _unitOfWork.ProductImages.Add(image);
+    //        }
+    //      }
+    //      strMessage = ADDPRODUCTSUCCESS;
+    //    }
+    //    else
+    //    {
+    //      _unitOfWork.Product.Update(product);
+    //      _unitOfWork.Save();
+    //      if (files.Count > 0)
+    //      {
+    //        var productImages = _unitOfWork.ProductImages.GetAll(x => x.ProductId == product.Id);
+
+    //        foreach (var item in productImages)
+    //        {
+    //          ImageHelper.DeleteImage(_webHostEnvironment.WebRootPath, item.ImagePath);
+    //          _unitOfWork.ProductImages.Remove(item);
+    //        }
+    //      }
+    //      if (files != null)
+    //      {
+    //        foreach (var file in files)
+    //        {
+    //          if (!ImageHelper.CheckImage(file))
+    //          {
+    //            throw new BadRequestException(FILEFORMAT);
+    //          }
+    //          var image = new ProductImages();
+    //          image.ProductId = product.Id;
+    //          image.ImageName = file.FileName;
+    //          image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id.ToString(), file, AppSettings.PatchProduct);
+    //          image.IsDefault = false;
+    //          image.IsActive = true;
+    //          image.IsDeleted = false;
+    //          image.CreateBy = "Admin";
+    //          image.ModifiedBy = "Admin";
+    //          _unitOfWork.ProductImages.Add(image);
+    //        }
+    //      }
+    //      strMessage = UPDATEPRODUCTSUCCESS;
+    //    }
+    //    _unitOfWork.Save();
+    //    _unitOfWork.Commit();
+    //    return product;
+    //  }
+    //  catch (Exception)
+    //  {
+    //    throw;
+    //  }
+    //}
+    //    @startuml
+    //(*) --> "Begin Transaction"
+
+    //if (Check if product exists) then
+    //  -->[Yes] "Throw BadRequestException: PRODUCTEXIST"
+    //  --> "Rollback Transaction"
+    //else
+    //  -->[No] "Set CreateBy and ModifiedBy"
+    //  --> "Add product to database"
+    //  --> "Save changes"
+
+    //  if (Files exist and not empty?) then
+    //    -->[Yes] "Loop through files"
+    //    --> "Check image format"
+
+    //    if (Image format valid?) then
+    //      -->[Yes] "Add image to database"
+    //      --> "Set success message"
+    //    else
+    //      -->[No] "Throw BadRequestException: FILEFORMAT"
+    //      --> "Rollback Transaction"
+    //      --> (*)
+    //    endif
+    //  else
+    //    -->[No] "Continue without adding images"
+    //  endif
+
+    //  --> "Set success message"
+    //  --> "Save changes"
+    //  --> "Commit Transaction"
+    //  --> "Return product"
+    //  --> (*)
+    //endif
+    //@enduml
+
+
+
+    //public bool Delete(int id, out string strMessage)
+    //{
+    //  strMessage = string.Empty;
+    //  try
+    //  {
+    //    var data = _unitOfWork.Product.Get(u => u.Id == id && !u.isDeleted);
+    //    if (data == null)
+    //    {
+    //      throw new BadRequestException(PRODUCTNOTFOUND);
+    //    }
+
+    //    data.isDeleted = true;
+    //    data.ModifiedDate = DateTime.Now;
+    //    _unitOfWork.Product.Update(data);
+    //    _unitOfWork.Save();
+    //    strMessage = DELETEPRODUCTSUCCESS;
+    //    return true;
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    throw;
+    //  }
+    //}
+
+    //    @startuml
+    //(*) --> "Get product by ID"
+
+    //if (Product found?) then
+    //  -->[Yes] "Mark product as deleted"
+    //  --> "Save changes"
+    //  --> "Set success message"
+    //  --> (*)
+    //else
+    //  -->[No] "Throw BadRequestException: PRODUCTNOTFOUND"
+    //  --> (*)
+    //endif
+    //@enduml
+
+
+
+
+    //public bool DeleteProductImage(int productId, string imageName, out string strMessage)
+    //{
+    //  strMessage = string.Empty;
+    //  try
+    //  {
+    //    var productImage = _unitOfWork.ProductImages.Get(x => x.ProductId == productId && x.ImageName == imageName);
+    //    if (productImage == null)
+    //    {
+    //      throw new BadRequestException(IMAGEPRODUCTNOTFOUND);
+    //    }
+
+    //    if (!ImageHelper.DeleteImage(_webHostEnvironment.WebRootPath, productImage.ImagePath))
+    //    {
+    //      throw new BadRequestException(DELETEIMAGESUCCESS);
+    //    }
+
+    //    _unitOfWork.ProductImages.Remove(productImage);
+    //    _unitOfWork.Save();
+    //    strMessage = DELETEIMAGESUCCESS;
+    //    return true;
+    //  }
+    //  catch (Exception)
+    //  {
+    //    throw;
+    //  }
+    //}
+    //    @startuml
+    //(*) --> "Get product image by product ID and image name"
+
+    //if (Product image found?) then
+    //  -->[Yes] "Delete image file from storage"
+    //  --> "Remove product image from database"
+    //  --> "Save changes"
+    //  --> "Set success message"
+    //  --> (*)
+    //else
+    //  -->[No] "Throw BadRequestException: IMAGEPRODUCTNOTFOUND"
+    //  --> (*)
+    //endif
+    //@enduml
+
+    //trademark
+    //    public Helpers.PagedResult<Trademark> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
+    //    {
+    //      strMessage = string.Empty;
+    //      try
+    //      {
+    //        var query = _db.Trademarks.OrderByDescending(u => u.ModifiedDate).AsQueryable();
+    //        if (!string.IsNullOrEmpty(name))
+    //        {
+    //          query = query.Where(e => e.TrademarkName.Contains(name.Trim()));
+    //        }
+    //        var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
+    //        query = query.OrderBy(orderBy);
+    //        var pagedResult = Helpers.PagedResult<Trademark>.CreatePagedResult(query, pageNumber, pageSize);
+    //        return pagedResult;
+    //      }
+    //      catch (Exception)
+    //      {
+    //        throw;
+    //      }
+    //    }
+
+    //    @startuml
+    //(*) --> "Retrieve all trademarks from the database"
+
+    //    if (Trademarks retrieved successfully?) then
+    //      -->[Yes] "Filter trademarks by name if provided"
+    //      --> "Sort trademarks based on sorting criteria"
+    //      --> "Create paged result based on pagination parameters"
+    //      --> "Return paged result"
+    //      --> (*)
+    //    else
+    //      -->[No] "Throw exception"
+    //      --> (*)
+    //    endif
+    //    @enduml
+
+    //        public Trademark FindById(int id, out string strMessage)
+    //    {
+    //      strMessage = string.Empty;
+    //      try
+    //      {
+    //        var data = _unitOfWork.Trademark.Get(u => u.Id == id);
+    //        if (data == null)
+    //        {
+    //          throw new BadRequestException(TRADEMARKNOTFOUND);
+    //        }
+    //        return data;
+    //      }
+    //      catch (Exception)
+    //      {
+    //        throw;
+    //      }
+    //    }
+
+    //    @startuml
+    //(*) --> "Retrieve trademark by ID from the database"
+
+    //    if (Trademark found?) then
+    //      -->[Yes] "Return the trademark"
+    //      --> (*)
+    //    else
+    //      -->[No] "Throw exception"
+    //      --> (*)
+    //    endif
+    //    @enduml
+
+    //    public Trademark Create(Trademark trademark, out string strMessage)
+    //    {
+    //      strMessage = string.Empty;
+    //      try
+    //      {
+
+    //        var checkPhone = _unitOfWork.Trademark.Get(u => u.TrademarkName == trademark.TrademarkName.Trim());
+    //        if (checkPhone != null)
+    //        {
+    //          throw new BadRequestException(TRADEMARKEXIST);
+    //        }
+    //        trademark.CreateBy = "Admin";
+    //        trademark.ModifiedBy = "Admin";
+    //        _unitOfWork.Trademark.Add(trademark);
+    //        _unitOfWork.Save();
+    //        strMessage = ADDTRADEMARKSUCCESS;
+    //        return trademark;
+    //      }
+    //      catch (Exception)
+    //      {
+    //        throw;
+    //      }
+    //    }
+
+    //    @startuml
+    //(*) --> "Check if trademark already exists"
+
+    //if (Trademark exists?) then
+    //  -->[Yes] "Throw exception: TRADEMARKEXIST"
+    //  --> (*)
+    //else
+    //  -->[No] "Create new trademark"
+    //  --> "Save changes to database"
+    //  --> "Return created trademark"
+    //  --> (*)
+    //endif
+    //@enduml
+    //    public Trademark Update(Trademark trademark, out string strMessage)
+    //    {
+    //      strMessage = string.Empty;
+    //      try
+    //      {
+    //        // lấy thông tin thương hiệu
+    //        var data = _unitOfWork.Trademark.Get(u => u.Id == trademark.Id);
+    //        if (data == null)
+    //        {
+    //          throw new BadRequestException(TRADEMARKNOTFOUND);
+    //        }
+    //        // kiểm tra số điện thoại thương hiệu đã tồn tại chưa
+    //        var trademarkName = _unitOfWork.Trademark.Get(u => u.TrademarkName == trademark.TrademarkName.Trim());
+    //        if (trademarkName != null && trademarkName.Id != trademark.Id)
+    //        {
+    //          throw new BadRequestException(TRADEMARKEXIST);
+    //        }
+    //        // kiêm tra mã số thueé
+    //        trademark.ModifiedBy = "Admin";
+    //        _unitOfWork.Trademark.Update(trademark);
+    //        _unitOfWork.Save();
+    //        strMessage = UPDATETRADEMARKSUCCESS;
+    //        return trademark;
+    //      }
+    //      catch (Exception)
+    //      {
+    //        throw;
+    //      }
+    //    }
+
+    //    @startuml
+    //(*) --> "Get trademark information by ID"
+
+    //if (Trademark exists?) then
+    //  -->[Yes] "Check if updated trademark name already exists"
+    //  if (Trademark name exists for another trademark?) then
+    //    -->[Yes] "Throw exception: TRADEMARKEXIST"
+    //    --> (*)
+    //  else
+    //    -->[No] "Update trademark"
+    //    --> "Save changes to database"
+    //    --> "Return updated trademark"
+    //    --> (*)
+    //  endif
+    //else
+    //  -->[No] "Throw exception: TRADEMARKNOTFOUND"
+    //  --> (*)
+    //endif
+    //@enduml
+
+
+    //public bool Delete(int id, out string strMessage)
+    //{
+    //  strMessage = string.Empty;
+    //  try
+    //  {
+    //    var data = _unitOfWork.Trademark.Get(u => u.Id == id);
+    //    if (data == null)
+    //    {
+    //      throw new BadRequestException(TRADEMARKNOTFOUND);
+    //    }
+    //    _unitOfWork.Trademark.Remove(data);
+    //    _unitOfWork.Save();
+    //    strMessage = DELETETRADEMARKSUCCESS;
+    //    return true;
+    //  }
+    //  catch (Exception)
+    //  {
+    //    throw;
+    //  }
+    //}
+    //    @startuml
+    //(*) --> "Get trademark information by ID"
+
+    //if (Trademark exists?) then
+    //  -->[Yes] "Delete trademark"
+    //  --> "Save changes to database"
+    //  --> "Return success message"
+    //  --> (*)
+    //else
+    //  -->[No] "Throw exception: TRADEMARKNOTFOUND"
+    //  --> (*)
+    //endif
+    //@enduml
+
+
+
+    //public Helpers.PagedResult<TrxTransaction> GetAll(string name, string orderStatus, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
+    //{
+    //  strMessage = string.Empty;
+    //  try
+    //  {
+    //    var query = _db.TrxTransactions.OrderByDescending(u => u.OrderDate).AsQueryable();
+    //    if (!string.IsNullOrEmpty(name))
+    //    {
+    //      query = query.Where(e => e.FullName.Contains(name.Trim()) || e.PhoneNumber.Contains(name.Trim()));
+    //    }
+    //    if (!string.IsNullOrEmpty(orderStatus))
+    //    {
+    //      query = query.Where(e => e.OrderStatus.Contains(orderStatus));
+    //    }
+    //    var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
+    //    query = query.OrderBy(orderBy);
+    //    var pagedResult = Helpers.PagedResult<TrxTransaction>.CreatePagedResult(query, pageNumber, pageSize);
+    //    return pagedResult;
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    throw;
+    //  }
+    //}
+    //    @startuml
+    //(*) --> "Retrieve all trademarks from the database"
+
+    //    if (Trademarks retrieved successfully?) then
+    //      -->[Yes] "Filter trxtransaction by name if provided"
+    //      --> "Sort trxtransaction based on sorting criteria"
+    //      --> "Create paged result based on pagination parameters"
+    //      --> "Return paged result"
+    //      --> (*)
+    //    else
+    //      -->[No] "Throw exception"
+    //      --> (*)
+    //    endif
+    //@enduml
+
+
+    //public TrxTransactionDTO Insert(TrxTransactionDTO trxTransactionDTO, out string strMessage)
+    //{
+    //  strMessage = string.Empty;
+    //  try
+    //  {
+    //    _unitOfWork.BeginTransaction();
+    //    TrxTransaction trxTransaction = new TrxTransaction();
+    //    int checkPromotion = trxTransactionDTO.Carts.Where(x => x.Discount > 0).Count();
+
+    //    // kiểm tra thông tin product trong carts để kiểm tra còn trong chương trình khuyến mãi không
+    //    var promotion = _promotionService.CheckPromotionActive().Select(x => x.ProductId);
+
+    //    var cartProduct = trxTransactionDTO.Carts.Where(x => x.Discount > 0 && promotion.Contains(x.ProductId)).ToList();
+    //    if (cartProduct.Count == 0 && checkPromotion > 0)
+    //    {
+    //      throw new BadRequestException(TRXTRANSACTIONPROMTION);
+    //    }
+    //    trxTransaction.CustomerId = GetCustomerId(trxTransactionDTO.CustomerId);
+
+    //    trxTransaction.FullName = trxTransactionDTO?.FullName;
+    //    trxTransaction.PhoneNumber = trxTransactionDTO?.PhoneNumber;
+    //    trxTransaction.Address = trxTransactionDTO?.Address;
+    //    trxTransaction.OrderDate = DateTime.Now;
+    //    trxTransaction.OrderStatus = trxTransactionDTO.OrderStatus ?? "PENDING";
+    //    trxTransaction.PaymentTypes = trxTransactionDTO.PaymentTypes;
+
+    //    //nếu PaymentTypes = CASH thì trạng thái thanh toán là đã thanh toán
+    //    if (trxTransaction.PaymentTypes == AppSettings.Cash)
+    //    {
+    //      trxTransaction.PaymentStatus = AppSettings.PaymentStatusApproved;
+    //    }
+    //    else
+    //    {
+    //      trxTransaction.PaymentStatus = AppSettings.PaymentStatusPending;
+    //    }
+    //    trxTransaction.PaymentStatus = AppSettings.PaymentStatusPending;
+    //    trxTransaction.OrderTotal = trxTransactionDTO.Amount ?? 0;
+    //    _unitOfWork.TrxTransaction.Add(trxTransaction);
+    //    _unitOfWork.Save();
+
+    //    //trxTransactionDTO.TrxTransactionId = trxTransaction.Id;
+    //    trxTransactionDTO.Amount = trxTransaction.OrderTotal;
+    //    // lấy thông tin đơn hàng theo userid từ cart
+    //    foreach (var item in trxTransactionDTO.Carts)
+    //    {
+    //      TransactionDetail trxTransactionDetail = new TransactionDetail();
+    //      trxTransactionDetail.ProductId = item.ProductId;
+    //      trxTransactionDetail.Total = item.Quantity;
+    //      trxTransactionDetail.Price = item.Price;
+    //      trxTransactionDetail.TrxTransactionId = trxTransaction.Id;
+    //      _unitOfWork.TransactionDetail.Add(trxTransactionDetail);
+    //    }
+
+    //    if (checkPromotion > 0)
+    //    {
+    //      UpdatePromotionDetail(cartProduct);
+    //    }
+
+    //    var listCartId = trxTransactionDTO.Carts.Select(x => x.Id).ToList();
+    //    _unitOfWork.Cart.RemoveRange(_unitOfWork.Cart.GetAll(u => listCartId.Contains(u.Id)));
+    //    UpdateProductQuantity(trxTransactionDTO.Carts);
+    //    _unitOfWork.Save();
+    //    _unitOfWork.Commit();
+    //    return trxTransactionDTO;
+    //  }
+    //  catch (Exception)
+    //  {
+    //    _unitOfWork.Rollback();
+    //    throw;
+    //  }
+    //}
+    //    @startuml
+    //(*) --> "Begin Transaction"
+
+    //if (Promotion Active?) then
+    //  -->[Yes] "Check if any cart item has discount"
+    //  if (Any cart item has discount?) then
+    //    -->[Yes] "Retrieve active promotion products"
+    //    --> "Filter cart items with active promotion"
+    //    -->[No] "Throw BadRequestException (TRXTRANSACTIONPROMTION)"
+    //    --> "RollBack"
+    //    -->(*)
+
+    //  else
+    //    -->[No] "Continue"
+    //  endif
+    //else
+    //  -->[No] "Continue"
+    //endif
+
+    //--> "Retrieve customer ID"
+
+    //if (Payment Type is Cash?) then
+    //  -->[Yes] "Set payment status to Approved"
+    //  --> "Save transaction"
+    //else
+    //  -->[No] "Set payment status to Pending"
+    //endif
+
+    //--> "Save transaction"
+    //--> "Create TransactionDetail"
+
+    //if (Any cart item has discount?) then
+    //  -->[Yes] "Update promotion details"
+    //  --> "Remove cart items"
+    //else
+    //  -->[No] "Remove cart items"
+    //endif
+
+    //--> "Update product quantity"
+    // --> "Save transaction"
+    //--> "Commit Transaction"
+    //--> "Return transaction details"
+    //--> (*)
+    //@enduml
+
+
   }
 }

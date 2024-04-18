@@ -98,7 +98,7 @@
     public Product Create(Product product, List<IFormFile>? files, out string strMessage)
     {
       strMessage = string.Empty;
-      _unitOfWork.BeginTransaction(); // Bắt đầu giao dịch
+      _unitOfWork.BeginTransaction();
 
       try
       {
@@ -107,10 +107,8 @@
           var checkProduct = _unitOfWork.Product.Get(x => x.ProductName == product.ProductName);
           if (checkProduct != null)
           {
-
             throw new BadRequestException(PRODUCTEXIST);
           }
-
           product.CreateBy = "Admin";
           product.ModifiedBy = "Admin";
 
@@ -123,11 +121,9 @@
             {
               if (!ImageHelper.CheckImage(file))
               {
-                strMessage = FILEFORMAT;
                 _unitOfWork.Rollback();
-                return null;
+                throw new BadRequestException(FILEFORMAT);
               }
-
               var image = new ProductImages();
               image.ProductId = product.Id;
               image.ImageName = file.FileName;
@@ -139,53 +135,46 @@
               image.ModifiedBy = "Admin";
               _unitOfWork.ProductImages.Add(image);
             }
-            _unitOfWork.Save();
           }
-
           strMessage = ADDPRODUCTSUCCESS;
-          _unitOfWork.Commit(); // Commit giao dịch
-          return product;
         }
-
-        _unitOfWork.Product.Update(product);
-        _unitOfWork.Save();
-        if (files.Count > 0)
+        else
         {
-          var productImages = _unitOfWork.ProductImages.GetAll(x => x.ProductId == product.Id);
-
-          foreach (var item in productImages)
+          _unitOfWork.Product.Update(product);
+          _unitOfWork.Save();
+          if (files.Count > 0)
           {
-            ImageHelper.DeleteImage(_webHostEnvironment.WebRootPath, item.ImagePath);
-            _unitOfWork.ProductImages.Remove(item);
-          }
-        }
+            var productImages = _unitOfWork.ProductImages.GetAll(x => x.ProductId == product.Id);
 
-        if (files != null)
-        {
-          foreach (var file in files)
-          {
-            if (!ImageHelper.CheckImage(file))
+            foreach (var item in productImages)
             {
-              strMessage = FILEFORMAT;
-              _unitOfWork.Rollback();
-              return null;
+              ImageHelper.DeleteImage(_webHostEnvironment.WebRootPath, item.ImagePath);
+              _unitOfWork.ProductImages.Remove(item);
             }
-
-            var image = new ProductImages();
-            image.ProductId = product.Id;
-            image.ImageName = file.FileName;
-            image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id.ToString(), file, AppSettings.PatchProduct);
-            image.IsDefault = false;
-            image.IsActive = true;
-            image.IsDeleted = false;
-            image.CreateBy = "Admin";
-            image.ModifiedBy = "Admin";
-            _unitOfWork.ProductImages.Add(image);
           }
+          if (files != null)
+          {
+            foreach (var file in files)
+            {
+              if (!ImageHelper.CheckImage(file))
+              {
+                throw new BadRequestException(FILEFORMAT);
+              }
+              var image = new ProductImages();
+              image.ProductId = product.Id;
+              image.ImageName = file.FileName;
+              image.ImagePath = ImageHelper.AddImage(_webHostEnvironment.WebRootPath, product.Id.ToString(), file, AppSettings.PatchProduct);
+              image.IsDefault = false;
+              image.IsActive = true;
+              image.IsDeleted = false;
+              image.CreateBy = "Admin";
+              image.ModifiedBy = "Admin";
+              _unitOfWork.ProductImages.Add(image);
+            }
+          }
+          strMessage = UPDATEPRODUCTSUCCESS;
         }
-
         _unitOfWork.Save();
-        strMessage = UPDATEPRODUCTSUCCESS;
         _unitOfWork.Commit();
         return product;
       }

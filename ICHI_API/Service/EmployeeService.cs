@@ -77,8 +77,7 @@ namespace ICHI_API.Service
         var checkPhone = _unitOfWork.Employee.Get(u => u.PhoneNumber == model.PhoneNumber);
         if (checkPhone != null)
         {
-          strMessage = PHONENUMBEREXISTCUSTOMER;
-          return null;
+          throw new BadRequestException(PHONENUMBEREXISTCUSTOMER);
         }
         model.CreateBy = "Admin";
         model.ModifiedBy = "Admin";
@@ -114,8 +113,7 @@ namespace ICHI_API.Service
         var checkPhone = _unitOfWork.Employee.Get(u => u.PhoneNumber == model.PhoneNumber);
         if (checkPhone != null && checkPhone.Id != model.Id)
         {
-          strMessage = PHONENUMBEREXISTCUSTOMER;
-          return null;
+          throw new BadRequestException(PHONENUMBEREXISTCUSTOMER);
         }
         // nếu có file thì thực hiện lưu file mới và xóa file cũ đi
         // lấy đường dẫn ảnh file cũ
@@ -127,7 +125,6 @@ namespace ICHI_API.Service
           user.ModifiedBy = "Admin";
           user.ModifiedDate = DateTime.Now;
           _unitOfWork.User.Update(user);
-          _unitOfWork.Save();
           // xóa file cũ
           if (oldFile != AppSettings.AvatarDefault)
           {
@@ -140,7 +137,7 @@ namespace ICHI_API.Service
         strMessage = UPDATEEMPLOYEESUCCESS;
         return model;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         throw;
       }
