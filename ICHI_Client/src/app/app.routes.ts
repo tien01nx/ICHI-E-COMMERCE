@@ -36,6 +36,7 @@ import { OrderTrackingComponent } from './components/client/order-tracking/order
 import { InvoiceComponent } from './components/client/invoice/invoice.component';
 import { OrderDetailComponent } from './components/admin/order-detail/order-detail.component';
 import { BuyNowComponent } from './components/client/checkout/buy-now/buy-now.component';
+import { ProductDetailComponent } from './components/client/product/product-detail/product-detail.component';
 
 export const routes: Routes = [
   {
@@ -74,7 +75,8 @@ export const routes: Routes = [
     canActivate: [AdminGuard],
   },
   { path: '', component: ClientLayoutComponent },
-  { path: 'product_detail/:id', component: DetailProductComponent },
+  // { path: 'product_detail/:id', component: DetailProductComponent },
+  { path: 'product_detail/:id', component: ProductDetailComponent },
   { path: 'product_filter/:categoryName', component: ProductsFilterComponent },
   { path: 'cart', component: CartComponent, canActivate: [UserGuard] },
   { path: 'checkout', component: CheckoutComponent, canActivate: [UserGuard] },

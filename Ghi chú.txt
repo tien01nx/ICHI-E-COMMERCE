@@ -1,0 +1,221 @@
+Deleted Cart
+
+@startuml
+(*) --> "Retrieve existing cart item"
+if (Cart item exists?) then
+  -->[Yes] "Remove cart item"
+  --> "Save changes"
+  --> "Return deleted cart item"
+  --> (*)
+else
+  -->[No] "Throw BadRequestException (PRODUCTCCARTNOTFOUND)"
+endif
+--> (*)
+@enduml
+
+
+
+Getcart
+
+@startuml
+(*) --> "Retrieve carts by user email"
+if (Carts found?) then
+  -->[Yes] "Retrieve active promotions"
+  --> "Update cart items with product image, customer information, and discounts"
+  --> "Return carts"
+  --> (*)
+else
+  -->[No] "Return null"
+endif
+--> (*)
+@enduml
+
+GetShoppingCart
+
+
+@startuml
+(*) --> "Initialize ShoppingCartVM object"
+if (Customer found?) then
+  -->[Yes] "Check cart promotion"
+  --> "Update ShoppingCartVM with cart information"
+  --> "Retrieve customer information"
+  --> "Update TrxTransaction with customer details"
+  --> "Return ShoppingCartVM object"
+  --> (*)
+else
+  -->[No] "Throw BadRequestException (CUSTOMERNOTFOUND)"
+  --> (*)
+endif
+@enduml
+
+
+
+InsertCard
+@startuml
+(*) --> "Retrieve existing cart item"
+if (Cart item exists?) then
+  -->[Yes] "Check if quantity exceeds product quantity"
+  if (Quantity exceeds product quantity?) then
+    -->[Yes] "Set quantity to product quantity"
+    --> "Update existing cart item"
+    --> (*)
+  else
+    -->[No] "Update quantity of existing cart item"
+    --> (*)
+  endif
+else
+  -->[No] "Add new cart item"
+  --> "Save changes"
+  --> (*)
+endif
+@enduml
+
+UpdateCart
+@startuml
+(*) --> "Retrieve existing cart item"
+if (Cart item exists?) then
+  -->[Yes] "Check if new quantity exceeds product quantity"
+  if (New quantity exceeds product quantity?) then
+    -->[Yes] "Set quantity to product quantity"
+    --> "Update existing cart item"
+   --> "Save changes"
+    --> (*)
+  else
+    -->[No] "Update quantity of existing cart item"
+    --> "Save changes"
+    --> (*)
+  endif
+else
+  -->[No] "Throw BadRequestException"
+  --> (*)
+endif
+@enduml
+
+
+Sequence diagram
+
+
+Thêm sản phẩm vào giỏ hàng
+
+@startuml
+actor User
+participant "ProductDetailTemplate" as ProductDetail
+participant "ProductDetaiComponent" as DetailComponent
+participant "CartService" as TrxTransactionService
+participant "CartController" as OrderController
+participant "ICartService" as TrxTransactionServiceImpl
+participant "ICartRepository" as OrderRepository
+
+User -> ProductDetail: submit form "onSubmit"
+activate ProductDetail
+ProductDetail -> DetailComponent: Gọi onSubmit()
+activate DetailComponent
+DetailComponent -> TrxTransactionService: Gọi AddToCart(InsertCartDTO)
+activate TrxTransactionService
+TrxTransactionService -> OrderController: Gọi Insert(Cart)
+activate OrderController
+OrderController -> TrxTransactionServiceImpl: Gọi create(cart,strMessage)
+activate TrxTransactionServiceImpl
+TrxTransactionServiceImpl -> OrderRepository: Add,Save(cart)
+activate OrderRepository
+OrderRepository --> TrxTransactionServiceImpl: Return save cart 
+deactivate OrderRepository
+deactivate OrderRepository
+TrxTransactionServiceImpl --> OrderController: Return (cart, strMessage)
+deactivate TrxTransactionServiceImpl
+OrderController --> TrxTransactionService: Return (cart, strMessage)
+deactivate OrderController
+TrxTransactionService --> DetailComponent: Return (cart, strMessage)
+deactivate TrxTransactionService
+DetailComponent --> ProductDetail: Display message
+deactivate DetailComponent
+deactivate ProductDetail
+ProductDetail --> User: Display message
+@enduml
+
+
+
+Cập nhật số lượng sản phẩm trong giỏ hàng
+
+@startuml
+actor User
+participant "CartTemplate" as ProductDetail
+participant "CartComponent" as DetailComponent
+participant "CartService" as TrxTransactionService
+participant "CartController" as OrderController
+participant "ICartService" as TrxTransactionServiceImpl
+participant "ICartRepository" as OrderRepository
+
+User -> ProductDetail: click increaseQuantity(CartModel) or decreaseQuantity(CartModel)
+activate ProductDetail
+ProductDetail -> DetailComponent: Gọi updateQuantity(cartModel,change)
+activate DetailComponent
+DetailComponent -> TrxTransactionService: Gọi Update(CartModel)
+activate TrxTransactionService
+TrxTransactionService -> OrderController: Gọi Update(Cart)
+activate OrderController
+OrderController -> TrxTransactionServiceImpl: Gọi Update(cart,strMessage)
+activate TrxTransactionServiceImpl
+TrxTransactionServiceImpl -> OrderRepository: Update,Save(cart)
+activate OrderRepository
+OrderRepository --> TrxTransactionServiceImpl: Return save cart 
+deactivate OrderRepository
+deactivate OrderRepository
+TrxTransactionServiceImpl --> OrderController: Return (cart, strMessage)
+deactivate TrxTransactionServiceImpl
+OrderController --> TrxTransactionService: Return (cart, strMessage)
+deactivate OrderController
+TrxTransactionService --> DetailComponent: Return (cart, strMessage)
+deactivate TrxTransactionService
+DetailComponent --> ProductDetail: Display message
+deactivate DetailComponent
+deactivate ProductDetail
+ProductDetail --> User: Display message
+@enduml
+
+
+
+Tạo đơn hàng
+
+
+@startuml
+actor User
+participant "CheckoutTemplate" as OrderTemplate
+participant "CheckoutComponent" as OrderComponent
+participant "TrxTransactionServer" as OrderService
+participant "TrxTransactionController" as OrderController
+participant "TrxTransactionService" as OrderServiceImpl
+participant "TrxTransactionRepository" as TransactionRepository
+participant "TransactionDetailRepository" as transactionDetail
+User -> OrderTemplate: Bắt sự kiện submit()
+activate OrderTemplate
+OrderTemplate -> OrderComponent: Gọi submit()
+activate OrderComponent
+OrderComponent -> OrderService: Gọi PaymentExecute(TrxTransactionDTO)
+activate OrderService
+OrderService -> OrderController: Gọi Insert(TrxTransactionDTO)
+activate OrderController
+OrderController -> OrderServiceImpl: Gọi Insert(TrxTransactionDTO,strMessage)
+activate OrderServiceImpl
+OrderServiceImpl -> TransactionRepository: Add,save(trxTransaction)
+activate TransactionRepository
+TransactionRepository --> OrderServiceImpl: Return saved order
+deactivate TransactionRepository
+
+OrderServiceImpl -> transactionDetail: Add, Save(TransactionDetail)
+activate transactionDetail
+transactionDetail --> OrderServiceImpl
+deactivate transactionDetail
+
+deactivate TransactionRepository
+OrderServiceImpl --> OrderController: Return (TrxTransactionDTO,strMessage)
+deactivate OrderServiceImpl
+OrderController --> OrderService: Return (TrxTransactionDTO,strMessage)
+deactivate OrderController
+OrderService --> OrderComponent: (TrxTransactionDTO,strMessage)
+deactivate OrderService
+OrderComponent --> OrderTemplate: Display message
+deactivate OrderComponent
+deactivate OrderTemplate
+OrderTemplate --> User: Display message
+@enduml

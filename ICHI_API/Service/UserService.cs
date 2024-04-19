@@ -19,7 +19,6 @@ namespace ICHI_API.Service
       _unitOfWork = unitOfWork;
       _db = pcsApiContext;
     }
-
     public Helpers.PagedResult<UserDTO> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
     {
       strMessage = string.Empty;
@@ -75,8 +74,6 @@ namespace ICHI_API.Service
         throw;
       }
     }
-
-
     public UserDTO UpdateAccount(UserDTO userDTO, out string strMessage)
     {
       strMessage = string.Empty;

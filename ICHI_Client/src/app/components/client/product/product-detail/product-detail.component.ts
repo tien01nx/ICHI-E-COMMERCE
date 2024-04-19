@@ -1,23 +1,23 @@
-import { CategoryProduct } from './../../../models/category.product';
-import { Environment } from './../../../environment/environment';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Environment } from '../../../../environment/environment';
+import { InsertCartDTO } from '../../../../dtos/insert.cart.dto';
+import { CategoryProduct } from '../../../../models/category.product';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductsService } from '../../../service/products.service';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { InsertCartDTO } from '../../../dtos/insert.cart.dto';
-import { TokenService } from '../../../service/token.service';
-import { TrxTransactionService } from '../../../service/trx-transaction.service';
+import { ProductsService } from '../../../../service/products.service';
+import { CategoryService } from '../../../../service/category-product.service';
+import { TokenService } from '../../../../service/token.service';
 import { ToastrService } from 'ngx-toastr';
-import { CategoryService } from '../../../service/category-product.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SwiperOptions } from 'swiper';
-import { Utils } from '../../../Utils.ts/utils';
+import { Utils } from '../../../../Utils.ts/utils';
+import { CartService } from '../../../../service/cart.service';
 
 @Component({
-  selector: 'app-detail-product',
-  templateUrl: './detail-product.component.html',
-  styleUrl: './detail-product.component.css',
+  selector: 'app-product-detail',
+  templateUrl: './product-detail.component.html',
+  styleUrl: './product-detail.component.css',
 })
-export class DetailProductComponent implements OnInit, AfterViewInit {
+export class ProductDetailComponent implements OnInit, AfterViewInit {
   protected readonly Environment = Environment;
   productdto: any;
   errorMessage: string = '';
@@ -34,7 +34,7 @@ export class DetailProductComponent implements OnInit, AfterViewInit {
     private tokenService: TokenService,
     private toastr: ToastrService,
     private router: Router,
-    private cartService: TrxTransactionService,
+    private cartService: CartService,
     private sanitizer: DomSanitizer
   ) {}
   ngAfterViewInit(): void {}

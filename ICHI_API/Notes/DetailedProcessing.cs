@@ -1985,5 +1985,162 @@
     //@enduml
 
 
+
+
+    //public ShoppingCartVM Update(UpdateTrxTransaction model, out string strMessage)
+    //{
+    //  strMessage = string.Empty;
+    //  try
+    //  {
+    //    _unitOfWork.BeginTransaction();
+    //    var data = _unitOfWork.TrxTransaction.Get(u => u.Id == model.TransactionId);
+    //    if (data == null)
+    //    {
+    //      throw new BadRequestException(TRXTRANSACTIONNOTFOUNDORDER);
+    //    }
+
+    //    switch (model.OrderStatus)
+    //    {
+    //      case "PENDING":
+    //        data.OrderDate = DateTime.Now;
+    //        break;
+    //      case "DELIVERED":
+    //        data.OnholDate = DateTime.Now;
+    //        data.DeliveredDate = DateTime.Now;
+    //        break;
+    //      case "WAITINGFORPICKUP":
+    //      case "WAITINGFORDELIVERY":
+    //        data.WaitingForPickupDate = DateTime.Now;
+    //        data.WaitingForDeliveryDate = DateTime.Now;
+    //        break;
+    //      case "CANCELLED":
+    //        data.CancelledDate = DateTime.Now;
+    //        break;
+    //    }
+    //    if (data.OrderStatus == AppSettings.StatusOrderDelivered && model.OrderStatus != AppSettings.StatusOrderDelivered)
+    //    {
+    //      throw new BadRequestException(TRXTRANSACTIONDELIVERED);
+    //    }
+
+    //    data.OrderStatus = model.OrderStatus;
+    //    _unitOfWork.TrxTransaction.Update(data);
+    //    _unitOfWork.Save();
+    //    _unitOfWork.Commit();
+    //    ShoppingCartVM cartVM = new ShoppingCartVM();
+    //    cartVM.TrxTransaction = data;
+    //    strMessage = UPDATETRXTRANSACTIONSUCCESS;
+    //    return cartVM;
+    //  }
+    //  catch (Exception)
+    //  {
+    //    throw;
+    //  }
+    //}
+
+    //    @startuml
+    //(*) --> "Begin Transaction"
+
+    //--> "Retrieve transaction by ID"
+    //if (Transaction found?) then
+    //  -->[Yes] "Update transaction status and dates"
+    //  if (New status is 'DELIVERED' and current status is not 'DELIVERED') then
+    //    -->[Yes] "Throw BadRequestException (TRXTRANSACTIONDELIVERED)"
+    //    --> (*)
+    //  else
+    //    -->[No] "Update Order Status"
+    //  endif
+    //  --> "Save updated transaction"
+    //  --> "Commit Transaction"
+    //  --> "Create ShoppingCartVM object"
+    //  --> "Return ShoppingCartVM object"
+    //else
+    //  -->[No] "Throw BadRequestException (TRXTRANSACTIONNOTFOUNDORDER)"
+    //  --> (*)
+
+    //endif
+    //--> (*)
+    //@enduml
+
+
+    //    public ShoppingCartVM GetTrxTransactionFindById(int id, out string strMessage)
+    //    {
+    //      strMessage = string.Empty;
+    //      try
+    //      {
+    //        ShoppingCartVM cartVM = new ShoppingCartVM();
+    //        cartVM.TrxTransaction = _unitOfWork.TrxTransaction.Get(u => u.Id == id);
+    //        if (cartVM.TrxTransaction == null)
+    //        {
+    //          throw new BadRequestException(TRXTRANSACTIONNOTFOUNDORDEROUT);
+    //        }
+
+    //        cartVM.Customer = _unitOfWork.Customer.Get(u => u.Id == cartVM.TrxTransaction.CustomerId);
+    //        cartVM.TransactionDetail = _unitOfWork.TransactionDetail.GetAll(u => u.TrxTransactionId == id, "Product");
+    //        foreach (var item in cartVM.TransactionDetail)
+    //        {
+    //          item.ProductImage = _unitOfWork.ProductImages.Get(u => u.ProductId == item.ProductId).ImagePath;
+    //        }
+
+    //        return cartVM;
+    //      }
+    //      catch (Exception ex)
+    //      {
+    //        throw;
+    //      }
+    //    }
+    //    @startuml
+    //(*) --> "Create ShoppingCartVM object"
+
+    //--> "Retrieve transaction by ID"
+    //if (Transaction found?) then
+    //  -->[Yes] "Retrieve customer information"
+    //  --> "Retrieve transaction details"
+    //  --> "Retrieve product images for transaction details"
+    //  --> "Return ShoppingCartVM object"
+    //  --> (*)
+    //else
+    //  -->[No] "Throw BadRequestException (TRXTRANSACTIONNOTFOUNDORDEROUT)"
+    //endif
+    //--> (*)
+    //@enduml
+
+
+
+    //    public CustomerTransactionDTO GetCustomerTransaction(string userid, out string strMessage)
+    //    {
+    //      strMessage = string.Empty;
+    //      try
+    //      {
+    //        CustomerTransactionDTO customerTransactionDTO = new CustomerTransactionDTO();
+    //        var customer = _unitOfWork.Customer.Get(u => u.UserId == userid, "User");
+    //        if (customer == null)
+    //        {
+    //          throw new BadRequestException(TRXTRANSACTIONNOTFOUNDUSEROUT);
+    //        }
+    //        customerTransactionDTO.Customer = customer;
+    //        customerTransactionDTO.TrxTransactions = _unitOfWork.TrxTransaction.GetAll(u => u.CustomerId == customer.Id).OrderByDescending(u => u.OrderDate).ToList();
+    //        return customerTransactionDTO;
+    //      }
+    //      catch (Exception ex)
+    //      {
+    //        throw;
+    //      }
+    //    }
+    //    @startuml
+    //(*) --> "Create ShoppingCartVM object"
+
+    //--> "Retrieve transaction by ID"
+    //if (Transaction found?) then
+    //  -->[Yes] "Retrieve customer information"
+    //  --> "Retrieve transaction details"
+    //  --> "Retrieve product images for transaction details"
+    //  --> "Return ShoppingCartVM object"
+    //  --> (*)
+    //else
+    //  -->[No] "Throw BadRequestException (TRXTRANSACTIONNOTFOUNDORDEROUT)"
+    //endif
+    //--> (*)
+    //@enduml
+
   }
 }

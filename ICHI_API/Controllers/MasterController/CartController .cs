@@ -19,14 +19,14 @@
       _cartService = cartService;
     }
 
-    [HttpPost("AddtoCart")]
-    public async Task<ApiResponse<Cart>> AddtoCart([FromBody] Cart cart)
+    [HttpPost("Insert")]
+    public async Task<ApiResponse<Cart>> Insert([FromBody] Cart cart)
     {
       ApiResponse<Cart> result;
       string strMessage = string.Empty;
       try
       {
-        var data = _cartService.InsertCard(cart, out strMessage);
+        var data = _cartService.Insert(cart, out strMessage);
         return new ApiResponse<Cart>(System.Net.HttpStatusCode.OK, strMessage, data);
       }
       catch (Exception ex)
@@ -128,14 +128,14 @@
       }
     }
 
-    [HttpPut("UpdateCart")]
-    public async Task<ApiResponse<Cart>> UpdateCart([FromBody] Cart cart)
+    [HttpPut("Update")]
+    public async Task<ApiResponse<Cart>> Update([FromBody] Cart cart)
     {
       ApiResponse<Cart> result;
       string strMessage = string.Empty;
       try
       {
-        var data = _cartService.UpdateCart(cart, out strMessage);
+        var data = _cartService.Update(cart, out strMessage);
         return new ApiResponse<Cart>(System.Net.HttpStatusCode.OK, strMessage, data);
       }
       catch (Exception ex)

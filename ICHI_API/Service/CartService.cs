@@ -5,7 +5,6 @@ using ICHI_API.Helpers;
 using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
-using ICHI_CORE.Helpers;
 using iText.Html2pdf;
 using System.Linq.Dynamic.Core;
 
@@ -17,11 +16,13 @@ namespace ICHI_API.Service
     private readonly IUnitOfWork _unitOfWork;
     private PcsApiContext _db;
     private readonly IPromotionService _promotionService;
+    private readonly ITrxTransactionService _trxTransactionService;
 
-    public CartService(IUnitOfWork unitOfWork, IPromotionService promotionService, IConfiguration configuration, PcsApiContext pcsApiContext)
+    public CartService(IUnitOfWork unitOfWork, IPromotionService promotionService, ITrxTransactionService trxTransactionService, IConfiguration configuration, PcsApiContext pcsApiContext)
     {
       _unitOfWork = unitOfWork;
       _db = pcsApiContext;
+      _trxTransactionService = trxTransactionService;
       _promotionService = promotionService;
     }
 
@@ -125,32 +126,17 @@ namespace ICHI_API.Service
       try
       {
         ShoppingCartVM cartVM = new ShoppingCartVM();
+        var customer = _unitOfWork.Customer.Get(u => u.UserId == email);
+        if (customer == null)
+        {
+          throw new BadRequestException(Constants.CUSTOMERNOTFOUND);
+        }
         cartVM.Cart = CheckCartPromotion(carts, out strMessage);
-
-        // thực hiện lấy thông tin từ email và từ đó lấy ra role => bảng employee hay customer
-        var roles = _unitOfWork.UserRole.Get(u => u.UserId == email, "User,Role");
-        if (roles.Role.RoleName == AppSettings.USER)
-        {
-          cartVM.Customer = _unitOfWork.Customer.Get(u => u.UserId == email);
-          cartVM.TrxTransaction = new TrxTransaction();
-          //cartVM.TrxTransaction.Address = cartVM.Cu;
-          // nếu address trong customer null thì hiện vui lòng nhập địa chỉ
-          cartVM.TrxTransaction.Address = cartVM?.Customer?.Address ?? "Vui lòng nhập địa chỉ";
-          cartVM.TrxTransaction.PhoneNumber = cartVM.Customer?.PhoneNumber;
-          cartVM.TrxTransaction.FullName = cartVM?.Customer?.FullName;
-        }
-        else
-        {
-          var data = _unitOfWork.Employee.Get(u => u.UserId == email);
-          string Address = data.Address;
-          string PhoneNumber = data.PhoneNumber;
-          string FullName = data.FullName;
-          cartVM.TrxTransaction = new TrxTransaction();
-          cartVM.TrxTransaction.Address = Address ?? "Vui lòng nhập địa chỉ";
-          cartVM.TrxTransaction.PhoneNumber = PhoneNumber;
-          cartVM.TrxTransaction.FullName = FullName;
-        }
-
+        cartVM.Customer = customer;
+        cartVM.TrxTransaction = new TrxTransaction();
+        cartVM.TrxTransaction.Address = cartVM?.Customer?.Address ?? "Vui lòng nhập địa chỉ";
+        cartVM.TrxTransaction.PhoneNumber = cartVM.Customer?.PhoneNumber;
+        cartVM.TrxTransaction.FullName = cartVM?.Customer?.FullName;
         return cartVM;
       }
       catch (Exception)
@@ -159,7 +145,7 @@ namespace ICHI_API.Service
       }
     }
 
-    public Cart InsertCard(Cart cart, out string strMessage)
+    public Cart Insert(Cart cart, out string strMessage)
     {
       strMessage = string.Empty;
       try
@@ -169,6 +155,7 @@ namespace ICHI_API.Service
         if (existingCartItem != null)
         {
           // nếu quantity > quantity trong product thì thông báo số lượng sản phẩm không đủ và set existingCartItem.Quantity = product.Quantity
+
           if (existingCartItem.Quantity + cart.Quantity > product.Quantity)
           {
             strMessage = Constants.PRODUCTNOTENOUGH;
@@ -194,7 +181,7 @@ namespace ICHI_API.Service
     }
 
     // update số lượng sản phẩm trong giỏ hàng
-    public Cart UpdateCart(Cart cart, out string strMessage)
+    public Cart Update(Cart cart, out string strMessage)
     {
       strMessage = string.Empty;
       try
@@ -235,7 +222,6 @@ namespace ICHI_API.Service
         throw;
       }
     }
-
 
     static void ConvertHtmlToPdf(string htmlFile, string pdfFile)
     {

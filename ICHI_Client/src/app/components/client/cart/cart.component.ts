@@ -8,6 +8,7 @@ import { CartModel } from '../../../models/cart.model';
 import { TrxTransactionService } from '../../../service/trx-transaction.service';
 import { Toast, ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { CartService } from '../../../service/cart.service';
 
 @Component({
   selector: 'app-cart',
@@ -23,7 +24,8 @@ export class CartComponent implements OnInit {
   cartsOrder: CartModel[] = [];
 
   constructor(
-    private cartService: TrxTransactionService,
+    private trxTransactionService: TrxTransactionService,
+    private cartService: CartService,
     private toastr: ToastrService,
     private tokenService: TokenService,
     private router: Router
@@ -31,7 +33,9 @@ export class CartComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCartByUserId();
-    this.cartService.getCartItemCount(this.tokenService.getUserEmail());
+    this.trxTransactionService.getCartItemCount(
+      this.tokenService.getUserEmail()
+    );
   }
 
   toggleSelectAll() {
@@ -70,7 +74,7 @@ export class CartComponent implements OnInit {
   }
 
   getCartByUserId() {
-    this.cartService
+    this.trxTransactionService
       .getCartByUserId(this.tokenService.getUserEmail())
       .subscribe({
         next: (response: any) => {
@@ -84,7 +88,7 @@ export class CartComponent implements OnInit {
   }
 
   deleteItemCart(cart: CartModel) {
-    this.cartService.DeleteItemCart(cart).subscribe({
+    this.trxTransactionService.DeleteItemCart(cart).subscribe({
       next: (response: any) => {
         if (response.message === 'Xóa sản phẩm khỏi giỏ hàng thành công') {
           this.toastr.success(response.message, 'Thông báo');
@@ -105,7 +109,7 @@ export class CartComponent implements OnInit {
       this.toastr.warning('Vui lòng chọn sản phẩm cần mua', 'Thông báo');
       return;
     }
-    this.cartService.setCarts(this.cartsOrder);
+    this.trxTransactionService.setCarts(this.cartsOrder);
     this.router.navigate(['/checkout']);
   }
 
@@ -113,7 +117,7 @@ export class CartComponent implements OnInit {
     const newQuantity = cart.quantity + change;
     if (newQuantity > 0) {
       cart.quantity = newQuantity;
-      this.cartService.UpdateQuantityCart(cart).subscribe({
+      this.cartService.Update(cart).subscribe({
         next: (response: any) => {
           if (response.message === 'Cập nhật giỏ hàng thành công') {
             this.getCartByUserId();

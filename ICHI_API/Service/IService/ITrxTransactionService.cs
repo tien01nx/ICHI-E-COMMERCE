@@ -10,6 +10,6 @@ namespace ICHI_API.Service.IService
     ShoppingCartVM Update(UpdateTrxTransaction model, out string strMessage);
     ShoppingCartVM GetTrxTransactionFindById(int id, out string strMessage);
     CustomerTransactionDTO GetCustomerTransaction(string userid, out string strMessage);
-
+    int GetCustomerId(string userId);
   }
 }

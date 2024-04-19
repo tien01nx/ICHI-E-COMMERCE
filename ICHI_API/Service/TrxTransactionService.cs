@@ -63,7 +63,6 @@ namespace ICHI_API.Service
           throw new BadRequestException(TRXTRANSACTIONPROMTION);
         }
         trxTransaction.CustomerId = GetCustomerId(trxTransactionDTO.CustomerId);
-
         trxTransaction.FullName = trxTransactionDTO?.FullName;
         trxTransaction.PhoneNumber = trxTransactionDTO?.PhoneNumber;
         trxTransaction.Address = trxTransactionDTO?.Address;
@@ -116,6 +115,55 @@ namespace ICHI_API.Service
         throw;
       }
     }
+    public ShoppingCartVM Update(UpdateTrxTransaction model, out string strMessage)
+    {
+      strMessage = string.Empty;
+      try
+      {
+        _unitOfWork.BeginTransaction();
+        var data = _unitOfWork.TrxTransaction.Get(u => u.Id == model.TransactionId);
+        if (data == null)
+        {
+          throw new BadRequestException(TRXTRANSACTIONNOTFOUNDORDER);
+        }
+
+        switch (model.OrderStatus)
+        {
+          case "PENDING":
+            data.OrderDate = DateTime.Now;
+            break;
+          case "DELIVERED":
+            data.OnholDate = DateTime.Now;
+            data.DeliveredDate = DateTime.Now;
+            break;
+          case "WAITINGFORPICKUP":
+          case "WAITINGFORDELIVERY":
+            data.WaitingForPickupDate = DateTime.Now;
+            data.WaitingForDeliveryDate = DateTime.Now;
+            break;
+          case "CANCELLED":
+            data.CancelledDate = DateTime.Now;
+            break;
+        }
+        if (data.OrderStatus == AppSettings.StatusOrderDelivered && model.OrderStatus != AppSettings.StatusOrderDelivered)
+        {
+          throw new BadRequestException(TRXTRANSACTIONDELIVERED);
+        }
+
+        data.OrderStatus = model.OrderStatus;
+        _unitOfWork.TrxTransaction.Update(data);
+        _unitOfWork.Save();
+        _unitOfWork.Commit();
+        ShoppingCartVM cartVM = new ShoppingCartVM();
+        cartVM.TrxTransaction = data;
+        strMessage = UPDATETRXTRANSACTIONSUCCESS;
+        return cartVM;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
 
     // giảm số lượng product khi đã mua
     public void UpdateProductQuantity(List<Cart> carts)
@@ -157,7 +205,7 @@ namespace ICHI_API.Service
     {
       try
       {
-        var role = _unitOfWork.UserRole.Get(u => u.UserId == userId, "Role");
+        var role = _unitOfWork.UserRole.Get(u => u.UserId == userId, "Role,User ");
         if (role == null)
         {
           throw new BadRequestException(TRXTRANSACTIONNOTFOUNDUSER);
@@ -174,58 +222,6 @@ namespace ICHI_API.Service
       }
     }
 
-    public ShoppingCartVM Update(UpdateTrxTransaction model, out string strMessage)
-    {
-      strMessage = string.Empty;
-      try
-      {
-        _unitOfWork.BeginTransaction();
-        var data = _unitOfWork.TrxTransaction.Get(u => u.Id == model.TransactionId);
-        if (data == null)
-        {
-          throw new BadRequestException(TRXTRANSACTIONNOTFOUNDORDER);
-        }
-        if (model.OrderStatus == AppSettings.StatusOrderPending)
-        {
-          data.OrderDate = DateTime.Now;
-        }
-        if (model.OrderStatus == AppSettings.StatusOrderDelivered)
-        {
-          data.OnholDate = DateTime.Now;
-        }
-
-        if (model.OrderStatus == AppSettings.StatusOrderWaitingForPickup || (model.OrderStatus == AppSettings.StatusOrderWaitingForDelivery))
-        {
-          data.WaitingForPickupDate = DateTime.Now;
-          data.WaitingForDeliveryDate = DateTime.Now;
-        }
-        if (model.OrderStatus == AppSettings.StatusOrderDelivered)
-        {
-          data.DeliveredDate = DateTime.Now;
-        }
-        if (model.OrderStatus == AppSettings.StatusOrderCancelled)
-        {
-          data.CancelledDate = DateTime.Now;
-        }
-        // nếu data có orderStatus = DELIVERED thì mà người dùng update lại về các trạng thái khác thì sẽ không cho update
-        if (data.OrderStatus == AppSettings.StatusOrderDelivered && model.OrderStatus != AppSettings.StatusOrderDelivered)
-        {
-          throw new BadRequestException(TRXTRANSACTIONDELIVERED);
-        }
-        data.OrderStatus = model.OrderStatus;
-        _unitOfWork.TrxTransaction.Update(data);
-        _unitOfWork.Save();
-        _unitOfWork.Commit();
-        ShoppingCartVM cartVM = new ShoppingCartVM();
-        cartVM.TrxTransaction = data;
-        strMessage = UPDATETRXTRANSACTIONSUCCESS;
-        return cartVM;
-      }
-      catch (Exception ex)
-      {
-        throw;
-      }
-    }
     public ShoppingCartVM GetTrxTransactionFindById(int id, out string strMessage)
     {
       strMessage = string.Empty;

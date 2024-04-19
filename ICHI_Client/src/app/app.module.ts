@@ -59,6 +59,7 @@ import { InvoiceComponent } from './components/client/invoice/invoice.component'
 import { OrderDetailComponent } from './components/admin/order-detail/order-detail.component';
 import { SwiperDirective } from './swiper.directive';
 import { BuyNowComponent } from './components/client/checkout/buy-now/buy-now.component';
+import { ProductDetailComponent } from './components/client/product/product-detail/product-detail.component';
 
 register();
 
@@ -107,6 +108,7 @@ register();
     InvoiceComponent,
     SwiperDirective,
     BuyNowComponent,
+    ProductDetailComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),

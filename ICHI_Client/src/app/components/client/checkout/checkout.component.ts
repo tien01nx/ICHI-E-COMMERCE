@@ -116,10 +116,7 @@ export class CheckoutComponent implements OnInit {
     } else {
       this.getInitDataId(this.activatedRoute.snapshot.params['id']);
     }
-    this.paymentsType = Utils.paymentTypes;
-
-    console.log('cart model', this.cartService.getCarts());
-
+    this.paymentsType = Utils.paymentTypes.filter((x) => x.name !== 'CASH');
     this.addressForm.get('city')?.valueChanges.subscribe((id: any) => {
       const filteredDistricts = Utils.district?.filter(
         (district: any) => district.city_id === id
@@ -135,7 +132,6 @@ export class CheckoutComponent implements OnInit {
         (ward: any) => ward.district_id === id
       );
       this.wards = filteredWards || [];
-      // Đặt giá trị mặc định cho trường 'ward' trong form nếu cần
       if (this.wards.length > 0) {
         this.addressForm.get('ward')?.setValue(this.wards[0]?.id);
       }
@@ -223,7 +219,7 @@ export class CheckoutComponent implements OnInit {
                 this.addressForm.get('ward')?.value
               )
           );
-
+        this.priceGoShip();
         // lấy data từ wards theo this.addressForm.value.district từ api
 
         // tính ra số tiền giảm giá của sản phẩm trong giỏ hàng bằng khi discount > 0 => sản phẩm cần tính giảm giá => số tiền giảm giá sản phẩm đó
@@ -243,6 +239,7 @@ export class CheckoutComponent implements OnInit {
       },
     });
   }
+
   getTotalPrice(): number {
     let totalPrice = 0; // Khởi tạo biến tổng giá tiền
     console.log('id', this.shoppingcartdto);
