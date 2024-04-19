@@ -37,6 +37,7 @@ import { InvoiceComponent } from './components/client/invoice/invoice.component'
 import { OrderDetailComponent } from './components/admin/order-detail/order-detail.component';
 import { BuyNowComponent } from './components/client/checkout/buy-now/buy-now.component';
 import { ProductDetailComponent } from './components/client/product/product-detail/product-detail.component';
+import { OrderNotificationComponent } from './components/client/cart/order-notification/order-notification.component';
 
 export const routes: Routes = [
   {
@@ -86,6 +87,8 @@ export const routes: Routes = [
     component: CheckoutComponent,
     canActivate: [UserGuard],
   },
+
+  { path: 'order-notification/:id', component: OrderNotificationComponent },
   {
     path: 'shipping_info',
     component: ShippingInfoComponent,

@@ -86,6 +86,7 @@ namespace ICHI_API.Service
 
         //trxTransactionDTO.TrxTransactionId = trxTransaction.Id;
         trxTransactionDTO.Amount = trxTransaction.OrderTotal;
+        trxTransactionDTO.TrxTransactionId = trxTransaction.Id;
         // lấy thông tin đơn hàng theo userid từ cart
         foreach (var item in trxTransactionDTO.Carts)
         {
@@ -205,7 +206,7 @@ namespace ICHI_API.Service
     {
       try
       {
-        var role = _unitOfWork.UserRole.Get(u => u.UserId == userId, "Role,User ");
+        var role = _unitOfWork.UserRole.Get(u => u.UserId == userId, "Role,User");
         if (role == null)
         {
           throw new BadRequestException(TRXTRANSACTIONNOTFOUNDUSER);

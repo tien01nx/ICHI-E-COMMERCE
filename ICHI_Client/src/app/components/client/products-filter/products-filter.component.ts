@@ -65,7 +65,7 @@ export class ProductsFilterComponent implements OnInit {
     console.log(this.colors);
 
     this.activatedRoute.queryParams.subscribe((params) => {
-      const pageSize = +params['page-size'] || 2;
+      const pageSize = +params['page-size'] || 10;
       const pageNumber = +params['page-number'] || 1;
 
       let colors: string[] = [];

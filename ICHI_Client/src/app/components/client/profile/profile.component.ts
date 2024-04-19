@@ -138,23 +138,21 @@ export class ProfileComponent implements OnInit {
 
   update() {
     debugger;
-    this.customerService
-      .UpdateImage(this.customerForm.value, this.file)
-      .subscribe({
-        next: (response: any) => {
-          if (response.message === 'Cập nhật thành công') {
-            this.customerForm.reset();
-            this.btnCloseModal.nativeElement.click();
-            this.getProfile();
-            this.toastr.success(response.message, 'Thông báo');
-          } else {
-            this.toastr.error(response.message, 'Thông báo');
-          }
-        },
-        error: (error: any) => {
-          this.errorMessage = error.error;
-          this.isDisplayNone = false;
-        },
-      });
+    this.customerService.Update(this.customerForm.value, this.file).subscribe({
+      next: (response: any) => {
+        if (response.message === 'Cập nhật thành công') {
+          this.customerForm.reset();
+          this.btnCloseModal.nativeElement.click();
+          this.getProfile();
+          this.toastr.success(response.message, 'Thông báo');
+        } else {
+          this.toastr.error(response.message, 'Thông báo');
+        }
+      },
+      error: (error: any) => {
+        this.errorMessage = error.error;
+        this.isDisplayNone = false;
+      },
+    });
   }
 }

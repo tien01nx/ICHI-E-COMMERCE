@@ -58,7 +58,7 @@ export class CheckoutComponent implements OnInit {
       Validators.pattern('^0[0-9]{9}$'),
     ]),
     address: new FormControl(''),
-    shipData: new FormControl(''),
+    shipData: new FormControl('', Validators.required),
     paymentTypes: new FormControl('', [Validators.required]),
   });
 
@@ -290,6 +290,7 @@ export class CheckoutComponent implements OnInit {
 
     this.cartService.PaymentExecute(this.trxTransactionDTO).subscribe({
       next: (response: any) => {
+        debugger;
         if (
           response.data &&
           typeof response.data === 'string' &&
@@ -305,7 +306,9 @@ export class CheckoutComponent implements OnInit {
             'Thông báo'
           );
           this.isDisplayNone = false;
-          this.router.navigate(['/']);
+          this.router.navigate([
+            '/order-notification/' + response.trxTransactionId,
+          ]);
           // Handle other cases, such as routing to another page
           // For example, you can use this.router.navigate([some_other_route]);
         }

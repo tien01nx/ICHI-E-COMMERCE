@@ -77,7 +77,7 @@ export class OrderTrackingComponent implements OnInit {
       case 'Cancelled':
         return 'bg-success';
       default:
-        return 'bg-warning'; // hoặc một lớp CSS mặc định khác nếu không khớp
+        return 'bg-warning';
     }
   }
 }

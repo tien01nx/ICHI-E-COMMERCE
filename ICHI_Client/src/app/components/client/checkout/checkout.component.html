@@ -191,6 +191,16 @@
                       </div>
                     </ng-template>
                   </ng-select>
+                  <small
+                    class="text-danger mt-1"
+                    *ngIf="trxTransacForm['controls']['shipData'].dirty"
+                  >
+                    <span
+                      *ngIf="trxTransacForm['controls']['shipData'].errors?.['required']"
+                    >
+                      Phương thức vận chuyển là bắt buộc
+                    </span>
+                  </small>
                 </td>
               </tr>
               <tr>

@@ -43,13 +43,13 @@ namespace ICHI_CORE.Controllers.MasterController
     }
 
     [HttpPut("Update")]
-    public async Task<ActionResult<ApiResponse<Employee>>> Update([FromForm] Employee customer, IFormFile? file)
+    public async Task<ActionResult<ApiResponse<Employee>>> Update([FromForm] Employee empolyee, IFormFile? file)
     {
       ApiResponse<Employee> result;
       string strMessage = "";
       try
       {
-        var data = _employeeService.Update(customer, file, out strMessage);
+        var data = _employeeService.Update(empolyee, file, out strMessage);
         result = new ApiResponse<Employee>(
           System.Net.HttpStatusCode.OK,
           strMessage, data);

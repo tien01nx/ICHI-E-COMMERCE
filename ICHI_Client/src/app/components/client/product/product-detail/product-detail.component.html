@@ -130,12 +130,20 @@
                     >
                   </p>
 
+                  <!--  nếu số lượng trong kho >0 thì hiện số lượng
+                  còn nếu <=0 thì hiện ===0
+                  -->
+
                   <p class="fw-semibold mb-2 text-body">
                     Số lượng trong kho:
                     <span
                       class="text-body-emphasis"
                       data-product-color="data-product-color"
-                      >{{ productdto?.product?.quantity }}</span
+                      >{{
+                        productdto?.product?.quantity <= 0
+                          ? 0
+                          : productdto?.product?.quantity
+                      }}</span
                     >
                   </p>
                   <div class="col-12 col-sm">

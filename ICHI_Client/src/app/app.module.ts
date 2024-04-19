@@ -60,6 +60,7 @@ import { OrderDetailComponent } from './components/admin/order-detail/order-deta
 import { SwiperDirective } from './swiper.directive';
 import { BuyNowComponent } from './components/client/checkout/buy-now/buy-now.component';
 import { ProductDetailComponent } from './components/client/product/product-detail/product-detail.component';
+import { OrderNotificationComponent } from './components/client/cart/order-notification/order-notification.component';
 
 register();
 
@@ -109,6 +110,7 @@ register();
     SwiperDirective,
     BuyNowComponent,
     ProductDetailComponent,
+    OrderNotificationComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),

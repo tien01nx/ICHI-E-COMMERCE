@@ -254,12 +254,7 @@ export class InsertAdminProductComponent implements OnInit {
     if (this.productForm.invalid) {
       return;
     }
-    this.createProduct();
-    // if (this.activatedRoute.snapshot.params['id'] === undefined) {
-    //   this.createProduct();
-    // } else {
-    //   this.updateProduct();
-    // }
+    this.create();
   }
 
   findProductById(id: number) {
@@ -308,7 +303,7 @@ export class InsertAdminProductComponent implements OnInit {
     });
   }
 
-  createProduct() {
+  create() {
     if (
       this.selectedImageProductFiles.length === 0 &&
       this.productImage.length === 0

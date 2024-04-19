@@ -106,7 +106,6 @@
         var handler = new GlobalExceptionHandler();
         return handler.HandleException<ShoppingCartVM>(ex);
       }
-      return result;
     }
     [HttpPost("CreatePaymentUrl")]
     public async Task<ApiResponse<string>> CreatePaymentUrl([FromBody] VnPaymentRequestModel model)
@@ -167,7 +166,7 @@
       string strMessage = string.Empty;
       var request = _httpContextAccessor.HttpContext.Request;
       var data = _vnPayService.PaymentCallBack(request, out strMessage);
-      return Redirect($"http://localhost:4200/checkout/{data.OrderId}");
+      return Redirect($"http://localhost:4200/order-notification/{data.OrderId}");
     }
     // viết url khi thanh toán thành công
     [HttpGet("CheckPaymentOrder")]

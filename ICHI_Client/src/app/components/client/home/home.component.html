@@ -7,7 +7,7 @@
         <div *ngFor="let item of CategoryProduct">
           <a class="icon-nav-item">
             <div
-              class="icon-container mb-2"
+              class="icon-container mb-2 m-auto"
               (click)="productFilter(item.categoryName)"
             >
               <!-- <span class="fs-4 uil uil-star text-warning"></span> -->
@@ -100,7 +100,7 @@
                         >
                           <div class="p-1">
                             <span
-                              *ngIf="data.product.quantity === 0"
+                              *ngIf="data.product.quantity <= 0"
                               class="badge text-bg-danger fs-9 fw-normal pt-1 pb-1 ms-auto"
                               >Hết hàng</span
                             >
@@ -369,7 +369,7 @@
       </a>
     </div>
 
-    <div class="row flex-center mb-15 mt-11 gy-6">
+    <!-- <div class="row flex-center mb-15 mt-11 gy-6">
       <div class="col-auto">
         <img
           class="d-dark-none"
@@ -399,7 +399,7 @@
           </a>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
   <!-- end of .container-->
 </section>
