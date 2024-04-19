@@ -102,13 +102,13 @@ namespace ICHI_CORE.Controllers.MasterController
     }
 
     [HttpPost("Create")]
-    public async Task<ApiResponse<Category>> CreateSupplỉer([FromBody] Category supplier)
+    public async Task<ApiResponse<Category>> Create([FromBody] Category category)
     {
       ApiResponse<Category> result;
       string strMessage = "";
       try
       {
-        var data = _categoryproductService.Create(supplier, out strMessage);
+        var data = _categoryproductService.Create(category, out strMessage);
         result = new ApiResponse<Category>(System.Net.HttpStatusCode.OK, strMessage, data);
       }
       catch (Exception ex)

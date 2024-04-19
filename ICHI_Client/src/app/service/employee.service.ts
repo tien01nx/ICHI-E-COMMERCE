@@ -78,7 +78,7 @@ export class EmployeeService {
     );
   }
   private apiProductAdminUrl = `${Environment.apiBaseUrl}/Employee/Update`;
-  UpdateImage(Employee: EmployeeModel, files: File | null) {
+  Update(Employee: EmployeeModel, files: File | null) {
     const formData = new FormData();
     formData.append('id', Employee.id.toString());
     formData.append('fullname', Employee.fullName);

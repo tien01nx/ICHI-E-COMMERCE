@@ -123,24 +123,22 @@ export class EmployeeComponent {
   update() {
     debugger;
     this.isDisplayNone = true;
-    this.employeeService
-      .UpdateImage(this.employeeForm.value, this.file)
-      .subscribe({
-        next: (response: any) => {
-          if (response.message === 'Cập nhật nhân viên thành công') {
-            this.employeeForm.reset();
-            this.btnCloseModal.nativeElement.click();
-            this.updateTable();
-            this.toastr.success(response.message, 'Thông báo');
-          }
+    this.employeeService.Update(this.employeeForm.value, this.file).subscribe({
+      next: (response: any) => {
+        if (response.message === 'Cập nhật nhân viên thành công') {
+          this.employeeForm.reset();
+          this.btnCloseModal.nativeElement.click();
+          this.updateTable();
+          this.toastr.success(response.message, 'Thông báo');
+        }
 
-          this.toastr.error(response.message, 'Thông báo');
-        },
-        error: (error: any) => {
-          this.errorMessage = error.error;
-          this.isDisplayNone = false;
-        },
-      });
+        this.toastr.error(response.message, 'Thông báo');
+      },
+      error: (error: any) => {
+        this.errorMessage = error.error;
+        this.isDisplayNone = false;
+      },
+    });
   }
 
   toggleSelectAll() {
@@ -227,33 +225,10 @@ export class EmployeeComponent {
       return;
     }
     if (this.employeeForm.value.id === null) {
-      // this.create();
-      this.createEmployee();
+      this.create();
       return;
     } else this.update();
   }
-
-  // create() {
-  //   this.isDisplayNone = true;
-  //   this.employeeForm.value.id = 0;
-  //   this.employeeService.create(this.employeeForm.value).subscribe({
-  //     next: (response: any) => {
-  //       if (response.code === 200) {
-  //         this.employeeForm.reset();
-  //         this.btnCloseModal.nativeElement.click();
-  //         this.updateTable();
-  //         this.toastr.success(response.message, 'Thông báo');
-  //       } else {
-  //         this.errorMessage = response.message;
-  //         this.isDisplayNone = false;
-  //       }
-  //     },
-  //     error: (error: any) => {
-  //       this.errorMessage = error.error;
-  //       this.isDisplayNone = false;
-  //     },
-  //   });
-  // }
 
   delete(id: number) {
     Swal.fire({
@@ -298,24 +273,6 @@ export class EmployeeComponent {
     this.errorMessage = '';
     this.showPassword = true;
   }
-
-  // openModalUpdate(employee: CustomerModel) {
-  //   this.showPassword = false;
-  //   this.employeeForm.patchValue({
-  //     id: customer.id,
-  //     fullName: customer.fullName,
-  //     phoneNumber: customer.phoneNumber,
-  //     gender: customer.gender,
-  //     birthday: customer.birthday,
-  //     userId: customer.userId,
-  //     email: customer.user.email,
-  //     address: customer.address,
-  //   });
-  //   this.avatarSrc = Environment.apiBaseRoot + customer.user.avatar;
-  //   this.birthday = customer.birthday;
-  //   this.titleModal = 'Cập nhật khách hàng';
-  //   this.btnSave = 'Cập nhật';
-  // }
 
   openModalUpdate(user: EmployeeModel) {
     debugger;
@@ -386,7 +343,7 @@ export class EmployeeComponent {
     });
   }
 
-  createEmployee() {
+  create() {
     debugger;
     this.isDisplayNone = true;
     this.employeeForm.value.id = 0;

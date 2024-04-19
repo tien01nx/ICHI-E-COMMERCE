@@ -65,7 +65,7 @@ namespace ICHI_CORE.Controllers.MasterController
     }
 
     [HttpPost("Create")]
-    public async Task<ApiResponse<Trademark>> CreateSupplỉer([FromBody] Trademark supplier)
+    public async Task<ApiResponse<Trademark>> Create([FromBody] Trademark supplier)
     {
       ApiResponse<Trademark> result;
       string strMessage = "";
@@ -84,7 +84,7 @@ namespace ICHI_CORE.Controllers.MasterController
     }
 
     [HttpPut("Update")]
-    public async Task<ApiResponse<Trademark>> UpdateSupplier([FromBody] Trademark supplier)
+    public async Task<ApiResponse<Trademark>> Update([FromBody] Trademark supplier)
     {
       ApiResponse<Trademark> result;
       string strMessage = "";

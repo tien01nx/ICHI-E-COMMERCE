@@ -145,7 +145,7 @@ export class CustomerComponent {
   update() {
     this.isDisplayNone = true;
     this.customerService
-      .UpdateImage(this.customerForm.value, this.file)
+      .Update(this.customerForm.value, this.file)
       .subscribe({
         next: (response: any) => {
           this.isDisplayNone = false;

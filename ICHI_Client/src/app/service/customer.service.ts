@@ -78,7 +78,7 @@ export class CustomerService {
       'delete'
     );
   }
-  UpdateImage(customer: CustomerModel, files: File | null) {
+  Update(customer: CustomerModel, files: File | null) {
     const formData = new FormData();
     formData.append('id', customer.id.toString());
     formData.append('fullname', customer.fullName);
