@@ -1,5 +1,4 @@
 ﻿using ICHI.API.DbInitializer;
-using ICHI_API;
 using ICHI_API.Data;
 using ICHI_CORE.Extension;
 using ICHI_CORE.Filter;

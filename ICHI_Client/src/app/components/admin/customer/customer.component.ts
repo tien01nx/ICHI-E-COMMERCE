@@ -55,10 +55,10 @@ export class CustomerComponent {
     ]),
     gender: new FormControl('', [Validators.required]),
     birthday: new FormControl('', [Validators.required]),
-    email: new FormControl('', [
-      Validators.required,
-      Validators.pattern(Utils.checkEmail),
-    ]),
+    // email: new FormControl('', [
+    //   Validators.required,
+    //   Validators.pattern(Utils.checkEmail),
+    // ]),
     city: new FormControl(null, [Validators.required]),
     district: new FormControl(null, [Validators.required]),
     ward: new FormControl(null, [Validators.required]),
@@ -66,7 +66,10 @@ export class CustomerComponent {
       Validators.required,
       Validators.maxLength(100),
     ]),
-    userId: new FormControl(null),
+    userId: new FormControl('', [
+      Validators.required,
+      Validators.pattern(Utils.checkEmail),
+    ]),
   });
   cities: any;
   districts: any;
@@ -144,21 +147,24 @@ export class CustomerComponent {
 
   update() {
     this.isDisplayNone = true;
-    this.customerService
-      .Update(this.customerForm.value, this.file)
-      .subscribe({
-        next: (response: any) => {
+    this.customerService.Update(this.customerForm.value, this.file).subscribe({
+      next: (response: any) => {
+        if (response.code === 200) {
           this.isDisplayNone = false;
           this.customerForm.reset();
           this.btnCloseModal.nativeElement.click();
           this.updateTable();
           this.toastr.success(response.message, 'Thông báo');
-        },
-        error: (error: any) => {
-          this.errorMessage = error.error;
+        } else {
+          this.errorMessage = response.message;
           this.isDisplayNone = false;
-        },
-      });
+        }
+      },
+      error: (error: any) => {
+        this.errorMessage = 'Có lỗi xảy ra';
+        this.isDisplayNone = false;
+      },
+    });
   }
 
   toggleSelectAll() {
@@ -314,7 +320,6 @@ export class CustomerComponent {
       gender: customer.gender,
       birthday: customer.birthday,
       userId: customer.userId,
-      email: customer.user.email,
       address: customer.address,
       city: customer.city,
       district: customer.district,

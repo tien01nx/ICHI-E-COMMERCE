@@ -65,11 +65,8 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var checkCategory = _unitOfWork.Category.Get(u => u.CategoryName == category.CategoryName);
-        if (checkCategory != null)
-        {
+        if (_unitOfWork.Category.ExistsBy(u => u.CategoryName.Equals(category.CategoryName)))
           throw new BadRequestException(Constants.CATEGORYEXIST);
-        }
         var categoryParentId = _unitOfWork.Category.Get(u => u.Id == category.ParentID);
         if (categoryParentId == null)
         {
@@ -83,7 +80,7 @@ namespace ICHI_API.Service
         strMessage = Constants.ADDCATEGORYSUCCESS;
         return category;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         throw;
       }
@@ -95,23 +92,16 @@ namespace ICHI_API.Service
       try
       {
         // lấy thông tin nhà cung cấp
-        var data = _unitOfWork.Category.Get(u => u.Id == category.Id);
-        if (data == null)
-        {
+        if (_unitOfWork.Category.ExistsBy(u => u.Id == category.Id))
           throw new BadRequestException(Constants.CATEGORYNOTFOUND);
-        }
-        var checkCategory = _unitOfWork.Category.Get(u => u.CategoryName == category.CategoryName && u.Id != category.Id);
-        if (checkCategory != null)
-        {
-
+        if (_unitOfWork.Category.ExistsBy(u => u.CategoryName.Equals(category.CategoryName) && u.Id != category.Id))
           throw new BadRequestException(Constants.CATEGORYEXIST);
-        }
-
         var categoryParentId = _unitOfWork.Category.Get(u => u.Id == category.ParentID);
         if (categoryParentId == null)
         {
           throw new BadRequestException(Constants.CATEGORYPARENTNOTFOUND);
         }
+
         category.CategoryLevel = categoryParentId.CategoryLevel + 1;
         category.ModifiedBy = "Admin";
         _unitOfWork.Category.Update(category);

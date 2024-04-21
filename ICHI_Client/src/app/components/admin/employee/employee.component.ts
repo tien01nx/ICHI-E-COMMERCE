@@ -360,7 +360,7 @@ export class EmployeeComponent {
     };
 
     debugger;
-    this.authService.register(userdto).subscribe({
+    this.authService.registerEmployee(userdto).subscribe({
       next: (response: any) => {
         if (response.message === 'Đăng ký tài khoản thành công') {
           this.employeeForm.reset();

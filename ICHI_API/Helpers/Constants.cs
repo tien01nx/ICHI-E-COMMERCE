@@ -24,6 +24,19 @@
     public static string JWTEXPIREDAY = "Jwt:ExpireDay";
     public static string JWTISSUER = "Jwt:Issuer";
     public static string JWTAUDIENCE = "Jwt:Audience";
+
+    //    "Key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+    //"Issuer": "https://localhost:7287/",
+    //"Audience": "https://localhost:7287/",
+    //"ExpireDay": 10 // time to expire tokenaaaaaaaaaaa
+
+    public static string KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
+    public static string ISSUER = "https://localhost:7287/";
+    public static string AUDIENCE = "https://localhost:7287/";
+    public static int EXPIREDAY = 10;
+
+
+
     public static string SUB = "sub";
     public static string ROLE = "Role";
     public static string ROLES = "roles";

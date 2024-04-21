@@ -58,7 +58,26 @@ namespace ICHI_CORE.Controllers.MasterController
       string strMessage = string.Empty;
       try
       {
-        string data = _authService.Register(userRegister, out strMessage);
+        string data = _authService.RegisterCustomer(userRegister, out strMessage);
+        return new ApiResponse<string>(System.Net.HttpStatusCode.OK, strMessage, data);
+      }
+      catch (Exception ex)
+      {
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<string>(ex);
+      }
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    [Route("RegisterEmployee")]
+    public async Task<ApiResponse<String>> RegisterEmployee([FromBody] UserRegister userRegister)
+    {
+      ApiResponse<String> result;
+      string strMessage = string.Empty;
+      try
+      {
+        string data = _authService.RegisterEmployee(userRegister, out strMessage);
         return new ApiResponse<string>(System.Net.HttpStatusCode.OK, strMessage, data);
       }
       catch (Exception ex)

@@ -135,8 +135,8 @@ namespace ICHI_API.Service
         cartVM.Customer = customer;
         cartVM.TrxTransaction = new TrxTransaction();
         cartVM.TrxTransaction.Address = cartVM?.Customer?.Address ?? "Vui lòng nhập địa chỉ";
-        cartVM.TrxTransaction.PhoneNumber = cartVM.Customer?.PhoneNumber;
-        cartVM.TrxTransaction.FullName = cartVM?.Customer?.FullName;
+        cartVM.TrxTransaction.PhoneNumber = cartVM.Customer?.PhoneNumber ?? "Bắt buộc";
+        cartVM.TrxTransaction.FullName = cartVM?.Customer?.FullName ?? "Bắt buộc";
         return cartVM;
       }
       catch (Exception)
@@ -150,21 +150,18 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var existingCartItem = _unitOfWork.Cart.Get(u => u.UserId == cart.UserId && u.ProductId == cart.ProductId);
-        var product = _unitOfWork.Product.Get(u => u.Id == cart.ProductId);
+        var existingCartItem = _unitOfWork.Cart.Get(u => u.UserId == cart.UserId && u.ProductId == cart.ProductId, "Product");
         if (existingCartItem != null)
         {
-          // nếu quantity > quantity trong product thì thông báo số lượng sản phẩm không đủ và set existingCartItem.Quantity = product.Quantity
-
-          if (existingCartItem.Quantity + cart.Quantity > product.Quantity)
+          // nếu số lượng sản phẩm trong giỏ hàng lớn hơn product.quantity thì báo số lượng hàng không đủ => số lượng sản phẩm trong giỏ hàng = product.quantity
+          if (existingCartItem.Quantity + cart.Quantity > existingCartItem.Product.Quantity)
           {
             strMessage = Constants.PRODUCTNOTENOUGH;
-            existingCartItem.Quantity = product.Quantity;
+            existingCartItem.Quantity = existingCartItem.Product.Quantity;
             _unitOfWork.Cart.Update(existingCartItem);
+            _unitOfWork.Save();
             return cart;
           }
-          existingCartItem.Quantity += cart.Quantity;
-          _unitOfWork.Cart.Update(existingCartItem);
         }
         else
         {
@@ -191,6 +188,9 @@ namespace ICHI_API.Service
 
         if (data != null)
         {
+
+          // nếu số lượng mua lớn hơn số lượng sản phẩm thì báo số lượng hàng không đủ => số lượng sản phẩm trong giỏ hàng = product.quantity
+          // nếu product.Quantity ==0 thì gán số lượng sản phẩm trong giỏ hàng = 1
           if (cart.Quantity > product.Quantity)
           {
             strMessage = Constants.PRODUCTNOTENOUGHOUT;

@@ -1,6 +1,5 @@
 ﻿using API.Model;
 using ICHI_API.Model;
-using ICHI_CORE.Domain;
 using ICHI_CORE.Model;
 
 namespace ICHI_API.Service.IService
@@ -9,7 +8,8 @@ namespace ICHI_API.Service.IService
   {
     string Login(UserLogin userLogin, out string strMessage);
 
-    string Register(UserRegister userRegister, out string strMessage);
+    string RegisterCustomer(UserRegister userRegister, out string strMessage);
+    string RegisterEmployee(UserRegister userRegister, out string strMessage);
 
     bool ForgotPassword(string email, out string strMessage);
 
@@ -18,9 +18,5 @@ namespace ICHI_API.Service.IService
     bool LockAccount(string id, bool status, out string strMessage);
 
     string RefreshToken(UserRefreshToken user, out string strMessage);
-
-    User ExistsByEmail(string email);
-
-    bool ExistsByPhoneNumber(string phoneNumber);
   }
 }

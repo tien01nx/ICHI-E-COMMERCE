@@ -20,9 +20,18 @@ export class AuthService {
   }
 
   register(userRegister: any) {
-
+    debugger;
     return this.apiService.callApi<any>(
       '/Auth/Register',
+      'post',
+      null,
+      userRegister
+    );
+  }
+
+  registerEmployee(userRegister: any) {
+    return this.apiService.callApi<any>(
+      '/Auth/RegisterEmployee',
       'post',
       null,
       userRegister
@@ -38,7 +47,7 @@ export class AuthService {
   }
 
   // đổi mật khẩu
-  changePassword(data: any)  {
+  changePassword(data: any) {
     return this.http.put(this.baseUrl + '/Auth/change-password', data);
   }
 }
