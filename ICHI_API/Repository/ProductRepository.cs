@@ -11,22 +11,22 @@ using System.Threading.Tasks;
 
 namespace ICHI.DataAccess.Repository
 {
-  public class ProductRepository : Repository<Product>, IProductRepository
-  {
-    private PcsApiContext _db;
-    public ProductRepository(PcsApiContext db) : base(db)
+    public class ProductRepository : Repository<Product>, IProductRepository
     {
-      _db = db;
-    }
+        private PcsApiContext _db;
+        public ProductRepository(PcsApiContext db) : base(db)
+        {
+            _db = db;
+        }
 
-    public bool ExistsBy(Expression<Func<Product, bool>> filter)
-    {
-      return dbSet.Any(filter);
-    }
+        public bool ExistsBy(Expression<Func<Product, bool>> filter)
+        {
+            return dbSet.Any(filter);
+        }
 
-    public void Update(Product obj)
-    {
-      _db.Products.Update(obj);
+        public void Update(Product obj)
+        {
+            _db.Products.Update(obj);
+        }
     }
-  }
 }

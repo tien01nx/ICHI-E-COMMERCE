@@ -9,131 +9,125 @@ using static ICHI_API.Helpers.Constants;
 
 namespace ICHI_API.Service
 {
-  public class TrademarkService : ITrademarkService
-  {
-    private readonly IUnitOfWork _unitOfWork;
-    private PcsApiContext _db;
-    private readonly IWebHostEnvironment _webHostEnvironment;
-
-    public TrademarkService(IUnitOfWork unitOfWork, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, PcsApiContext pcsApiContext)
+    public class TrademarkService : ITrademarkService
     {
-      _unitOfWork = unitOfWork;
-      _webHostEnvironment = webHostEnvironment;
-      _db = pcsApiContext;
-    }
+        private readonly IUnitOfWork _unitOfWork;
+        private PcsApiContext _db;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public Helpers.PagedResult<Trademark> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
-    {
-      strMessage = string.Empty;
-      try
-      {
-        var query = _db.Trademarks.OrderByDescending(u => u.ModifiedDate).AsQueryable();
-        if (!string.IsNullOrEmpty(name))
+        public TrademarkService(IUnitOfWork unitOfWork, IConfiguration configuration, IWebHostEnvironment webHostEnvironment, PcsApiContext pcsApiContext)
         {
-          query = query.Where(e => e.TrademarkName.Contains(name.Trim()));
+            _unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
+            _db = pcsApiContext;
         }
-        var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
-        query = query.OrderBy(orderBy);
-        var pagedResult = Helpers.PagedResult<Trademark>.CreatePagedResult(query, pageNumber, pageSize);
-        return pagedResult;
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
 
-    public Trademark FindById(int id, out string strMessage)
-    {
-      strMessage = string.Empty;
-      try
-      {
-        var data = _unitOfWork.Trademark.Get(u => u.Id == id);
-        if (data == null)
+        public Helpers.PagedResult<Trademark> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
         {
-          throw new BadRequestException(TRADEMARKNOTFOUND);
+            strMessage = string.Empty;
+            try
+            {
+                var query = _db.Trademarks.OrderByDescending(u => u.ModifiedDate).AsQueryable();
+                if (!string.IsNullOrEmpty(name))
+                {
+                    query = query.Where(e => e.TrademarkName.Contains(name.Trim()));
+                }
+                var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
+                query = query.OrderBy(orderBy);
+                var pagedResult = Helpers.PagedResult<Trademark>.CreatePagedResult(query, pageNumber, pageSize);
+                return pagedResult;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
-        return data;
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
 
-    public Trademark Create(Trademark trademark, out string strMessage)
-    {
-      strMessage = string.Empty;
-      try
-      {
+        public Trademark FindById(int id, out string strMessage)
+        {
+            strMessage = string.Empty;
+            try
+            {
+                var data = _unitOfWork.Trademark.Get(u => u.Id == id);
+                if (data == null)
+                {
+                    throw new BadRequestException(TRADEMARKNOTFOUND);
+                }
+                return data;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-        var checkPhone = _unitOfWork.Trademark.Get(u => u.TrademarkName == trademark.TrademarkName.Trim());
-        if (checkPhone != null)
+        public Trademark Create(Trademark trademark, out string strMessage)
         {
-          throw new BadRequestException(TRADEMARKEXIST);
+            strMessage = string.Empty;
+            try
+            {
+                if (_unitOfWork.Trademark.ExistsBy(u => u.TrademarkName == trademark.TrademarkName))
+                    throw new BadRequestException(TRADEMARKEXIST);
+                trademark.CreateBy = "Admin";
+                trademark.ModifiedBy = "Admin";
+                _unitOfWork.Trademark.Add(trademark);
+                _unitOfWork.Save();
+                strMessage = ADDTRADEMARKSUCCESS;
+                return trademark;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
-        trademark.CreateBy = "Admin";
-        trademark.ModifiedBy = "Admin";
-        _unitOfWork.Trademark.Add(trademark);
-        _unitOfWork.Save();
-        strMessage = ADDTRADEMARKSUCCESS;
-        return trademark;
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
 
-    public Trademark Update(Trademark trademark, out string strMessage)
-    {
-      strMessage = string.Empty;
-      try
-      {
-        // lấy thông tin thương hiệu
-        var data = _unitOfWork.Trademark.Get(u => u.Id == trademark.Id);
-        if (data == null)
+        public Trademark Update(Trademark trademark, out string strMessage)
         {
-          throw new BadRequestException(TRADEMARKNOTFOUND);
+            strMessage = string.Empty;
+            try
+            {
+                // lấy thông tin thương hiệu
+                var data = _unitOfWork.Trademark.Get(u => u.Id == trademark.Id);
+                if (data == null)
+                {
+                    throw new BadRequestException(TRADEMARKNOTFOUND);
+                }
+                // kiểm tra số điện thoại thương hiệu đã tồn tại chưa
+                var trademarkName = _unitOfWork.Trademark.Get(u => u.TrademarkName == trademark.TrademarkName.Trim());
+                if (_unitOfWork.Trademark.ExistsBy(u => u.TrademarkName == trademark.TrademarkName && u.Id != trademark.Id))
+                    throw new BadRequestException(TRADEMARKEXIST);
+                // kiêm tra mã số thueé
+                trademark.ModifiedBy = "Admin";
+                _unitOfWork.Trademark.Update(trademark);
+                _unitOfWork.Save();
+                strMessage = UPDATETRADEMARKSUCCESS;
+                return trademark;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
-        // kiểm tra số điện thoại thương hiệu đã tồn tại chưa
-        var trademarkName = _unitOfWork.Trademark.Get(u => u.TrademarkName == trademark.TrademarkName.Trim());
-        if (trademarkName != null && trademarkName.Id != trademark.Id)
-        {
-          throw new BadRequestException(TRADEMARKEXIST);
-        }
-        // kiêm tra mã số thueé
-        trademark.ModifiedBy = "Admin";
-        _unitOfWork.Trademark.Update(trademark);
-        _unitOfWork.Save();
-        strMessage = UPDATETRADEMARKSUCCESS;
-        return trademark;
-      }
-      catch (Exception)
-      {
-        throw;
-      }
-    }
 
-    public bool Delete(int id, out string strMessage)
-    {
-      strMessage = string.Empty;
-      try
-      {
-        var data = _unitOfWork.Trademark.Get(u => u.Id == id);
-        if (data == null)
+        public bool Delete(int id, out string strMessage)
         {
-          throw new BadRequestException(TRADEMARKNOTFOUND);
+            strMessage = string.Empty;
+            try
+            {
+                var data = _unitOfWork.Trademark.Get(u => u.Id == id);
+                if (data == null)
+                {
+                    throw new BadRequestException(TRADEMARKNOTFOUND);
+                }
+                _unitOfWork.Trademark.Remove(data);
+                _unitOfWork.Save();
+                strMessage = DELETETRADEMARKSUCCESS;
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
-        _unitOfWork.Trademark.Remove(data);
-        _unitOfWork.Save();
-        strMessage = DELETETRADEMARKSUCCESS;
-        return true;
-      }
-      catch (Exception)
-      {
-        throw;
-      }
     }
-  }
 }
