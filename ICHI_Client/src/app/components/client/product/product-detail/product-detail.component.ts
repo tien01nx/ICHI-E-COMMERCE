@@ -26,6 +26,8 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
   category!: CategoryProduct;
   categories: CategoryProduct[] = [];
   image: string = '';
+  daysRemaining!: number;
+  isImage: string = '';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -51,6 +53,9 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
         this.category = respon.data.categoryProduct;
         this.image = respon.data?.productImages[0].imagePath;
         this.getParent();
+        if (this.productdto.promotionDetail !== null) {
+          this.calculateDaysRemaining();
+        }
       },
     });
   }
@@ -216,6 +221,23 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
     },
   };
   chooseImage(image: any) {
+    debugger;
     this.image = image.imagePath;
+    this.isImage = image.imagePath;
+  }
+  // tính ra số giờ kết thúc mã giảm giá
+  calculateDaysRemaining(): void {
+    this.daysRemaining = this.calculateDaysToEnd(
+      this.productdto.promotionDetail.promotion.endTime
+    );
+  }
+  calculateDaysToEnd(endTime: string): number {
+    const endDate = new Date(endTime);
+    const currentDate = new Date();
+    const differenceInMilliseconds = endDate.getTime() - currentDate.getTime();
+    const differenceInDays = Math.ceil(
+      differenceInMilliseconds / (1000 * 3600 * 24)
+    );
+    return differenceInDays;
   }
 }

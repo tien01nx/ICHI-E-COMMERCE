@@ -183,7 +183,7 @@
                     type="number"
                     placeholder="Số lô"
                     formControlName="batchNumber"
-                    required
+                    readonly
                   />
                 </td>
                 <td class="pt-2 pb-2">
@@ -192,8 +192,7 @@
                     type="number"
                     placeholder="Đơn giá"
                     formControlName="price"
-                    required
-                    (keydown)="onKeyDown($event, true)"
+                    (keypress)="Utils.handleKeyPress($event, 0, 1000000)"
                   />
                   <div
                     class="label-error mt-1"
@@ -223,16 +222,16 @@
                     min="1"
                     max="1000"
                     placeholder="Số lượng"
-                    formControlName="total"
+                    formControlName="quantity"
                     required
-                    (keydown)="onKeyDown($event, false)"
+                    (keypress)="Utils.handleKeyPress($event, 1, 1000)"
                   />
                   <div
                     class="label-error mt-1"
-                    *ngIf="receiptDetails.get('total')?.dirty"
+                    *ngIf="receiptDetails.get('quantity')?.dirty"
                   >
                     <span
-                      *ngIf="receiptDetails.get('total')?.hasError('required')"
+                      *ngIf="receiptDetails.get('quantity')?.hasError('required')"
                     >
                       <small class="text-danger mt-1"
                         >Số lượng là trường bắt buộc.</small
@@ -240,8 +239,8 @@
                     </span>
                     <span
                       *ngIf="
-                        receiptDetails.get('total')?.hasError('max') ||
-                        receiptDetails.get('total')?.hasError('min')
+                        receiptDetails.get('quantity')?.hasError('max') ||
+                        receiptDetails.get('quantity')?.hasError('min')
                       "
                     >
                       <small>Số lượng phải từ 1 đến 1000.</small>

@@ -20,7 +20,7 @@
               <input
                 class="form-control search-input search"
                 type="text"
-                placeholder="Tìm kiếm nhà cung cấp"
+                placeholder="Tìm kiếm danh mục sản phẩm"
                 name="searchTemp"
                 (input)="search()"
                 [(ngModel)]="searchTemp"
@@ -36,7 +36,7 @@
             data-bs-toggle="modal"
             (click)="openModalCreate()"
           >
-            <span class="fas fa-plus me-2"></span>Thêm nhà cung cấp
+            <span class="fas fa-plus me-2"></span>Thêm danh mục
           </button>
         </div>
       </div>
@@ -67,12 +67,12 @@
                 class="sort white-space-nowrap align-middle ps-4"
                 scope="col"
                 style="width: 20%"
-                (click)="sortByField('categoryName')"
+                (click)="sortByField('ParentID')"
               >
                 Tên danh mục cha
                 <label
                   [class.d-none]="
-                    SortBy === 'categoryName' &&
+                    SortBy === 'ParentID' &&
                     (sortDir === 'DESC' || sortDir === 'ASC')
                   "
                 >
@@ -80,14 +80,14 @@
                 </label>
                 <label
                   [class.d-none]="
-                    SortBy !== 'categoryName' || sortDir !== 'ASC'
+                    SortBy !== 'ParentID' || sortDir !== 'ASC'
                   "
                 >
                   <span class="fas fa-sort-up align-middle fs-9"></span>
                 </label>
                 <label
                   [class.d-none]="
-                    SortBy !== 'categoryName' || sortDir !== 'DESC'
+                    SortBy !== 'ParentID' || sortDir !== 'DESC'
                   "
                 >
                   <span class="fas fa-sort-down align-middle fs-9"></span>
@@ -96,25 +96,25 @@
               <th
                 class="sort align-middle ps-4"
                 scope="col"
-                (click)="sortByField('address')"
+                (click)="sortByField('CategoryLevel')"
                 style="width: 20%"
               >
                 Cấp độ danh mục
                 <label
                   [class.d-none]="
-                    SortBy === 'address' &&
+                    SortBy === 'CategoryLevel' &&
                     (sortDir === 'DESC' || sortDir === 'ASC')
                   "
                 >
                   <span class="fas fa-sort align-middle fs-9"></span>
                 </label>
                 <label
-                  [class.d-none]="SortBy !== 'address' || sortDir !== 'ASC'"
+                  [class.d-none]="SortBy !== 'CategoryLevel' || sortDir !== 'ASC'"
                 >
                   <span class="fas fa-sort-up align-middle fs-9"></span>
                 </label>
                 <label
-                  [class.d-none]="SortBy !== 'address' || sortDir !== 'DESC'"
+                  [class.d-none]="SortBy !== 'CategoryLevel' || sortDir !== 'DESC'"
                 >
                   <span class="fas fa-sort-down align-middle fs-9"></span>
                 </label>
@@ -123,22 +123,22 @@
                 class="sort align-middle ps-4"
                 scope="col"
                 style="width: 20%"
-                (click)="sortByField('phone')"
+                (click)="sortByField('CategoryName')"
               >
                 Tên danh mục
                 <label
                   [class.d-none]="
-                    SortBy === 'phone' &&
+                    SortBy === 'CategoryName' &&
                     (sortDir === 'DESC' || sortDir === 'ASC')
                   "
                 >
                   <span class="fas fa-sort align-middle fs-9"></span>
                 </label>
-                <label [class.d-none]="SortBy !== 'phone' || sortDir !== 'ASC'">
+                <label [class.d-none]="SortBy !== 'CategoryName' || sortDir !== 'ASC'">
                   <span class="fas fa-sort-up align-middle fs-9"></span>
                 </label>
                 <label
-                  [class.d-none]="SortBy !== 'phone' || sortDir !== 'DESC'"
+                  [class.d-none]="SortBy !== 'CategoryName' || sortDir !== 'DESC'"
                 >
                   <span class="fas fa-sort-down align-middle fs-9"></span>
                 </label>
@@ -147,12 +147,12 @@
                 class="sort align-middle ps-4"
                 scope="col"
                 style="width: 20%"
-                (click)="sortByField('UpdateDatetime')"
+                (click)="sortByField('ModifiedDate')"
               >
                 Ngày sửa
                 <label
                   [class.d-none]="
-                    SortBy === 'UpdateDatetime' &&
+                    SortBy === 'ModifiedDate' &&
                     (sortDir === 'DESC' || sortDir === 'ASC')
                   "
                 >
@@ -160,14 +160,14 @@
                 </label>
                 <label
                   [class.d-none]="
-                    SortBy !== 'UpdateDatetime' || sortDir !== 'ASC'
+                    SortBy !== 'ModifiedDate' || sortDir !== 'ASC'
                   "
                 >
                   <span class="fas fa-sort-up align-middle fs-9"></span>
                 </label>
                 <label
                   [class.d-none]="
-                    SortBy !== 'UpdateDatetime' || sortDir !== 'DESC'
+                    SortBy !== 'ModifiedDate' || sortDir !== 'DESC'
                   "
                 >
                   <span class="fas fa-sort-down align-middle fs-9"></span>

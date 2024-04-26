@@ -45,7 +45,7 @@ namespace ICHI_API.Service
         throw;
       }
     }
-    public TrxTransactionDTO Insert(TrxTransactionDTO trxTransactionDTO, out string strMessage)
+    public TrxTransactionDTO Create(TrxTransactionDTO trxTransactionDTO, out string strMessage)
     {
       strMessage = string.Empty;
       try
@@ -88,14 +88,31 @@ namespace ICHI_API.Service
         trxTransactionDTO.Amount = trxTransaction.OrderTotal;
         trxTransactionDTO.TrxTransactionId = trxTransaction.Id;
         // lấy thông tin đơn hàng theo userid từ cart
+        //foreach (var item in trxTransactionDTO.Carts)
+        //{
+        //  TransactionDetail trxTransactionDetail = new TransactionDetail();
+        //  trxTransactionDetail.ProductId = item.ProductId;
+        //  trxTransactionDetail.Quantity = item.Quantity;
+        //  trxTransactionDetail.Price = item.Price;
+        //  trxTransactionDetail.BatchNumber = GetBatchNumber(item.ProductId);
+        //  trxTransactionDetail.TrxTransactionId = trxTransaction.Id;
+        //  _unitOfWork.TransactionDetail.Add(trxTransactionDetail);
+        //}
         foreach (var item in trxTransactionDTO.Carts)
         {
-          TransactionDetail trxTransactionDetail = new TransactionDetail();
-          trxTransactionDetail.ProductId = item.ProductId;
-          trxTransactionDetail.Total = item.Quantity;
-          trxTransactionDetail.Price = item.Price;
-          trxTransactionDetail.TrxTransactionId = trxTransaction.Id;
-          _unitOfWork.TransactionDetail.Add(trxTransactionDetail);
+          // Lấy danh sách các lô và số lượng tương ứng
+          var batchNumbers = GetBatchNumbers(item.ProductId, item.Quantity);
+
+          foreach (var batch in batchNumbers)
+          {
+            TransactionDetail trxTransactionDetail = new TransactionDetail();
+            trxTransactionDetail.ProductId = item.ProductId;
+            trxTransactionDetail.Quantity = batch.Quantity;
+            trxTransactionDetail.Price = item.Price;
+            trxTransactionDetail.BatchNumber = batch.BatchNumber;
+            trxTransactionDetail.TrxTransactionId = trxTransaction.Id;
+            _unitOfWork.TransactionDetail.Add(trxTransactionDetail);
+          }
         }
 
         if (checkPromotion > 0)
@@ -270,6 +287,54 @@ namespace ICHI_API.Service
         throw;
       }
     }
+
+
+
+    public List<(double BatchNumber, int Quantity)> GetBatchNumbers(int productId, int purchaseQuantity)
+    {
+      List<(double BatchNumber, int Quantity)> batchNumbers = new List<(double BatchNumber, int Quantity)>();
+      try
+      {
+        // Lấy ra tổng số lượng sản phẩm đã bán
+        var soldQuantity = _unitOfWork.TransactionDetail.GetAll(u => u.ProductId == productId).Sum(u => u.Quantity);
+
+        // Lấy ra các số lô của sản phẩm
+        var inventoryReceiptDetails = _unitOfWork.InventoryReceiptDetail.GetAll(u => u.ProductId == productId).OrderBy(u => u.BatchNumber).ToList();
+
+        int remainingQuantity = purchaseQuantity;
+        int cumulativeQuantity = 0; // Điều này sẽ theo dõi số lượng tích lũy được bao phủ bởi mỗi đợt
+
+        foreach (var item in inventoryReceiptDetails)
+        {
+          if (remainingQuantity <= 0)
+            break;
+
+          int previousCumulativeQuantity = cumulativeQuantity;
+          cumulativeQuantity += item.Quantity;
+
+          // Tính số lượng có sẵn trong đợt hiện tại
+          int availableQuantity = Math.Max(0, item.Quantity - Math.Max(soldQuantity - previousCumulativeQuantity, 0));
+
+          if (availableQuantity > 0 && remainingQuantity > 0)
+          {
+            int quantityToTake = Math.Min(availableQuantity, remainingQuantity);
+            batchNumbers.Add((item.BatchNumber, quantityToTake));
+            remainingQuantity -= quantityToTake;
+          }
+          // Cập nhật số lượng đã bán cho đợt tiếp theo
+          soldQuantity = Math.Max(soldQuantity - item.Quantity, 0);
+        }
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+
+      return batchNumbers;
+    }
+
+
+
 
   }
 }

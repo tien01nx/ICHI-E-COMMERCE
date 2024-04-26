@@ -154,7 +154,7 @@ export class TrxTransactionService {
       body: model,
     };
 
-    return this.http.delete(this.baseUrl + '/Cart/DeleteCart', options);
+    return this.http.delete(this.baseUrl + '/Cart/Delete', options);
   }
 
   GetTrxTransaction(cartProduct: CartProductDTO) {
@@ -175,7 +175,7 @@ export class TrxTransactionService {
 
   PaymentExecute(model: TrxTransactionDTO): Observable<any> {
     debugger;
-    return this.http.post(this.baseUrl + '/TrxTransaction/Insert', model).pipe(
+    return this.http.post(this.baseUrl + '/TrxTransaction/Create', model).pipe(
       mergeMap((response: any) => {
         if (
           response.data &&

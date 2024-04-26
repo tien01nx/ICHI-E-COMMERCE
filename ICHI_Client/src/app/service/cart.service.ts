@@ -29,7 +29,7 @@ export class CartService {
   }
 
   AddToCart(model: InsertCartDTO) {
-    return this.http.post(this.baseUrl + '/Cart/Insert', model);
+    return this.http.post(this.baseUrl + '/Cart/Create', model);
   }
 
   Update(model: InsertCartDTO) {

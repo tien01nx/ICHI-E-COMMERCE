@@ -56,14 +56,14 @@
       }
       return result;
     }
-    [HttpPost("Insert")]
-    public async Task<ApiResponse<TrxTransactionDTO>> Insert([FromBody] TrxTransactionDTO trxTransactionDTO)
+    [HttpPost("Create")]
+    public async Task<ApiResponse<TrxTransactionDTO>> Create([FromBody] TrxTransactionDTO trxTransactionDTO)
     {
       ApiResponse<TrxTransactionDTO> result;
       string strMessage = string.Empty;
       try
       {
-        var data = _trxTransactionService.Insert(trxTransactionDTO, out strMessage);
+        var data = _trxTransactionService.Create(trxTransactionDTO, out strMessage);
         return new ApiResponse<TrxTransactionDTO>(System.Net.HttpStatusCode.OK, strMessage, data);
       }
       catch (Exception ex)
@@ -228,6 +228,7 @@
       }
       return result;
     }
+
 
   }
 }

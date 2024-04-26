@@ -82,7 +82,7 @@ namespace ICHI_CORE.Controllers.MasterController
     }
 
     [HttpPost("Create")]
-    public async Task<ApiResponse<InventoryReceiptDTO>> CreateSupplỉer([FromBody] InventoryReceiptDTO model)
+    public async Task<ApiResponse<InventoryReceiptDTO>> Create([FromBody] InventoryReceiptDTO model)
     {
       ApiResponse<InventoryReceiptDTO> result;
       string strMessage = "";
@@ -100,7 +100,7 @@ namespace ICHI_CORE.Controllers.MasterController
     }
 
     [HttpPost("Update")]
-    public async Task<ApiResponse<InventoryReceiptDTO>> UpdateInventory([FromBody] InventoryReceiptDTO model)
+    public async Task<ApiResponse<InventoryReceiptDTO>> Update([FromBody] InventoryReceiptDTO model)
     {
       ApiResponse<InventoryReceiptDTO> result;
       string strMessage = "";

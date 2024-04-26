@@ -291,7 +291,7 @@ export class CategoryComponent implements OnInit {
 
   openModalCreate() {
     this.categoryForm.reset();
-    this.titleModal = 'Thêm danh mục sàn phẩm';
+    this.titleModal = 'Thêm danh mục sản phẩm';
     this.btnSave = 'Thêm mới';
     this.errorMessage = '';
   }

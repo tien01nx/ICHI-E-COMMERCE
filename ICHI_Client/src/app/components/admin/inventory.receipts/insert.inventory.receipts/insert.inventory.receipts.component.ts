@@ -59,7 +59,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
           Validators.min(0),
           Validators.max(1000000000),
         ]),
-        total: new FormControl(null, [
+        quantity: new FormControl(null, [
           Validators.required,
           Validators.min(1),
           Validators.max(1000),
@@ -184,9 +184,9 @@ export class InsertInventoryReceiptsComponent implements OnInit {
       return;
     }
     if (this.activatedRoute.snapshot.params['id'] === undefined) {
-      this.createProduct();
+      this.create();
     } else {
-      this.updateProduct();
+      this.update();
     }
   }
 
@@ -222,7 +222,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
             id: new FormControl(detail.id),
             inventoryReceiptId: new FormControl(detail.inventoryReceiptId),
             price: new FormControl(detail.price),
-            total: new FormControl(detail.total),
+            quantity: new FormControl(detail.quantity),
             productId: new FormControl(detail.product?.id), // Assuming product is available in detail
             batchNumber: new FormControl(detail.batchNumber),
           });
@@ -244,7 +244,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
         null,
         [Validators.required, Validators.min(0), Validators.max(1000000000)],
       ],
-      total: [
+      quantity: [
         null,
         [
           Validators.required,
@@ -271,7 +271,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
       (control) => {
         const productId = control.get('productId')?.value;
         const price = control.get('price')?.value;
-        const total = control.get('total')?.value;
+        const total = control.get('quantity')?.value;
         return productId && price && total;
       }
     );
@@ -314,7 +314,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
     inventoryReceiptDetails.controls.forEach(
       (control: AbstractControl<any, any>) => {
         const price = (control.get('price') as FormControl)?.value || 0;
-        const quantity = (control.get('total') as FormControl)?.value || 0;
+        const quantity = (control.get('quantity') as FormControl)?.value || 0;
         total += price * quantity;
       }
     );
@@ -322,7 +322,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
     return total;
   }
 
-  createProduct() {
+  create() {
     this.inventoryService.create(this.receiptForm.value).subscribe({
       next: (respon: any) => {
         if (respon.message === 'Tạo phiếu nhập thành công') {
@@ -348,7 +348,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
       formGroup.get('batchNumber')?.setValue(event.batchNumber);
     }
   }
-  updateProduct() {
+  update() {
     this.inventoryService.update(this.receiptForm.value).subscribe({
       next: (respon: any) => {
         if (respon.message === 'Cập nhật hóa đơn nhập thành công') {
@@ -421,7 +421,7 @@ export class InsertInventoryReceiptsComponent implements OnInit {
     inventoryReceiptDetails.controls.forEach(
       (control: AbstractControl<any, any>) => {
         const price = (control.get('price') as FormControl)?.value || 0;
-        const quantity = (control.get('total') as FormControl)?.value || 0;
+        const quantity = (control.get('quantity') as FormControl)?.value || 0;
         const total = price * quantity;
         totals.push(total);
       }

@@ -157,10 +157,12 @@ export class TrademarkComponent implements OnInit {
         } else {
           this.errorMessage = response.message;
           this.isDisplayNone = false;
+          this.trademarkForm.value.id = null;
           // this.toastr.error(response.message, 'Thông báo');
         }
       },
       error: (error: any) => {
+        this.trademarkForm.value.id = null;
         this.errorMessage = error.error;
         this.isDisplayNone = false;
       },

@@ -36,7 +36,6 @@ import { SignOutComponent } from './components/auth/sign-out/sign-out.component'
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 import { VerificationCodeComponent } from './components/auth/verification-code/verification-code.component';
 import { HomeComponent } from './components/client/home/home.component';
-import { DetailProductComponent } from './components/client/detail-product/detail-product.component';
 import { CheckoutComponent } from './components/client/checkout/checkout.component';
 import { ClientLayoutComponent } from './components/client/client-layout/client-layout.component';
 import { ClientFooterComponent } from './components/client/client-footer/client-footer.component';
@@ -87,7 +86,6 @@ register();
     SignUpComponent,
     VerificationCodeComponent,
     HomeComponent,
-    DetailProductComponent,
     CheckoutComponent,
     ClientLayoutComponent,
     ClientFooterComponent,

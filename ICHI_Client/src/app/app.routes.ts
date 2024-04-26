@@ -1,7 +1,6 @@
 import { OrderComponent } from './components/admin/order/order.component';
 import { CustomerComponent } from './components/admin/customer/customer.component';
 import { ClientLayoutComponent } from './components/client/client-layout/client-layout.component';
-import { DetailProductComponent } from './components/client/detail-product/detail-product.component';
 import { ProductsFilterComponent } from './components/client/products-filter/products-filter.component';
 import { CartComponent } from './components/client/cart/cart.component';
 import { CheckoutComponent } from './components/client/checkout/checkout.component';

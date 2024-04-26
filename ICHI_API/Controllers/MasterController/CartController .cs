@@ -19,8 +19,8 @@
       _cartService = cartService;
     }
 
-    [HttpPost("Insert")]
-    public async Task<ApiResponse<Cart>> Insert([FromBody] Cart cart)
+    [HttpPost("Create")]
+    public async Task<ApiResponse<Cart>> Create([FromBody] Cart cart)
     {
       ApiResponse<Cart> result;
       string strMessage = string.Empty;
@@ -55,9 +55,8 @@
     }
 
 
-
-    [HttpDelete("DeleteCart")]
-    public async Task<ApiResponse<Cart>> DeleteCart([FromBody] Cart cart)
+    [HttpDelete("Delete")]
+    public async Task<ApiResponse<Cart>> Delete([FromBody] Cart cart)
     {
       ApiResponse<Cart> result;
       string strMessage = string.Empty;

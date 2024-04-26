@@ -560,33 +560,33 @@
     //    }
     //    @startuml
     //(*) --> "Retrieve existing category data by ID"
-    //"Retrieve existing category data by ID" --> "Category found?"
-    //if "Category found?" then
-    //    -->[Yes] "Check for duplicate category name"
-    //    "Check for duplicate category name" --> "Duplicate category name found?"
-    //    if "Duplicate category name found?" then
-    //        -->[Yes] "Throw BadRequestException: CATEGORYEXIST"
-    //        --> (*)
-    //    else
-    //        -->[No] "Check for parent category"
-    //        "Check for parent category" --> "Parent category exists?"
-    //        if "Parent category exists?" then
-    //            -->[Yes] "Calculate category level"
-    //            --> "Update category in database"
-    //            --> "Save changes"
-    //            --> "Set success message"
-    //            --> "Return updated category"
+    //    "Retrieve existing category data by ID" --> "Category found?"
+    //    if "Category found?" then
+    //        -->[Yes] "Check for duplicate category name"
+    //        "Check for duplicate category name" --> "Duplicate category name found?"
+    //        if "Duplicate category name found?" then
+    //            -->[Yes] "Throw BadRequestException: CATEGORYEXIST"
     //            --> (*)
     //        else
-    //            -->[No] "Throw BadRequestException: CATEGORYPARENTNOTFOUND"
-    //            --> (*)
+    //            -->[No] "Check for parent category"
+    //            "Check for parent category" --> "Parent category exists?"
+    //            if "Parent category exists?" then
+    //                -->[Yes] "Calculate category level"
+    //                --> "Update category in database"
+    //                --> "Save changes"
+    //                --> "Set success message"
+    //                --> "Return updated category"
+    //                --> (*)
+    //            else
+    //                -->[No] "Throw BadRequestException: CATEGORYPARENTNOTFOUND"
+    //                --> (*)
+    //            endif
     //        endif
+    //    else
+    //        -->[No] "Throw BadRequestException: CATEGORYNOTFOUND"
+    //        --> (*)
     //    endif
-    //else
-    //    -->[No] "Throw BadRequestException: CATEGORYNOTFOUND"
-    //    --> (*)
-    //endif
-    //@enduml
+    //    @enduml
 
     //public bool Delete(int id, out string strMessage)
     //{

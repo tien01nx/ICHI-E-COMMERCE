@@ -15,6 +15,7 @@ import { Utils } from '../../../Utils.ts/utils';
 export class ResetPasswordComponent {
   strMessage: string = '';
   passwordsNotMatching: boolean = false;
+  passwordsFalse: boolean = false;
 
   userForm: FormGroup = new FormGroup({
     userName: new FormControl(''),
@@ -37,8 +38,8 @@ export class ResetPasswordComponent {
 
   checkPasswordMatch() {
     const password = this.userForm.get('password')?.value;
-    const confirmPassword = this.userForm.get('confirmPassword')?.value;
-
+    const confirmPassword = this.userForm.get('newPassword')?.value;
+    debugger;
     if (password !== confirmPassword) {
       this.passwordsNotMatching = true;
     } else {
@@ -65,12 +66,14 @@ export class ResetPasswordComponent {
         debugger;
         if (res.message === 'Đổi mật khẩu thành công') {
           // xóa token đã lưu trên local storage
+           this.passwordsFalse = false
           this.tokenService.removeToken();
           this.router.navigate(['/login']);
           this.toastr.success('Đổi mật khẩu thành công', 'Thông báo');
           return;
         }
-        this.toastr.error('Mật khẩu cũ không đúng', 'Thông báo');
+        // this.toastr.error('Mật khẩu cũ không đúng', 'Thông báo');
+        this.passwordsFalse = true;
         return;
       },
       (error) => {

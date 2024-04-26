@@ -20,26 +20,12 @@
     public decimal Price { get; set; } = 0;
 
     [Range(0, double.MaxValue, ErrorMessage = "Tổng số phải lớn hơn hoặc bằng 0")]
-    public int Total { get; set; } = 0;
+    public int Quantity { get; set; } = 0;
 
     private double _version = 1;
 
     public double BatchNumber
-    {
-      get => _version;
-      set => _version = IncrementVersion(value);
-    }
+    { get; set; } = 0;
 
-    public double IncrementVersion(double version)
-    {
-      if (version <= 1.19)
-      {
-        return version + 0.01;
-      }
-      else
-      {
-        return Math.Ceiling(version) + 0.0;
-      }
-    }
   }
 }

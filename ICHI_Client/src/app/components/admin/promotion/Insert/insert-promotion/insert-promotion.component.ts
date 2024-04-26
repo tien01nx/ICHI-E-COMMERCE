@@ -109,10 +109,10 @@ export class InsertPromotionComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.activatedRoute.snapshot.params['id'] === undefined) {
-      this.titleString = 'Thêm sản phẩm';
+      this.titleString = 'Thêm chương trình khuyến mãi';
       this.btnSave = 'Thêm mới';
     } else {
-      this.titleString = 'Cập nhật sản phẩm';
+      this.titleString = 'Cập nhật chương trình khuyến mãi';
       this.btnSave = 'Cập nhật';
       this.findProductById(this.activatedRoute.snapshot.params['id']);
     }
@@ -130,14 +130,16 @@ export class InsertPromotionComponent implements OnInit {
       console.log(data.data.items);
     });
 
-    this.productService.findAll().subscribe((data: any) => {
-      this.products = data.data.items;
-      this.productsRoot = data.data.items;
-      this.originalProducts = data.data.items.map((item: ProductDTO) => ({
-        ...item,
-      }));
-      console.log(data.data.items);
-    });
+    this.productService
+      .findAllByName(1, 100000, 'DESC', 'id', '')
+      .subscribe((data: any) => {
+        this.products = data.data.items;
+        this.productsRoot = data.data.items;
+        this.originalProducts = data.data.items.map((item: ProductDTO) => ({
+          ...item,
+        }));
+        console.log(data.data.items);
+      });
   }
 
   onSubmit() {
@@ -149,9 +151,9 @@ export class InsertPromotionComponent implements OnInit {
       return;
     }
     if (this.activatedRoute.snapshot.params['id'] === undefined) {
-      this.createProduct();
+      this.create();
     } else {
-      this.updateProduct();
+      this.update();
     }
   }
 
@@ -253,7 +255,7 @@ export class InsertPromotionComponent implements OnInit {
     }
   }
 
-  createProduct() {
+  create() {
     this.promotionService.create(this.promotionForm.value).subscribe({
       next: (respon: any) => {
         if (respon.message === 'Tạo mới chương trình khuyến mãi thành công') {
@@ -293,7 +295,7 @@ export class InsertPromotionComponent implements OnInit {
     });
   }
 
-  updateProduct() {
+  update() {
     debugger;
     this.promotionService.update(this.promotionForm.value).subscribe({
       next: (response: any) => {

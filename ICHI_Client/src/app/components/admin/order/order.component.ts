@@ -338,10 +338,10 @@ export class OrderComponent implements OnInit {
       return;
     }
     console.log('qua day');
-    this.createProduct();
+    this.create();
   }
 
-  createProduct() {
+  create() {
     this.trxTransactionService
       .PaymentExecute(this.trxTransactionForm.value)
       .subscribe({
