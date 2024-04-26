@@ -334,7 +334,67 @@ namespace ICHI_API.Service
     }
 
 
+    public OrderStatusVM GetOrderStatus(out string strMessage)
+    {
+      strMessage = string.Empty;
+      try
+      {
+        OrderStatusVM orderStatusVM = new OrderStatusVM();
+        var data = _unitOfWork.TrxTransaction.GetAll();
+        orderStatusVM.Pending = _unitOfWork.TrxTransaction.GetAll(u => u.OrderStatus == AppSettings.StatusOrderPending).Count();
+        orderStatusVM.OnHold = _unitOfWork.TrxTransaction.GetAll(u => u.OrderStatus == AppSettings.StatusOrderOnHold).Count();
+        orderStatusVM.WaitingForPickup = _unitOfWork.TrxTransaction.GetAll(u => u.OrderStatus == AppSettings.StatusOrderWaitingForPickup).Count();
+        orderStatusVM.WaitingForDelivery = _unitOfWork.TrxTransaction.GetAll(u => u.OrderStatus == AppSettings.StatusOrderWaitingForDelivery).Count();
+        orderStatusVM.Delivered = _unitOfWork.TrxTransaction.GetAll(u => u.OrderStatus == AppSettings.StatusOrderDelivered).Count();
+        orderStatusVM.Cancelled = _unitOfWork.TrxTransaction.GetAll(u => u.OrderStatus == AppSettings.StatusOrderCancelled).Count();
+        return orderStatusVM;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
 
+
+    public MoneyTotal getMonneyTotal(out string strMessage)
+    {
+      strMessage = string.Empty;
+      try
+      {
+        // thực hiện lấy tổng số tiền của đơn hàng theo trạng thái đã thanh toán và chưa thanh toán
+        // Tổng số lượng đơn hàng
+        // Doanh số đặt hàng
+        // Thực thu
+        // Thực chi
+        // Lấy theo ngày hiện tại
+        MoneyTotal moneyTotal = new MoneyTotal();
+        var data = _unitOfWork.TrxTransaction.GetAll(u => u.OrderDate.Date == DateTime.Now.Date);
+        moneyTotal.TotalOrder = data.Count();
+        moneyTotal.TotalOrderAmount = data.Sum(u => u.OrderTotal);
+        moneyTotal.TotalRealAmount = data.Where(u => u.PaymentStatus == AppSettings.PaymentStatusApproved).Sum(u => u.OrderTotal);
+        moneyTotal.TotalRemainAmount = data.Where(u => u.PaymentStatus == AppSettings.PaymentStatusApproved).Sum(u => u.OrderTotal);
+
+        // Lấy theo ngày hôm trước
+        var dataYesterday = _unitOfWork.TrxTransaction.GetAll(u => u.OrderDate.Date == DateTime.Now.AddDays(-1).Date);
+        moneyTotal.TotalOrderYesterday = dataYesterday.Count();
+        moneyTotal.TotalOrderAmountYesterday = dataYesterday.Sum(u => u.OrderTotal);
+        moneyTotal.TotalRealAmountYesterday = dataYesterday.Where(u => u.PaymentStatus == AppSettings.PaymentStatusApproved).Sum(u => u.OrderTotal);
+        moneyTotal.TotalRemainAmountYesterday = dataYesterday.Where(u => u.PaymentStatus == AppSettings.PaymentStatusApproved).Sum(u => u.OrderTotal);
+
+        // Tính phần trăm so với hôm qua
+        moneyTotal.PercentTotalOrder = (moneyTotal.TotalOrder - moneyTotal.TotalOrderYesterday) / moneyTotal.TotalOrderYesterday * 100;
+        moneyTotal.PercentTotalOrderAmount = (moneyTotal.TotalOrderAmount - moneyTotal.TotalOrderAmountYesterday) / moneyTotal.TotalOrderAmountYesterday * 100;
+        moneyTotal.PercentTotalRealAmount = (moneyTotal.TotalRealAmount - moneyTotal.TotalRealAmountYesterday) / moneyTotal.TotalRealAmountYesterday * 100;
+        moneyTotal.PercentTotalRemainAmount = (moneyTotal.TotalRemainAmount - moneyTotal.TotalRemainAmountYesterday) / moneyTotal.TotalRemainAmountYesterday * 100;
+
+
+        return moneyTotal;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
 
   }
 }

@@ -110,8 +110,8 @@
                             >
                               <ng-template ng-option-tmp let-item="item">
                                 <div class="container">
-                                  <div class="row">
-                                    <div class="col-md-2">
+                                  <div class="d-flex">
+                                    <div>
                                       <img
                                         *ngIf="item.image"
                                         [src]="item.image"
@@ -123,9 +123,12 @@
                                         "
                                       />
                                     </div>
-                                    <div class="col-md-10 text-start">
-                                      <p>{{ item.productName }}</p>
-                                    </div>
+
+                                    <span
+                                      class="ms-2 text-start align-self-center"
+                                    >
+                                      {{ item.productName }}
+                                    </span>
                                   </div>
                                 </div>
                               </ng-template>

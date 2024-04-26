@@ -1,51 +1,67 @@
 import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
+import { TrxTransactionService } from '../../../service/trx-transaction.service';
 @Component({
   selector: 'app-admin-home',
   templateUrl: './admin-home.component.html',
   styleUrl: './admin-home.component.css',
 })
 export class AdminHomeComponent implements OnInit {
-  constructor() {}
+  constructor(private transactionService: TrxTransactionService) {}
   ngOnInit(): void {
     this.createPieChart();
+    this.getData();
   }
   piechart: any;
-
+  orderStatus: any;
+  moneyTotal: any;
+  colors = [
+    'rgb(56, 116, 255)', // Màu cho 'pending'
+    'rgb(38, 176, 4)', // Màu cho 'onHold'
+    'rgb(0, 152, 235)', // Màu cho 'waitingForPickup'
+    'rgb(97, 197, 255)', // Màu cho 'waitingForDelivery'
+    'rgb(250, 189, 180)', // Màu cho 'delivered'
+    'rgb(255, 204, 133)', // Màu cho 'cancelled'
+  ];
   createPieChart() {
-    this.piechart = new Chart('piechart', {
-      type: 'pie',
-      data: {
-        datasets: [
-          {
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            // backgroundColor: [
-            //   'rgba(255, 99, 132, 0.2)',
-            //   'rgba(54, 162, 235, 0.2)',
-            //   'rgba(255, 206, 86, 0.2)',
-            //   'rgba(75, 192, 192, 0.2)',
-            //   'rgba(153, 102, 255, 0.2)',
-            //   'rgba(255, 159, 64, 0.2)',
-            // ],
-            // borderColor: [
-            //   'rgba(255, 99, 132, 1)',
-            //   'rgba(54, 162, 235, 1)',
-            //   'rgba(255, 206, 86, 1)',
-            //   'rgba(75, 192, 192, 1)',
-            //   'rgba(153, 102, 255, 1)',
-            //   'rgba(255, 159, 64, 1)',
-            // ],
-            // borderWidth: 1,
+    this.transactionService.getOrderStatus().subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.orderStatus = res.data;
+        this.piechart = new Chart('piechart', {
+          type: 'pie',
+          data: {
+            datasets: [
+              {
+                data: [
+                  this.orderStatus.pending,
+                  this.orderStatus.onHold,
+                  this.orderStatus.waitingForPickup,
+                  this.orderStatus.waitingForDelivery,
+                  this.orderStatus.delivered,
+                  this.orderStatus.cancelled,
+                ],
+                backgroundColor: this.colors,
+              },
+            ],
           },
-        ],
+        });
       },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  getData() {
+    this.transactionService.getGetMonneyTotal().subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.moneyTotal = res.data;
+        console.log(this.moneyTotal);
+      },
+      error: (err) => {
+        console.log(err);
       },
     });
   }

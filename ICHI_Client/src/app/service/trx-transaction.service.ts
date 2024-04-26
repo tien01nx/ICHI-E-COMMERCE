@@ -128,6 +128,14 @@ export class TrxTransactionService {
     );
   }
 
+  getOrderStatus() {
+    return this.http.get(this.baseUrl + '/TrxTransaction/GetOrderStatus');
+  }
+
+  getGetMonneyTotal() {
+    return this.http.get(this.baseUrl + '/TrxTransaction/GetMonneyTotal');
+  }
+
   checkProductPromotion(carts: any) {
     debugger;
     return this.http.post(`${this.baseUrl}/Cart/CheckCartPromotion`, carts);

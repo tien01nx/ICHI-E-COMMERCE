@@ -65,59 +65,6 @@
     return null;
   };
 
-  const contactsBySourceChartInit = () => {
-    const { getColor: e, getData: t, toggleColor: a } = window.phoenix.utils,
-      o = document.querySelector(".echart-contact-by-source-container"),
-      r = o.querySelector(".echart-contact-by-source"),
-      i = o.querySelector("[data-label]");
-    if (r) {
-      const o = t(r, "echarts"),
-        n = window.echarts.init(r),
-        l = [
-          { value: 900, name: "Organic Search" },
-          { value: 65, name: "Paid Search" },
-          { value: 40, name: "Direct Traffic" },
-          { value: 220, name: "Social Media" },
-          { value: 120, name: "Referrals" },
-          { value: 35, name: "Others Campaigns" },
-        ],
-        c = l.reduce((e, t) => t.value + e, 0);
-      i && (i.innerHTML = c);
-      echartSetOption(n, o, () => ({
-        color: [
-          e("primary"),
-          e("success"),
-          e("info"),
-          a(e("info-light"), e("info-dark")),
-          a(e("danger-lighter"), e("danger-darker")),
-          a(e("warning-light"), e("warning-dark")),
-        ],
-        tooltip: {
-          trigger: "item",
-          borderWidth: 0,
-          position: (...e) => handleTooltipPosition(e),
-        },
-        responsive: !0,
-        maintainAspectRatio: !1,
-        series: [
-          {
-            name: "Contacts by Source",
-            type: "pie",
-            radius: ["55%", "90%"],
-            startAngle: 90,
-            avoidLabelOverlap: !1,
-            itemStyle: { borderColor: e("body-bg"), borderWidth: 3 },
-            label: { show: !1 },
-            emphasis: { label: { show: !1 } },
-            labelLine: { show: !1 },
-            data: l,
-          },
-        ],
-        grid: { bottom: 0, top: 0, left: 0, right: 0, containLabel: !1 },
-      }));
-    }
-  };
-
   const contactsCreatedChartInit = () => {
     const { getColor: t, getData: o, getPastDates: e } = window.phoenix.utils,
       r = document.querySelector(".echart-contacts-created"),
@@ -933,8 +880,7 @@
   };
 
   const { docReady: docReady } = window.phoenix.utils;
-  docReady(contactsBySourceChartInit),
-    docReady(contactsCreatedChartInit),
+  docReady(contactsCreatedChartInit),
     docReady(newUsersChartsInit),
     docReady(newLeadsChartsInit),
     docReady(addClicksChartInit),

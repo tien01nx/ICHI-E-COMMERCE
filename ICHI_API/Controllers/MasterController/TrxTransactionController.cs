@@ -229,6 +229,38 @@
       return result;
     }
 
+    [HttpGet("GetOrderStatus")]
+    public async Task<ApiResponse<OrderStatusVM>> GetOrderStatus()
+    {
+      ApiResponse<OrderStatusVM> result;
+      string strMessage = string.Empty;
+      try
+      {
+        var data = _trxTransactionService.GetOrderStatus(out strMessage);
+        return new ApiResponse<OrderStatusVM>(System.Net.HttpStatusCode.OK, strMessage, data);
+      }
+      catch (Exception ex)
+      {
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<OrderStatusVM>(ex);
+      }
+    }
 
+    [HttpGet("GetMonneyTotal")]
+    public async Task<ApiResponse<MoneyTotal>> GetMonneyTotal()
+    {
+      ApiResponse<MoneyTotal> result;
+      string strMessage = string.Empty;
+      try
+      {
+        var data = _trxTransactionService.getMonneyTotal(out strMessage);
+        return new ApiResponse<MoneyTotal>(System.Net.HttpStatusCode.OK, strMessage, data);
+      }
+      catch (Exception ex)
+      {
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<MoneyTotal>(ex);
+      }
+    }
   }
 }

@@ -11,5 +11,7 @@ namespace ICHI_API.Service.IService
     ShoppingCartVM GetTrxTransactionFindById(int id, out string strMessage);
     CustomerTransactionDTO GetCustomerTransaction(string userid, out string strMessage);
     int GetCustomerId(string userId);
+    OrderStatusVM GetOrderStatus(out string strMessage);
+    MoneyTotal getMonneyTotal(out string strMessage);
   }
 }
