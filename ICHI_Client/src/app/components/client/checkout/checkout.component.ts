@@ -39,6 +39,7 @@ export class CheckoutComponent implements OnInit {
   carts: CartModel[] = [];
   // shipdata : ShipmentData[] = [];
   priceDiscount: number = 0;
+  priceAmount: number = 0;
   priceShip = 0;
   paymentsType: any;
   Environment = Environment;
@@ -248,26 +249,18 @@ export class CheckoutComponent implements OnInit {
       // nếu shoppingcartdto.cart không tồn tại thì lấy dữ liệu từ shoppingcartdto.transactionDetail
       this.shoppingcartdto.transactionDetail.forEach((item) => {
         totalPrice += item.total * item.price;
+        this.priceAmount = item.total * item.price;
       });
     }
 
-    // Nếu shoppingcartdto hoặc shoppingcartdto.cart không tồn tại, hoặc có giá trị,
-    // thì trả về 0 hoặc một giá trị mặc định khác tùy thuộc vào yêu cầu của bạn.
-    // if (!this.shoppingcartdto || !this.shoppingcartdto.cart) {
-    //   return this.shoppingcartdto.transactionDetail.reduce((acc, item) => {
-    //     return acc + item.total * item.price;
-    //   }, 0);
-    // }
-
-    // Nếu shoppingcartdto.cart tồn tại, duyệt qua từng sản phẩm trong giỏ hàng và tính tổng giá tiền
     // Nếu shoppingcartdto.cart tồn tại, duyệt qua từng sản phẩm trong giỏ hàng và tính tổng giá tiền
     if (this.shoppingcartdto.cart) {
       this.shoppingcartdto.cart.forEach((item) => {
         totalPrice += item.price * item.quantity; // Tính tổng giá tiền
       });
     }
+    this.priceAmount = totalPrice - this.priceDiscount;
     totalPrice = totalPrice - this.priceDiscount + this.priceShip; // Trừ giảm giá và cộng phí ship
-
     return totalPrice;
   }
 
@@ -281,7 +274,8 @@ export class CheckoutComponent implements OnInit {
         this.trxTransacForm.value?.fullName || '',
         this.trxTransacForm.value?.phoneNumber || '',
         this.trxTransacForm.value?.address || '',
-        this.getTotalPrice(),
+        this.priceAmount,
+        this.priceShip,
         this.trxTransacForm.value?.paymentTypes || '',
         false,
         this.shoppingcartdto.cart

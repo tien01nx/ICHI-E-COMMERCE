@@ -72,7 +72,7 @@
         </a>
       </div>
     </div> -->
-
+ 
     <div class="mb-6">
       <div class="d-flex flex-between-center mb-3">
         <h3>Sản phẩm khuyến mãi</h3>
@@ -81,6 +81,7 @@
           <span class="fas fa-chevron-right fs-9 ms-1"></span>
         </a>
       </div>
+
       <div class="swiper-theme-container products-slider">
         <div class="swiper swiper-container theme-slider">
           <swiper-container appSwiper [config]="swiperNewestConfig">
@@ -149,7 +150,7 @@
                           routerLink="product_detail/{{ data.product.id }}"
                         >
                           <h6 class="mb-2 lh-sm line-clamp-3 product-name">
-                            {{ data.product.productName }}
+                            {{ data?.product?.productName }}
                           </h6>
                         </a>
                       </div>
@@ -159,7 +160,7 @@
                           class="me-2 text-body text-decoration-line-through mb-0"
                           *ngIf="data.product.discount > 0"
                         >
-                          {{ data.product.price | number : "1.0-0" }}
+                          {{ data?.product?.price | number : "1.0-0" }}
                         </p>
                         <h3 class="text-body-emphasis mb-0">
                           {{

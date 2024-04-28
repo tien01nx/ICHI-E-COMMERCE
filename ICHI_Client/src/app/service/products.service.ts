@@ -18,6 +18,12 @@ export class ProductsService {
     private http: HttpClient
   ) {}
 
+  ProductTopFive(dateTime: string) {
+    return this.http.get(
+      this.baseUrl + '/Product/ProductTopFive?dateTime=' + dateTime
+    );
+  }
+  // this.baseUrl + '/TrxTransaction/GetMonneyTotalByMonth?year=' + id
   findAllByName(
     PageNumber: number,
     PageSize: number,

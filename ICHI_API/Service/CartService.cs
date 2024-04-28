@@ -110,7 +110,7 @@ namespace ICHI_API.Service
                 foreach (var item in trxTransaction)
                 {
                     item.ProductImage = _unitOfWork.ProductImages.Get(u => u.ProductId == item.ProductId).ImagePath;
-                    item.Discount = promotionDetail.Where(u => u.ProductId == item.ProductId).FirstOrDefault()?.Promotion?.Discount ?? 0;
+                    item.Discount = promotionDetail.Where(u => u.ProductId == item.ProductId && u.UsedCodesCount < u.Quantity).FirstOrDefault()?.Promotion?.Discount ?? 0;
                 }
                 return trxTransaction;
             }

@@ -5,22 +5,8 @@
       Sự phát triển kinh doanh của cửa hàng
     </h5>
 
-    <!-- {
-    "totalOrder": 0,
-    "totalOrderAmount": 0,
-    "totalRealAmount": 0,
-    "totalRemainAmount": 0,
-    "totalOrderYesterday": 18,
-    "totalOrderAmountYesterday": 3555800,
-    "totalRealAmountYesterday": 897500,
-    "totalRemainAmountYesterday": 897500,
-    "percentTotalOrder": -100,
-    "percentTotalOrderAmount": -100,
-    "percentTotalRealAmount": -100,
-    "percentTotalRemainAmount": -100
-} -->
     <div class="row g-3 mb-3">
-      <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-3">
+      <!-- <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-3">
         <div class="card h-100">
           <div class="card-body">
             <div class="d-flex d-sm-block justify-content-between">
@@ -39,7 +25,7 @@
                   </p>
                 </div>
                 <p class="text-primary mt-2 fs-6 fw-bold mb-0 mb-sm-4">
-                  {{ moneyTotal.totalOrder }}
+                  {{ moneyTotal?.totalOrder }}
                   <span class="fs-8 text-body lh-lg">Số lượng đơn hàng</span>
                 </p>
               </div>
@@ -55,12 +41,50 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
+
       <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-3">
-        <div class="card h-100">
+        <div class="card h-75">
           <div class="card-body">
             <div class="d-flex d-sm-block justify-content-between">
-              <div class="border-bottom-sm border-translucent mb-sm-4">
+              <div class="border-translucent mb-sm-4">
+                <div class="d-flex align-items-center">
+                  <div
+                    class="d-flex align-items-center icon-wrapper-sm shadow-primary-100"
+                    style="transform: rotate(-7.45deg)"
+                  >
+                    <span
+                      class="far fa-box-check text-primary fs-7 z-1 ms-2"
+                    ></span>
+                  </div>
+                  <p class="text-body-tertiary fs-9 mb-0 ms-2 mt-3">
+                    Outgoing call
+                  </p>
+                </div>
+                <p class="text-primary mt-2 fs-6 fw-bold mb-0 mb-sm-4">
+                  {{ moneyTotal?.totalOrder }}
+                  <span class="fs-8 text-body lh-lg">Số lượng đơn hàng</span>
+                </p>
+              </div>
+              <!-- <div
+                class="d-flex flex-column justify-content-center flex-between-end d-sm-block text-end text-sm-start"
+              >
+                <span
+                  class="badge badge-phoenix badge-phoenix-success fs-10 mb-2"
+                  >+24.5%</span
+                >
+                <p class="mb-0 fs-9 text-body-tertiary">Than Yesterday</p>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-3">
+        <div class="card h-75">
+          <div class="card-body">
+            <div class="d-flex d-sm-block justify-content-between">
+              <div class="border-translucent mb-sm-4">
                 <div class="d-flex align-items-center">
                   <div
                     class="d-flex align-items-center icon-wrapper-sm shadow-info-100"
@@ -75,11 +99,11 @@
                   </p>
                 </div>
                 <p class="text-info mt-2 fs-6 fw-bold mb-0 mb-sm-4">
-                  {{ moneyTotal.totalOrderAmount }}
+                  {{ moneyTotal?.totalOrderAmount | number : "1.0-0" }}
                   <span class="fs-8 text-body lh-lg">Doanh số đặt hàng</span>
                 </p>
               </div>
-              <div
+              <!-- <div
                 class="d-flex flex-column justify-content-center flex-between-end d-sm-block text-end text-sm-start"
               >
                 <span
@@ -87,17 +111,17 @@
                   >+24.5%</span
                 >
                 <p class="mb-0 fs-9 text-body-tertiary">Than last week</p>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
       </div>
 
       <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-3">
-        <div class="card h-100">
+        <div class="card h-75">
           <div class="card-body">
             <div class="d-flex d-sm-block justify-content-between">
-              <div class="border-bottom-sm border-translucent mb-sm-4">
+              <div class="border-translucent mb-sm-4">
                 <div class="d-flex align-items-center">
                   <div
                     class="d-flex align-items-center icon-wrapper-sm shadow-info-100"
@@ -112,11 +136,11 @@
                   </p>
                 </div>
                 <p class="text-info mt-2 fs-6 fw-bold mb-0 mb-sm-4">
-                  {{ moneyTotal.totalRealAmount }}
+                  {{ moneyTotal?.totalRealAmount | number : "1.0-0" }}
                   <span class="fs-8 text-body lh-lg">Thực thu</span>
                 </p>
               </div>
-              <div
+              <!-- <div
                 class="d-flex flex-column justify-content-center flex-between-end d-sm-block text-end text-sm-start"
               >
                 <span
@@ -124,16 +148,16 @@
                   >+24.5%</span
                 >
                 <p class="mb-0 fs-9 text-body-tertiary">Than last week</p>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
       </div>
       <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-3">
-        <div class="card h-100">
+        <div class="card h-75">
           <div class="card-body">
             <div class="d-flex d-sm-block justify-content-between">
-              <div class="border-bottom-sm border-translucent mb-sm-4">
+              <div class="border-translucent mb-sm-4">
                 <div class="d-flex align-items-center">
                   <div
                     class="d-flex align-items-center icon-wrapper-sm shadow-info-100"
@@ -148,11 +172,11 @@
                   </p>
                 </div>
                 <p class="text-info mt-2 fs-6 fw-bold mb-0 mb-sm-4">
-                  {{ moneyTotal.totalRemainAmount }}
+                  {{ moneyTotal?.totalRemainAmount | number : "1.0-0" }}
                   <span class="fs-8 text-body lh-lg">Còn phải thu</span>
                 </p>
               </div>
-              <div
+              <!-- <div
                 class="d-flex flex-column justify-content-center flex-between-end d-sm-block text-end text-sm-start"
               >
                 <span
@@ -160,7 +184,7 @@
                   >+24.5%</span
                 >
                 <p class="mb-0 fs-9 text-body-tertiary">Than last week</p>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -230,13 +254,11 @@
       style="min-height: 270px; width: 100%"
     ></div>
   </div> -->
-  <div class="col-12 col-xxl-6 mb-3 mb-sm-0">
+  <div class="col-12 col-xxl-12 mb-3 mb-sm-0">
     <div class="row">
       <div class="col-sm-7 col-md-8 col-xxl-8 mb-md-3 mb-lg-0">
-        <h3>Tổng các trạng thái đơn hàng</h3>
-        <p class="text-body-tertiary">
-          Tất cả trạng thái đơn hàng đang có trên hệ thống
-        </p>
+        <h3>Tổng các trạng thái đơn hàng trên hệ thống</h3>
+        <p class="text-body-tertiary"></p>
         <div class="row g-0">
           <div class="col-6 col-xl-4">
             <div
@@ -252,7 +274,7 @@
               <h3
                 class="fw-semibold ms-xl-3 ms-xxl-0 pe-md-2 pe-xxl-0 mb-0 mb-sm-3"
               >
-                {{ orderStatus.pending }}
+                {{ orderStatus?.pending }}
               </h3>
             </div>
           </div>
@@ -270,7 +292,7 @@
               <h3
                 class="fw-semibold ms-xl-3 ms-xxl-0 pe-md-2 pe-xxl-0 mb-0 mb-sm-3"
               >
-                {{ orderStatus.onHold }}
+                {{ orderStatus?.onHold }}
               </h3>
             </div>
           </div>
@@ -288,7 +310,7 @@
               <h3
                 class="fw-semibold ms-xl-3 ms-xxl-0 pe-md-2 pe-xxl-0 mb-0 mb-sm-3"
               >
-                {{ orderStatus.waitingForPickup }}
+                {{ orderStatus?.waitingForPickup }}
               </h3>
             </div>
           </div>
@@ -306,7 +328,7 @@
               <h3
                 class="fw-semibold ms-xl-3 ms-xxl-0 pe-md-2 pe-xxl-0 mb-0 mb-sm-3"
               >
-                {{ orderStatus.waitingForDelivery }}
+                {{ orderStatus?.waitingForDelivery }}
               </h3>
             </div>
           </div>
@@ -324,7 +346,7 @@
               <h3
                 class="fw-semibold ms-xl-3 ms-xxl-0 pe-md-2 pe-xxl-0 mb-0 mb-sm-3"
               >
-                {{ orderStatus.delivered }}
+                {{ orderStatus?.delivered }}
               </h3>
             </div>
           </div>
@@ -342,7 +364,7 @@
               <h3
                 class="fw-semibold ms-xl-3 ms-xxl-0 pe-md-2 pe-xxl-0 mb-0 mb-sm-3"
               >
-                {{ orderStatus.cancelled }}
+                {{ orderStatus?.cancelled }}
               </h3>
             </div>
           </div>
@@ -350,12 +372,9 @@
       </div>
       <div class="col-sm-5 col-md-4 col-xxl-4 my-3 my-sm-0">
         <div
-          class="position-relative d-flex flex-center mb-sm-4 mb-xl-0 echart-contact-by-source-container mt-sm-7 mt-lg-4 mt-xl-0"
+          class="position-relative d-flex flex-center mb-sm-4 mb-xl-0 echart-contact-by-source-container mt-sm-7 mt-lg-4 mt-xl-0 pt-4"
         >
-          <div
-            class="echart-contact-by-source"
-            style="min-height: 245px; width: 100%"
-          >
+          <div class="echart-contact-by-source">
             <canvas id="piechart">{{ piechart }}</canvas>
             <h3 class="mb-0 text-primary-dark fw-bolder"></h3>
           </div>
@@ -363,7 +382,7 @@
       </div>
     </div>
   </div>
-  <div class="col-12 col-xxl-6 mb-8">
+  <!-- <div class="col-12 col-xxl-6 mb-8">
     <div class="mb-3">
       <h3>New Users &amp; Leads</h3>
       <p class="text-body-tertiary mb-0">
@@ -418,117 +437,50 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
+
   <div class="col-12 col-xxl-6">
     <div class="row align-items-start justify-content-between mb-4 g-3">
       <div class="col-auto">
         <h3>Doanh thu của cửa hàng</h3>
-        <p class="text-body-tertiary lh-sm mb-0">
-          Check effectiveness of your ads
-        </p>
       </div>
       <div class="col-12 col-sm-4">
-        <select class="form-select form-select-sm" id="select-ad-clicks-month">
+        <!-- <select class="form-select form-select-sm" id="select-ad-clicks-month">
           <option>Mar 1 - 31, 2022</option>
           <option>April 1 - 30, 2022</option>
           <option>May 1 - 31, 2022</option>
         </select>
+       -->
+        <select
+          class="form-select"
+          (change)="onYearSelect($event)"
+          [(ngModel)]="chooseYear"
+        >
+          <option *ngFor="let item of years" [value]="item">{{ item }}</option>
+        </select>
       </div>
     </div>
-    <div
-      class="echart-add-clicks-chart"
-      style="min-height: 385px; width: 100%"
-    ></div>
+    <div style="min-height: 385px; width: 100%">
+      <canvas id="lineChart">{{ lineChart }}</canvas>
+    </div>
   </div>
   <div class="col-12 col-xxl-6 mb-6 gy-0 gy-xxl-3">
     <div class="row align-items-start justify-content-between mb-4 g-3">
       <div class="col-auto">
-        <h3>Deal Forecast<span class="fw-semibold">- $90,303</span></h3>
-        <p class="text-body-tertiary mb-1">Show what you offer here</p>
+        <h3>Top các sản phẩm đã chạy<span class="fw-semibold"></span></h3>
+        <p class="text-body-tertiary mb-1"></p>
       </div>
       <div class="col-12 col-sm-4">
-        <select class="form-select form-select-sm" id="select-ad-forcast-month">
-          <option>Mar 1 - 31, 2022</option>
-          <option>April 1 - 30, 2022</option>
-          <option>May 1 - 31, 2022</option>
-        </select>
+        <input
+          class="form-control"
+          type="month"
+          [value]="yearNow + '-' + monthNow"
+          (input)="changeDateBestSeller($event)"
+        />
       </div>
     </div>
-    <div class="w-100">
-      <div class="d-flex flex-start">
-        <p
-          class="mb-2 text-body-tertiary fw-semibold fs-9"
-          style="width: 20.72%"
-        >
-          $21.0k
-        </p>
-        <p
-          class="mb-2 text-body-tertiary fw-semibold fs-9"
-          style="width: 35.76%"
-        >
-          $3.4k
-        </p>
-        <p
-          class="mb-2 text-body-tertiary fw-semibold fs-9"
-          style="width: 25.38%"
-        >
-          $15.1k
-        </p>
-        <p
-          class="mb-2 text-body-tertiary fw-semibold fs-9"
-          style="width: 25.14%"
-        >
-          $4.6k
-        </p>
-      </div>
-      <div class="progress mb-3 rounded-3" style="height: 10px">
-        <div
-          class="progress-bar border-end border-2 bg-primary-dark"
-          role="progressbar"
-          style="width: 20.72%"
-          aria-valuenow="20.72"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          data-bs-toggle="tooltip"
-          data-bs-placement="top"
-          title="Appointment"
-        ></div>
-        <div
-          class="progress-bar border-end border-2"
-          role="progressbar"
-          style="width: 35.76%"
-          aria-valuenow="35.76"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          data-bs-toggle="tooltip"
-          data-bs-placement="top"
-          title="Qualified"
-        ></div>
-        <div
-          class="progress-bar bg-success border-end border-2"
-          role="progressbar"
-          style="width: 25.38%"
-          aria-valuenow="25.38"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          data-bs-toggle="tooltip"
-          data-bs-placement="top"
-          title="Closed Won"
-        ></div>
-        <div
-          class="progress-bar bg-info"
-          role="progressbar"
-          style="width: 25.14%"
-          aria-valuenow="25.14"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          data-bs-toggle="tooltip"
-          data-bs-placement="top"
-          title="Contact Sent"
-        ></div>
-      </div>
-    </div>
-    <h4 class="mt-4 mb-3">Deal Forecast by Owner</h4>
+
+    <h4 class="mt-4 mb-3">Thông tin chi tiết</h4>
     <div
       class="border-top border-bottom-0"
       id="dealForecastTable"
@@ -539,31 +491,21 @@
           <thead>
             <tr>
               <th
-                class="sort border-end border-translucent white-space-nowrap align-middle ps-0 text-uppercase text-body-tertiary"
+                class="white-space-nowrap align-middle ps-0 text-uppercase text-body-tertiary"
                 scope="col"
-                data-sort="contact"
-                style="width: 15%; min-width: 100px"
-              >
-                Contact
-              </th>
-              <th
-                class="sort border-end border-translucent align-middle text-end px-3 text-uppercase text-body-tertiary"
-                scope="col"
-                data-sort="appointment"
-                style="width: 15%; min-width: 95px"
+                style="width: 10%; min-width: 100px"
               >
                 <div class="d-inline-flex flex-center">
-                  <span
-                    class="fas fa-square fs-11 text-primary me-2"
-                    data-fa-transform="up-2"
-                  ></span
-                  ><span class="mb-0 fs-9">Appointment</span>
+                  <span class="fas fa-square fs-11 text-primary me-2"></span>
                 </div>
+                <span class="mb-0 fs-9">Tên sản phẩm</span>
               </th>
               <th
                 class="sort border-end border-translucent align-middle text-end px-3 text-uppercase text-body-tertiary"
-                scope="col"
-                data-sort="qualified"
+                style="width: 20%; min-width: 95px"
+              ></th>
+              <th
+                class="border-end border-translucent align-middle text-end px-3 text-uppercase text-body-tertiary"
                 style="width: 20%; min-width: 100px"
               >
                 <div class="d-inline-flex flex-center">
@@ -571,27 +513,21 @@
                     class="fas fa-square fs-11 text-primary-light me-2"
                     data-fa-transform="up-2"
                   ></span
-                  ><span class="mb-0 fs-9">Qualified</span>
+                  ><span class="mb-0 fs-9">Đơn giá</span>
                 </div>
               </th>
               <th
                 class="sort border-end border-translucent align-middle text-end px-3 text-uppercase text-body-tertiary"
                 scope="col"
-                data-sort="closed-won"
                 style="width: 20%; min-width: 100px"
               >
                 <div class="d-inline-flex flex-center">
-                  <span
-                    class="fas fa-square fs-11 text-success me-2"
-                    data-fa-transform="up-2"
-                  ></span
-                  ><span class="mb-0 fs-9">Closed Won</span>
+                  <span class="fas fa-square fs-11 text-success me-2"></span
+                  ><span class="mb-0 fs-9">Lên đơn</span>
                 </div>
               </th>
               <th
                 class="sort align-middle text-end ps-3 text-uppercase text-body-tertiary"
-                scope="col"
-                data-sort="contact-sent"
                 style="width: 20%; min-width: 100px"
               >
                 <div class="d-inline-flex flex-center">
@@ -599,7 +535,7 @@
                     class="fas fa-square fs-11 text-info me-2"
                     data-fa-transform="up-2"
                   ></span
-                  ><span class="mb-0 fs-9">Contact Sent</span>
+                  ><span class="mb-0 fs-9">Đá bán</span>
                 </div>
               </th>
             </tr>
@@ -607,204 +543,56 @@
           <tbody class="list" id="table-deal-forecast-body">
             <tr
               class="hover-actions-trigger btn-reveal-trigger position-static"
+              *ngFor="let item of productdto"
             >
               <td
-                class="contact border-end border-translucent align-middle white-space-nowrap py-2 ps-0 px-3"
+                class="contact border-translucent align-middle white-space-nowrap py-2 ps-0 px-3"
               >
-                <a class="fw-semibold" href="#!">Carrie Anne</a>
+                <!-- <a class="fw-semibold" href="#!">1000</a> -->
+                <img
+                  class="img-fluid"
+                  src="{{ Environment.apiBaseRoot }}{{
+                    item.productImages[0].imagePath
+                  }}"
+                  alt=""
+                />
               </td>
               <td
                 class="appointment border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
               >
-                1000
+                {{ item.product.productName }}
               </td>
               <td
                 class="qualified border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
               >
-                $1256
+                {{ item.product.price }}
               </td>
               <td
                 class="closed-won border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
               >
-                $1200
+                {{ item.quantityOnnTheOrder }}
               </td>
               <td
                 class="contact-sent border-end-0 align-middle white-space-nowrap text-end fw-semibold text-body ps-3 py-2"
               >
-                $1200
-              </td>
-            </tr>
-            <tr
-              class="hover-actions-trigger btn-reveal-trigger position-static"
-            >
-              <td
-                class="contact border-end border-translucent align-middle white-space-nowrap py-2 ps-0 px-3"
-              >
-                <a class="fw-semibold" href="#!">Milind Mikuja</a>
-              </td>
-              <td
-                class="appointment border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
-              >
-                558
-              </td>
-              <td
-                class="qualified border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
-              >
-                $2531
-              </td>
-              <td
-                class="closed-won border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
-              >
-                $2200
-              </td>
-              <td
-                class="contact-sent border-end-0 align-middle white-space-nowrap text-end fw-semibold text-body ps-3 py-2"
-              >
-                $2200
-              </td>
-            </tr>
-            <tr
-              class="hover-actions-trigger btn-reveal-trigger position-static"
-            >
-              <td
-                class="contact border-end border-translucent align-middle white-space-nowrap py-2 ps-0 px-3"
-              >
-                <a class="fw-semibold" href="#!">Stanley Drinkwater</a>
-              </td>
-              <td
-                class="appointment border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
-              >
-                1100
-              </td>
-              <td
-                class="qualified border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
-              >
-                $100
-              </td>
-              <td
-                class="closed-won border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
-              >
-                $100
-              </td>
-              <td
-                class="contact-sent border-end-0 align-middle white-space-nowrap text-end fw-semibold text-body ps-3 py-2"
-              >
-                $100
-              </td>
-            </tr>
-            <tr
-              class="hover-actions-trigger btn-reveal-trigger position-static"
-            >
-              <td
-                class="contact border-end border-translucent align-middle white-space-nowrap py-2 ps-0 px-3"
-              >
-                <a class="fw-semibold" href="#!">Josef Stravinsky</a>
-              </td>
-              <td
-                class="appointment border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
-              >
-                856
-              </td>
-              <td
-                class="qualified border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
-              >
-                $326
-              </td>
-              <td
-                class="closed-won border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
-              >
-                $265
-              </td>
-              <td
-                class="contact-sent border-end-0 align-middle white-space-nowrap text-end fw-semibold text-body ps-3 py-2"
-              >
-                $265
-              </td>
-            </tr>
-            <tr
-              class="hover-actions-trigger btn-reveal-trigger position-static"
-            >
-              <td
-                class="contact border-end border-translucent align-middle white-space-nowrap py-2 ps-0 px-3"
-              >
-                <a class="fw-semibold" href="#!">Roy Anderson</a>
-              </td>
-              <td
-                class="appointment border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
-              >
-                1200
-              </td>
-              <td
-                class="qualified border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
-              >
-                $1452
-              </td>
-              <td
-                class="closed-won border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
-              >
-                $865
-              </td>
-              <td
-                class="contact-sent border-end-0 align-middle white-space-nowrap text-end fw-semibold text-body ps-3 py-2"
-              >
-                $865
-              </td>
-            </tr>
-            <tr
-              class="hover-actions-trigger btn-reveal-trigger position-static"
-            >
-              <td
-                class="contact border-end border-translucent align-middle white-space-nowrap py-2 ps-0 px-3"
-              >
-                <a class="fw-semibold" href="#!">Oscar Wilde</a>
-              </td>
-              <td
-                class="appointment border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
-              >
-                1020
-              </td>
-              <td
-                class="qualified border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
-              >
-                $950
-              </td>
-              <td
-                class="closed-won border-end border-translucent align-middle white-space-nowrap text-end fw-semibold text-body py-2 px-3"
-              >
-                $1000
-              </td>
-              <td
-                class="contact-sent border-end-0 align-middle white-space-nowrap text-end fw-semibold text-body ps-3 py-2"
-              >
-                $800
+                {{ item.quantitySold }}
               </td>
             </tr>
           </tbody>
-          <tr class="hover-actions-trigger btn-reveal-trigger position-static">
-            <td
-              class="align-middle border-bottom-0 border-end border-translucent white-space-nowrap text-end fw-bold text-body-emphasis pt-2 lh-sm pb-0 px-3"
-            ></td>
-            <td
-              class="align-middle border-bottom-0 border-end border-translucent white-space-nowrap text-end fw-bold text-body-emphasis pt-2 lh-sm pb-0 px-3"
+
+          <tbody class="list" id="table-deal-forecast-body">
+            <tr
+              class="hover-actions-trigger btn-reveal-trigger position-static"
+              *ngIf="productdto.length == 0"
             >
-              4,744
-            </td>
-            <td
-              class="align-middle border-bottom-0 border-end border-translucent white-space-nowrap text-end fw-bold text-body-emphasis pt-2 lh-sm pb-0 px-3"
-            >
-              $5,665
-            </td>
-            <td
-              class="align-middle border-bottom-0 border-end border-translucent white-space-nowrap text-end fw-bold text-body-emphasis pt-2 lh-sm pb-0 px-3"
-            >
-              $4630
-            </td>
-            <td
-              class="border-bottom-0 align-middle white-space-nowrap text-end fw-bold text-body-emphasis pt-2 pb-0 ps-3"
-            >
-              $4630
-            </td>
-          </tr>
+              <td
+                colspan="5 "
+                class="text-capitalize text-center text-warning-dark"
+              >
+                <span>Không có bản ghi nào</span>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>

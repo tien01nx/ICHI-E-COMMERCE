@@ -18,7 +18,7 @@ export class OrderTrackingComponent implements OnInit {
   protected readonly Environment = Environment;
   orderTrackingDTO: OrderTrackingDTO[] = [];
   priceDiscount: number = 0;
-  priceShip = 30000;
+  priceShip = 0;
 
   constructor(
     private toastr: ToastrService,
@@ -44,9 +44,10 @@ export class OrderTrackingComponent implements OnInit {
               // nếu discount > 0 thì tính ra số tiền giảm giá của sản phẩm đó
               if (item.discount > 0) {
                 this.priceDiscount +=
-                  item.price * item.total * (item.discount / 100);
+                  item.price * item.quantity * (item.discount / 100);
               }
             });
+            this.priceShip = this.orderTrackingDTO[0].trxTransaction.priceShip;
           } else {
             this.toastr.error(response.message);
           }
@@ -59,7 +60,7 @@ export class OrderTrackingComponent implements OnInit {
   getTotalPrice(): number {
     let totalPrice = 0;
     this.orderTrackingDTO.forEach((item) => {
-      totalPrice += item.price * item.total;
+      totalPrice += item.price * item.quantity;
     });
     totalPrice = totalPrice - this.priceDiscount + this.priceShip;
     return totalPrice;

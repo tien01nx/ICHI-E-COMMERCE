@@ -16,7 +16,7 @@ export class OrderTrackingDTO {
   trxTransactionId: number;
   productId: number;
   price: number;
-  total: number;
+  quantity: number;
   productImage: string;
   product: ProductModel;
   trxTransaction: TrxTransactionModel;
@@ -26,7 +26,7 @@ export class OrderTrackingDTO {
     this.trxTransactionId = data.trxTransactionId;
     this.productId = data.productId;
     this.price = data.price;
-    this.total = data.total;
+    this.quantity = data.quantity;
     this.productImage = data.productImage;
     this.product = data.product;
     this.trxTransaction = data.trxTransaction;

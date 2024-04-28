@@ -136,6 +136,12 @@ export class TrxTransactionService {
     return this.http.get(this.baseUrl + '/TrxTransaction/GetMonneyTotal');
   }
 
+  getGetMonneyMoth(id: number) {
+    return this.http.get(
+      this.baseUrl + '/TrxTransaction/GetMonneyTotalByMonth?year=' + id
+    );
+  }
+
   checkProductPromotion(carts: any) {
     debugger;
     return this.http.post(`${this.baseUrl}/Cart/CheckCartPromotion`, carts);

@@ -439,7 +439,10 @@
                     <td
                       class="date align-middle fw-semibold text-end py-2 text-body-highlight"
                     >
-                      {{ trxTransaction.orderTotal | number : "1.0-0" }}
+                      {{
+                        trxTransaction.orderTotal + trxTransaction.priceShip
+                          | number : "1.0-0"
+                      }}
                     </td>
                     <td
                       class="align-middle text-end white-space-nowrap pe-0 action py-2"

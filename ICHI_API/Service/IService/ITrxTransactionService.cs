@@ -13,5 +13,6 @@ namespace ICHI_API.Service.IService
     int GetCustomerId(string userId);
     OrderStatusVM GetOrderStatus(out string strMessage);
     MoneyTotal getMonneyTotal(out string strMessage);
+    List<MoneyMonth> getMonneyTotalByMonth(int year, out string strMessage);
   }
 }

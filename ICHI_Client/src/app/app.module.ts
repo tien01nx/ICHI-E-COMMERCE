@@ -60,6 +60,7 @@ import { SwiperDirective } from './swiper.directive';
 import { BuyNowComponent } from './components/client/checkout/buy-now/buy-now.component';
 import { ProductDetailComponent } from './components/client/product/product-detail/product-detail.component';
 import { OrderNotificationComponent } from './components/client/cart/order-notification/order-notification.component';
+import { FlatpickrModule } from 'angularx-flatpickr';
 
 register();
 
@@ -139,6 +140,7 @@ register();
         disallowedRoutes: [`${Environment.apiBaseUrl}/login`],
       },
     }),
+    FlatpickrModule.forRoot(),
     EditorModule,
     NgSelectModule,
     NgxDropzoneModule,

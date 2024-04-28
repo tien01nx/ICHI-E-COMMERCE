@@ -127,7 +127,8 @@ export class ProfileComponent implements OnInit {
           order.orderStatus === Utils.DELIVERED ||
           order.paymentStatus === Utils.PaymentStatusApproved
         ) {
-          this.totalPrice += order.orderTotal;
+          debugger;
+          this.totalPrice += order.orderTotal + order.priceShip;
           this.totalorder += 1;
         }
       });

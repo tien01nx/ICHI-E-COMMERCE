@@ -14,13 +14,19 @@ export class ProductDTO {
   product: ProductModel;
   categoryProduct: CategoryProduct;
   productImages: ProductImage[];
+  quantitySold: number;
+  quantityOnnTheOrder: number;
   constructor(
     product: ProductModel,
     category: CategoryProduct,
-    ProductImages: ProductImage[]
+    ProductImages: ProductImage[],
+    quantitySold: number,
+    quantityOnnTheOrder: number
   ) {
     this.product = product;
     this.categoryProduct = category;
     this.productImages = ProductImages;
+    this.quantitySold = quantitySold;
+    this.quantityOnnTheOrder = quantityOnnTheOrder;
   }
 }

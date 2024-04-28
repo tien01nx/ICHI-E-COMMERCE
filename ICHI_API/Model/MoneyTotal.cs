@@ -20,6 +20,8 @@
     public decimal PercentTotalRealAmount { get; set; } = 0;
     public decimal PercentTotalRemainAmount { get; set; } = 0;
 
+    public int Month { get; set; } = 0;
+
 
   }
 }

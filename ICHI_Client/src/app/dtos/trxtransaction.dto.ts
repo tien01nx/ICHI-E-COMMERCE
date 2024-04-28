@@ -18,6 +18,7 @@ export class TrxTransactionDTO {
   phoneNumber: string;
   address: string;
   amount: number;
+  priceShip: number;
   paymentTypes: string;
   checkOrder: boolean;
   carts: any;
@@ -29,6 +30,7 @@ export class TrxTransactionDTO {
     phoneNumber: string,
     address: string,
     amount: number,
+    priceShip: number,
     paymentTypes: string,
     checkOrder: boolean,
     carts: any
@@ -40,6 +42,7 @@ export class TrxTransactionDTO {
     this.phoneNumber = phoneNumber;
     this.address = address;
     this.amount = amount;
+    this.priceShip = priceShip;
     this.paymentTypes = paymentTypes;
     this.checkOrder = checkOrder;
     this.carts = carts;

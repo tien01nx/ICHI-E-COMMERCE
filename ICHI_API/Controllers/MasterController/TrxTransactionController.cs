@@ -262,5 +262,22 @@
         return handler.HandleException<MoneyTotal>(ex);
       }
     }
+
+    [HttpGet("GetMonneyTotalByMonth")]
+    public async Task<ApiResponse<List<MoneyMonth>>> GetMonneyTotalByMonth(int year)
+    {
+      ApiResponse<List<MoneyMonth>> result;
+      string strMessage = string.Empty;
+      try
+      {
+        var data = _trxTransactionService.getMonneyTotalByMonth(year, out strMessage);
+        return new ApiResponse<List<MoneyMonth>>(System.Net.HttpStatusCode.OK, strMessage, data);
+      }
+      catch (Exception ex)
+      {
+        var handler = new GlobalExceptionHandler();
+        return handler.HandleException<List<MoneyMonth>>(ex);
+      }
+    }
   }
 }
