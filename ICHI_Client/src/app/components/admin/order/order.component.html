@@ -125,9 +125,15 @@
                                     </div>
 
                                     <span
-                                      class="ms-2 text-start align-self-center"
+                                      class="ms-2 text-start align-self-center text-truncate"
                                     >
                                       {{ item.productName }}
+                                    </span>
+
+                                    <span
+                                      class="ms-2 text-end align-self-center"
+                                    >
+                                      {{ item.quantity }}
                                     </span>
                                   </div>
                                 </div>
@@ -144,6 +150,7 @@
                               max="1000"
                               formControlName="quantity"
                               required
+                              (change)="onSelectQuantity(receiptDetails,i)"
                               (keypress)="Utils.handleKeyPressNguyen($event)"
                             />
                             <!-- (keydown)="onKeyDown($event, false)" -->
@@ -341,12 +348,12 @@
                 </div>
               </div>
 
-              <div class="row">
+              <!-- <div class="row">
                 <div class="col-5 white-space-nowrap pe-5 fw-bold pb-3 pt-3">
                   Trạng thái đơn hàng<span class="text-danger">*</span>
-                </div>
+                </div> 
 
-                <div class="col-7 pe-5 pb-3 pt-3">
+             <div class="col-7 pe-5 pb-3 pt-3">
                   <ng-select
                     style="height: 16px"
                     [items]="Utils.statusOrder"
@@ -365,8 +372,8 @@
                       Trạng thái đơn hàng không được để trống
                     </span>
                   </small>
-                </div>
-              </div>
+                </div> 
+               </div> -->
             </div>
           </div>
         </div>

@@ -444,6 +444,7 @@
       <div class="col-auto">
         <h3>Doanh thu của cửa hàng</h3>
       </div>
+
       <div class="col-12 col-sm-4">
         <!-- <select class="form-select form-select-sm" id="select-ad-clicks-month">
           <option>Mar 1 - 31, 2022</option>
@@ -459,9 +460,34 @@
           <option *ngFor="let item of years" [value]="item">{{ item }}</option>
         </select>
       </div>
+      <div class="scrollbar overflow-hidden-y">
+        <div class="btn-group position-static" role="group">
+          <div class="btn-group position-static text-nowrap">
+            <button
+              class="btn btn-phoenix-secondary px-7 flex-shrink-0"
+              type="button"
+              data-bs-toggle="dropdown"
+              data-boundary="window"
+              aria-haspopup="true"
+              aria-expanded="false"
+              data-bs-reference="parent"
+            >
+              {{ titleShow }}<span class="fas fa-angle-down ms-2"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a class="dropdown-item" (click)="showDisplay(1)">Doanh thu</a>
+              </li>
+              <li>
+                <a class="dropdown-item" (click)="showDisplay(2)">Lợi nhuận</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
     <div style="min-height: 385px; width: 100%">
-      <canvas id="lineChart">{{ lineChart }}</canvas>
+      <canvas id="lineChart"></canvas>
     </div>
   </div>
   <div class="col-12 col-xxl-6 mb-6 gy-0 gy-xxl-3">
@@ -481,11 +507,8 @@
     </div>
 
     <h4 class="mt-4 mb-3">Thông tin chi tiết</h4>
-    <div
-      class="border-top border-bottom-0"
-      id="dealForecastTable"
-      data-list='{"valueNames":["contact","appointment","qualified","closed-won","contact-sent"],"page":5}'
-    >
+
+    <div class="border-top border-bottom-0" id="dealForecastTable">
       <div class="table-responsive scrollbar">
         <table class="table fs-9 mb-0">
           <thead>

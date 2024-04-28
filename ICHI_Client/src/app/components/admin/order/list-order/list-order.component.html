@@ -77,6 +77,36 @@
         </div>
       </div>
     </div>
+
+    <div class="scrollbar overflow-hidden-y">
+      <div class="btn-group position-static" role="group">
+        <div class="btn-group position-static text-nowrap">
+          <button
+            class="btn btn-phoenix-secondary px-7 flex-shrink-0"
+            type="button"
+            data-bs-toggle="dropdown"
+            data-boundary="window"
+            aria-haspopup="true"
+            aria-expanded="false"
+            data-bs-reference="parent"
+          >
+            {{ titlepayMent }}<span class="fas fa-angle-down ms-2"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" (click)="orderPayment('PENDING')"
+                >Chưa thanh toán</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="orderPayment('APPROVED')"
+                >Đã thanh toán</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
     <!-- <div class="scrollbar overflow-hidden-y">
       <div class="btn-group position-static" role="group">hEHEHEHE</div>
     </div> -->
@@ -87,6 +117,7 @@
         *ngIf="shouldDisplayClearButton()"
       >
         <!-- <span class="fas fa-file-export fs-9 me-2"></span> -->
+        <i class="fad fa-eraser"></i>
         Xóa lọc
       </button>
       <button class="btn btn-primary" id="addBtn" routerLink="/admin/order">

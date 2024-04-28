@@ -40,7 +40,8 @@ export class TrxTransactionService {
     SortDirection: string,
     SortBy: string,
     Search: string,
-    OrderStatis: string
+    OrderStatis: string,
+    PaymentStatus: string
   ) {
     let params = new HttpParams();
     if (PageNumber && PageNumber.toString().trim() !== '') {
@@ -61,6 +62,10 @@ export class TrxTransactionService {
 
     if (OrderStatis && OrderStatis.trim() !== '') {
       params = params.set('order-status', OrderStatis);
+    }
+
+    if (OrderStatis && OrderStatis.trim() !== '') {
+      params = params.set('payment-status', PaymentStatus);
     }
     // console.log(params);
     // return this.apiService.callApi<PromotionModel>(
@@ -130,6 +135,10 @@ export class TrxTransactionService {
 
   getOrderStatus() {
     return this.http.get(this.baseUrl + '/TrxTransaction/GetOrderStatus');
+  }
+
+  getCost(id:number) {
+    return this.http.get(this.baseUrl + '/TrxTransaction/GetMonneyRevenue?year='+id);
   }
 
   getGetMonneyTotal() {

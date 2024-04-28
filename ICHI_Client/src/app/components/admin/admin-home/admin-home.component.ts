@@ -16,20 +16,25 @@ import { Environment } from '../../../environment/environment';
   templateUrl: './admin-home.component.html',
   styleUrl: './admin-home.component.css',
 })
-export class AdminHomeComponent implements OnInit {
+export class AdminHomeComponent implements OnInit, AfterViewInit {
   constructor(
     private transactionService: TrxTransactionService,
     private productService: ProductsService
   ) {}
+  ngAfterViewInit(): void {}
   Environment = Environment;
 
   ngOnInit(): void {
     this.createYears();
     this.onYearSelect({ target: { value: this.yearNow } });
+    this.createLineChart();
     this.createPieChart();
     this.getData();
-    this.createLineChart();
+    this.getMoneyTotal();
   }
+  titleShow: string = 'Doanh thu';
+
+  intDisplay: number = 1;
   years: number[] = [];
   chooseYear: number = new Date().getFullYear();
 
@@ -41,6 +46,8 @@ export class AdminHomeComponent implements OnInit {
   orderStatus: any;
   moneyTotal: any;
   productdto: ProductDTO[] = [];
+  dataDoanhThu: any;
+  dataLoiNhuan: any;
   colors = [
     'rgb(56, 116, 255)', // Màu cho 'pending'
     'rgb(38, 176, 4)', // Màu cho 'onHold'
@@ -71,8 +78,20 @@ export class AdminHomeComponent implements OnInit {
     this.transactionService.getGetMonneyMoth(this.chooseYear).subscribe({
       next: (res: any) => {
         console.log(res);
-        const data = res.data;
-        this.updateChartData(data);
+        this.dataDoanhThu = res.data;
+        this.updateChartData(this.dataDoanhThu);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+
+    // data lợi nhuận
+    this.transactionService.getCost(this.chooseYear).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.dataLoiNhuan = res.data;
+        // this.updateChartData(this.dataLoiNhuan);
       },
       error: (err) => {
         console.log(err);
@@ -137,6 +156,19 @@ export class AdminHomeComponent implements OnInit {
     });
   }
 
+  // Lợi nhuận
+
+  getMoneyTotal() {
+    this.transactionService.getCost(1).subscribe({
+      next: (res: any) => {
+        console.log(res);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
   updateChartData(data: any) {
     const totalOrderAmountData = data.map((item: any) => item.totalOrderAmount);
     const totalRealAmountData = data.map((item: any) => item.totalRealAmount);
@@ -148,62 +180,137 @@ export class AdminHomeComponent implements OnInit {
   }
 
   createLineChart() {
-    this.lineChart = new Chart('lineChart', {
-      data: {
-        labels: [
-          'Tháng',
-          'Tháng 1',
-          'Tháng 2',
-          'Tháng 3',
-          'Tháng 4',
-          'Tháng 5',
-          'Tháng 6',
-          'Tháng 7',
-          'Tháng 8',
-          'Tháng 9',
-          'Tháng 10',
-          'Tháng 11',
-          'Tháng 12',
-        ],
-        datasets: [
-          {
-            type: 'line',
-            label: 'Doanh thu: ',
-            data: [],
-            borderColor: 'green', // Màu viền của đường
-            backgroundColor: 'lightgreen', // Màu nền của đường
-            borderWidth: 2, // Độ dày của đường
-            pointRadius: 5, // Kích thước của điểm
-            pointBackgroundColor: 'green', // Màu của điểm
-          },
-          {
-            type: 'line',
-            label: 'Chi phí: ',
-            data: [],
-            borderColor: 'red', // Màu viền của đường
-            backgroundColor: 'lightcoral', // Màu nền của đường
-            borderWidth: 2, // Độ dày của đường
-            pointRadius: 5, // Kích thước của điểm
-            pointBackgroundColor: 'red', // Màu của điểm
-          },
-        ],
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-            // Tùy chỉnh các thuộc tính của trục y ở đây
-          },
-          x: {
-            beginAtZero: true,
-            // Tùy chỉnh các thuộc tính của trục x ở đây
+    if (this.lineChart) {
+      this.lineChart.destroy();
+    }
+
+    if (this.intDisplay === 1) {
+      this.lineChart = new Chart('lineChart', {
+        data: {
+          labels: [
+            'Tháng',
+            'Tháng 1',
+            'Tháng 2',
+            'Tháng 3',
+            'Tháng 4',
+            'Tháng 5',
+            'Tháng 6',
+            'Tháng 7',
+            'Tháng 8',
+            'Tháng 9',
+            'Tháng 10',
+            'Tháng 11',
+            'Tháng 12',
+          ],
+          datasets: [
+            {
+              type: 'line',
+              label: 'Doanh thu: ',
+              data: [],
+              borderColor: 'green', // Màu viền của đường
+              backgroundColor: 'lightgreen', // Màu nền của đường
+              borderWidth: 2, // Độ dày của đường
+              pointRadius: 5, // Kích thước của điểm
+              pointBackgroundColor: 'green', // Màu của điểm
+            },
+            {
+              type: 'line',
+              label: 'Chi phí: ',
+              data: [],
+              borderColor: 'red', // Màu viền của đường
+              backgroundColor: 'lightcoral', // Màu nền của đường
+              borderWidth: 2, // Độ dày của đường
+              pointRadius: 5, // Kích thước của điểm
+              pointBackgroundColor: 'red', // Màu của điểm
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              // Tùy chỉnh các thuộc tính của trục y ở đây
+            },
+            x: {
+              beginAtZero: true,
+              // Tùy chỉnh các thuộc tính của trục x ở đây
+            },
           },
         },
-      },
-    });
+      });
+    }
+
+    if (this.intDisplay === 2) {
+      this.lineChart = new Chart('lineChart', {
+        data: {
+          labels: [
+            'Tháng',
+            'Tháng 1',
+            'Tháng 2',
+            'Tháng 3',
+            'Tháng 4',
+            'Tháng 5',
+            'Tháng 6',
+            'Tháng 7',
+            'Tháng 8',
+            'Tháng 9',
+            'Tháng 10',
+            'Tháng 11',
+            'Tháng 12',
+          ],
+          datasets: [
+            {
+              type: 'line',
+              label: 'Lợi nhuận: ',
+              data: [],
+              borderColor: 'green', // Màu viền của đường
+              backgroundColor: 'lightgreen', // Màu nền của đường
+              borderWidth: 2, // Độ dày của đường
+              pointRadius: 5, // Kích thước của điểm
+              pointBackgroundColor: 'green', // Màu của điểm
+            },
+            {
+              type: 'line',
+              label: 'Chi phí: ',
+              data: [],
+              borderColor: 'red', // Màu viền của đường
+              backgroundColor: 'lightcoral', // Màu nền của đường
+              borderWidth: 2, // Độ dày của đường
+              pointRadius: 5, // Kích thước của điểm
+              pointBackgroundColor: 'red', // Màu của điểm
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              // Tùy chỉnh các thuộc tính của trục y ở đây
+            },
+            x: {
+              beginAtZero: true,
+              // Tùy chỉnh các thuộc tính của trục x ở đây
+            },
+          },
+        },
+      });
+    }
   }
   changeDateBestSeller(event: any) {
     const selectedDate: string = event.target.value; // Lấy giá trị của control chọn tháng và năm
     this.productTopFive(selectedDate);
+  }
+  showDisplay(int: number) {
+    this.intDisplay = int;
+    if (int == 1) {
+      this.titleShow = 'Doanh thu';
+      this.createLineChart();
+      this.updateChartData(this.dataDoanhThu);
+    }
+    if (int == 2) {
+      this.titleShow = 'Lợi nhu';
+      this.createLineChart();
+      this.updateChartData(this.dataLoiNhuan);
+    }
   }
 }

@@ -21,11 +21,14 @@ export class ListOrderComponent implements OnInit {
   searchTemp: any = this.activatedRoute.snapshot.queryParams['Search'] || '';
   orderStatusTemp: any =
     this.activatedRoute.snapshot.queryParams['order-status'] || '';
+
+  payMentStatusTemp: any =
+    this.activatedRoute.snapshot.queryParams['payment-status'] || '';
   selectAll: boolean = false;
   sortDir: string = 'ASC';
   SortBy: string = 'id';
   titleOrder: string = 'Trạng thái đơn hàng';
-
+  titlepayMent: string = 'Trạng thái thanh toán';
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   titleModal: string = '';
   btnSave: string = '';
@@ -80,15 +83,24 @@ export class ListOrderComponent implements OnInit {
     private toastr: ToastrService
   ) {}
   ngOnInit() {
-    this.title.setTitle('Quản lý nhà cung cấp');
+    this.title.setTitle('Quản lý danh sách hóa đơn');
     this.activatedRoute.queryParams.subscribe((params) => {
       const search = params['search'] || '';
       const order = params['order-status'] || '';
+      const payment = params['payment-status'] || '';
       const pageSize = +params['page-size'] || 10;
       const pageNumber = +params['page-number'] || 1;
       const sortDir = params['sort-direction'] || 'DESC';
       const sortBy = params['sort-by'] || 'CreateDate';
-      this.findAll(pageSize, pageNumber, sortBy, sortDir, search, order);
+      this.findAll(
+        pageSize,
+        pageNumber,
+        sortBy,
+        sortDir,
+        search,
+        order,
+        payment
+      );
     });
   }
 
@@ -109,7 +121,8 @@ export class ListOrderComponent implements OnInit {
     sortBy: string,
     sortDir: string,
     search: string,
-    order: string
+    order: string,
+    payment: string
   ) {
     this.transactitonService
       .getFindAllTransaction(
@@ -118,7 +131,8 @@ export class ListOrderComponent implements OnInit {
         sortDir,
         sortBy,
         search,
-        order
+        order,
+        payment
       )
       .subscribe({
         next: (response: any) => {
@@ -189,6 +203,18 @@ export class ListOrderComponent implements OnInit {
       })
       .then((r) => {});
     this.titleOrder = Utils.getOrdersStatus(order);
+  }
+
+  orderPayment(order: string) {
+    this.router
+      .navigate(['/admin/list_order'], {
+        queryParams: {
+          'payment-status': order,
+        },
+        queryParamsHandling: 'merge',
+      })
+      .then((r) => {});
+    this.titlepayMent = Utils.getPaymentStatus(order);
   }
 
   onSubmit() {
@@ -304,6 +330,7 @@ export class ListOrderComponent implements OnInit {
       1,
       'CreateDate',
       'DESC',
+      '',
       '',
       ''
     );

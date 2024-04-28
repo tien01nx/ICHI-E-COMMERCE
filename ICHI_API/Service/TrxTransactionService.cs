@@ -4,6 +4,7 @@ using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Helpers;
+using System.Data.SqlTypes;
 using System.Linq.Dynamic.Core;
 using static ICHI_API.Helpers.Constants;
 
@@ -21,7 +22,7 @@ namespace ICHI_API.Service
             _db = pcsApiContext;
             _promotionService = promotionService;
         }
-        public Helpers.PagedResult<TrxTransaction> GetAll(string name, string orderStatus, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
+        public Helpers.PagedResult<TrxTransaction> GetAll(string name, string orderStatus, string paymentStatus, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
         {
             strMessage = string.Empty;
             try
@@ -34,6 +35,11 @@ namespace ICHI_API.Service
                 if (!string.IsNullOrEmpty(orderStatus))
                 {
                     query = query.Where(e => e.OrderStatus.Contains(orderStatus));
+                }
+
+                if (!string.IsNullOrEmpty(paymentStatus))
+                {
+                    query = query.Where(e => e.PaymentStatus.Contains(paymentStatus));
                 }
                 var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
                 query = query.OrderBy(orderBy);
@@ -69,6 +75,14 @@ namespace ICHI_API.Service
                 trxTransaction.Address = trxTransactionDTO?.Address;
                 trxTransaction.OrderDate = DateTime.Now;
                 trxTransaction.OrderStatus = trxTransactionDTO.OrderStatus ?? "PENDING";
+
+                if (trxTransactionDTO.OrderStatus == AppSettings.StatusOrderDelivered)
+                {
+                    trxTransaction.OnholDate = DateTime.Now;
+                    trxTransaction.WaitingForPickupDate = DateTime.Now;
+                    trxTransaction.WaitingForDeliveryDate = DateTime.Now;
+                    trxTransaction.DeliveredDate = DateTime.Now;
+                }
                 trxTransaction.PaymentTypes = trxTransactionDTO.PaymentTypes;
 
                 //nếu PaymentTypes = CASH thì trạng thái thanh toán là đã thanh toán
@@ -287,9 +301,6 @@ namespace ICHI_API.Service
                 throw;
             }
         }
-
-
-
         public List<(double BatchNumber, int Quantity)> GetBatchNumbers(int productId, int purchaseQuantity)
         {
             List<(double BatchNumber, int Quantity)> batchNumbers = new List<(double BatchNumber, int Quantity)>();
@@ -332,8 +343,6 @@ namespace ICHI_API.Service
 
             return batchNumbers;
         }
-
-
         public OrderStatusVM GetOrderStatus(out string strMessage)
         {
             strMessage = string.Empty;
@@ -354,8 +363,6 @@ namespace ICHI_API.Service
                 throw;
             }
         }
-
-
         public MoneyTotal getMonneyTotal(out string strMessage)
         {
             strMessage = string.Empty;
@@ -417,7 +424,6 @@ namespace ICHI_API.Service
                 throw;
             }
         }
-
         // tính doanh thu và chi phí theo từng tháng theo năm truyền vào
         // doanh thu lấy từ bảng trxtransaction
         // chi phí lấy từ bảng inventoryreceiptDetail
@@ -436,6 +442,49 @@ namespace ICHI_API.Service
                     // Lấy chi phí nhập hàng bằng cách lấy tổng số lượng sản phẩm nhập nhân với price
                     var inventoryReceiptDetail = _unitOfWork.InventoryReceiptDetail.GetAll(u => u.CreateDate.Month == i && u.CreateDate.Year == year);
                     moneyMonth.TotalRealAmount = inventoryReceiptDetail.Sum(u => u.Quantity * u.Price);
+                    moneyMonths.Add(moneyMonth);
+                }
+                return moneyMonths;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        // API viết hàm tính lợi nhận theo từng tháng theo năm truyền vào
+        // Chi phí = tổng số lượng sản phẩm nhập * giá nhập
+        // Cách tính lợi nhuận ta dựa vào trong TransactionDetail  ta có được số lô, giá bán, số lượng
+        // Lợi nhuận bằng = Giá bán * số lượng - ( từ sô lô => giá mua của sản phẩm đó trong  inventoryReceiptDetail) (số lượng * giá nhập)
+
+        public List<MoneyMonth> getProfitByMonth(int year, out string strMessage)
+        {
+            strMessage = string.Empty;
+            try
+            {
+                year = 2024;
+                List<MoneyMonth> moneyMonths = new List<MoneyMonth>();
+                for (int i = 1; i <= 12; i++)
+                {
+                    MoneyMonth moneyMonth = new MoneyMonth();
+                    decimal cost = _unitOfWork.InventoryReceiptDetail
+                        .GetAll(u => u.CreateDate.Year == year && u.CreateDate.Month == i)
+                        .Sum(u => u.Price * u.Quantity);
+                    decimal revenue = 0;
+
+                    // lấy danh sách trong chi tiết hóa đơn
+                    var orderDetail = _unitOfWork.TransactionDetail.GetAll(includeProperties: "TrxTransaction");
+                    var order = orderDetail.Where(u => u.TrxTransaction.OrderStatus == AppSettings.StatusOrderDelivered &&
+                                                        u.TrxTransaction.PaymentStatus == AppSettings.PaymentStatusApproved &&
+                                                        u.TrxTransaction.OrderDate.Year == year &&
+                                                        u.TrxTransaction.OrderDate.Month == i);
+                    foreach (var item in order)
+                    {
+                        var amountInventory = _unitOfWork.InventoryReceiptDetail.Get(u => u.ProductId == item.ProductId && u.BatchNumber == item.BatchNumber).Price;
+                        revenue += (item.Price * item.Quantity) - (amountInventory * item.Quantity);
+                    }
+                    moneyMonth.Month = i;
+                    moneyMonth.TotalOrderAmount = revenue;
+                    moneyMonth.TotalRealAmount = cost;
                     moneyMonths.Add(moneyMonth);
                 }
                 return moneyMonths;

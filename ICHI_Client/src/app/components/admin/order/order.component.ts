@@ -74,7 +74,7 @@ export class OrderComponent implements OnInit {
     fullName: new FormControl(''),
     phoneNumber: new FormControl(''),
     address: new FormControl(''),
-    orderStatus: new FormControl(''),
+    orderStatus: new FormControl(Utils.DELIVERED),
     paymentTypes: new FormControl('', [Validators.required]),
     notes: new FormControl(''),
     amount: new FormControl(0),
@@ -170,7 +170,7 @@ export class OrderComponent implements OnInit {
       fullName: new FormControl(''),
       phoneNumber: new FormControl(''),
       address: new FormControl(''),
-      orderStatus: new FormControl('', [Validators.required]),
+      orderStatus: new FormControl(Utils.DELIVERED),
       paymentTypes: new FormControl('', [Validators.required]),
       notes: new FormControl(''),
       amount: new FormControl(0),
@@ -294,12 +294,18 @@ export class OrderComponent implements OnInit {
   }
 
   getDatacombobox() {
-    this.productService.findAll().subscribe((data: any) => {
-      this.productdtos = data.data.items;
-      this.products = this.productdtos.map((product) => product.product);
-      this.products;
-      console.log('products', this.products);
-    });
+    this.productService
+      .findAllByName(1, 100000, 'DESC', 'id', '')
+      .subscribe((data: any) => {
+        this.productdtos = data.data.items;
+        // Lọc các sản phẩm có số lượng lớn hơn 0
+        this.products = this.productdtos
+          .filter((product) => product.product.quantity > 0)
+          .map((product) => product.product);
+
+        // this.products = this.productdtos.map((product) => product.product);
+        console.log('products', this.products);
+      });
     this.customerService.findAll().subscribe((data: any) => {
       this.customers = data.data.items;
       // console.log(data.data);
@@ -478,6 +484,7 @@ export class OrderComponent implements OnInit {
 
   onProductSelection(event: any, index: number) {
     let pricePromotion;
+
     const receiptDetails = this.trxTransactionForm.get('carts') as FormArray;
     const formGroup = receiptDetails.at(index) as FormGroup;
     if (event.discount > 0) {
@@ -485,10 +492,26 @@ export class OrderComponent implements OnInit {
     } else {
       pricePromotion = event.price;
     }
-
     if (formGroup !== null) {
       formGroup.get('price')?.setValue(pricePromotion);
       formGroup.get('quantity')?.setValue(1);
+    }
+  }
+
+  onSelectQuantity(data: any, index: any) {
+    const quantitySelect = data.value.quantity;
+    const selectedProduct = this.products.find(
+      (product) => product.id === data.value.productId
+    );
+
+    // nếu quantitySelect lớn hơn số lượng hiện có của sản phẩm thì hiển thị thông báo
+    if (selectedProduct && quantitySelect > selectedProduct?.quantity) {
+      this.toastr.info(
+        'Số lượng bạn chọn vượt quá số lượng hiện có của sản phẩm.'
+      );
+      const receiptDetails = this.trxTransactionForm.get('carts') as FormArray;
+      const formGroup = receiptDetails.at(index) as FormGroup;
+      formGroup.get('quantity')?.setValue(selectedProduct?.quantity);
     }
   }
   priceGoShip() {
