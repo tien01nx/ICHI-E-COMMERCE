@@ -149,7 +149,7 @@
                             <!-- (keydown)="onKeyDown($event, false)" -->
 
                             <div
-                              class="label-error mt-1"
+                              class="label-error mt-1 text-danger"
                               *ngIf="receiptDetails.get('quantity')?.dirty"
                             >
                               <span
@@ -159,7 +159,7 @@
                                     ?.hasError('required')
                                 "
                               >
-                                <small>Số lượng là trường bắt buộc.</small>
+                                <small>Số lượng là bắt buộc.</small>
                               </span>
                               <span
                                 *ngIf="
@@ -194,7 +194,7 @@
                               (keydown)="onKeyDown($event, true)" -->
 
                             <div
-                              class="label-error mt-1"
+                              class="label-error mt-1 text-danger"
                               *ngIf="receiptDetails.get('price')?.dirty"
                             >
                               <span
@@ -204,7 +204,7 @@
                                     ?.hasError('required')
                                 "
                               >
-                                <small>Đơn giá là trường bắt buộc.</small>
+                                <small>Đơn giá là bắt buộc.</small>
                               </span>
                               <span
                                 *ngIf="
