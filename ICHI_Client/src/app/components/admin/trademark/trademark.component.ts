@@ -173,7 +173,6 @@ export class TrademarkComponent implements OnInit {
     this.isDisplayNone = true;
     this.trademarkService.update(this.trademarkForm.value).subscribe({
       next: (response: any) => {
-        debugger;
         if (response.message === 'Cập nhật thương hiệu thành công') {
           this.trademarkForm.reset();
           this.btnCloseModal.nativeElement.click();

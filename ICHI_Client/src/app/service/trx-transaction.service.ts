@@ -137,8 +137,19 @@ export class TrxTransactionService {
     return this.http.get(this.baseUrl + '/TrxTransaction/GetOrderStatus');
   }
 
-  getCost(id:number) {
-    return this.http.get(this.baseUrl + '/TrxTransaction/GetMonneyRevenue?year='+id);
+  getCost(id: number) {
+    return this.http.get(
+      this.baseUrl + '/TrxTransaction/GetMonneyRevenue?year=' + id
+    );
+  }
+
+  getExcel(year: number) {
+    return this.http.get(
+      `${this.baseUrl}/TrxTransaction/GenerateExcelReport?year=${year}`,
+      {
+        responseType: 'blob', // Set responseType to 'blob'
+      }
+    );
   }
 
   getGetMonneyTotal() {
@@ -152,7 +163,6 @@ export class TrxTransactionService {
   }
 
   checkProductPromotion(carts: any) {
-    debugger;
     return this.http.post(`${this.baseUrl}/Cart/CheckCartPromotion`, carts);
   }
 
@@ -197,7 +207,6 @@ export class TrxTransactionService {
   vnpaydto!: VnPaymentRequestDTO;
 
   PaymentExecute(model: TrxTransactionDTO): Observable<any> {
-    debugger;
     return this.http.post(this.baseUrl + '/TrxTransaction/Create', model).pipe(
       mergeMap((response: any) => {
         if (
@@ -232,7 +241,6 @@ export class TrxTransactionService {
   }
 
   PaymentExecuteOrder(model: TrxTransactionDTO): Observable<any> {
-    debugger;
     return this.http.post(this.baseUrl + '/TrxTransaction/Insert', model).pipe(
       mergeMap((response: any) => {
         if (
@@ -270,7 +278,7 @@ export class TrxTransactionService {
     return this.http.put(this.baseUrl + '/TrxTransaction/Update', model);
   }
 
-  private createPaymentUrl(vnpaydto: VnPaymentRequestDTO): Observable<any> {
+   createPaymentUrl(vnpaydto: VnPaymentRequestDTO): Observable<any> {
     return this.http
       .post(this.baseUrl + '/TrxTransaction/CreatePaymentUrl', vnpaydto)
       .pipe(

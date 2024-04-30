@@ -116,7 +116,6 @@ export class CustomerComponent {
   }
 
   onFileSelected(event: any) {
-    debugger;
     const maxFileSize = 5 * 1024 * 1024; // 5MB
     this.file = event.target.files[0];
 
@@ -251,7 +250,6 @@ export class CustomerComponent {
     }
     if (this.customerForm.value.id === null) this.create();
     else this.update();
-    debugger;
   }
 
   create() {
@@ -312,7 +310,6 @@ export class CustomerComponent {
   }
 
   openModalUpdate(customer: CustomerModel) {
-    debugger;
     this.customerForm.patchValue({
       id: customer.id,
       fullName: customer.fullName,
@@ -351,7 +348,6 @@ export class CustomerComponent {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        debugger;
         this.userService.delete(id, status).subscribe({
           next: (response: any) => {
             if (response.message === 'Mở khóa tài khoản thành công') {

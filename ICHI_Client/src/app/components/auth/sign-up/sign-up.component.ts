@@ -106,7 +106,6 @@ export class SignUpComponent implements OnInit {
     }
     this.authServer.register(this.userForm.value).subscribe({
       next: (response: ApiResponse<string>) => {
-        debugger;
         if (response.message === 'Đăng ký tài khoản thành công') {
           this.userForm.reset();
           this.errorMessage = '';

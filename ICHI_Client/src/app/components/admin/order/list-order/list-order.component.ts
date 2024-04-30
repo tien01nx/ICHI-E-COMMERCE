@@ -111,7 +111,6 @@ export class ListOrderComponent implements OnInit {
   getStatusOrderName(value: string) {
     const status = Utils.statusOrder.find((x) => x.value === value);
     const name = status ? status.name : ''; // Kiểm tra nếu status không null thì lấy tên, ngược lại trả về ''
-    debugger;
     return name;
   }
 

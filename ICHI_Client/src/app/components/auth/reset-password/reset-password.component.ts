@@ -39,7 +39,6 @@ export class ResetPasswordComponent {
   checkPasswordMatch() {
     const password = this.userForm.get('password')?.value;
     const confirmPassword = this.userForm.get('newPassword')?.value;
-    debugger;
     if (password !== confirmPassword) {
       this.passwordsNotMatching = true;
     } else {
@@ -63,10 +62,9 @@ export class ResetPasswordComponent {
     console.log(this.userForm.value);
     this.authService.changePassword(this.userForm.value).subscribe(
       (res: any) => {
-        debugger;
         if (res.message === 'Đổi mật khẩu thành công') {
           // xóa token đã lưu trên local storage
-           this.passwordsFalse = false
+          this.passwordsFalse = false;
           this.tokenService.removeToken();
           this.router.navigate(['/login']);
           this.toastr.success('Đổi mật khẩu thành công', 'Thông báo');

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ICHI.DataAccess.Repository.IRepository;
+using ICHI_API.Report;
+using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using System.Net.WebSockets;
 using System.Text;
@@ -8,6 +10,11 @@ namespace ICHI_CORE.Controllers.MasterController
     [Route("api/ws")]
     public class WebSocketController : ControllerBase
     {
+        private readonly IUnitOfWork _unitOfWork;
+        public WebSocketController(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
         [HttpGet]
         public async Task Get()
         {
@@ -83,61 +90,107 @@ namespace ICHI_CORE.Controllers.MasterController
         //        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Report.xlsx");
         //    }
         //}
-        [HttpGet("testhehe")]
-        public IActionResult TestHehe()
+        [HttpGet("generateReport")]
+        public IActionResult GenerateReport()
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "files", "TemplateExcel.xlsx");
+            var fileInfo = new FileInfo(filePath);
 
-            // Prepare the memory stream to hold the excel data
-            var stream = new MemoryStream();
-
-            using (var package = new ExcelPackage(stream))
+            using (var package = new ExcelPackage(fileInfo))
             {
-                // Add a sheet for "Sales Invoice Details"
-                var salesSheet = package.Workbook.Worksheets.Add("Sales Invoice Details");
-                // Headers
-                string[] salesHeaders = new string[] { "STT", "Số Lô", "Mã sản phẩm", "Tên sản phẩm", "Giá bán", "Giá nhập", "Số lượng", "Thành tiền" };
-                for (int i = 0; i < salesHeaders.Length; i++)
-                {
-                    salesSheet.Cells[1, i + 1].Value = salesHeaders[i];
-                }
-                // Add a sample data row
-                salesSheet.Cells["A2"].Value = 1;
-                salesSheet.Cells["B2"].Value = "L001";
-                salesSheet.Cells["C2"].Value = "P001";
-                salesSheet.Cells["D2"].Value = "Product 1";
-                salesSheet.Cells["E2"].Value = 100;
-                salesSheet.Cells["F2"].Value = 80;
-                salesSheet.Cells["G2"].Value = 10;
-                salesSheet.Cells["H2"].Formula = "E2*G2";  // Thành tiền
+                // Get the worksheets
+                var reportSheet = package.Workbook.Worksheets["Báo cáo"];
+                var profitSheet = package.Workbook.Worksheets["Lợi nhuận"];
 
-                // Add a sheet for "Purchase Invoice Details"
-                var purchaseSheet = package.Workbook.Worksheets.Add("Purchase Invoice Details");
-                // Headers
-                string[] purchaseHeaders = new string[] { "STT", "Số Lô", "Mã sản phẩm", "Tên sản phẩm", "Giá nhập", "Số lượng", "Thành tiền" };
-                for (int j = 0; j < purchaseHeaders.Length; j++)
-                {
-                    purchaseSheet.Cells[1, j + 1].Value = purchaseHeaders[j];
-                }
-                // Add a sample data row
-                purchaseSheet.Cells["A2"].Value = 1;
-                purchaseSheet.Cells["B2"].Value = "L001";
-                purchaseSheet.Cells["C2"].Value = "P001";
-                purchaseSheet.Cells["D2"].Value = "Product 1";
-                purchaseSheet.Cells["E2"].Value = 80;
-                purchaseSheet.Cells["F2"].Value = 10;
-                purchaseSheet.Cells["G2"].Formula = "E2*F2";  // Thành tiền
+                // Sample data for sales and purchases
+                var salesData = new List<dynamic>
+        {
+            new { Index = 1, Date = DateTime.Now, Lot = "L001", ProductName = "Product 1", SalePrice = 200, PurchasePrice = 150, Quantity = 10 },
+            new { Index = 2, Date = DateTime.Now, Lot = "L002", ProductName = "Product 2", SalePrice = 250, PurchasePrice = 200, Quantity = 15 }
+        };
 
-                // Save the changes and prepare the file for download
-                package.Save();
+                var purchaseData = new List<dynamic>
+        {
+            new { Index = 1, Date = DateTime.Now, Lot = "L001", ProductName = "Product 1", PurchasePrice = 150, Quantity = 10 },
+            new { Index = 2, Date = DateTime.Now, Lot = "L002", ProductName = "Product 2", PurchasePrice = 200, Quantity = 15 }
+        };
+
+                // Insert data for sales
+                decimal salesTotal = 0;
+                int salesRowStart = 5;
+                foreach (var item in salesData)
+                {
+                    reportSheet.Cells[salesRowStart, 1].Value = item.Index;
+                    reportSheet.Cells[salesRowStart, 2].Value = item.Date.ToShortDateString();
+                    reportSheet.Cells[salesRowStart, 3].Value = item.Lot;
+                    reportSheet.Cells[salesRowStart, 4].Value = item.ProductName;
+                    reportSheet.Cells[salesRowStart, 5].Value = item.SalePrice;
+                    reportSheet.Cells[salesRowStart, 6].Value = item.PurchasePrice;
+                    reportSheet.Cells[salesRowStart, 7].Value = item.Quantity;
+                    reportSheet.Cells[salesRowStart, 8].Formula = $"E{salesRowStart}*G{salesRowStart}"; // Giá bán * Số lượng
+                    salesTotal += item.SalePrice * item.Quantity;
+                    salesRowStart++;
+                }
+                reportSheet.Cells[salesRowStart, 7].Value = "Thành tiền";
+                reportSheet.Cells[salesRowStart, 8].Value = salesTotal;
+
+                // Insert data for purchases
+                decimal purchaseTotal = 0;
+                int purchaseRowStart = 5; // Adjust based on actual content
+                int columnOffset = 13;
+                foreach (var item in purchaseData)
+                {
+                    reportSheet.Cells[purchaseRowStart, columnOffset + 1].Value = item.Index;
+                    reportSheet.Cells[purchaseRowStart, columnOffset + 2].Value = item.Date.ToShortDateString();
+                    reportSheet.Cells[purchaseRowStart, columnOffset + 3].Value = item.Lot;
+                    reportSheet.Cells[purchaseRowStart, columnOffset + 4].Value = item.ProductName;
+                    reportSheet.Cells[purchaseRowStart, columnOffset + 5].Value = item.PurchasePrice;
+                    reportSheet.Cells[purchaseRowStart, columnOffset + 6].Value = item.Quantity;
+                    reportSheet.Cells[purchaseRowStart, columnOffset + 7].Formula = $"R{purchaseRowStart}*S{purchaseRowStart}"; // Giá mua * Số lượng
+                    purchaseTotal += item.PurchasePrice * item.Quantity;
+                    purchaseRowStart++;
+                }
+
+                reportSheet.Cells[purchaseRowStart, columnOffset + 6].Value = "Thành tiền";
+                reportSheet.Cells[purchaseRowStart, columnOffset + 7].Value = purchaseTotal;
+
+
+
+                profitSheet.Cells["C5"].Formula = "'Báo cáo'!H" + salesRowStart.ToString(); // Link total sales to profit sheet
+                profitSheet.Cells["C6"].Formula = "'Báo cáo'!T" + purchaseRowStart.ToString(); // Link total purchases to profit sheet
+                profitSheet.Cells["C7"].Formula = "C5-C6"; // Calculate profit
+
+                // Save to a new file to prevent modifying the template directly
+                var newFile = new FileInfo("Updated_Report.xlsx");
+                if (newFile.Exists)
+                {
+                    newFile.Delete();  // Ensures a new workbook is created
+                }
+                package.SaveAs(newFile);
+
+                var stream = new MemoryStream();
+                using (var fileStream = new FileStream(newFile.FullName, FileMode.Open))
+                {
+                    fileStream.CopyTo(stream);
+                }
+                stream.Position = 0;
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Updated_Report.xlsx");
             }
-
-            stream.Position = 0;
-            string excelName = $"Report-{System.DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
-
-            // Return the stream as a file attachment in the response
-            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
+
+        [HttpGet]
+        [Route("api/reports/bill/{invoiceId}")]
+        public ActionResult GetBillReport(int invoiceId)
+        {
+            var report = new Report2(invoiceId, _unitOfWork);
+            var stream = new MemoryStream();
+            report.ExportToPdf(stream);
+            stream.Position = 0;
+            return File(stream, "application/pdf", "BillReport.pdf");
+        }
+
+
     }
     public class Student_Report
     {

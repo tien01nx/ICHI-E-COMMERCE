@@ -441,17 +441,11 @@
 
   <div class="col-12 col-xxl-6">
     <div class="row align-items-start justify-content-between mb-4 g-3">
-      <div class="col-auto">
+      <div class="col-8">
         <h3>Doanh thu của cửa hàng</h3>
       </div>
 
-      <div class="col-12 col-sm-4">
-        <!-- <select class="form-select form-select-sm" id="select-ad-clicks-month">
-          <option>Mar 1 - 31, 2022</option>
-          <option>April 1 - 30, 2022</option>
-          <option>May 1 - 31, 2022</option>
-        </select>
-       -->
+      <div class="col-3">
         <select
           class="form-select"
           (change)="onYearSelect($event)"
@@ -460,6 +454,14 @@
           <option *ngFor="let item of years" [value]="item">{{ item }}</option>
         </select>
       </div>
+      <button
+        class="col-1 pt-2"
+        *ngIf="intDisplay === 2"
+        (click)="clickDownloadExcel()"
+      >
+        <i class="fal fa-folder-download"></i>
+      </button>
+
       <div class="scrollbar overflow-hidden-y">
         <div class="btn-group position-static" role="group">
           <div class="btn-group position-static text-nowrap">
@@ -472,7 +474,7 @@
               aria-expanded="false"
               data-bs-reference="parent"
             >
-              {{ titleShow }}<span class="fas fa-angle-down ms-2"></span>
+              {{ titleShow }} <span class="fas fa-angle-down ms-5"></span>
             </button>
             <ul class="dropdown-menu">
               <li>

@@ -300,6 +300,12 @@ export class AdminHomeComponent implements OnInit, AfterViewInit {
     const selectedDate: string = event.target.value; // Lấy giá trị của control chọn tháng và năm
     this.productTopFive(selectedDate);
   }
+
+  changeDateLoiNhuan(event: any) {
+    const selectedDate: string = event.target.value; // Lấy giá trị của control chọn tháng và năm
+    // this.productTopFive(selectedDate);
+  }
+
   showDisplay(int: number) {
     this.intDisplay = int;
     if (int == 1) {
@@ -308,9 +314,26 @@ export class AdminHomeComponent implements OnInit, AfterViewInit {
       this.updateChartData(this.dataDoanhThu);
     }
     if (int == 2) {
-      this.titleShow = 'Lợi nhu';
+      this.titleShow = 'Lợi nhuận';
       this.createLineChart();
       this.updateChartData(this.dataLoiNhuan);
     }
+  }
+  clickDownloadExcel() {
+    this.transactionService.getExcel(this.chooseYear).subscribe(
+      (blob: Blob) => {
+        // Ensure blob is of type Blob
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `report${this.chooseYear}.xlsx`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove(); // Optionally remove the element after use
+      },
+      (error) => {
+        console.error('Download error:', error); // Handle errors appropriately
+      }
+    );
   }
 }

@@ -45,11 +45,14 @@ export class OrderNotificationComponent implements OnInit {
       .GetTrxTransactionFindById(this.activatedRoute.snapshot.params['id'])
       .subscribe({
         next: (respon: any) => {
+          debugger;
           this.shoppingcartdto = respon.data;
           // vnpay va da thanh toan
           if (
-            this.shoppingcartdto.trxTransaction.paymentTypes ===
-              'PAYMENTVIACARD' &&
+            (this.shoppingcartdto.trxTransaction.paymentTypes ===
+              'PAYMENTVIACARD' ||
+              this.shoppingcartdto.trxTransaction.paymentTypes ===
+                'PAYMENTONDELIVERY') &&
             this.shoppingcartdto.trxTransaction.paymentStatus === 'APPROVED'
           ) {
             this.isSuccessful = true;
@@ -57,7 +60,7 @@ export class OrderNotificationComponent implements OnInit {
           } else if (
             this.shoppingcartdto.trxTransaction.paymentTypes ===
               'PAYMENTVIACARD' &&
-            this.shoppingcartdto.trxTransaction.paymentStatus === 'APPROVED'
+            this.shoppingcartdto.trxTransaction.paymentStatus === 'PENDING'
           ) {
             this.isSuccessful = false;
             this.titleNotification = 'Thanh toán thất bại';

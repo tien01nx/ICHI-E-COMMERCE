@@ -107,7 +107,6 @@ export class SupplierService {
   }
 
   create(supplier: InsertSupplierDTO) {
-    debugger;
     return this.apiService.callApi<SupplierModel>(
       '/Supplier/Create',
       'post',
@@ -117,7 +116,6 @@ export class SupplierService {
   }
 
   update(supplier: SupplierModel) {
-    debugger;
     return this.apiService.callApi<SupplierModel>(
       '/Supplier/Update',
       'put',

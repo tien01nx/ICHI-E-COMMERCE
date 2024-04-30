@@ -11,8 +11,19 @@
       <h2 class="mb-2">Chi tiết hóa đơn bán hàng</h2>
     </div>
     <div class="col-auto">
-      <button class="btn btn-primary mb-2 mb-sm-0 me-8" type="submit">
-        Cập nhật đơn hàng
+      <button
+        class="btn btn-outline-primary mb-2 mb-sm-0 me-8"
+        type="button"
+        routerLink="/admin/list_order"
+      >
+        Quay lại
+      </button>
+      <button
+        class="btn btn-primary mb-2 mb-sm-0 me-8"
+        type="submit"
+        [disabled]="trxTransactionForm.invalid"
+      >
+        Cập nhật
       </button>
     </div>
   </div>
@@ -70,12 +81,12 @@
                         </div>
                         <div class="col-2 col-md-3 col-lg-2">
                           <h6 class="fs-16 mb-0">
-                            {{ item.total }}
+                            {{ item.quantity }}
                           </h6>
                         </div>
                         <div class="col-2 ps-0">
                           <h5 class="mb-0 fw-semibold text-end">
-                            {{ item.total * item.price | number : "1.0-0" }}
+                            {{ item.quantity * item.price | number : "1.0-0" }}
                           </h5>
                         </div>
                       </div>
@@ -135,15 +146,8 @@
                 <div class="col-6 white-space-nowrap pe-5 fw-bold">
                   Tình trạng đơn hàng
                 </div>
+
                 <div class="col-6 white-space-nowrap pe-5 fw-bold">
-                  <!-- <ng-select
-                    style="height: 16px"
-                    [items]="Utils.statusOrder"
-                    bindValue="name"
-                    bindLabel="value"
-                    [(ngModel)]="shoppingcartdto.trxTransaction.orderStatus"
-                    placeholder="Tình trạng đơn hàng"
-                  ></ng-select> -->
                   <ng-select
                     style="height: 16px"
                     [items]="Utils.statusOrder"
@@ -158,6 +162,14 @@
                       {{ option.value }}
                     </ng-option>
                   </ng-select>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-6"></div>
+                <div class="col-6">
+                  <small class="text-danger mt-1">
+                    {{ strError }}
+                  </small>
                 </div>
               </div>
             </div>

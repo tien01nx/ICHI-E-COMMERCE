@@ -20,7 +20,6 @@ export class AuthService {
   }
 
   register(userRegister: any) {
-    debugger;
     return this.apiService.callApi<any>(
       '/Auth/Register',
       'post',

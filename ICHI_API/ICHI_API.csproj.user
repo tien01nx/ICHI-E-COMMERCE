@@ -8,4 +8,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="Report\Bill.cs">
+      <SubType>XtraReport</SubType>
+    </Compile>
+    <Compile Update="Report\Report1.cs">
+      <SubType>XtraReport</SubType>
+    </Compile>
+    <Compile Update="Report\Report2.cs">
+      <SubType>XtraReport</SubType>
+    </Compile>
+  </ItemGroup>
 </Project>

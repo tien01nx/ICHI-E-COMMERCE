@@ -66,7 +66,7 @@ export class BuyNowComponent implements OnInit {
     if (this.shoppingcartdto.cart === null) {
       // nếu shoppingcartdto.cart không tồn tại thì lấy dữ liệu từ shoppingcartdto.transactionDetail
       this.shoppingcartdto.transactionDetail.forEach((item) => {
-        totalPrice += item.total * item.price;
+        totalPrice += item.quantity * item.price;
       });
     }
 
@@ -94,7 +94,6 @@ export class BuyNowComponent implements OnInit {
     // nếu url có id thì set giá trị cho trxtransactionId và không có thì set = 0
     this.cartService.PaymentExecute(this.trxTransactionDTO).subscribe({
       next: (response: any) => {
-        debugger;
         if (
           response.data &&
           typeof response.data === 'string' &&

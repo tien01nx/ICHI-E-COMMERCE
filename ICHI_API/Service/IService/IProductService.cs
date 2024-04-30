@@ -8,6 +8,7 @@ namespace ICHI_API.Service.IService
     {
         PagedResult<ProductDTO> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage);
         PagedResult<ProductDTO> GetProductInCategory(string categoryName, string? category_parent, string? color, string? trademarkName, decimal? priceMin, decimal? priceMax, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage);
+        List<ProductDTO> GetAll();
 
         Product Create(Product product, List<IFormFile>? files, out string strMessage);
 

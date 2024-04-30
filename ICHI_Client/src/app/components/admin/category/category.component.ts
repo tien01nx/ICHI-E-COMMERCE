@@ -205,7 +205,7 @@ export class CategoryComponent implements OnInit {
 
   create() {
     this.isDisplayNone = true;
-    //debugger;
+    // ;
     this.categoryForm.value.id = 0;
     // lấy ra giá trị của parentID => categoryLevel = parentID + 1
     // this.categoryForm.value.categoryLevel =

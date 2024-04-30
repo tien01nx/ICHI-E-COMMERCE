@@ -7,6 +7,7 @@ import { Title } from '@angular/platform-browser';
 import { Utils } from '../../../Utils.ts/utils';
 import { Environment } from '../../../environment/environment';
 import { OrderTrackingDTO } from '../../../dtos/order.tracking.dto';
+import { VnPaymentRequestDTO } from '../../../dtos/vn.payment.request.dto';
 
 @Component({
   selector: 'app-order-tracking',
@@ -19,6 +20,13 @@ export class OrderTrackingComponent implements OnInit {
   orderTrackingDTO: OrderTrackingDTO[] = [];
   priceDiscount: number = 0;
   priceShip = 0;
+  data: VnPaymentRequestDTO = {
+    trxTransactionId: 0,
+    fullName: '',
+    amount: 0,
+    orderStatus: '',
+    createDate: new Date(),
+  };
 
   constructor(
     private toastr: ToastrService,
@@ -80,5 +88,23 @@ export class OrderTrackingComponent implements OnInit {
       default:
         return 'bg-warning';
     }
+  }
+  // thanh toán lại
+  repayment() {
+    let data: VnPaymentRequestDTO = {
+      trxTransactionId: this.orderTrackingDTO[0].trxTransaction.id,
+      fullName: this.orderTrackingDTO[0].trxTransaction.fullName,
+      amount: this.getTotalPrice(),
+      orderStatus: 'Pending',
+      createDate: new Date(),
+    };
+
+    this.orderService.createPaymentUrl(data).subscribe({
+      next: (response: any) => {
+        if (response.code === 200) {
+          window.location.href = response.data;
+        }
+      },
+    });
   }
 }

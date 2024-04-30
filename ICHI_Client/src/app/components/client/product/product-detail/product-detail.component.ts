@@ -221,7 +221,6 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
     },
   };
   chooseImage(image: any) {
-    debugger;
     this.image = image.imagePath;
     this.isImage = image.imagePath;
   }

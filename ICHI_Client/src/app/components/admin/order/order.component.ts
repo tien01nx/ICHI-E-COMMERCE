@@ -361,7 +361,6 @@ export class OrderComponent implements OnInit {
             window.location.href = response.data;
             // this.titleStatus='Đã thanh toán';
           } else {
-            debugger;
             this.toastr.success('Thêm hóa đơn thành công!', 'Thông báo');
             this.isDisplayNone = false;
             this.router.navigate(['/admin/list_order']);

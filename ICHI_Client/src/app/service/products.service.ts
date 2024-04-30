@@ -23,7 +23,13 @@ export class ProductsService {
       this.baseUrl + '/Product/ProductTopFive?dateTime=' + dateTime
     );
   }
+
+  findAllProduct() {
+    return this.http.get(this.baseUrl + '/Product/FindAll');
+  }
+  
   // this.baseUrl + '/TrxTransaction/GetMonneyTotalByMonth?year=' + id
+
   findAllByName(
     PageNumber: number,
     PageSize: number,

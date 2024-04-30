@@ -112,7 +112,6 @@ export class TrademarkService {
   }
 
   create(Trademark: InsertTrademarkDTO) {
-    debugger;
     return this.apiService.callApi<TrademarkModel>(
       '/Trademark/Create',
       'post',

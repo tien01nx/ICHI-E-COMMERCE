@@ -104,7 +104,6 @@ export class CartComponent implements OnInit {
   }
 
   checkout() {
-    debugger;
     if (!this.isCheck) {
       this.toastr.warning('Vui lòng chọn sản phẩm cần mua', 'Thông báo');
       return;

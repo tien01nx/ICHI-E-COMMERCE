@@ -70,6 +70,29 @@
             }
         }
 
+        public List<ProductDTO> GetAll()
+        {
+            List<ProductDTO> productDTO = new List<ProductDTO>();
+            try
+            {
+                var data = _unitOfWork.Product.GetAll(u => u.isDeleted == false, "Category,Trademark").ToList();
+                foreach (var item in data)
+                {
+                    productDTO.Add(new ProductDTO
+                    {
+                        Product = item,
+                        ProductImages = _unitOfWork.ProductImages.GetAll(u => u.ProductId == item.Id).ToList(),
+                        CategoryProduct = item.Category,
+                    });
+                }
+                return productDTO;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public ProductDTO FindById(int id, out string strMessage)
         {
             strMessage = string.Empty;
@@ -334,5 +357,7 @@
                 throw;
             }
         }
+
+
     }
 }

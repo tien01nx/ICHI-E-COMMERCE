@@ -16,5 +16,6 @@ namespace ICHI_API.Service.IService
         List<MoneyMonth> getMonneyTotalByMonth(int year, out string strMessage);
 
         List<MoneyMonth> getProfitByMonth(int year, out string strMessage);
+        byte[] GenerateExcelReport(int year);
     }
 }

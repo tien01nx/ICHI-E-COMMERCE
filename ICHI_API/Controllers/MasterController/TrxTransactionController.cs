@@ -123,8 +123,26 @@
                 var handler = new GlobalExceptionHandler();
                 return handler.HandleException<string>(ex);
             }
-            return result;
         }
+
+        // vnpay hoàn tiền
+        [HttpGet("refundVNPAY")]
+        public async Task<ApiResponse<string>> CreateRèundVNPAY()
+        {
+            ApiResponse<string> result;
+            string strMessage = string.Empty;
+            try
+            {
+                string data = await _vnPayService.btnRefund_Click(HttpContext);
+                return new ApiResponse<string>(System.Net.HttpStatusCode.OK, strMessage, data);
+            }
+            catch (Exception ex)
+            {
+                var handler = new GlobalExceptionHandler();
+                return handler.HandleException<string>(ex);
+            }
+        }
+
         [HttpGet("PaymentExecute")]
         public async Task<ApiResponse<VnPaymentResponseModel>> PaymentExecute([FromQuery] IQueryCollection collections)
         {
@@ -297,6 +315,15 @@
                 var handler = new GlobalExceptionHandler();
                 return handler.HandleException<List<MoneyMonth>>(ex);
             }
+        }
+
+        [HttpGet("GenerateExcelReport")]
+        public IActionResult DownloadExcelReport(int year)
+        {
+            var fileContents = _trxTransactionService.GenerateExcelReport(year);
+            var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            var fileName = "Updated_Report.xlsx";
+            return File(fileContents, contentType, fileName);
         }
     }
 }

@@ -157,7 +157,6 @@ export class InsertAdminProductComponent implements OnInit {
     const file = event.target.files[0];
     const maxFile = 5 * 1024 * 1024;
     this.selectedImageFile = file;
-    debugger;
     if (file) {
       if (file.size > maxFile) {
         this.toastr.error('Kích thước ảnh lớn hơn 5MB', 'Thất bại');

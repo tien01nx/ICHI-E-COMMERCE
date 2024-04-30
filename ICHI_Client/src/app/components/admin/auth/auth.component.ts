@@ -206,13 +206,11 @@ export class AuthComponent implements OnInit {
     }
     if (this.userForm.value.id === null) this.create();
     else this.update();
-    debugger;
   }
 
   create() {
     this.isDisplayNone = true;
     this.userForm.value.id = 0;
-    debugger;
     const userdto: UpdateUserDTO = {
       id: this.userForm.value.id,
       fullName: this.userForm.value.fullName,
@@ -259,7 +257,6 @@ export class AuthComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        debugger;
         this.userService.delete(id, status).subscribe({
           next: (response: any) => {
             this.updateTable();
@@ -281,7 +278,6 @@ export class AuthComponent implements OnInit {
   }
 
   openModalUpdate(user: UserDTO) {
-    debugger;
     this.showPassword = false;
     this.userForm.patchValue({
       id: user.user.id,

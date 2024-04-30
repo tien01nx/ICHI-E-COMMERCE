@@ -4,6 +4,7 @@ using ICHI_API.Model;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Helpers;
+using OfficeOpenXml;
 using System.Data.SqlTypes;
 using System.Linq.Dynamic.Core;
 using static ICHI_API.Helpers.Constants;
@@ -28,9 +29,19 @@ namespace ICHI_API.Service
             try
             {
                 var query = _db.TrxTransactions.OrderByDescending(u => u.OrderDate).AsQueryable();
+                // ép kiểu string sang int là từ name sang int
+
                 if (!string.IsNullOrEmpty(name))
                 {
-                    query = query.Where(e => e.FullName.Contains(name.Trim()) || e.PhoneNumber.Contains(name.Trim()));
+                    int trxTransactionId;
+                    if (int.TryParse(name, out trxTransactionId))
+                    {
+                        query = query.Where(e => e.FullName.Contains(name.Trim()) || e.PhoneNumber.Contains(name.Trim()) || e.Id == trxTransactionId);
+                    }
+                    else
+                    {
+                        query = query.Where(e => e.FullName.Contains(name.Trim()) || e.PhoneNumber.Contains(name.Trim()));
+                    }
                 }
                 if (!string.IsNullOrEmpty(orderStatus))
                 {
@@ -180,6 +191,10 @@ namespace ICHI_API.Service
                 if (data.OrderStatus == AppSettings.StatusOrderDelivered && model.OrderStatus != AppSettings.StatusOrderDelivered)
                 {
                     throw new BadRequestException(TRXTRANSACTIONDELIVERED);
+                }
+                if (data.PaymentStatus == AppSettings.PaymentStatusPending && data.PaymentTypes == AppSettings.PaymentStatusPending)
+                {
+                    throw new BadRequestException("Không thể cập nhật trạng thái đơn hàng");
                 }
 
                 data.OrderStatus = model.OrderStatus;
@@ -494,6 +509,114 @@ namespace ICHI_API.Service
                 throw;
             }
         }
+
+        public byte[] GenerateExcelReport(int year)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "files", "TemplateExcel.xlsx");
+            var fileInfo = new FileInfo(filePath);
+
+            using (var package = new ExcelPackage(fileInfo))
+            {
+                // Get the worksheets
+                var reportSheet = package.Workbook.Worksheets["Báo cáo"];
+                var profitSheet = package.Workbook.Worksheets["Lợi nhuận"];
+
+
+                //STT Ngày Nhập Số Lô Tên Sản phẩm    Giá Bán Giá Mua Số Lượng    Thành Tiền
+
+                var data = _unitOfWork.TransactionDetail.GetAll(includeProperties: "TrxTransaction,Product");
+                var order = data.Where(u => u.TrxTransaction.OrderStatus == AppSettings.StatusOrderDelivered &&
+                                                                   u.TrxTransaction.PaymentStatus == AppSettings.PaymentStatusApproved && u.TrxTransaction.OrderDate.Year == year).GroupBy(u => u.ProductId).Select(group => new
+                                                                   {
+                                                                       ProductId = group.Key,
+                                                                       TotalQuantity = group.Sum(item => item.Quantity),
+                                                                       OrderDate = group.FirstOrDefault().TrxTransaction.OrderDate,
+                                                                       BatchNumber = group.FirstOrDefault().BatchNumber,
+                                                                       ProductName = group.FirstOrDefault().Product.ProductName,
+                                                                       Price = group.FirstOrDefault().Price, // Giá bán
+                                                                       PriceInventory = _unitOfWork.InventoryReceiptDetail.Get(u => u.ProductId == group.Key && u.BatchNumber == group.FirstOrDefault().BatchNumber).Price, // Giá mua
+                                                                       Items = group.ToList() // Các chi tiết trong nhóm
+                                                                   });
+
+                // Insert data for sales
+                decimal salesTotal = 0;
+                int salesRowStart = 5;
+                foreach (var item in order)
+                {
+
+                    reportSheet.Cells[salesRowStart, 1].Value = item.ProductId;
+                    reportSheet.Cells[salesRowStart, 2].Value = item.OrderDate;
+                    reportSheet.Cells[salesRowStart, 2].Style.Numberformat.Format = "mm/dd/yyyy hh:mm:ss AM/PM"; // Định dạng ngày tháng
+                    reportSheet.Cells[salesRowStart, 3].Value = item.BatchNumber;
+                    reportSheet.Cells[salesRowStart, 4].Value = item.ProductName;
+                    reportSheet.Cells[salesRowStart, 5].Value = item.Price;
+                    reportSheet.Cells[salesRowStart, 6].Value = item.PriceInventory;
+                    reportSheet.Cells[salesRowStart, 7].Value = item.TotalQuantity;
+                    reportSheet.Cells[salesRowStart, 8].Formula = $"E{salesRowStart}*G{salesRowStart}"; // Giá bán * Số lượng
+                    salesTotal += item.Price * item.TotalQuantity;
+                    salesRowStart++;
+                }
+                reportSheet.Cells[salesRowStart, 7].Value = "Thành tiền";
+                reportSheet.Cells[salesRowStart, 8].Value = salesTotal;
+
+
+                var data1 = _unitOfWork.InventoryReceiptDetail.GetAll(u => u.CreateDate.Year == year, includeProperties: "Product").GroupBy(u => u.ProductId).Select(group => new
+                {
+                    ProductId = group.Key,
+                    TotalPrice = group.Sum(item => item.Price * item.Quantity),
+                    TotalQuantity = group.Sum(item => item.Quantity),
+                    OrderDate = group.FirstOrDefault().CreateDate,
+                    BatchNumber = group.FirstOrDefault().BatchNumber,
+                    ProductName = group.FirstOrDefault().Product.ProductName,
+                    Price = group.FirstOrDefault().Price,
+                    Items = group.ToList() // Các chi tiết trong nhóm
+
+                })
+                    .ToList();
+
+                // Insert data for purchases
+                decimal purchaseTotal = 0;
+                int purchaseRowStart = 5; // Adjust based on actual content
+                int columnOffset = 13;
+                foreach (var item in data1)
+                {
+                    int Index = 1;
+                    reportSheet.Cells[purchaseRowStart, columnOffset + 1].Value = Index;
+                    reportSheet.Cells[purchaseRowStart, columnOffset + 2].Value = item.OrderDate;
+                    reportSheet.Cells[purchaseRowStart, columnOffset + 2].Style.Numberformat.Format = "mm/dd/yyyy hh:mm:ss AM/PM"; // Định dạng ngày tháng
+                    reportSheet.Cells[purchaseRowStart, columnOffset + 3].Value = item.BatchNumber;
+                    reportSheet.Cells[purchaseRowStart, columnOffset + 4].Value = item.ProductName;
+                    reportSheet.Cells[purchaseRowStart, columnOffset + 5].Value = item.Price;
+                    reportSheet.Cells[purchaseRowStart, columnOffset + 6].Value = item.TotalQuantity;
+                    reportSheet.Cells[purchaseRowStart, columnOffset + 7].Formula = $"R{purchaseRowStart}*S{purchaseRowStart}"; // Giá mua * Số lượng
+                    purchaseTotal += item.Price * item.TotalQuantity;
+                    purchaseRowStart++;
+                    Index++;
+                }
+
+                reportSheet.Cells[purchaseRowStart, columnOffset + 6].Value = "Thành tiền";
+                reportSheet.Cells[purchaseRowStart, columnOffset + 7].Value = purchaseTotal;
+
+
+
+                profitSheet.Cells["C5"].Formula = "'Báo cáo'!H" + salesRowStart.ToString(); // Link total sales to profit sheet
+                profitSheet.Cells["C6"].Formula = "'Báo cáo'!T" + purchaseRowStart.ToString(); // Link total purchases to profit sheet
+                profitSheet.Cells["C7"].Formula = "C5-C6"; // Calculate profit
+
+
+                var memoryStream = new MemoryStream();
+                package.SaveAs(memoryStream);
+
+                memoryStream.Position = 0;
+
+                return memoryStream.ToArray();
+
+            }
+        }
+
+
+
 
     }
 }

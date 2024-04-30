@@ -23,7 +23,7 @@ export class AdminGuard {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean | UrlTree => {
-    // debugger
+    //
     const requiredRole = ['ADMIN', 'EMPLOYEE']; // Quyền truy cập yêu cầu
     let roles = this.tokenService.getUserRoles(); // Lấy danh sách các quyền từ AuthService
     // console.log("role:" + roles);
@@ -31,7 +31,7 @@ export class AdminGuard {
       roles = [roles];
     }
 
-    // debugger
+    //
     if (
       roles == null ||
       roles.length == 0 ||

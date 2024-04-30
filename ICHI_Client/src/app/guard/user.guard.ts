@@ -23,7 +23,7 @@ export class UserGuard {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean | UrlTree => {
-    // debugger
+    //
     if (!this.tokenService.isLogin()) {
       // nếu token hết hạn hoặc chưa đăng nhập, chuyển hướng đến trang đăng nhập
       this.toastr.error('Vui lòng đăng nhập để tiếp tục');

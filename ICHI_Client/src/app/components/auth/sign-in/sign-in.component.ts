@@ -51,18 +51,17 @@ export class SignInComponent implements OnInit {
         if (response.code === 200) {
           // Đăng nhập thành công
           if (response.message === 'Đăng nhập thành công') {
-            debugger;
             this.tokenService.setToken(response.data);
             let roles = this.tokenService.getUserRoles();
 
-              if (!Array.isArray(roles)) {
-                roles = [roles];
-              }
+            if (!Array.isArray(roles)) {
+              roles = [roles];
+            }
 
             const userId = this.tokenService.getUserEmail();
 
             const requiredRole = ['ADMIN', 'EMPLOYEE'];
-            const hasRequiredRole = roles.some((role :any) =>
+            const hasRequiredRole = roles.some((role: any) =>
               requiredRole.includes(role)
             );
             if (hasRequiredRole) {

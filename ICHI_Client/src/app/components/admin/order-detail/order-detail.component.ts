@@ -40,6 +40,7 @@ export class OrderDetailComponent implements OnInit {
   titleString: string = '';
   isReadOnly: boolean = true;
   shoppingcartdto!: ShoppingCartDTO;
+  strError: string = '';
 
   // getData khách hàng
   customers: CustomerModel[] = [];
@@ -82,6 +83,13 @@ export class OrderDetailComponent implements OnInit {
         },
       });
     }
+    this.trxTransactionForm.get('orderStatus')?.valueChanges.subscribe({
+      next: (value: any) => {
+        if (value === null) {
+          this.strError = 'Trạng thái đơn hàng là bắt buộc';
+        }
+      },
+    });
   }
 
   // isDisabled(optionName: string): boolean {
@@ -106,9 +114,6 @@ export class OrderDetailComponent implements OnInit {
       this.toastr.error('Vui lòng điền đầy đủ thông tin', 'Thông báo');
       return;
     }
-
-    // Lấy dữ liệu từ form
-    const trxTransactionFormValue = this.trxTransactionForm.value;
 
     // Gọi API cập nhật trạng thái đơn hàng
     this.trxTransactionService

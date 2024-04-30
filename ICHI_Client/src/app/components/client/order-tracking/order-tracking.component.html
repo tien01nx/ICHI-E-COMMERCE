@@ -34,10 +34,19 @@
           <span class="ms-sm-1"></span>
         </p>
       </div>
-      <!-- <button class="btn btn-outline-primary mt-3">
-        <span class="fas fa-phone me-2"></span>
-        Support
-      </button> -->
+      <button
+        class="btn btn-outline-primary mt-3"
+        type="button"
+        *ngIf="
+          orderTrackingDTO[0].trxTransaction.paymentTypes ===
+            'PAYMENTVIACARD' &&
+          orderTrackingDTO[0].trxTransaction.paymentStatus === 'PENDING'
+        "
+        (click)="repayment()"
+      >
+        <i class="fal fa-credit-card"></i>
+        Thanh toán lại
+      </button>
     </div>
     <div class="row gy-9 gx-5">
       <div class="col-12 col-lg-6">

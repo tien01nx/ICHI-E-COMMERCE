@@ -39,8 +39,7 @@ export class ForgotPasswordComponent {
     this.authServer.forgotPassword(this.userForm.value.email).subscribe({
       next: (response: any) => {
         if (response.code === 200) {
-          this.userForm.reset();
-          debugger; // tslint:disable-line
+          this.userForm.reset(); // tslint:disable-line
           console.log(response.message);
           if (response.message === 'Gửi email thành công') {
             this.router.navigate(['/login']);

@@ -24,6 +24,21 @@ export class ProfileComponent implements OnInit {
   Environment = Environment;
   avatarSrc: string = '';
 
+  // static PENDING = 'PENDING';
+  // static ONHOLD = 'ONHOLD';
+  // static WAITINGFORPICKUP = 'WAITINGFORPICKUP';
+  // static WAITINGFORDELIVERY = 'WAITINGFORDELIVERY';
+  // static DELIVERED = 'DELIVERED';
+  // static CANCELLED = 'CANCELLED';
+
+  totalOrder = 0;
+  totalPending: number = 0;
+  totalOnHold: number = 0;
+  totalWaitingForPickup: number = 0;
+  totalWaitingForDelivery: number = 0;
+  totalDelivered: number = 0;
+  totalCancel: number = 0;
+
   birthday: Date | undefined;
   isDisplayNone: boolean = false;
   errorMessage: string = '';
@@ -96,6 +111,24 @@ export class ProfileComponent implements OnInit {
     this.profileService.getProfile().subscribe((respon: any) => {
       this.customerTransaction = respon.data;
       this.trxTransaction = respon.data.trxTransactions;
+
+      this.trxTransaction.forEach((order: any) => {
+        if (order.orderStatus === Utils.PENDING) {
+          this.totalPending += 1;
+        } else if (order.orderStatus === Utils.ONHOLD) {
+          this.totalOnHold += 1;
+        } else if (order.orderStatus === Utils.WAITINGFORPICKUP) {
+          this.totalWaitingForPickup += 1;
+        } else if (order.orderStatus === Utils.WAITINGFORDELIVERY) {
+          this.totalWaitingForDelivery += 1;
+        } else if (order.orderStatus === Utils.DELIVERED) {
+          this.totalDelivered += 1;
+        } else if (order.orderStatus === Utils.CANCELLED) {
+          this.totalCancel += 1;
+        }
+        this.totalOrder += 1;
+      });
+
       this.getTotalPrice();
       console.log('profile', this.customerTransaction);
       console.log('trxTransactions', this.customerTransaction?.trxTransactions);
@@ -127,7 +160,6 @@ export class ProfileComponent implements OnInit {
           order.orderStatus === Utils.DELIVERED ||
           order.paymentStatus === Utils.PaymentStatusApproved
         ) {
-          debugger;
           this.totalPrice += order.orderTotal + order.priceShip;
           this.totalorder += 1;
         }
@@ -138,7 +170,6 @@ export class ProfileComponent implements OnInit {
   }
 
   update() {
-    debugger;
     this.customerService.Update(this.customerForm.value, this.file).subscribe({
       next: (response: any) => {
         if (response.message === 'Cập nhật thành công') {

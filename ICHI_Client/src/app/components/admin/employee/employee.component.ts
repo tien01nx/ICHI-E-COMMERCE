@@ -121,7 +121,6 @@ export class EmployeeComponent {
   }
 
   update() {
-    debugger;
     this.isDisplayNone = true;
     this.employeeService.Update(this.employeeForm.value, this.file).subscribe({
       next: (response: any) => {
@@ -220,7 +219,6 @@ export class EmployeeComponent {
     return isMale;
   }
   onSubmit() {
-    debugger;
     if (this.employeeForm.invalid) {
       return;
     }
@@ -247,7 +245,6 @@ export class EmployeeComponent {
       if (result.isConfirmed) {
         this.employeeService.delete(id).subscribe({
           next: (response: any) => {
-            debugger;
             if (response.message === 'Mở khóa tài khoản thành công') {
               this.updateTable();
               this.toastr.success(response.message, 'Thông báo');
@@ -275,7 +272,6 @@ export class EmployeeComponent {
   }
 
   openModalUpdate(user: EmployeeModel) {
-    debugger;
     // hiện thị lỗi từ formGroup nếu không nhập đủ trường thông tin
 
     this.showPassword = false;
@@ -321,10 +317,8 @@ export class EmployeeComponent {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        debugger;
         this.userServide.delete(id, status).subscribe({
           next: (response: any) => {
-            debugger;
             if (response.message === 'Mở khóa tài khoản thành công') {
               this.updateTable();
               this.toastr.success(response.message, 'Thông báo');
@@ -344,7 +338,6 @@ export class EmployeeComponent {
   }
 
   create() {
-    debugger;
     this.isDisplayNone = true;
     this.employeeForm.value.id = 0;
     const userdto: UpdateUserDTO = {
@@ -359,7 +352,6 @@ export class EmployeeComponent {
       address: this.employeeForm.value.address,
     };
 
-    debugger;
     this.authService.registerEmployee(userdto).subscribe({
       next: (response: any) => {
         if (response.message === 'Đăng ký tài khoản thành công') {

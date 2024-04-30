@@ -143,7 +143,6 @@ export class InsertPromotionComponent implements OnInit {
   }
 
   onSubmit() {
-    debugger;
     console.log(this.promotionForm.value);
     if (this.promotionForm.invalid) {
       const formErrors = this.promotionForm.errors;
@@ -184,8 +183,6 @@ export class InsertPromotionComponent implements OnInit {
         while (this.promotionDetails.length !== 0) {
           this.promotionDetails.removeAt(0);
         }
-
-        debugger;
 
         // Iterate through promotionDetails in response data and add each detail to FormArray
         data.promotionDetails.forEach((detail: PromotionDetails) => {
@@ -296,7 +293,6 @@ export class InsertPromotionComponent implements OnInit {
   }
 
   update() {
-    debugger;
     this.promotionService.update(this.promotionForm.value).subscribe({
       next: (response: any) => {
         if (

@@ -208,7 +208,6 @@ export class PromotionComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        debugger;
         this.promotionService.updateStatus(id, status).subscribe({
           next: (response: any) => {
             if (response.message === 'Mở khóa tài khoản thành công') {

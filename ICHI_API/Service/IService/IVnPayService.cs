@@ -7,5 +7,7 @@ namespace ICHI_API.Service.IService
         string CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model);
         VnPaymentResponseModel PaymentExecute(IQueryCollection collections);
         VnPaymentResponseModel PaymentCallBack(HttpRequest request, out string strMessage);
+
+        Task<string> btnRefund_Click(HttpContext context);
     }
 }

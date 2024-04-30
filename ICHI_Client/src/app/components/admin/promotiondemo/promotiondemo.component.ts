@@ -21,7 +21,6 @@ export class PromotiondemoComponent implements OnInit {
 
   constructor(@Inject(DOCUMENT) private document: Document) {
     // this.localStorage = document.defaultView?.localStorage;
-    debugger;
   }
   ngOnInit() {
     this.getProducts(1, 10, 'desc', 'id', '');
@@ -34,12 +33,10 @@ export class PromotiondemoComponent implements OnInit {
     sortDir: string,
     search: string
   ) {
-    debugger;
     this.productService
       .getPromotiom(pageSize, pageNumber, sortBy, sortDir, search)
       .subscribe({
         next: (response: any) => {
-          debugger;
           this.paginationModel.content = response.data.items;
           this.paginationModel.totalPages = response.data.pageCount;
           this.paginationModel.totalElements = response.data.totalCount;
@@ -52,11 +49,8 @@ export class PromotiondemoComponent implements OnInit {
           this.paginationModel.sortDirection = response.sortDirection;
           console.log('Products:', this.paginationModel.content);
         },
-        complete: () => {
-          debugger;
-        },
+        complete: () => {},
         error: (error: any) => {
-          debugger;
           console.error('Error fetching products:', error);
         },
       });
