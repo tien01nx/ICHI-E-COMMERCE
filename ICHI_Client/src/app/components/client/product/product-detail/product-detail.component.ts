@@ -182,27 +182,6 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
   }
 
   // Swiper
-  swiperThumbsConfig: SwiperOptions = {
-    slidesPerView: 1, // Số lượng slide hiển thị trên một lần trượt
-    spaceBetween: 20, // Khoảng cách giữa các slide
-    speed: 500, // Tốc độ chuyển slide (milliseconds)
-    autoplay: {
-      // Tự động chuyển slide
-      delay: 3000, // Thời gian delay giữa các slide (milliseconds)
-      disableOnInteraction: false, // Tạm dừng tự động chuyển slide khi người dùng tương tác
-    },
-    navigation: {
-      // Hiển thị nút điều hướng
-      nextEl: '.swiper-button-next', // Nút next
-      prevEl: '.swiper-button-prev', // Nút prev
-    },
-    breakpoints: {
-      450: { slidesPerView: 2, spaceBetween: 16 },
-      768: { slidesPerView: 3, spaceBetween: 16 },
-      992: { slidesPerView: 4, spaceBetween: 16 },
-      1200: { slidesPerView: 5, spaceBetween: 16 },
-    },
-  };
 
   swiperImageConfig: SwiperOptions = {
     slidesPerView: 1, // Số lượng slide hiển thị trên một lần trượt
@@ -220,6 +199,7 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
       1200: { slidesPerView: 4, spaceBetween: 16 },
     },
   };
+
   chooseImage(image: any) {
     this.image = image.imagePath;
     this.isImage = image.imagePath;

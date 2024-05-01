@@ -170,6 +170,10 @@ namespace ICHI_API.Service
             try
             {
                 var model = _unitOfWork.Category.Get(u => u.CategoryName == categoryName && !u.IsDeleted);
+                if(model == null)
+                {
+                    throw new BadRequestException(Constants.CATEGORYNOTFOUND);
+                }
                 var data = GetCategories(model.Id);
                 return data;
 

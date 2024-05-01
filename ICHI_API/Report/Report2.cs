@@ -22,7 +22,6 @@ namespace ICHI_API.Report
         private void LoadData(int invoiceId)
         {
             var invoice = _unitOfWork.TrxTransaction.Get(i => i.Id == invoiceId, "Customer");
-            //var invoiceDetail = _unitOfWork.TransactionDetail.Get(u => u.TrxTransactionId == invoiceId, "Product");
             var invoiceDetails = new BindingList<TransactionDetail>(_unitOfWork.TransactionDetail.GetAll(filter: u => u.TrxTransactionId == invoiceId, includeProperties: "Product").ToList());
 
 

@@ -212,6 +212,39 @@ namespace ICHI_API.Service
             }
         }
 
+        public bool CannelOrder(int id, out string strMessage)
+        {
+            strMessage = string.Empty;
+            try
+            {
+                _unitOfWork.BeginTransaction();
+                var data = _unitOfWork.TrxTransaction.Get(u => u.Id == id);
+                if (data == null)
+                {
+                    throw new BadRequestException(TRXTRANSACTIONNOTFOUNDORDER);
+                }
+                if (data.OrderStatus == AppSettings.StatusOrderDelivered)
+                {
+                    throw new BadRequestException(TRXTRANSACTIONDELIVERED);
+                }
+                if (data.PaymentStatus == AppSettings.PaymentStatusPending && data.PaymentTypes == AppSettings.PaymentStatusPending)
+                {
+                    throw new BadRequestException("Không thể hủy đơn hàng");
+                }
+                data.OrderStatus = AppSettings.StatusOrderCancelled;
+                data.CancelledDate = DateTime.Now;
+                _unitOfWork.TrxTransaction.Update(data);
+                _unitOfWork.Save();
+                _unitOfWork.Commit();
+                strMessage = "CANCELORDER";
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         // giảm số lượng product khi đã mua
         public void UpdateProductQuantity(List<Cart> carts)
         {

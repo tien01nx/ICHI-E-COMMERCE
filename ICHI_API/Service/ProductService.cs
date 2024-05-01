@@ -33,7 +33,6 @@
             _categoryProductService = categoryProductService;
             _promotionService = promotionService;
         }
-
         public Helpers.PagedResult<ProductDTO> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
         {
             strMessage = string.Empty;
@@ -69,7 +68,6 @@
                 throw;
             }
         }
-
         public List<ProductDTO> GetAll()
         {
             List<ProductDTO> productDTO = new List<ProductDTO>();
@@ -92,7 +90,6 @@
                 throw;
             }
         }
-
         public ProductDTO FindById(int id, out string strMessage)
         {
             strMessage = string.Empty;
@@ -121,7 +118,6 @@
                 throw;
             }
         }
-
         public Product Create(Product product, List<IFormFile>? files, out string strMessage)
         {
             strMessage = string.Empty;
@@ -206,7 +202,6 @@
                 throw;
             }
         }
-
         public bool Delete(int id, out string strMessage)
         {
             strMessage = string.Empty;
@@ -257,18 +252,22 @@
                 throw;
             }
         }
-
         public IQueryable<Product> FilterProducts(IQueryable<Product> query, string categoryName, string category_parent, string color, string trademark, decimal? priceMin, decimal? priceMax)
         {
             query = query.Where(product => !product.isDeleted);
 
             if (!string.IsNullOrEmpty(categoryName))
             {
-                int categoryId = _unitOfWork.Category.Get(u => u.CategoryName == categoryName).Id;
-                if (categoryId == 0)
+                var data = _unitOfWork.Category.Get(u => u.CategoryName == categoryName);
+                if (data == null)
                 {
                     return query;
                 }
+                int categoryId = data.Id;
+                //if (categoryId == 0)
+                //{
+                //    return query;
+                //}
                 var categories = _categoryProductService.GetCategories(categoryId);
                 List<int> lstID = categories.Select(x => x.Id).ToList();
                 query = query.Where(x => lstID.Any(id => id == x.CategoryId));
@@ -303,7 +302,6 @@
 
             return query;
         }
-
         public Helpers.PagedResult<ProductDTO> GetProductInCategory(string categoryName, string? category_parent, string? color, string? trademarkName, decimal? priceMin, decimal? priceMax, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
         {
             strMessage = string.Empty;
@@ -324,7 +322,6 @@
                 throw;
             }
         }
-
         // top 5 sản phẩm bán chạy nhất tháng data truyền vào là DateTime
         public List<ProductDTO> ProductTopFive(string strDateTime, out string strMessage)
         {
@@ -358,6 +355,29 @@
             }
         }
 
+        public List<ProductDTO> Search(string productName, out string strMessage)
+        {
+            try
+            {
+                strMessage = string.Empty;
+                List<ProductDTO> productDTOs = new List<ProductDTO>();
+                var data = _unitOfWork.Product.GetAll(u => u.ProductName.Contains(productName) && u.isDeleted == false, "Category,Trademark").ToList();
+                foreach (var item in data)
+                {
+                    productDTOs.Add(new ProductDTO
+                    {
+                        Product = item,
+                        ProductImages = _unitOfWork.ProductImages.GetAll(u => u.ProductId == item.Id).ToList(),
+                        CategoryProduct = item.Category,
+                    });
+                }
+                return productDTOs;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
     }
 }

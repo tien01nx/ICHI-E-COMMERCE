@@ -27,7 +27,11 @@ export class ProductsService {
   findAllProduct() {
     return this.http.get(this.baseUrl + '/Product/FindAll');
   }
-  
+
+  searchProductName(name: string) {
+    return this.http.get(this.baseUrl + '/Product/Search/' + name);
+  }
+
   // this.baseUrl + '/TrxTransaction/GetMonneyTotalByMonth?year=' + id
 
   findAllByName(

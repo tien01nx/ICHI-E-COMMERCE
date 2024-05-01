@@ -19,5 +19,7 @@ namespace ICHI_API.Service.IService
         bool DeleteProductImage(int productId, string imageName, out string strMessage);
 
         List<ProductDTO> ProductTopFive(string dateTime, out string strMessage);
+
+        List<ProductDTO> Search(string productName, out string strMessage);
     }
 }

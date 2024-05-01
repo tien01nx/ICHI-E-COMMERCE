@@ -65,6 +65,24 @@ namespace ICHI_CORE.Controllers.MasterController
             return result;
         }
 
+
+        [HttpGet("Search/{productName}")]
+        public async Task<ApiResponse<List<ProductDTO>>> Search(string productName)
+        {
+            ApiResponse<List<ProductDTO>> result;
+            string strMessage = "";
+            try
+            {
+                var data = _productService.Search(productName, out strMessage);
+                result = new ApiResponse<List<ProductDTO>>(System.Net.HttpStatusCode.OK, strMessage, data);
+            }
+            catch (Exception ex)
+            {
+                var handler = new GlobalExceptionHandler();
+                return handler.HandleException<List<ProductDTO>>(ex);
+            }
+            return result;
+        }   
         // Lấy ra sản phẩm theo id
         [HttpGet("GetProductById/{id}")]
         public async Task<ApiResponse<ProductDTO>> GetProductById(int id)

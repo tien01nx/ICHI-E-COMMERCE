@@ -107,4 +107,24 @@ export class OrderTrackingComponent implements OnInit {
       },
     });
   }
+
+  getReportBill() {
+    this.orderService
+      .getReportBill(this.orderTrackingDTO[0].trxTransactionId)
+      .subscribe(
+        (blob: Blob) => {
+          // Ensure blob is of type Blob
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `report${this.orderTrackingDTO[0].trxTransactionId}.pdf`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+          a.remove(); // Optionally remove the element after use
+        },
+        (error) => {
+          console.error('Download error:', error); // Handle errors appropriately
+        }
+      );
+  }
 }

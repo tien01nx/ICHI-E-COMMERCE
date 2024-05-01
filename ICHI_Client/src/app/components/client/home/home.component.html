@@ -33,46 +33,7 @@
 <section class="py-0 px-xl-3">
   <div class="container px-xl-0 px-xxl-3">
     <div class="row g-3 mb-9"></div>
-    <!-- 
-    <div class="row g-4 mb-6">
-      <div class="col-12 col-lg-12 col-xxl-12">
-        <div class="d-flex flex-between-center mb-3">
-          <div class="d-flex">
-            <span class="fas fa-bolt text-warning fs-6"></span>
-            <h3 class="mx-2">Khuyễn mãi</h3>
-            <span class="fas fa-bolt text-warning fs-6"></span>
-          </div>
-          <a class="btn btn-link btn-lg p-0 d-none d-md-block" href="#!"
-            >Xem thêm
-            <span class="fas fa-chevron-right fs-9 ms-1"></span>
-          </a>
-        </div>
-        <div class="swiper-theme-container products-slider">
-          <div class="swiper swiper-container theme-slider">
-            <swiper-container appSwiper [config]="swiperNewestConfig">
-              <swiper-slide *ngFor="let data of products">
-                <div class="swiper-wrapper">
-                  <div class="swiper-slide"></div>
-                </div>
-              </swiper-slide>
-            </swiper-container>
-          </div>
-          <div class="swiper-nav">
-            <div class="swiper-button-next">
-              <span class="fas fa-chevron-right nav-icon"></span>
-            </div>
-            <div class="swiper-button-prev">
-              <span class="fas fa-chevron-left nav-icon"></span>
-            </div>
-          </div>
-        </div>
-        <a class="fw-bold d-md-none px-0" href="#!"
-          >Xem thêm
-          <span class="fas fa-chevron-right fs-9 ms-1"></span>
-        </a>
-      </div>
-    </div> -->
- 
+
     <div class="mb-6">
       <div class="d-flex flex-between-center mb-3">
         <h3>Sản phẩm khuyến mãi</h3>
@@ -116,38 +77,9 @@
                             />
                           </div>
                         </div>
-                        <!-- <div
-                          class="border border-1 border-translucent rounded-3 position-relative mb-3"
-                        >
-                          <button
-                            class="btn rounded-circle p-0 d-flex flex-center btn-wish z-2 d-toggle-container btn-outline-primary"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            aria-label="Add to wishlist"
-                            data-bs-original-title="Add to wishlist"
-                          >
-                            <span
-                              class="badge text-bg-success fs-10 product-verified-badge"
-                              >Verified<span class="fas fa-check ms-1"></span
-                            ></span>
-                            <span class="fas fa-heart d-block-hover"></span>
-                            <span
-                              class="far fa-heart d-none-hover"
-                            ></span></button
-                          ><img
-                            class="img-fluid"
-                            src="{{ Environment.apiBaseRoot }}{{
-                              data.productImages[0].imagePath
-                            }}"
-                            alt=""
-                          /><span
-                            class="badge text-bg-success fs-10 product-verified-badge"
-                            >Verified<span class="fas fa-check ms-1"></span
-                          ></span>
-                        </div> -->
                         <a
                           class="stretched-link"
-                          routerLink="product_detail/{{ data.product.id }}"
+                          [routerLink]="['/product_detail', data.product.id]"
                         >
                           <h6 class="mb-2 lh-sm line-clamp-3 product-name">
                             {{ data?.product?.productName }}

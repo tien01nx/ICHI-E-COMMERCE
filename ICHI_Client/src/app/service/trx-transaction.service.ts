@@ -152,6 +152,12 @@ export class TrxTransactionService {
     );
   }
 
+  getReportBill(id: number) {
+    return this.http.get(`${this.baseUrl}/Report/bill/` + id, {
+      responseType: 'blob', // Set responseType to 'blob'
+    });
+  }
+
   getGetMonneyTotal() {
     return this.http.get(this.baseUrl + '/TrxTransaction/GetMonneyTotal');
   }
@@ -278,7 +284,7 @@ export class TrxTransactionService {
     return this.http.put(this.baseUrl + '/TrxTransaction/Update', model);
   }
 
-   createPaymentUrl(vnpaydto: VnPaymentRequestDTO): Observable<any> {
+  createPaymentUrl(vnpaydto: VnPaymentRequestDTO): Observable<any> {
     return this.http
       .post(this.baseUrl + '/TrxTransaction/CreatePaymentUrl', vnpaydto)
       .pipe(

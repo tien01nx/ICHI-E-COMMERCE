@@ -18,67 +18,8 @@
           </ol>
         </nav>
         <form class="form" (submit)="onSubmit()">
-          <div
-            class="row g-5 mb-5 mb-lg-8"
-            data-product-details="data-product-details"
-          >
+          <div class="row g-5 mb-5 mb-lg-8">
             <div class="col-12 col-lg-6">
-              <!-- <div class="row g-3 mb-3">
-                <div class="col-12 col-md-12 col-lg-12 col-xl-12">
-                  <div
-                    class="d-flex align-items-center border border-translucent rounded-3 text-center h-100 p-3"
-                  >
-                    <div class="zoomable-image-container flex-1">
-                      <img
-                        class="img-fluid zoomable-image thumbnail-image"
-                        src="{{ Environment.apiBaseRoot }}/{{ image }}"
-                        alt=""
-                        style="object-fit: contain; height: 400px"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-12 col-md-12 col-lg-12 col-xl-12">
-                <div class="swiper-theme-container products-slider">
-                  <div class="swiper swiper-container theme-slider">
-                    <swiper-container appSwiper [config]="swiperImageConfig">
-                      <swiper-slide
-                        *ngFor="let image of productdto?.productImages"
-                      >
-                        <span>__</span>
-                        <div class="swiper-wrapper">
-                          <div class="swiper-slide">
-                            <div
-                              class="border border-1 border-translucent rounded-3 position-relative p-2"
-                              (click)="chooseImage(image)"
-                            >
-                              <img
-                                class="img-fluid image-custom-list"
-                                src="{{ Environment.apiBaseRoot }}/{{
-                                  image.imagePath
-                                }}"
-                                alt=""
-                                style="height: 100px"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                       
-                      </swiper-slide>
-                    </swiper-container>
-                  </div>
-                  <div class="swiper-nav">
-                    <div class="swiper-next">
-                      <span class="fas fa-chevron-right nav-icon"></span>
-                    </div>
-                    <div class="swiper-prev">
-                      <span class="fas fa-chevron-left nav-icon"></span>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
-
               <div class="row g-3 mb-3">
                 <!-- ảnh to -->
                 <div class="col-12 col-md-12 col-lg-12 col-xl-12">
@@ -90,7 +31,7 @@
                         class="img-fluid zoomable-image thumbnail-image"
                         src="{{ Environment.apiBaseRoot }}/{{ image }}"
                         alt=""
-                        style="object-fit: contain; height: 400px"
+                        style="object-fit: contain"
                       />
                     </div>
                   </div>
@@ -98,15 +39,15 @@
               </div>
               <!-- hỉnh thêm ảnh sản phẩm -->
               <div class="col-12 col-md-12 col-lg-12 col-xl-12">
-                <div class="swiper-theme-container products-slider">
-                  <div class="swiper swiper-container theme-slider">
+                <div class="">
+                  <div class="">
                     <swiper-container appSwiper [config]="swiperImageConfig">
                       <swiper-slide
                         *ngFor="let image of productdto?.productImages"
                       >
-                        <div class="swiper-wrapper">
+                        <div class="">
                           <div
-                            class="swiper-slide"
+                            class=""
                             [ngClass]="{ 'choose-image': image === isImage }"
                           >
                             <div
@@ -119,7 +60,6 @@
                                   image.imagePath
                                 }}"
                                 alt=""
-                                style="height: 100px"
                               />
                             </div>
                           </div>
@@ -141,14 +81,7 @@
             <div class="col-12 col-lg-6">
               <div class="d-flex flex-column justify-content-between h-100">
                 <div>
-                  <div class="d-flex flex-wrap">
-                    <!-- <div class="me-2">
-                      <span class="fa fa-star text-warning"></span>
-                    </div> -->
-                    <!-- <p class="text-primary fw-semibold mb-2">
-                  6548 Người đánh giá và đánh giá
-                  </p> -->
-                  </div>
+                  <div class="d-flex flex-wrap"></div>
                   <h3 class="mb-3 lh-sm">
                     {{ productdto?.product?.productName }}
                     <span>
@@ -160,20 +93,12 @@
                     </span>
                   </h3>
                   <h3 class="mb-3 lh-sm"></h3>
-                  <!-- <div class="d-flex flex-wrap align-items-start mb-3">
-                    <span
-                      class="badge text-bg-success fs-9 rounded-pill me-2 fw-semibold"
-                      >#1 Bán chạy nhất</span
-                    ><a class="fw-semibold" href="#!"
-                      >phân tích bán hàng ở Phoenix 2021</a
-                    >
-                  </div> -->
                   <div
                     class="d-flex flex-wrap align-items-center"
                     *ngIf="
-                      productdto.promotionDetail !== null &&
-                      productdto.promotionDetail.usedCodesCount <=
-                        productdto.promotionDetail.quantity
+                      productdto?.promotionDetail !== null &&
+                      productdto?.promotionDetail.usedCodesCount <=
+                        productdto?.promotionDetail.quantity
                     "
                   >
                     <!-- Tiền giảm giá  = số tiền gốc - tiền gốc * số giảm giá
@@ -183,7 +108,7 @@
                       {{
                         productdto?.product?.price -
                           (productdto?.product?.price *
-                            productdto.promotionDetail.promotion.discount) /
+                            productdto?.promotionDetail.promotion.discount) /
                             100 | number : "1.0-0"
                       }}
                     </h1>
@@ -193,12 +118,13 @@
                       {{ productdto?.product?.price | number : "1.0-0" }}
                     </p>
                     <p class="text-warning fw-bolder fs-6 mb-0">
-                      Giảm {{ productdto.promotionDetail.promotion.discount }} %
+                      Giảm
+                      {{ productdto?.promotionDetail.promotion.discount }} %
                     </p>
                   </div>
                   <div
                     class="d-flex flex-wrap align-items-center"
-                    *ngIf="productdto.promotionDetail === null"
+                    *ngIf="productdto?.promotionDetail === null"
                   >
                     <h1 class="me-3">
                       {{ productdto?.product?.price | number : "1.0-0" }}
@@ -213,11 +139,9 @@
                   </div>
                   <p class="fw-semibold mb-2 text-body">
                     Màu sắc :
-                    <span
-                      class="text-body-emphasis"
-                      data-product-color="data-product-color"
-                      >{{ productdto?.product?.color }}</span
-                    >
+                    <span class="text-body-emphasis">{{
+                      productdto?.product?.color
+                    }}</span>
                   </p>
 
                   <!--  nếu số lượng trong kho >0 thì hiện số lượng
@@ -226,23 +150,19 @@
 
                   <p class="fw-semibold mb-2 text-body">
                     Số lượng trong kho:
-                    <span
-                      class="text-body-emphasis"
-                      data-product-color="data-product-color"
-                      >{{
-                        productdto?.product?.quantity <= 0
-                          ? 0
-                          : productdto?.product?.quantity
-                      }}</span
-                    >
+                    <span class="text-body-emphasis">{{
+                      productdto?.product?.quantity <= 0
+                        ? 0
+                        : productdto?.product?.quantity
+                    }}</span>
                   </p>
 
                   <p
                     class="text-danger-dark fw-bold mb-5 mb-lg-0"
                     *ngIf="
-                      productdto.promotionDetail !== null &&
-                      productdto.promotionDetail.usedCodesCount <=
-                        productdto.promotionDetail.quantity
+                      productdto?.promotionDetail !== null &&
+                      productdto?.promotionDetail.usedCodesCount <=
+                        productdto?.promotionDetail.quantity
                     "
                   >
                     <!--  hiện thị kiểu tổng số tiếng -->
@@ -307,54 +227,16 @@
     </section>
     <section class="py-0">
       <div class="container-small">
-        <ul class="nav nav-underline fs-9 mb-4" id="productTab" role="tablist">
-          <li class="nav-item" role="presentation">
-            <a
-              class="nav-link active"
-              id="description-tab"
-              data-bs-toggle="tab"
-              href="#tab-description"
-              role="tab"
-              aria-controls="tab-description"
-              aria-selected="true"
-              >Mô tả</a
-            >
-          </li>
-          <li class="nav-item" role="presentation">
-            <a
-              class="nav-link"
-              id="specification-tab"
-              data-bs-toggle="tab"
-              href="#tab-specification"
-              role="tab"
-              aria-controls="tab-specification"
-              aria-selected="false"
-              tabindex="-1"
-              >Sự chỉ rõ</a
-            >
-          </li>
-          <li class="nav-item" role="presentation">
-            <a
-              class="nav-link"
-              id="reviews-tab"
-              data-bs-toggle="tab"
-              href="#tab-reviews"
-              role="tab"
-              aria-controls="tab-reviews"
-              aria-selected="false"
-              tabindex="-1"
-              >Xếp hạng và đánh giá</a
-            >
+        <ul class="nav nav-underline fs-9 mb-4">
+          <li class="nav-item">
+            <a>Mô tả</a>
           </li>
         </ul>
         <div class="row gx-3 gy-7">
           <div class="col-12 col-lg-7 col-xl-8">
-            <div class="tab-content" id="productTabContent">
+            <div>
               <div
                 class="tab-pane pe-lg-6 pe-xl-12 fade show active text-body-emphasis"
-                id="tab-description"
-                role="tabpanel"
-                aria-labelledby="description-tab"
               >
                 <div [innerHTML]="productdto?.product?.description"></div>
               </div>
