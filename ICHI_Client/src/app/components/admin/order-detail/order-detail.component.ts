@@ -45,6 +45,8 @@ export class OrderDetailComponent implements OnInit {
   // getData khách hàng
   customers: CustomerModel[] = [];
   isDisplayNone: boolean = false;
+  oderStatusValue: any;
+
   btnSave: string = '';
   strMessage: string = '';
   trxTransactionForm: FormGroup = new FormGroup({
@@ -63,6 +65,7 @@ export class OrderDetailComponent implements OnInit {
     private fb: FormBuilder
   ) {}
   ngOnInit(): void {
+    this.oderStatusValue = Utils.statusOrder;
     const id = this.activatedRoute.snapshot.params['id'];
     if (id) {
       this.titleString = 'Chi tiết hóa đơn';
@@ -71,6 +74,7 @@ export class OrderDetailComponent implements OnInit {
         next: (response: any) => {
           this.shoppingcartdto = response.data;
           console.log('shoppingcartdto', this.shoppingcartdto);
+          this.changeValue(this.shoppingcartdto.trxTransaction.orderStatus);
           // set data vào trxTransactionForm
           this.trxTransactionForm.setValue({
             transactionId: this.shoppingcartdto.trxTransaction.id.toString(),
@@ -91,22 +95,50 @@ export class OrderDetailComponent implements OnInit {
       },
     });
   }
+  valueStatusOrder: any;
+  changeValue(value: any) {
+    // thực hiện gán giá trị vào valueStatusOrder theo value truyền vào
+    // PENDING => List data là danh sách ONHOLD, CANCELLED
+    // ONHOLD => List data là danh sách WAITINGFORPICKUP, CANCELLED
+    // WAITINGFORPICKUP => List data là danh sách WAITINGFORDELIVERY
+    // WAITINGFORDELIVERY => List data là danh sách DELIVERED
 
-  // isDisabled(optionName: string): boolean {
-  //   const currentStatus = this.shoppingcartdto.trxTransaction.orderStatus;
+    // Nếu là chưa xác nhận => sẽ là đã xác nhận, chờ lấy hàng, đã hủy
+    // Nếu là đã xác nhận => sẽ là chờ lấy hàng, đã hủy
+    // Nếu là chờ lấy hàng => sẽ là đang giao hàng, đã giao hàng
+    // Nếu là đang giao hàng => sẽ là đã giao hàng
+    // Nếu là đã giao hàng => sẽ là đã giao hàng
+    
 
-  //   // Vô hiệu hóa PENDING nếu trạng thái là ONHOLD
-  //   if (currentStatus === 'ONHOLD' && optionName === 'PENDING') {
-  //     return true;
-  //   }
 
-  //   // Vô hiệu hóa tất cả trừ DELIVERED nếu trạng thái là DELIVERED
-  //   if (currentStatus === 'DELIVERED' && optionName !== 'DELIVERED') {
-  //     return true;
-  //   }
-
-  //   return false;
-  // }
+    if (value === 'PENDING') {
+      this.valueStatusOrder = [
+        { name: 'PENDING', value: 'Chờ xác nhận' },
+        { name: 'ONHOLD', value: 'Đã xác nhận' },
+        { name: 'CANCELLED', value: 'Đã hủy' },
+      ];
+    } else if (value === 'ONHOLD') {
+      this.valueStatusOrder = [
+        { name: 'ONHOLD', value: 'Đã xác nhận' },
+        { name: 'WAITINGFORPICKUP', value: 'Chờ lấy hàng' },
+        { name: 'CANCELLED', value: 'Đã hủy' },
+      ];
+    } else if (value === 'WAITINGFORPICKUP') {
+      this.valueStatusOrder = [
+        { name: 'WAITINGFORPICKUP', value: 'Đang chờ lấy hàng' },
+        { name: 'WAITINGFORDELIVERY', value: 'Đang giao hàng' },
+      ];
+    } else if (value === 'WAITINGFORDELIVERY') {
+      this.valueStatusOrder = [
+        { name: 'WAITINGFORDELIVERY', value: 'Đang giao hàng' },
+        { name: 'DELIVERED', value: 'Đã giao hàng' },
+      ];
+    } else if (value === 'CANCELLED') {
+      this.valueStatusOrder = [{ name: 'CANCELLED', value: 'Đã hủy' }];
+    } else {
+      this.valueStatusOrder = [{ name: 'DELIVERED', value: 'Đã hủy' }];
+    }
+  }
 
   onSubmit() {
     // Kiểm tra form đã hợp lệ chưa

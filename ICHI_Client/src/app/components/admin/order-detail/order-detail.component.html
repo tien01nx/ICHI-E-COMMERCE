@@ -150,13 +150,13 @@
                 <div class="col-6 white-space-nowrap pe-5 fw-bold">
                   <ng-select
                     style="height: 16px"
-                    [items]="Utils.statusOrder"
+                    [items]="valueStatusOrder"
                     bindValue="name"
                     bindLabel="value"
                     formControlName="orderStatus"
                   >
                     <ng-option
-                      *ngFor="let option of Utils.statusOrder"
+                      *ngFor="let option of valueStatusOrder"
                       [value]="option.name"
                     >
                       {{ option.value }}

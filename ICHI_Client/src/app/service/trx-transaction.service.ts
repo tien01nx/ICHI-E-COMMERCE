@@ -64,7 +64,7 @@ export class TrxTransactionService {
       params = params.set('order-status', OrderStatis);
     }
 
-    if (OrderStatis && OrderStatis.trim() !== '') {
+    if (PaymentStatus && PaymentStatus.trim() !== '') {
       params = params.set('payment-status', PaymentStatus);
     }
     // console.log(params);
