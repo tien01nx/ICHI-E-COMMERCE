@@ -129,7 +129,11 @@
                     </span>
                   </div>
                 </a>
-                <a class="nav-link label-1" routerLink="products">
+                <a
+                  class="nav-link label-1"
+                  routerLink="products"
+                  routerLinkActive="active"
+                >
                   <div class="d-flex align-items-center">
                     <span class="nav-link-icon">
                       <i class="fal fa-cookie"></i
@@ -281,6 +285,87 @@
                     ></span>
                     <span class="nav-link-text-wrapper">
                       <span class="nav-link-text">Hóa đơn nhập hàng</span>
+                    </span>
+                  </div>
+                </a>
+              </div>
+            </ul>
+          </div>
+        </div>
+
+        <div class="nav-item-wrapper">
+          <a
+            class="nav-link dropdown-indicator label-1"
+            href="#nv-e-commerce-product-return"
+            role="button"
+            data-bs-toggle="collapse"
+            aria-expanded="false"
+            aria-controls="nv-e-commerce-product-return"
+          >
+            <div class="d-flex align-items-center">
+              <div class="dropdown-indicator-icon">
+                <span class="fas fa-caret-right"></span>
+              </div>
+              <span class="nav-link-icon">
+                <i class="far fa-badge-percent"></i>
+              </span>
+              <span class="nav-link-text">Quản lý đổi trả</span>
+            </div>
+          </a>
+          <div class="parent-wrapper label-1">
+            <ul
+              class="nav collapse parent"
+              data-bs-parent="#navbarVerticalCollapse"
+              id="nv-e-commerce-product-return"
+            >
+              <hr class="navbar-vertical-line" />
+              <!-- parent pages-->
+              <div class="nav-item-wrapper">
+                <a
+                  class="nav-link label-1"
+                  [routerLink]="['/admin/list_return']"
+                  routerLinkActive="active"
+                >
+                  <div class="d-flex align-items-center">
+                    <span class="nav-link-icon">
+                      <i class="fal fa-ticket-alt"></i
+                    ></span>
+                    <span class="nav-link-text-wrapper">
+                      <span class="nav-link-text">danh sách đổi trả</span>
+                    </span>
+                  </div>
+                </a>
+              </div>
+
+              <div class="nav-item-wrapper">
+                <a
+                  class="nav-link label-1"
+                  [routerLink]="['/admin/return_save']"
+                  routerLinkActive="active"
+                >
+                  <div class="d-flex align-items-center">
+                    <span class="nav-link-icon">
+                      <i class="fal fa-ticket-alt"></i
+                    ></span>
+                    <span class="nav-link-text-wrapper">
+                      <span class="nav-link-text">Tạo đơn đổi trả</span>
+                    </span>
+                  </div>
+                </a>
+              </div>
+
+              <div class="nav-item-wrapper">
+                <a
+                  class="nav-link label-1"
+                  [routerLink]="['/admin/detail_return/3']"
+                  routerLinkActive="active"
+                >
+                  <div class="d-flex align-items-center">
+                    <span class="nav-link-icon">
+                      <i class="fal fa-ticket-alt"></i
+                    ></span>
+                    <span class="nav-link-text-wrapper">
+                      <span class="nav-link-text">Trang chi tiết</span>
                     </span>
                   </div>
                 </a>

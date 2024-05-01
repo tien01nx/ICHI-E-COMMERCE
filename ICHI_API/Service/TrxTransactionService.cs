@@ -16,10 +16,13 @@ namespace ICHI_API.Service
     private readonly IUnitOfWork _unitOfWork;
     private PcsApiContext _db;
     private readonly IPromotionService _promotionService;
-    public TrxTransactionService(IUnitOfWork unitOfWork, IPromotionService promotionService, IConfiguration configuration, PcsApiContext pcsApiContext)
+    private readonly IAuthService _authSerive;
+
+    public TrxTransactionService(IUnitOfWork unitOfWork, IPromotionService promotionService, IAuthService authService, IConfiguration configuration, PcsApiContext pcsApiContext)
     {
       _unitOfWork = unitOfWork;
       _db = pcsApiContext;
+      _authSerive = authService;
       _promotionService = promotionService;
     }
     public Helpers.PagedResult<TrxTransaction> GetAll(string name, string orderStatus, string paymentStatus, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
@@ -61,6 +64,7 @@ namespace ICHI_API.Service
         throw;
       }
     }
+
     public TrxTransactionDTO Create(TrxTransactionDTO trxTransactionDTO, out string strMessage)
     {
       strMessage = string.Empty;
@@ -111,17 +115,6 @@ namespace ICHI_API.Service
         //trxTransactionDTO.TrxTransactionId = trxTransaction.Id;
         trxTransactionDTO.Amount = trxTransaction.OrderTotal;
         trxTransactionDTO.TrxTransactionId = trxTransaction.Id;
-        // lấy thông tin đơn hàng theo userid từ cart
-        //foreach (var item in trxTransactionDTO.Carts)
-        //{
-        //  TransactionDetail trxTransactionDetail = new TransactionDetail();
-        //  trxTransactionDetail.ProductId = item.ProductId;
-        //  trxTransactionDetail.Quantity = item.Quantity;
-        //  trxTransactionDetail.Price = item.Price;
-        //  trxTransactionDetail.BatchNumber = GetBatchNumber(item.ProductId);
-        //  trxTransactionDetail.TrxTransactionId = trxTransaction.Id;
-        //  _unitOfWork.TransactionDetail.Add(trxTransactionDetail);
-        //}
         foreach (var item in trxTransactionDTO.Carts)
         {
           // Lấy danh sách các lô và số lượng tương ứng
@@ -135,6 +128,12 @@ namespace ICHI_API.Service
             trxTransactionDetail.Price = item.Price;
             trxTransactionDetail.BatchNumber = batch.BatchNumber;
             trxTransactionDetail.TrxTransactionId = trxTransaction.Id;
+            var discount = cartProduct.FirstOrDefault(x => x.ProductId == item.ProductId)?.Discount;
+            decimal discountPercentage = discount.HasValue ? Convert.ToDecimal(discount.Value) : 0m;
+            if (discountPercentage > 0)
+            {
+              trxTransactionDetail.SalePrice = item.Price * (1 - discountPercentage / 100);
+            }
             _unitOfWork.TransactionDetail.Add(trxTransactionDetail);
           }
         }
@@ -169,6 +168,7 @@ namespace ICHI_API.Service
           throw new BadRequestException(TRXTRANSACTIONNOTFOUNDORDER);
         }
 
+
         switch (model.OrderStatus)
         {
           case "PENDING":
@@ -197,6 +197,19 @@ namespace ICHI_API.Service
         }
 
         data.OrderStatus = model.OrderStatus;
+        var email = _authSerive.GetUserEmail();
+        var employee = _unitOfWork.Employee.Get(u => u.UserId == email);
+        // nếu employee null thì data.Employee = null
+        // nếu employee != null thì data.Employee = employee
+        if (employee != null)
+        {
+          data.EmployeeId = employee.Id;
+        }
+        else
+        {
+          data.EmployeeId = null;
+        }
+
         _unitOfWork.TrxTransaction.Update(data);
         _unitOfWork.Save();
         _unitOfWork.Commit();
@@ -502,7 +515,6 @@ namespace ICHI_API.Service
     // Chi phí = tổng số lượng sản phẩm nhập * giá nhập
     // Cách tính lợi nhuận ta dựa vào trong TransactionDetail  ta có được số lô, giá bán, số lượng
     // Lợi nhuận bằng = Giá bán * số lượng - ( từ sô lô => giá mua của sản phẩm đó trong  inventoryReceiptDetail) (số lượng * giá nhập)
-
     public List<MoneyMonth> getProfitByMonth(int year, out string strMessage)
     {
       strMessage = string.Empty;
@@ -541,7 +553,6 @@ namespace ICHI_API.Service
         throw;
       }
     }
-
     public byte[] GenerateExcelReport(int year)
     {
       ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -646,9 +657,27 @@ namespace ICHI_API.Service
 
       }
     }
+    // các đơn hàng với trạng thái đã giao hàng
+    public List<OrderResponse> GetOrderDelivered(out string strMessage)
+    {
+      strMessage = string.Empty;
+      try
+      {
+        var transaction = _unitOfWork.TrxTransaction.GetAll(includeProperties: "TransactionDetails,Customer,Employee");
+        var productReturn = _unitOfWork.ProductReturnDetail.GetAll(includeProperties: "ProductReturn");
 
-
-
-
+        List<OrderResponse> orderResponses = new List<OrderResponse>();
+        foreach (var trxTransaction in transaction)
+        {
+          int productReturnCount = productReturn.Where(x => x.ProductReturn.TrxTransactionId == trxTransaction.Id).Count();
+          orderResponses.Add(OrderResponse.ConvertToModel(trxTransaction, productReturnCount));
+        }
+        return orderResponses;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
   }
 }

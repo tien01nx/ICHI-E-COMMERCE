@@ -301,6 +301,7 @@
     public static string PRODUCTCCARTNOTFOUND = "Không tìm thấy sản phẩm trong giỏ hàng";
     public static string DELETECARTSUCCESS = "Xóa sản phẩm khỏi giỏ hàng thành công";
     public static string PRODUCTNOTENOUGH = "Số lượng sản phẩm không đủ";
+    public static string PRODUCTNOTENOUGHCART = "Số lượng sản phẩm không đủ để đáp ứng, kiểm tra lại giỏ hàng";
     public static string ADDCARTSUCCESS = "Thêm vào giỏ hàng thành công";
     public static string ERRORTRYAGAIN = "Có lỗi xảy ra vui lòng thử lại sau!";
     public static string PRODUCTNOTENOUGHOUT = "Số lượng sản phẩm không đủ/ hết hàng";

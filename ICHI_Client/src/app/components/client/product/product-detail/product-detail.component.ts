@@ -155,10 +155,10 @@ export class ProductDetailComponent implements OnInit, AfterViewInit {
             this.toastr.success(response.message, 'Thông báo');
             this.router.navigate(['/']);
           } else {
-            this.errorMessage = response.message;
+            this.toastr.warning(response.message, 'Thông báo');
           }
         } else {
-          this.errorMessage = response.message;
+          this.toastr.warning(response.message, 'Thông báo');
           // this.isDisplayNone = false;
         }
       },

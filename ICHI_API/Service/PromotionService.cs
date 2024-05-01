@@ -44,6 +44,18 @@ namespace ICHI_API.Service
       }
     }
 
+    public List<PromotionDetail> GetAll()
+    {
+      try
+      {
+        var data = _unitOfWork.PromotionDetail.GetAll(includeProperties: "Product,Promotion").ToList();
+        return data;
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
     public PromotionDTO FindById(int id, out string strMessage)
     {
       strMessage = string.Empty;

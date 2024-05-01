@@ -18,5 +18,6 @@ namespace ICHI_API.Service.IService
     bool LockAccount(string id, bool status, out string strMessage);
 
     string RefreshToken(UserRefreshToken user, out string strMessage);
+    string GetUserEmail();
   }
 }

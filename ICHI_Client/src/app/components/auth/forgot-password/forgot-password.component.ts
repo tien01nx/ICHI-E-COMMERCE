@@ -36,18 +36,17 @@ export class ForgotPasswordComponent {
   });
 
   userLogin() {
+    debugger;
     this.authServer.forgotPassword(this.userForm.value.email).subscribe({
       next: (response: any) => {
         if (response.code === 200) {
           this.userForm.reset(); // tslint:disable-line
           console.log(response.message);
-          if (response.message === 'Gửi email thành công') {
-            this.router.navigate(['/login']);
-            this.toastr.success(response.message, 'Thông báo');
-          } else {
-            this.passwordsNotMatching = true;
-            this.errorMessage = response.message;
-          }
+          this.router.navigate(['/login']);
+          this.toastr.success(response.message, 'Thông báo');
+        } else {
+          this.passwordsNotMatching = true;
+          this.errorMessage = response.message;
         }
       },
       error: (error: any) => {

@@ -88,6 +88,10 @@ export class TrxTransactionService {
     );
   }
 
+  findAllGetOrderDelivered() {
+    return this.http.get(this.baseUrl + '/TrxTransaction/GetOrderDelivered');
+  }
+
   getCarts(): CartModel[] {
     const cartsString = localStorage.getItem(Utils.cartList);
     if (cartsString) {

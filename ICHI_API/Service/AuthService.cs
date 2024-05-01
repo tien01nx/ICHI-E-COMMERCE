@@ -190,7 +190,7 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        if (_unitOfWork.User.ExistsBy(u => u.Email.Equals(email)))
+        if (!_unitOfWork.User.ExistsBy(u => u.Email.Equals(email)))
         {
           throw new BadRequestException(Constants.ACCOUNTNOTFOUNF);
         }
@@ -260,6 +260,18 @@ namespace ICHI_API.Service
         throw;
       }
     }
+
+    public string GetUserEmail()
+    {
+      var context = _httpContextAccessor.HttpContext;
+      if (context != null && context.Items["UserEmail"] != null)
+      {
+        return context.Items["UserEmail"].ToString();
+      }
+
+      return null;
+    }
+
 
   }
 }

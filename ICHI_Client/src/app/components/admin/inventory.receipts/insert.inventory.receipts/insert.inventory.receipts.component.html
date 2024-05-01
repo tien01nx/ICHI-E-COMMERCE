@@ -13,7 +13,7 @@
 >
   <div class="row g-3 flex-between-end">
     <div class="col-auto">
-      <h2 class="mb-2">Tạo đơn nhập hàng</h2>
+      <h2 class="mb-2">{{ titleString }}</h2>
     </div>
     <div class="col-auto">
       <button
@@ -231,7 +231,9 @@
                     *ngIf="receiptDetails.get('quantity')?.dirty"
                   >
                     <span
-                      *ngIf="receiptDetails.get('quantity')?.hasError('required')"
+                      *ngIf="
+                        receiptDetails.get('quantity')?.hasError('required')
+                      "
                     >
                       <small class="text-danger mt-1"
                         >Số lượng là trường bắt buộc.</small

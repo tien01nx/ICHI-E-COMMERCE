@@ -97,9 +97,11 @@ export class InsertInventoryReceiptsComponent implements OnInit {
   ngOnInit(): void {
     if (this.activatedRoute.snapshot.params['id'] === undefined) {
       this.title.setTitle('Thêm hóa đơn nhập hàng');
+      this.titleString = 'Thêm hóa đơn nhập hàng';
       this.btnSave = 'Thêm mới';
       // thumbnailFileControl?.setValidators([Validators.required]);
     } else {
+      this.title.setTitle('Cập nhật hóa đơn nhập hàng');
       this.titleString = 'Cập nhật hóa đơn nhập hàng';
       this.btnSave = 'Xác nhận';
       this.findProductById(this.activatedRoute.snapshot.params['id']);

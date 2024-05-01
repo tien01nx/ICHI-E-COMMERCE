@@ -61,7 +61,6 @@ import { BuyNowComponent } from './components/client/checkout/buy-now/buy-now.co
 import { ProductDetailComponent } from './components/client/product/product-detail/product-detail.component';
 import { OrderNotificationComponent } from './components/client/cart/order-notification/order-notification.component';
 import { FlatpickrModule } from 'angularx-flatpickr';
-import { DetailReturnComponent } from './components/admin/return-product/detail-return/detail-return.component';
 
 register();
 
@@ -111,7 +110,6 @@ register();
     BuyNowComponent,
     ProductDetailComponent,
     OrderNotificationComponent,
-    DetailReturnComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),

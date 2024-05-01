@@ -310,7 +310,6 @@ export class InsertAdminProductComponent implements OnInit {
       this.toastr.error('Chưa chọn ảnh sản phẩm', 'Thất bại');
       return;
     }
-
     this.productService
       .create(this.productForm.value, this.selectedImageProductFiles)
       .subscribe({

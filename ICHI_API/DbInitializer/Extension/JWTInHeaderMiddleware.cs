@@ -1,6 +1,4 @@
-﻿using ICHI_CORE.Helpers;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -16,18 +14,6 @@ namespace ICHI_CORE.Filter
       _next = next;
       _configuration = configuration;
     }
-    //public async Task Invoke(HttpContext context)
-    //{
-    //    var name = "Jwt";
-    //    var cookie = context.Request.Cookies[name];
-    //    if (cookie != null)
-    //    {
-    //        if (!context.Request.Headers.ContainsKey("Authorization"))
-    //            context.Request.Headers.Append("Authorization", "Bearer " + cookie);
-    //    }
-    //    await _next(context);
-    //}
-
 
     public async Task Invoke(HttpContext context)
     {
@@ -43,7 +29,7 @@ namespace ICHI_CORE.Filter
       await _next(context);
     }
 
-    private static string GetEmailFromToken(string token, IConfiguration configuration)
+    public static string GetEmailFromToken(string token, IConfiguration configuration)
     {
       try
       {

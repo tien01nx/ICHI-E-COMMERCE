@@ -338,6 +338,8 @@
                       <input
                         class="form-control"
                         type="number"
+                        min="0"
+                        max="100000000"
                         placeholder="0"
                         formControlName="price"
                         (keypress)="Utils.handleKeyPressNguyen($event)"

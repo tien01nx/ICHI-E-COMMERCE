@@ -6,6 +6,7 @@
 
   public class TransactionDetail : MasterEntity
   {
+
     [Required(ErrorMessage = "Mã hóa đơn là bắt buộc")]
     public int TrxTransactionId { get; set; } = 0;
 
@@ -23,10 +24,14 @@
     [Required(ErrorMessage = "Giá là bắt buộc")]
     public decimal Price { get; set; } = 0;
 
+    [ValidateNever]
+    public decimal SalePrice { get; set; } = 0;
+
     [Required(ErrorMessage = "Tổng là bắt buộc")]
     public int Quantity { get; set; } = 0;
 
     public double? BatchNumber { get; set; } = 0;
+
     [NotMapped]
     public string? ProductImage { get; set; }
 

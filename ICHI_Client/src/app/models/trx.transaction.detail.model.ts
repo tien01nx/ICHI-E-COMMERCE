@@ -9,4 +9,5 @@ export interface TrxTransactionDetailModel extends MasterEntity {
   quantity: number;
   productImage: string;
   product: ProductModel;
+  discount: number;
 }

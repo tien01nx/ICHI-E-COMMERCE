@@ -245,7 +245,7 @@ export class CheckoutComponent implements OnInit {
     let totalPrice = 0; // Khởi tạo biến tổng giá tiền
     console.log('id', this.shoppingcartdto);
     // Kiểm tra xem this.shoppingcartdto đã được xác định và có giá trị không
-    if (this.shoppingcartdto.cart === null) {
+    if (this.shoppingcartdto && this.shoppingcartdto.cart === null) {
       // nếu shoppingcartdto.cart không tồn tại thì lấy dữ liệu từ shoppingcartdto.transactionDetail
       this.shoppingcartdto.transactionDetail.forEach((item) => {
         totalPrice += item.quantity * item.price;
@@ -254,7 +254,7 @@ export class CheckoutComponent implements OnInit {
     }
 
     // Nếu shoppingcartdto.cart tồn tại, duyệt qua từng sản phẩm trong giỏ hàng và tính tổng giá tiền
-    if (this.shoppingcartdto.cart) {
+    if (this.shoppingcartdto.cart!==undefined && this.shoppingcartdto.cart.length > 0) {
       this.shoppingcartdto.cart.forEach((item) => {
         totalPrice += item.price * item.quantity; // Tính tổng giá tiền
       });
