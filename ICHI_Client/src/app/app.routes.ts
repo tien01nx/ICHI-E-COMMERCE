@@ -1,3 +1,4 @@
+import { SaveReturnComponent } from './components/admin/return-product/return-product/save-return/save-return.component';
 import { OrderComponent } from './components/admin/order/order.component';
 import { CustomerComponent } from './components/admin/customer/customer.component';
 import { ClientLayoutComponent } from './components/client/client-layout/client-layout.component';
@@ -37,6 +38,8 @@ import { OrderDetailComponent } from './components/admin/order-detail/order-deta
 import { BuyNowComponent } from './components/client/checkout/buy-now/buy-now.component';
 import { ProductDetailComponent } from './components/client/product/product-detail/product-detail.component';
 import { OrderNotificationComponent } from './components/client/cart/order-notification/order-notification.component';
+import { DetailReturnComponent } from './components/admin/return-product/return-product/detail-return/detail-return.component';
+import { ListReturnComponent } from './components/admin/return-product/return-product/list-return/list-return.component';
 
 export const routes: Routes = [
   {
@@ -70,6 +73,18 @@ export const routes: Routes = [
       {
         path: 'insert_inventory_receipts/:id',
         component: InsertInventoryReceiptsComponent,
+      },
+      {
+        path: 'product_return/:id',
+        component: DetailReturnComponent,
+      },
+      {
+        path: 'list_return',
+        component: ListReturnComponent,
+      },
+      {
+        path: 'save_return',
+        component: SaveReturnComponent,
       },
     ],
     canActivate: [AdminGuard],

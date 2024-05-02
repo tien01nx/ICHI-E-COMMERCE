@@ -4,9 +4,9 @@ import { Title } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ElementRef, ViewChild } from '@angular/core';
-import { Environment } from '../../../../environment/environment';
-import { ProductsService } from '../../../../service/products.service';
-import { ReturnProductService } from '../../../../service/ReturnService.service';
+import { Environment } from '../../../../../environment/environment';
+import { ProductsService } from '../../../../../service/products.service';
+import { ReturnProductService } from '../../../../../service/ReturnService.service';
 
 @Component({
   selector: 'app-detail-return',
@@ -79,34 +79,34 @@ export class DetailReturnComponent implements OnInit {
     this.updateReturnStatusForm.patchValue(this.returnProduct);
   }
 
-  updateReturnStatus() {
-    this.updateReturnStatusForm.patchValue({ id: this.returnProduct.id });
+  // updateReturnStatus() {
+  //   this.updateReturnStatusForm.patchValue({ id: this.returnProduct.id });
 
-    console.log(this.updateReturnStatusForm.value);
-    this.returnService
-      .updateReturnStatus(this.updateReturnStatusForm.value)
-      .subscribe({
-        next: (data: any) => {
-          this.toastr.success('Xử lý đổi trả thành công', 'Thông báo');
-          this.findById(this.returnProduct.id);
-          this.btnCloseModal.nativeElement.click();
-        },
-        error: (error: any) => {
-          console.log(error);
-          if (
-            error.status == 400 &&
-            error.error == 'RETURN_PRODUCT_NOT_FOUND'
-          ) {
-            this.toastr.error('Phiếu đổi trả không tồn tại', 'Thông báo');
-          } else if (
-            error.status == 400 &&
-            error.error == 'RETURN_PRODUCT_STATUS_CANNOT_BE_CHANGED'
-          ) {
-            this.toastr.error('Phiếu đổi trả đã được xử lý', 'Thông báo');
-          } else {
-            this.toastr.error('Lỗi không xác định', 'Thông báo');
-          }
-        },
-      });
-  }
+  //   console.log(this.updateReturnStatusForm.value);
+  //   this.returnService
+  //     .updateReturnStatus(this.updateReturnStatusForm.value)
+  //     .subscribe({
+  //       next: (data: any) => {
+  //         this.toastr.success('Xử lý đổi trả thành công', 'Thông báo');
+  //         this.findById(this.returnProduct.id);
+  //         this.btnCloseModal.nativeElement.click();
+  //       },
+  //       error: (error: any) => {
+  //         console.log(error);
+  //         if (
+  //           error.status == 400 &&
+  //           error.error == 'RETURN_PRODUCT_NOT_FOUND'
+  //         ) {
+  //           this.toastr.error('Phiếu đổi trả không tồn tại', 'Thông báo');
+  //         } else if (
+  //           error.status == 400 &&
+  //           error.error == 'RETURN_PRODUCT_STATUS_CANNOT_BE_CHANGED'
+  //         ) {
+  //           this.toastr.error('Phiếu đổi trả đã được xử lý', 'Thông báo');
+  //         } else {
+  //           this.toastr.error('Lỗi không xác định', 'Thông báo');
+  //         }
+  //       },
+  //     });
+  // }
 }

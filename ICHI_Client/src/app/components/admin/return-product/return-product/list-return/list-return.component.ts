@@ -3,13 +3,12 @@ import { NavigationExtras } from '@angular/router';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { ReturnProductService } from '../../../../service/ReturnService.service';
 import { Title } from '@angular/platform-browser';
-import { PaginationDTO } from '../../../../dtos/pagination.dto';
-import { ProductReturnDTO } from '../../../../dtos/product.return.dto';
-import { Utils } from '../../../../Utils.ts/utils';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ProductReturn } from '../../../../models/product.return';
+import { Utils } from '../../../../../Utils.ts/utils';
+import { ProductReturnDTO } from '../../../../../dtos/product.return.dto';
+import { PaginationDTO } from '../../../../../dtos/pagination.dto';
+import { ReturnProductService } from '../../../../../service/ReturnService.service';
 
 @Component({
   selector: 'app-list-return',

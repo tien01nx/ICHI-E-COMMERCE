@@ -24,9 +24,7 @@
     [Required(ErrorMessage = "Trạng thái")]
     public string Status { get; set; }
 
-    [StringLength(50)]
-    [Required(ErrorMessage = "Lý do đổi trả")]
-    public string Reason { get; set; }
+    public string? Reason { get; set; }
 
   }
 }

@@ -663,7 +663,18 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        var transaction = _unitOfWork.TrxTransaction.GetAll(includeProperties: "TransactionDetails,Customer,Employee");
+        var transaction = _unitOfWork.TrxTransaction.GetAll(u => u.OrderStatus == AppSettings.StatusOrderDelivered, includeProperties: "TransactionDetails,Customer,Employee").OrderByDescending(u => u.Id);
+        // chèn thêm ảnh sản phẩm vào trong danh sách trong TransactionDetail.ProductImage
+        foreach (var item in transaction)
+        {
+          foreach (var item1 in item.TransactionDetails)
+          {
+            item1.ProductImage = _unitOfWork.ProductImages.Get(u => u.ProductId == item1.ProductId).ImagePath;
+            item1.Product = _unitOfWork.Product.Get(u => u.Id == item1.ProductId);
+          }
+        }
+
+
         var productReturn = _unitOfWork.ProductReturnDetail.GetAll(includeProperties: "ProductReturn");
 
         List<OrderResponse> orderResponses = new List<OrderResponse>();

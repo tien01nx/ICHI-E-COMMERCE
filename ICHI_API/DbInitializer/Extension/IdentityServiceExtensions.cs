@@ -48,6 +48,7 @@ namespace ICHI_CORE.Extension
       services.AddScoped<ICartService, CartService>();
       services.AddScoped<IVnPayService, VnPayService>();
       services.AddScoped<IInventoryReceiptService, InventoryReceiptService>();
+      services.AddScoped<IProductReturnService, ProductReturnService>();
 
       return services;
     }

@@ -1,3 +1,4 @@
+import { SaveReturnComponent } from './components/admin/return-product/return-product/save-return/save-return.component';
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -61,6 +62,8 @@ import { BuyNowComponent } from './components/client/checkout/buy-now/buy-now.co
 import { ProductDetailComponent } from './components/client/product/product-detail/product-detail.component';
 import { OrderNotificationComponent } from './components/client/cart/order-notification/order-notification.component';
 import { FlatpickrModule } from 'angularx-flatpickr';
+import { DetailReturnComponent } from './components/admin/return-product/return-product/detail-return/detail-return.component';
+import { ListReturnComponent } from './components/admin/return-product/return-product/list-return/list-return.component';
 
 register();
 
@@ -110,6 +113,11 @@ register();
     BuyNowComponent,
     ProductDetailComponent,
     OrderNotificationComponent,
+    DetailReturnComponent,
+    ListReturnComponent,
+    SaveReturnComponent,
+
+
   ],
   imports: [
     RouterModule.forRoot(routes),

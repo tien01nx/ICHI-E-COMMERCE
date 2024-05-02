@@ -84,11 +84,13 @@ namespace ICHI_API.Model
         OrderDetailsResponse orderDetailsResponse = new OrderDetailsResponse();
         orderDetailsResponse.Id = item.Id;
         orderDetailsResponse.ProductId = item.ProductId;
-
-        orderDetailsResponse.ProductName = item.Product?.ProductName;
+        orderDetailsResponse.ProductImage = item.ProductImage;
+        orderDetailsResponse.ProductName = item.Product.ProductName;
         orderDetailsResponse.ProductPrice = item.Price;
         orderDetailsResponse.Quantity = item.Quantity;
         orderDetailsResponse.SalePrice = item.SalePrice;
+
+
         if (item.SalePrice == 0)
         {
           orderDetailsResponse.TotalPrice = item.Price * item.Quantity;
@@ -111,6 +113,8 @@ namespace ICHI_API.Model
     public int Id { get; set; }
     public int ProductId { get; set; }
     public string ProductName { get; set; }
+
+    public string ProductImage { get; set; }
     public decimal ProductPrice { get; set; } // giá gốc
     public int Quantity { get; set; } // số lượng sản phẩm
     public decimal SalePrice { get; set; } // giá khuyến mãi

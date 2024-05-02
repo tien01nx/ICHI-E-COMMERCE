@@ -8,19 +8,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ReturnProductService {
-  private apiUrl = `${Environment.apiBaseUrl}/api/return-product`;
-  private jsonUrl = 'assets/data.json';
-  private apiConfig = { headers: this.createHeader() };
+  baseUrl = Environment.apiBaseUrl;
 
   constructor(private http: HttpClient, private tokenService: TokenService) {}
-
-  private createHeader() {
-    return new HttpHeaders({ 'Content-Type': 'application/json' });
-  }
-
-  getTotals(): Observable<any> {
-    return this.http.get<any>(this.apiUrl + `/totals`);
-  }
 
   findAll(
     page: number,
@@ -38,20 +28,24 @@ export class ReturnProductService {
       .set('sort-by', sortBy)
       .set('status', status);
 
-    return this.http.get(this.apiUrl, { params });
+    return this.http.get(this.baseUrl, { params });
   }
 
   findById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`);
+    return this.http.get<any>(`${this.baseUrl}/${id}`);
   }
 
-  saveReturn(returnProduct: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, returnProduct, this.apiConfig);
+  create(returnProduct: any) {
+    debugger;
+    return this.http.post(
+      `${this.baseUrl}/ProductReturn/Create`,
+      returnProduct
+    );
   }
 
-  updateReturnStatus(returnProduct: any): Observable<any> {
-    return this.http.put<any>(this.apiUrl, returnProduct, this.apiConfig);
-  }
+  // updateReturnStatus(returnProduct: any): Observable<any> {
+  //   return this.http.put<any>(this.baseUrl, returnProduct);
+  // }
 
   // For customer
   findAllByCustomer(
@@ -67,14 +61,14 @@ export class ReturnProductService {
     queryParams = queryParams.append('page-number', pageNumber);
     queryParams = queryParams.append('sort-direction', sortDir);
     queryParams = queryParams.append('sort-by', sortBy);
-    return this.http.get(`${this.apiUrl}/customer`, { params: queryParams });
+    return this.http.get(`${this.baseUrl}/customer`, { params: queryParams });
   }
 
   getTotalsByUserLogin(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/customer/totals`);
+    return this.http.get<any>(`${this.baseUrl}/customer/totals`);
   }
 
   findByIdWithClient(id: number) {
-    return this.http.get(`${this.apiUrl}/${id}`);
+    return this.http.get(`${this.baseUrl}/${id}`);
   }
 }

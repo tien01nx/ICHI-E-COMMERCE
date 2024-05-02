@@ -28,7 +28,7 @@ export class TokenService {
     // Giải mã token để lấy thông tin về người dùng, bao gồm danh sách các quyền (roles)
     const token = localStorage.getItem(this.TOKEN_KEY);
     const decodedToken = token ? this.jwtHelper.decodeToken(token) : null;
-    // console.log("token" + decodedToken);
+    console.log('token' + decodedToken);
     return decodedToken !== null ? decodedToken.roles : [];
   }
 

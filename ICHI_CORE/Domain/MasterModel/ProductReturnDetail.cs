@@ -26,7 +26,6 @@
     [Required(ErrorMessage = "Lý do đổi trả")]
     public string Reason { get; set; }
 
-    [StringLength(50)]
     [Required(ErrorMessage = "Trạng thái")]
     public bool ReturnType { get; set; }
 
