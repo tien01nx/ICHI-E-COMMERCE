@@ -1,6 +1,8 @@
 import { Data } from '@angular/router';
 import { MasterEntity } from './master.entity';
 import { ProductModel } from './product.model';
+import { EmployeeModel } from './employee.model';
+import { CustomerModel } from './customer.model';
 
 export interface TrxTransactionModel extends MasterEntity {
   // userId: string;
@@ -24,4 +26,6 @@ export interface TrxTransactionModel extends MasterEntity {
   phoneNumber: string;
   address: string;
   notes: string;
+  employee: EmployeeModel;
+  customer: CustomerModel;
 }

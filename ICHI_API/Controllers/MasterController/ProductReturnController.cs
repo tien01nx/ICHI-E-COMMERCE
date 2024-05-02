@@ -45,19 +45,19 @@ namespace ICHI_CORE.Controllers.MasterController
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ApiResponse<ProductReturnDTO>>> FindById(int id)
+    public async Task<ActionResult<ApiResponse<ProductReturnDetail>>> FindById(int id)
     {
-      ApiResponse<ProductReturnDTO> result;
+      ApiResponse<ProductReturnDetail> result;
       string strMessage = "";
       try
       {
         var data = _productReturnService.FindById(id, out strMessage);
-        result = new ApiResponse<ProductReturnDTO>(System.Net.HttpStatusCode.OK, strMessage, data);
+        result = new ApiResponse<ProductReturnDetail>(System.Net.HttpStatusCode.OK, strMessage, data);
       }
       catch (Exception ex)
       {
         var handler = new GlobalExceptionHandler();
-        return handler.HandleException<ProductReturnDTO>(ex);
+        return handler.HandleException<ProductReturnDetail>(ex);
       }
       return result;
     }

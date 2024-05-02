@@ -44,11 +44,11 @@ export class SaveReturnComponent implements OnInit {
 
   returnForm: FormGroup = new FormGroup({
     id: new FormControl(0),
-    status: new FormControl('RETURN_APPROVED'),
+    status: new FormControl('APPROVED'),
     trxTransactionId: new FormControl(null, [Validators.required]),
     returnProductDetails: new FormArray([
       new FormGroup({
-        id: new FormControl(null),
+        id: new FormControl(0),
         price: new FormControl(null),
         quantity: new FormControl(null, [
           Validators.required,
@@ -143,7 +143,7 @@ export class SaveReturnComponent implements OnInit {
     ) as FormArray;
     receiptDetails.push(
       new FormGroup({
-        id: new FormControl(null),
+        id: new FormControl(0),
         price: new FormControl(null),
         quantity: new FormControl(null, [
           Validators.required,
@@ -181,10 +181,13 @@ export class SaveReturnComponent implements OnInit {
 
     debugger;
     this.returnService.create(this.returnForm.value).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         console.log(response);
-        this.toastr.success('Tạo phiếu đổi trả thành công!', 'Thông báo');
-        this.router.navigate(['/admin/return-product']);
+        if (response.code === 200) {
+          this.toastr.success(response.message, 'Thông báo');
+          this.router.navigate(['/admin/return-product']);
+        }
+        this.toastr.error(response.message, 'Thông báo');
       },
       error: (error) => {
         this.toastr.error('Lỗi tải dữ liệu', 'Thông báo');
@@ -292,7 +295,7 @@ export class SaveReturnComponent implements OnInit {
 
     productIdControl.valueChanges.pipe().subscribe((productId: any) => {
       this.listProductInOrder.forEach((product: any) => {
-        if (product.id === productId) {
+        if (product.productId === productId) {
           // Lấy thằng cuối trong listProductSelected ném vào listProductInOrder và xóa khỏi listProductSelected
           if (this.listProductSelected.length > 0) {
             this.listProductInOrder.push(
@@ -303,7 +306,7 @@ export class SaveReturnComponent implements OnInit {
 
           // xóa sản phẩm đã chọn khỏi listProductInOrder
           const index = this.listProductInOrder.findIndex(
-            (x) => x.id === productId
+            (x) => x.productId === productId
           );
           this.listProductInOrder.splice(index, 1);
           this.listProductSelected.push(product); ////

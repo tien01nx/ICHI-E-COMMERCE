@@ -25,42 +25,41 @@ namespace ICHI_API.Service
       strMessage = string.Empty;
       try
       {
-        ////var query = _db.ProductReturns.AsQueryable().Where(u => u.isDeleted == false);
-        var query = _unitOfWork.ProductReturn.GetAll().AsQueryable();
-        // thực hiện update trạng thái chương trình khuyến mãi khi hết hạn
-
-        //if (!string.IsNullOrEmpty(name))
-        //{
-        //  query = query.Where(e => e.TrxTransactionId.Contains(name.Trim()));
-        //}
+        var query = _unitOfWork.ProductReturn.GetAll(includeProperties: "Employee,TrxTransaction").AsQueryable();
+        foreach (var item in query)
+        {
+          item.TrxTransaction = _unitOfWork.TrxTransaction.Get(u => u.Id == item.TrxTransactionId, includeProperties: "Customer");
+        }
+        if (!string.IsNullOrEmpty(name))
+        {
+          query = query.Where(e => e.TrxTransaction.Customer.FullName.Contains(name.Trim()));
+        }
         var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
         query = query.OrderBy(orderBy);
         var pagedResult = Helpers.PagedResult<ProductReturn>.CreatePagedResult(query, pageNumber, pageSize);
         return pagedResult;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         throw;
       }
     }
 
-    public ProductReturnDTO FindById(int id, out string strMessage)
+    public ProductReturnDetail FindById(int id, out string strMessage)
     {
       strMessage = string.Empty;
       try
       {
-        var dataProductReturn = _unitOfWork.ProductReturn.Get(u => u.Id == id);
+        var dataProductReturn = _unitOfWork.ProductReturnDetail.Get(u => u.ProductReturnId == id);
         if (dataProductReturn == null)
         {
-          throw new BadRequestException(PROMOTIONNOTFOUND);
+          throw new BadRequestException(PRODUCTRETURNNOTFOUND);
         }
-        ProductReturnDTO model = new ProductReturnDTO
-        {
-          ProductReturn = dataProductReturn,
-          ProductReturnDetails = _unitOfWork.ProductReturnDetail.GetAll(u => u.ProductReturnId == dataProductReturn.Id, "Product")
-        };
+        dataProductReturn.Product.Image = _unitOfWork.ProductImages.Get(u => u.ProductId == dataProductReturn.ProductId).ImagePath;
+        dataProductReturn.ProductReturn.Employee = _unitOfWork.Employee.Get(u => u.Id == dataProductReturn.ProductReturn.EmployeeId);
+        dataProductReturn.ProductReturn.TrxTransaction = _unitOfWork.TrxTransaction.Get(u => u.Id == dataProductReturn.ProductReturn.TrxTransactionId, includeProperties: "Customer");
 
-        return model;
+        return dataProductReturn;
       }
       catch (Exception)
       {
@@ -74,11 +73,11 @@ namespace ICHI_API.Service
       try
       {
         _unitOfWork.BeginTransaction();
-        var checkProductReturn = _unitOfWork.ProductReturn.Get(u => u.TrxTransactionId == model.TrxTransactionId);
-        if (checkProductReturn != null)
-        {
-          throw new BadRequestException(PROMOTIONEXIST);
-        }
+        //var checkProductReturn = _unitOfWork.ProductReturn.Get(u => u.TrxTransactionId == model.TrxTransactionId);
+        //if (checkProductReturn != null)
+        //{
+        //  throw new BadRequestException(PRODUCTRETURNEXIST);
+        //}
 
         ProductReturn productReturn = new ProductReturn();
 
@@ -92,11 +91,12 @@ namespace ICHI_API.Service
         productReturn.ModifiedDate = DateTime.Now;
         _unitOfWork.ProductReturn.Add(productReturn);
         _unitOfWork.Save();
-        foreach (var item in model.ProductReturnDetails)
+        foreach (var item in model.ReturnProductDetails)
         {
           ProductReturnDetail productReturnDetail = new ProductReturnDetail();
           productReturnDetail.ProductReturnId = productReturn.Id;
           productReturnDetail.ProductId = item.ProductId;
+          productReturnDetail.Price = item.Price;
           productReturnDetail.Quantity = item.Quantity;
           productReturnDetail.Reason = item.Reason;
           productReturnDetail.ReturnType = item.ReturnType;

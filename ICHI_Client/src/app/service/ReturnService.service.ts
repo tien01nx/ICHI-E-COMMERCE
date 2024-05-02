@@ -28,7 +28,9 @@ export class ReturnProductService {
       .set('sort-by', sortBy)
       .set('status', status);
 
-    return this.http.get(this.baseUrl, { params });
+    return this.http.get(`${this.baseUrl}/ProductReturn/FindAllPaged`, {
+      params,
+    });
   }
 
   findById(id: number): Observable<any> {

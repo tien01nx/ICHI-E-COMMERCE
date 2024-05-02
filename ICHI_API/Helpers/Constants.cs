@@ -269,6 +269,7 @@
 
     // promotion
     public static string PROMOTIONNOTFOUND = "Chương trình khuyến mãi không tồn tại";
+    public static string PRODUCTRETURNNOTFOUND = "Phiếu đổi trả  không tồn tại";
     public static string PROMOTIONEXIST = "Tên chương trình khuyến mãi đã tồn tại";
     public static string PROMOTIONSTARTDATE = "Ngày bắt đầu phải lớn hơn hoặc bằng ngày hiện tại";
     public static string PROMOTIONENDDATE = "Ngày kết thúc phải lớn hơn hoặc bằng ngày hiện tại";
@@ -281,6 +282,7 @@
     public static string PROMOTIONNOTFOUNDID = "Mã chương trình khuyến mãi không tồn tại";
     public static string DELETEPROMOTIONSUCCESS = "Xóa chương trình khuyến mãi thành công";
 
+    public static string PRODUCTRETURNEXIST = "Không thể tạo khi đã có phiếu đổi trả";
 
 
     // product

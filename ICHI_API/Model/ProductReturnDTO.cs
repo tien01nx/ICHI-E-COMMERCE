@@ -60,12 +60,12 @@ namespace ICHI_API.Model
         ModifiedBy = _productReturn.ModifiedBy;
       }
     }
-    public IEnumerable<ProductReturnDetail> ProductReturnDetails { get; set; }
+    public IEnumerable<ProductReturnDetail> ReturnProductDetails { get; set; }
 
     public ProductReturnDTO()
     {
       ProductReturn = new ProductReturn();
-      ProductReturnDetails = new List<ProductReturnDetail>();
+      ReturnProductDetails = new List<ProductReturnDetail>();
     }
   }
 }

@@ -22,6 +22,8 @@
 
     public int Quantity { get; set; } = 0;
 
+    public decimal Price { get; set; } = 0;
+
     [StringLength(50)]
     [Required(ErrorMessage = "Lý do đổi trả")]
     public string Reason { get; set; }

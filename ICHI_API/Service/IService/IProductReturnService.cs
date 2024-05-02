@@ -8,11 +8,7 @@ namespace ICHI_API.Service.IService
   {
     PagedResult<ProductReturn> GetAll(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage);
     ProductReturnDTO Create(ProductReturnDTO model, out string strMessage);
-
     ProductReturnDTO Update(ProductReturnDTO model, out string strMessage);
-
-    ProductReturnDTO FindById(int id, out string strMessage);
-
-
+    ProductReturnDetail FindById(int id, out string strMessage);
   }
 }

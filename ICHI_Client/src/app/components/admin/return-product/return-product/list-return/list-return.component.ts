@@ -74,8 +74,8 @@ export class ListReturnComponent implements OnInit {
       .findAll(pageNumber, pageSize, sortDir, sortBy, search, status)
       .subscribe({
         next: (response: any) => {
-          console.log(response);
-          this.paginationModel.content = response.data;
+          console.log('List data: ', response.data);
+          this.paginationModel.content = response.data.items;
           this.paginationModel.totalPages = response.data.pageCount;
           this.paginationModel.totalElements = response.data.totalCount;
           this.paginationModel.numberOfElements = response.numberOfElements;
@@ -85,7 +85,7 @@ export class ListReturnComponent implements OnInit {
           this.paginationModel.lastElementOnPage = response.lastElementOnPage;
           this.paginationModel.sortBy = response.sortBy;
           this.paginationModel.sortDirection = response.sortDirection;
-          console.log(this.paginationModel);
+          console.log(this.paginationModel.content);
         },
         error: (error: any) => {
           console.log(error);
@@ -95,7 +95,7 @@ export class ListReturnComponent implements OnInit {
 
   changePageNumber(pageNumber: number): void {
     this.router
-      .navigate(['/admin/categories'], {
+      .navigate(['/admin/list_return'], {
         queryParams: { 'page-number': pageNumber },
         queryParamsHandling: 'merge',
       })
@@ -104,7 +104,7 @@ export class ListReturnComponent implements OnInit {
 
   changePageSize(pageSize: number): void {
     this.router
-      .navigate(['/admin/categories'], {
+      .navigate(['/admin/list_return'], {
         queryParams: { 'page-size': pageSize, 'page-number': 1 },
         queryParamsHandling: 'merge',
       })
@@ -113,7 +113,7 @@ export class ListReturnComponent implements OnInit {
 
   sortByField(sortBy: string): void {
     this.router
-      .navigate(['/admin/categories'], {
+      .navigate(['/admin/list_return'], {
         queryParams: { 'sort-by': sortBy, 'sort-direction': this.sortDir },
         queryParamsHandling: 'merge',
       })
@@ -124,7 +124,7 @@ export class ListReturnComponent implements OnInit {
 
   search() {
     this.router
-      .navigate(['/admin/categories'], {
+      .navigate(['/admin/list_return'], {
         queryParams: { search: this.searchTemp, 'page-number': 1 },
         queryParamsHandling: 'merge',
       })

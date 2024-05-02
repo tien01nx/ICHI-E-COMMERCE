@@ -30,6 +30,8 @@ namespace ICHI_CORE.Helpers
     public const string PaymentStatusPending = "PENDING";
     public const string PaymentStatusApproved = "APPROVED";
 
+    public const string APPROVED = "APPROVED";
+
     // Trạng thái đơn hàng
     // Chưa xác nhận - Pending
     // Chờ xác nhận - On hold

@@ -73,7 +73,7 @@
                 class="sort align-middle ps-4"
                 scope="col"
                 (click)="sortByField('CategoryLevel')"
-                style="width: 10%"
+                style="width: 20%"
               >
                 Mã đơn tạo
                 <label
@@ -102,29 +102,25 @@
               <th
                 class="sort align-middle ps-4"
                 scope="col"
-                style="width: 20%"
-                (click)="sortByField('CategoryName')"
+                style="width: 25%"
+                (click)="sortByField('FullName')"
               >
                 Người tạo
                 <label
                   [class.d-none]="
-                    SortBy === 'CategoryName' &&
+                    SortBy === 'FullName' &&
                     (sortDir === 'DESC' || sortDir === 'ASC')
                   "
                 >
                   <span class="fas fa-sort align-middle fs-9"></span>
                 </label>
                 <label
-                  [class.d-none]="
-                    SortBy !== 'CategoryName' || sortDir !== 'ASC'
-                  "
+                  [class.d-none]="SortBy !== 'FullName' || sortDir !== 'ASC'"
                 >
                   <span class="fas fa-sort-up align-middle fs-9"></span>
                 </label>
                 <label
-                  [class.d-none]="
-                    SortBy !== 'CategoryName' || sortDir !== 'DESC'
-                  "
+                  [class.d-none]="SortBy !== 'FullName' || sortDir !== 'DESC'"
                 >
                   <span class="fas fa-sort-down align-middle fs-9"></span>
                 </label>
@@ -132,29 +128,25 @@
               <th
                 class="sort align-middle ps-4"
                 scope="col"
-                style="width: 20%"
-                (click)="sortByField('ModifiedDate')"
+                style="width: 25%"
+                (click)="sortByField('Customer')"
               >
                 Khách hàng
                 <label
                   [class.d-none]="
-                    SortBy === 'ModifiedDate' &&
+                    SortBy === 'Customer' &&
                     (sortDir === 'DESC' || sortDir === 'ASC')
                   "
                 >
                   <span class="fas fa-sort align-middle fs-9"></span>
                 </label>
                 <label
-                  [class.d-none]="
-                    SortBy !== 'ModifiedDate' || sortDir !== 'ASC'
-                  "
+                  [class.d-none]="SortBy !== 'Customer' || sortDir !== 'ASC'"
                 >
                   <span class="fas fa-sort-up align-middle fs-9"></span>
                 </label>
                 <label
-                  [class.d-none]="
-                    SortBy !== 'ModifiedDate' || sortDir !== 'DESC'
-                  "
+                  [class.d-none]="SortBy !== 'Customer' || sortDir !== 'DESC'"
                 >
                   <span class="fas fa-sort-down align-middle fs-9"></span>
                 </label>
@@ -190,70 +182,51 @@
                 </label>
               </th>
 
-              <th
-                class="sort align-middle ps-4"
-                scope="col"
-                style="width: 20%"
-                (click)="sortByField('ModifiedDate')"
-              >
-                Tổng tiền
-                <label
-                  [class.d-none]="
-                    SortBy === 'ModifiedDate' &&
-                    (sortDir === 'DESC' || sortDir === 'ASC')
-                  "
-                >
-                  <span class="fas fa-sort align-middle fs-9"></span>
-                </label>
-                <label
-                  [class.d-none]="
-                    SortBy !== 'ModifiedDate' || sortDir !== 'ASC'
-                  "
-                >
-                  <span class="fas fa-sort-up align-middle fs-9"></span>
-                </label>
-                <label
-                  [class.d-none]="
-                    SortBy !== 'ModifiedDate' || sortDir !== 'DESC'
-                  "
-                >
-                  <span class="fas fa-sort-down align-middle fs-9"></span>
-                </label>
-              </th>
               <th class="align-middle ps-4" scope="col"></th>
             </tr>
           </thead>
           <tbody class="list" id="category-table-body">
-            <!-- <tr *ngIf="paginationModel.content.length <= 0">
+            <tr *ngIf="paginationModel.content.length <= 0">
               <td colspan="7" class="text-center">
                 <span class="fs-7">Không có dữ liệu</span>
               </td>
-            </tr> -->
-            <tr class="position-static">
-              <!-- *ngFor="let category of paginationModel.content" -->
-
+            </tr>
+            <tr
+              class="position-static"
+              *ngFor="let category of paginationModel.content"
+            >
               <!-- <td class="align-middle ps-4">{{ category.categoryCode }}</td> -->
               <td class="align-middle white-space-nowrap text-700 ps-4">
-                category
+                {{ category.createDate | date : "dd/MM/yyyy" }}
               </td>
 
               <td class="align-middle white-space-nowrap text-700 ps-4">
-                category
+                {{ category.id }}
               </td>
               <td class="align-middle white-space-nowrap text-700 ps-4">
-                category
+                {{ category.employee.fullName }}
               </td>
               <!-- <td class="align-middle white-space-nowrap text-600 ps-4">
                 {{ category.createDatetime | date : "dd/MM/yyyy HH:mm:ss" }}
               </td> -->
-              <td class="align-middle white-space-nowrap text-600 ps-3">
-                category.modifiedDate
+              <td class="align-middle white-space-nowrap text-600 ps-4">
+                {{ category.trxTransaction.customer.fullName }}
               </td>
-              <td class="align-middle white-space-nowrap text-600 ps-3">
-                category.modifiedDate
-              </td>
-              <td class="align-middle white-space-nowrap text-600 ps-3">
-                category.modifiedDate
+              <td class="align-middle white-space-nowrap text-600 ps-4">
+                <span
+                  *ngIf="category.status === 'APPROVED'"
+                  class="badge badge-phoenix fs-10 badge-phoenix-success"
+                >
+                  Đã xác nhận
+                </span>
+                <img src="" alt="" />
+
+                <span
+                  *ngIf="category.status === 'REFUSE'"
+                  class="badge badge-phoenix fs-10 badge-phoenix-danger"
+                >
+                  Từ chối xác nhận
+                </span>
               </td>
               <td
                 class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger"

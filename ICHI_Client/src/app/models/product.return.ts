@@ -9,4 +9,5 @@ export interface ProductReturn extends MasterEntity {
   reason: string;
   employee: EmployeeModel;
   trxTransaction: TrxTransactionModel;
+  
 }
