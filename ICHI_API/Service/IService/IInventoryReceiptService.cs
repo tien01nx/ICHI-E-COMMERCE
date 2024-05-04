@@ -21,5 +21,9 @@ namespace ICHI_API.Service.IService
 
         bool Delete(int id, out string strMessage);
 
+        List<InventoryModel> InventoryModels(int year, out string strMessage);
+
+        byte[] GenerateExcelReport(int year);
+
     }
 }

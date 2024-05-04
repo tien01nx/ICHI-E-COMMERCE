@@ -34,15 +34,22 @@
         <div class="col-sm-2">
           <div class="mb-5">
             <h5 class="mb-3">Mã phiếu</h5>
-            <div class="form-control fw-bold">{{ returnProduct?.id }}</div>
+            <div class="form-control fw-bold">
+              {{ productReturnVM?.productReturn?.id }}
+            </div>
           </div>
         </div>
         <div class="col-sm-2">
           <div class="mb-5">
             <h5 class="mb-3">Mã hóa đơn</h5>
             <div class="form-control fw-bold">
-              <a [routerLink]="['/admin/order', returnProduct?.orderId]">
-                #{{ returnProduct?.orderId }}
+              <a
+                [routerLink]="[
+                  '/admin/order',
+                  productReturnVM?.productReturn?.trxTransactionId
+                ]"
+              >
+                #{{ productReturnVM?.productReturn?.trxTransactionId }}
               </a>
             </div>
           </div>
@@ -51,7 +58,9 @@
           <div class="col-12 col-sm-6 col-xl-12">
             <div class="mb-5">
               <h5 class="mb-3">Người tạo</h5>
-              <div class="form-control">{{ returnProduct?.employeeName }}</div>
+              <div class="form-control">
+                {{ productReturnVM?.productReturn?.employee?.fullName }}
+              </div>
             </div>
           </div>
         </div>
@@ -59,8 +68,16 @@
           <div class="mb-5">
             <h5 class="mb-3">Khách hàng</h5>
             <div class="form-control">
-              <a [routerLink]="['/admin/customer', returnProduct?.customerId]">
-                {{ returnProduct?.customerName }}
+              <a
+                [routerLink]="[
+                  '/admin/customer',
+                  productReturnVM?.productReturn?.trxTransaction?.customerId
+                ]"
+              >
+                {{
+                  productReturnVM?.productReturn?.trxTransaction?.customer
+                    ?.fullName
+                }}
               </a>
             </div>
           </div>
@@ -69,9 +86,9 @@
           <div class="mb-5">
             <h5 class="mb-3">Trạng thái</h5>
             <div class="form-control">
-              <ng-container [ngSwitch]="returnProduct?.status">
+              <ng-container [ngSwitch]="productReturnVM?.productReturn?.status">
                 <span
-                  *ngSwitchCase="'RETURN_PENDING'"
+                  *ngSwitchCase="'PENDING'"
                   data-bs-toggle="modal"
                   data-bs-target="#tooltipModalChangeReturnStatus"
                   class="badge badge-phoenix badge-phoenix-warning fw-semibold align-middle fs-9"
@@ -81,7 +98,7 @@
                   </span>
                 </span>
                 <span
-                  *ngSwitchCase="'RETURN_APPROVED'"
+                  *ngSwitchCase="'APPROVED'"
                   class="badge badge-phoenix badge-phoenix-success fw-semibold align-middle fs-9"
                 >
                   <span class="fw-semibold align-middle fs-9 ms-1">
@@ -89,7 +106,7 @@
                   </span>
                 </span>
                 <span
-                  *ngSwitchCase="'RETURN_REJECTED'"
+                  *ngSwitchCase="'REJECTED'"
                   class="badge badge-phoenix badge-phoenix-danger fw-semibold align-middle fs-9"
                 >
                   <span class="fw-semibold align-middle fs-9 ms-1">
@@ -104,7 +121,10 @@
           <div class="mb-5">
             <h5 class="mb-3">Ngày tạo</h5>
             <div class="form-control">
-              {{ returnProduct?.createdAt | date : "dd/MM/yyyy - HH:mm:ss" }}
+              {{
+                productReturnVM?.productReturn?.createDate
+                  | date : "dd/MM/yyyy - HH:mm:ss"
+              }}
             </div>
           </div>
         </div>
@@ -112,11 +132,13 @@
     </div>
     <div
       class="col-12 col-xl-12"
-      *ngIf="returnProduct?.status == 'RETURN_REJECTED'"
+      *ngIf="productReturnVM?.productReturn?.status == 'REJECTED'"
     >
       <div class="mb-5">
         <h5 class="mb-3">Lý do từ chối</h5>
-        <div class="form-control">{{ returnProduct?.reason }}</div>
+        <div class="form-control">
+          {{ productReturnVM?.productReturn?.reason }}
+        </div>
       </div>
     </div>
   </div>
@@ -193,10 +215,16 @@
                 </th>
               </tr>
             </thead>
-            <tbody class="list" *ngIf="returnProductDetails?.length != 0">
+            <tbody
+              class="list"
+              *ngIf="productReturnVM?.productRetuenDetails?.length !== 0"
+            >
               <tr
                 class="hover-actions-trigger btn-reveal-trigger position-static ps-3 pe-3"
-                *ngFor="let item of returnProductDetails; let i = index"
+                *ngFor="
+                  let item of productReturnVM?.productReturnDetails;
+                  let i = index
+                "
               >
                 <td class="align-middle white-space-nowrap pe-5">
                   <p class="mb-0 text-truncate text-center pb-3 pt-3">
@@ -206,7 +234,9 @@
                 <td class="pt-2 pb-2 align-middle white-space-nowrap py-0">
                   <a class="d-block border border-translucent rounded-2">
                     <img
-                      src="{{ baseUrl }}/images/{{ item?.productThumbnail }}"
+                      src="{{ Environment.apiBaseRoot }}/{{
+                        item?.product?.image
+                      }}"
                       alt=""
                       width="53"
                       height="53"
@@ -216,30 +246,26 @@
                 </td>
                 <td class="align-middle white-space-nowrap pe-5">
                   <div class="fs-9 fw-bold text-truncate text-start">
-                    {{ item?.productName }}
-                  </div>
-                  <div class="text-black-50 fs-10 fw-bold">
-                    {{ item?.productColor }} - {{ item?.productSize }}
+                    {{ item?.product?.productName }}
                   </div>
                 </td>
                 <td
                   class="align-middle white-space-nowrap pe-5 text-end fw-semibold"
                 >
                   <p class="mb-0 text-truncate">
-                    {{ item?.priceSold | currencyFormat }}
+                    {{ item?.price | currencyFormat }}
                   </p>
                 </td>
                 <td class="align-middle white-space-nowrap pe-5 text-center">
-                  <p class="mb-0 text-truncate">{{ item?.quantityReturned }}</p>
+                  <p class="mb-0 text-truncate">{{ item?.quantity }}</p>
                 </td>
                 <td
                   class="align-middle white-space-nowrap pe-5 text-end fw-bold"
                 >
                   <p class="mb-0 text-truncate text-black-50">
                     {{
-                      item.returnType
-                        ? (item?.quantityReturned * item?.priceSold
-                          | currencyFormat)
+                      item?.returnType
+                        ? (item?.quantity * item?.price | currencyFormat)
                         : (0 | currencyFormat)
                     }}
                   </p>
@@ -274,7 +300,7 @@
                   class="align-middle white-space-nowrap pe-5 text-end fw-bold text-black-50 pb-3 pt-3"
                 >
                   <p class="mb-0 text-truncate fs-9">
-                    {{ returnProduct?.total_fee | currencyFormat }}
+                    {{ productReturnVM.productReturn.trxTransaction.priceShip| currencyFormat }}
                   </p>
                 </td>
                 <td></td>
@@ -292,14 +318,14 @@
                   class="align-middle white-space-nowrap text-end pe-5 fw-bold text-success pb-3 pt-3"
                 >
                   <p class="mb-0 text-truncate fs-9">
-                    {{ returnProduct?.totalMoneyReturned | currencyFormat }}
+                    {{ productReturnVM.productReturn.trxTransaction.orderTotal | currencyFormat }}
                   </p>
                 </td>
                 <td></td>
                 <td></td>
               </tr>
             </tbody>
-            <tbody *ngIf="returnProductDetails?.length == 0">
+            <tbody *ngIf="productReturnVM?.productRetuenDetails?.length === 0">
               <tr
                 class="hover-actions-trigger btn-reveal-trigger position-static"
               >
@@ -327,9 +353,9 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="tooltipModalLabel" #headerModal>
-          Xử lý đổi trả #{{ returnProduct?.id }}
+          Xử lý đổi trả #{{ productReturnVM?.productReturn?.id }}
         </h5>
-        <ng-container [ngSwitch]="returnProduct?.status">
+        <ng-container [ngSwitch]="productReturnVM?.productReturn?.status">
           <span
             *ngSwitchCase="'RETURN_PENDING'"
             data-bs-toggle="modal"

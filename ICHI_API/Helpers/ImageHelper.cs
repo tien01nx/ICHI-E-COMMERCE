@@ -18,7 +18,7 @@ namespace ICHI_CORE.Helpers
         {
           return false;
         }
-        if (file.ContentType != "image/png" && file.ContentType != "image/jpg" && file.ContentType != "image/jpegfb" +
+        if (file.ContentType != "image/png" && file.ContentType != "image/jpg" && file.ContentType != "image/jpegfb" && file.ContentType != "image/jpeg" +
           "")
         {
           return false;

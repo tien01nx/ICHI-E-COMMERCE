@@ -32,15 +32,35 @@
 <!-- <section> begin ============================-->
 <section class="py-0 px-xl-3">
   <div class="container px-xl-0 px-xxl-3">
-    <div class="row g-3 mb-9"></div>
+    <div class="row g-3 mb-9 mt-2">
+      <div class="col-12">
+        <div class="swiper-theme-container products-slider">
+          <div class="swiper swiper-container theme-slider">
+            <swiper-container appSwiper [config]="swiperBannerConfig">
+              <swiper-slide *ngFor="let banner of banners">
+                <div class="swiper-wrapper">
+                  <div class="swiper-slide">
+                    <div
+                      class="position-relative text-decoration-none product-card h-100"
+                    >
+                      <div
+                        class="d-flex flex-column justify-content-between h-100"
+                      >
+                        <img class="rounded-3" [src]="banner" alt="" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </swiper-slide>
+            </swiper-container>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="mb-6">
       <div class="d-flex flex-between-center mb-3">
         <h3>Sản phẩm khuyến mãi</h3>
-        <a class="fw-bold d-none d-md-block" href="#!"
-          >Xem thêm
-          <span class="fas fa-chevron-right fs-9 ms-1"></span>
-        </a>
       </div>
 
       <div class="swiper-theme-container products-slider">
@@ -58,7 +78,7 @@
                       <div>
                         <div
                           class="border border-1 border-translucent position-relative mb-3"
-                          style="min-height: 342px; background: #ffffff"
+                          style="min-height: 245px; background: #ffffff"
                         >
                           <div class="p-1">
                             <span
@@ -94,7 +114,7 @@
                         >
                           {{ data?.product?.price | number : "1.0-0" }}
                         </p>
-                        <h3 class="text-body-emphasis mb-0">
+                        <h3 class="fw-normal mb-0 text-danger">
                           {{
                             data.product.price *
                               (1 - data.product.discount / 100)
@@ -118,23 +138,16 @@
           </div>
         </div>
       </div>
-      <a class="fw-bold d-md-none" href="#!"
-        >Xem thêm
-        <span class="fas fa-chevron-right fs-9 ms-1"></span>
-      </a>
     </div>
+
     <div class="mb-6">
       <div class="d-flex flex-between-center mb-3">
-        <h3>Sản phẩm mới</h3>
-        <a class="fw-bold d-none d-md-block" href="#!"
-          >Xem thêm
-          <span class="fas fa-chevron-right fs-9 ms-1"></span>
-        </a>
+        <h3>Sản phẩm bán chạy</h3>
       </div>
       <div class="swiper-theme-container products-slider">
         <div class="swiper swiper-container theme-slider">
-          <swiper-container appSwiper [config]="swiperNewestConfig">
-            <swiper-slide *ngFor="let data of products">
+          <swiper-container appSwiper [config]="swiperNewestConfig1">
+            <swiper-slide *ngFor="let data of productdto">
               <div class="swiper-wrapper">
                 <div class="swiper-slide">
                   <div
@@ -145,33 +158,32 @@
                     >
                       <div>
                         <div
-                          class="border border-1 border-translucent rounded-3 position-relative mb-3"
+                          class="border border-1 border-translucent position-relative mb-3"
+                          style="min-height: 245px; background: #ffffff"
                         >
-                          <button
-                            class="btn rounded-circle p-0 d-flex flex-center btn-wish z-2 d-toggle-container btn-outline-primary"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            aria-label="Add to wishlist"
-                            data-bs-original-title="Add to wishlist"
-                          >
-                            <span class="fas fa-heart d-block-hover"></span>
+                          <div class="p-1">
                             <span
-                              class="far fa-heart d-none-hover"
-                            ></span></button
-                          ><img
-                            class="img-fluid"
-                            src="{{ Environment.apiBaseRoot }}{{
-                              data.productImages[0].imagePath
-                            }}"
-                            alt=""
-                          />
+                              *ngIf="data.product.quantity <= 0"
+                              class="badge text-bg-danger fs-9 fw-normal pt-1 pb-1 ms-auto"
+                              >Hết hàng</span
+                            >
+                          </div>
+                          <div class="image-container">
+                            <img
+                              class="img-fluid image-custom"
+                              src="{{ Environment.apiBaseRoot }}{{
+                                data.productImages[0].imagePath
+                              }}"
+                              alt=""
+                            />
+                          </div>
                         </div>
                         <a
                           class="stretched-link"
-                          routerLink="product_detail/{{ data.product.id }}"
+                          [routerLink]="['/product_detail', data.product.id]"
                         >
                           <h6 class="mb-2 lh-sm line-clamp-3 product-name">
-                            {{ data.product.productName }}
+                            {{ data?.product?.productName }}
                           </h6>
                         </a>
                       </div>
@@ -181,9 +193,9 @@
                           class="me-2 text-body text-decoration-line-through mb-0"
                           *ngIf="data.product.discount > 0"
                         >
-                          {{ data.product.price | number : "1.0-0" }}
+                          {{ data?.product?.price | number : "1.0-0" }}
                         </p>
-                        <h3 class="text-body-emphasis mb-0">
+                        <h3 class="fw-normal mb-0 text-danger">
                           {{
                             data.product.price *
                               (1 - data.product.discount / 100)
@@ -199,31 +211,24 @@
           </swiper-container>
         </div>
         <div class="swiper-nav">
-          <div class="swiper-button-next">
+          <div class="swiper-button-next1">
             <span class="fas fa-chevron-right nav-icon"></span>
           </div>
-          <div class="swiper-button-prev">
+          <div class="swiper-button-prev1">
             <span class="fas fa-chevron-left nav-icon"></span>
           </div>
         </div>
       </div>
-      <a class="fw-bold d-md-none" href="#!"
-        >Xem thêm
-        <span class="fas fa-chevron-right fs-9 ms-1"></span>
-      </a>
     </div>
+
     <div class="mb-6">
       <div class="d-flex flex-between-center mb-3">
         <h3>Sản phẩm mới</h3>
-        <a class="fw-bold d-none d-md-block" href="#!"
-          >Xem thêm
-          <span class="fas fa-chevron-right fs-9 ms-1"></span>
-        </a>
       </div>
       <div class="swiper-theme-container products-slider">
         <div class="swiper swiper-container theme-slider">
-          <swiper-container appSwiper [config]="swiperNewestConfig">
-            <swiper-slide *ngFor="let data of products">
+          <swiper-container appSwiper [config]="swiperNewestConfig1">
+            <swiper-slide *ngFor="let data of dataProductNew">
               <div class="swiper-wrapper">
                 <div class="swiper-slide">
                   <div
@@ -234,33 +239,32 @@
                     >
                       <div>
                         <div
-                          class="border border-1 border-translucent rounded-3 position-relative mb-3"
+                          class="border border-1 border-translucent position-relative mb-3"
+                          style="min-height: 245px; background: #ffffff"
                         >
-                          <button
-                            class="btn rounded-circle p-0 d-flex flex-center btn-wish z-2 d-toggle-container btn-outline-primary"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            aria-label="Add to wishlist"
-                            data-bs-original-title="Add to wishlist"
-                          >
-                            <span class="fas fa-heart d-block-hover"></span>
+                          <div class="p-1">
                             <span
-                              class="far fa-heart d-none-hover"
-                            ></span></button
-                          ><img
-                            class="img-fluid"
-                            src="{{ Environment.apiBaseRoot }}{{
-                              data.productImages[0].imagePath
-                            }}"
-                            alt=""
-                          />
+                              *ngIf="data.product.quantity <= 0"
+                              class="badge text-bg-danger fs-9 fw-normal pt-1 pb-1 ms-auto"
+                              >Hết hàng</span
+                            >
+                          </div>
+                          <div class="image-container">
+                            <img
+                              class="img-fluid image-custom"
+                              src="{{ Environment.apiBaseRoot }}{{
+                                data.productImages[0].imagePath
+                              }}"
+                              alt=""
+                            />
+                          </div>
                         </div>
                         <a
                           class="stretched-link"
-                          routerLink="product_detail/{{ data.product.id }}"
+                          [routerLink]="['/product_detail', data.product.id]"
                         >
                           <h6 class="mb-2 lh-sm line-clamp-3 product-name">
-                            {{ data.product.productName }}
+                            {{ data?.product?.productName }}
                           </h6>
                         </a>
                       </div>
@@ -270,9 +274,9 @@
                           class="me-2 text-body text-decoration-line-through mb-0"
                           *ngIf="data.product.discount > 0"
                         >
-                          {{ data.product.price | number : "1.0-0" }}
+                          {{ data?.product?.price | number : "1.0-0" }}
                         </p>
-                        <h3 class="text-body-emphasis mb-0">
+                        <h3 class="fw-normal mb-0 text-danger">
                           {{
                             data.product.price *
                               (1 - data.product.discount / 100)
@@ -288,18 +292,14 @@
           </swiper-container>
         </div>
         <div class="swiper-nav">
-          <div class="swiper-button-next">
+          <div class="swiper-button-next1">
             <span class="fas fa-chevron-right nav-icon"></span>
           </div>
-          <div class="swiper-button-prev">
+          <div class="swiper-button-prev1">
             <span class="fas fa-chevron-left nav-icon"></span>
           </div>
         </div>
       </div>
-      <a class="fw-bold d-md-none" href="#!"
-        >Xem thêm
-        <span class="fas fa-chevron-right fs-9 ms-1"></span>
-      </a>
     </div>
 
     <!-- <div class="row flex-center mb-15 mt-11 gy-6">

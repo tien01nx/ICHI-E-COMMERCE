@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Text.Json.Serialization;
 
     public class InventoryReceipt : MasterEntity
     {
@@ -22,6 +23,7 @@
         public string? Notes { get; set; } = string.Empty;
 
         public bool isActive { get; set; } = false;
+
 
 
     }

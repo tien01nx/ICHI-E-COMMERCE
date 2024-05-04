@@ -72,4 +72,10 @@ export class InventorryReceiptsService {
   findById(id: number) {
     return this.http.get(this.baseUrl + '/InventoryReceipt/' + id);
   }
+
+  InventoryModel(id: number) {
+    return this.http.get(
+      this.baseUrl + '/InventoryReceipt/InventoryModels?year=' + id
+    );
+  }
 }

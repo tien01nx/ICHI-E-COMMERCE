@@ -4,6 +4,7 @@ import { ProductReturn } from './product.return';
 
 export interface ProductReturnDetail extends MasterEntity {
   productId: number;
+  price : number;
   quantity: number;
   reason: string;
   returnType: boolean;

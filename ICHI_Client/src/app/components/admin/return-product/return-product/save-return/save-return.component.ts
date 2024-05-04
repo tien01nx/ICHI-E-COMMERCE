@@ -185,7 +185,7 @@ export class SaveReturnComponent implements OnInit {
         console.log(response);
         if (response.code === 200) {
           this.toastr.success(response.message, 'Thông báo');
-          this.router.navigate(['/admin/return-product']);
+          this.router.navigate(['/admin/list_return']);
         }
         this.toastr.error(response.message, 'Thông báo');
       },

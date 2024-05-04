@@ -24677,6 +24677,43 @@ pre[class*="language-"] {
 .swiper-theme-container .swiper-nav .swiper-button-next {
   right: -1rem;
 }
+
+.swiper-theme-container .swiper-nav .swiper-button-prev1::after,
+.swiper-theme-container .swiper-nav .swiper-button-prev1::before,
+.swiper-theme-container .swiper-nav .swiper-button-next1::after,
+.swiper-theme-container .swiper-nav .swiper-button-next1::before {
+  content: "";
+}
+.swiper-theme-container .swiper-nav .swiper-button-prev1.swiper-button-disabled,
+.swiper-theme-container .swiper-nav .swiper-button-next1.swiper-button-disabled {
+  opacity: 0;
+}
+.swiper-theme-container .swiper-nav .swiper-button-prev1 {
+  left: -1rem;
+}
+.swiper-theme-container .swiper-nav .swiper-button-next1 {
+  right: -1rem;
+}
+
+
+.swiper-theme-container .swiper-nav .swiper-button-prev2::after,
+.swiper-theme-container .swiper-nav .swiper-button-prev2::before,
+.swiper-theme-container .swiper-nav .swiper-button-next2::after,
+.swiper-theme-container .swiper-nav .swiper-button-next2::before {
+  content: "";
+}
+.swiper-theme-container .swiper-nav .swiper-button-prev2.swiper-button-disabled,
+.swiper-theme-container .swiper-nav .swiper-button-next2.swiper-button-disabled {
+  opacity: 0;
+}
+.swiper-theme-container .swiper-nav .swiper-button-prev2 {
+  left: -1rem;
+}
+.swiper-theme-container .swiper-nav .swiper-button-next2 {
+  right: -1rem;
+}
+
+
 .dropzone {
   position: relative;
   background-color: var(--phoenix-body-bg);
@@ -36137,6 +36174,41 @@ html:not(.navbar-vertical-collapsed)
   left: -1rem;
   right: auto;
 }
+
+
+
+.products-slider .swiper-nav .swiper-button-prev1 {
+  left: -1rem;
+}
+[dir="rtl"] .products-slider .swiper-nav .swiper-button-prev1 {
+  right: -1rem;
+  left: auto;
+}
+.products-slider .swiper-nav .swiper-button-next1 {
+  right: -1rem;
+}
+[dir="rtl"] .products-slider .swiper-nav .swiper-button-next1 {
+  left: -1rem;
+  right: auto;
+}
+
+
+.products-slider .swiper-nav .swiper-button-prev2 {
+  left: -1rem;
+}
+[dir="rtl"] .products-slider .swiper-nav .swiper-button-prev2 {
+  right: -1rem;
+  left: auto;
+}
+.products-slider .swiper-nav .swiper-button-next2 {
+  right: -1rem;
+}
+[dir="rtl"] .products-slider .swiper-nav .swiper-button-next2 {
+  left: -1rem;
+  right: auto;
+}
+
+
 .collapse-indicator {
   position: relative;
 }

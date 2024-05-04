@@ -233,6 +233,17 @@ export class Utils {
     { name: 'APPROVED', value: 'Đã thanh toán' },
   ];
 
+   static productReturn = [
+    { name: 'PENDING', value: 'Chưa xử lý' },
+    { name: 'APPROVED', value: 'Đã xử lý' },
+    { name: 'REJECTED', value: 'Từ chối xử lý' },
+  ];
+
+   static getProductReturnStatus(status: string): string {
+    const orderStatus = this.productReturn.find((x) => x.name === status);
+    return orderStatus ? orderStatus.value : '';
+  }
+
   static getOrdersStatus(status: string): string {
     const orderStatus = this.statusOrder.find((x) => x.name === status);
     return orderStatus ? orderStatus.value : '';

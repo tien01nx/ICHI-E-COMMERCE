@@ -68,6 +68,47 @@
                 throw;
             }
         }
+
+
+        public Helpers.PagedResult<ProductDTO> GetPromotion(string name, int pageSize, int pageNumber, string sortDir, string sortBy, out string strMessage)
+        {
+            strMessage = string.Empty;
+            try
+            {
+                var query = _unitOfWork.Product.GetAll(u => u.isDeleted == false, "Category,Trademark").AsQueryable();
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    query = query.Where(e => e.ProductName.Contains(name.Trim()));
+                }
+
+                var orderBy = $"{sortBy} {(sortDir.ToLower() == "asc" ? "ascending" : "descending")}";
+                query = query.OrderBy(orderBy);
+                var promotion = _promotionService.GetPromotionDetailActive(DateTime.Now);
+                // thu được list data promotion lấy ra các sản phẩm có productId trong list promotion và lấy ra discount
+                var listId = promotion.Select(u => u.ProductId).ToList();
+                var productPromotion = query.Where(u => listId.Contains(u.Id)).ToList();
+
+                foreach (var item in productPromotion)
+                {
+                    //item.Discount = _unitOfWork.PromotionDetail.Get(u => u.ProductId == item.Id, "Promotion")?.Promotion?.Discount ?? 0;
+                    item.Discount = promotion.Where(u => u.ProductId == item.Id).FirstOrDefault()?.Promotion?.Discount ?? 0;
+                    item.Image += _unitOfWork.ProductImages.GetAll(u => u.ProductId == item.Id).FirstOrDefault()?.ImagePath;
+                }
+                var pagedResult = Helpers.PagedResult<ProductDTO>.CreatePagedResult(query.Select(p => new ProductDTO
+                {
+                    Product = p,
+                    ProductImages = _unitOfWork.ProductImages.GetAll(u => u.ProductId == p.Id, null),
+                    CategoryProduct = p.Category,
+                }), pageNumber, pageSize);
+                return pagedResult;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public List<ProductDTO> GetAll()
         {
             List<ProductDTO> productDTO = new List<ProductDTO>();
@@ -333,7 +374,7 @@
                 int year = dateTime.Year;
                 List<ProductDTO> productDTOs = new List<ProductDTO>();
                 var data = _unitOfWork.TransactionDetail.GetAll(u => u.CreateDate.Year == year && u.CreateDate.Month == month, "TrxTransaction").GroupBy(u => u.ProductId).OrderByDescending(g => g.Sum(u => u.Quantity)).Take(5);
-                var productId = data.Select(g => g.Key).Take(5);
+                var productId = data.Select(g => g.Key);
                 foreach (var item in productId)
                 {
                     productDTOs.Add(new ProductDTO

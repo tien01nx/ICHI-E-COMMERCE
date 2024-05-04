@@ -34,7 +34,7 @@ export class ReturnProductService {
   }
 
   findById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/${id}`);
+    return this.http.get(`${this.baseUrl}/ProductReturn/${id}`);
   }
 
   create(returnProduct: any) {

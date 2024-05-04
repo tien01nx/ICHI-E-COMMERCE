@@ -11,6 +11,7 @@ import flatpickr from 'flatpickr';
 import { ProductsService } from '../../../service/products.service';
 import { ProductDTO } from '../../../dtos/product.dto';
 import { Environment } from '../../../environment/environment';
+import { InventorryReceiptsService } from '../../../service/inventory.receipts.service';
 @Component({
   selector: 'app-admin-home',
   templateUrl: './admin-home.component.html',
@@ -19,20 +20,26 @@ import { Environment } from '../../../environment/environment';
 export class AdminHomeComponent implements OnInit, AfterViewInit {
   constructor(
     private transactionService: TrxTransactionService,
-    private productService: ProductsService
+    private productService: ProductsService,
+    private InventoryService: InventorryReceiptsService
   ) {}
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.createLineChart();
+    }, 0);
+  }
   Environment = Environment;
 
   ngOnInit(): void {
     this.createYears();
     this.onYearSelect({ target: { value: this.yearNow } });
-    this.createLineChart();
     this.createPieChart();
     this.getData();
     this.getMoneyTotal();
+    this.getdataInventoryModel();
   }
   titleShow: string = 'Doanh thu';
+  show = true;
 
   intDisplay: number = 1;
   years: number[] = [];
@@ -48,6 +55,9 @@ export class AdminHomeComponent implements OnInit, AfterViewInit {
   productdto: ProductDTO[] = [];
   dataDoanhThu: any;
   dataLoiNhuan: any;
+
+  dataInventoryModel: any;
+
   colors = [
     'rgb(56, 116, 255)', // Màu cho 'pending'
     'rgb(38, 176, 4)', // Màu cho 'onHold'
@@ -74,29 +84,34 @@ export class AdminHomeComponent implements OnInit, AfterViewInit {
 
   onYearSelect(event: any) {
     this.chooseYear = event.target.value;
-    // data doanh thu và chi phí
-    this.transactionService.getGetMonneyMoth(this.chooseYear).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        this.dataDoanhThu = res.data;
-        this.updateChartData(this.dataDoanhThu);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+    if (this.intDisplay === 1) {
+      this.transactionService.getGetMonneyMoth(this.chooseYear).subscribe({
+        next: (res: any) => {
+          console.log(res);
+          this.dataDoanhThu = res.data;
+          this.updateChartData(this.dataDoanhThu);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    }
 
     // data lợi nhuận
-    this.transactionService.getCost(this.chooseYear).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        this.dataLoiNhuan = res.data;
-        // this.updateChartData(this.dataLoiNhuan);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+    if (this.intDisplay === 2) {
+      this.transactionService.getCost(this.chooseYear).subscribe({
+        next: (res: any) => {
+          console.log(res);
+          this.dataLoiNhuan = res.data;
+          // this.updateChartData(this.dataLoiNhuan);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    }
+
+    this.getdataInventoryModel();
   }
   createPieChart() {
     this.transactionService.getOrderStatus().subscribe({
@@ -147,7 +162,9 @@ export class AdminHomeComponent implements OnInit, AfterViewInit {
   productTopFive(dateTime: string) {
     this.productService.ProductTopFive(dateTime).subscribe({
       next: (res: any) => {
-        this.productdto = res.data;
+        // chỉ lấy 5 sản phẩm đầu tiên
+        this.productdto = res.data.slice(0, 5);
+        // this.productdto = res.data;
         console.log('products', this.productdto);
       },
       error: (err) => {
@@ -308,17 +325,30 @@ export class AdminHomeComponent implements OnInit, AfterViewInit {
 
   showDisplay(int: number) {
     this.intDisplay = int;
-    if (int == 1) {
-      this.titleShow = 'Doanh thu';
-      this.createLineChart();
-      this.updateChartData(this.dataDoanhThu);
+    // Hủy biểu đồ hiện tại nếu có
+    if (this.lineChart) {
+      this.lineChart.destroy();
+      this.lineChart = null; // Đặt lại biến lineChart
     }
-    if (int == 2) {
-      this.titleShow = 'Lợi nhuận';
-      this.createLineChart();
-      this.updateChartData(this.dataLoiNhuan);
+
+    // Xử lý hiển thị dựa trên giá trị của intDisplay
+    if (int === 1 || int === 2) {
+      this.show = true; // Cho phép hiển thị biểu đồ
+      if (int === 1) {
+        this.titleShow = 'Doanh thu';
+        this.createLineChart();
+        this.updateChartData(this.dataDoanhThu);
+      } else if (int === 2) {
+        this.titleShow = 'Lợi nhuận';
+        this.createLineChart();
+        this.updateChartData(this.dataLoiNhuan);
+      }
+    } else {
+      this.show = false; // Ẩn biểu đồ
+      this.titleShow = 'Báo cáo nhập hàng';
     }
   }
+
   clickDownloadExcel() {
     this.transactionService.getExcel(this.chooseYear).subscribe(
       (blob: Blob) => {
@@ -335,5 +365,17 @@ export class AdminHomeComponent implements OnInit, AfterViewInit {
         console.error('Download error:', error); // Handle errors appropriately
       }
     );
+  }
+
+  getdataInventoryModel() {
+    this.InventoryService.InventoryModel(this.chooseYear).subscribe({
+      next: (res: any) => {
+        console.log('respondata', res.data);
+        this.dataInventoryModel = res.data;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 }

@@ -87,6 +87,10 @@ export class TrxTransactionService {
         'TrxTransaction/FindAllPaged?page-size=10000&page-number=1&sort-direction=desc&sort-by=Id'
     );
   }
+  cancelOrder(model: any) {
+    debugger;
+    return this.http.put(this.baseUrl + '/TrxTransaction/CancelOrderId', model);
+  }
 
   findAllGetOrderDelivered() {
     return this.http.get(this.baseUrl + '/TrxTransaction/GetOrderDelivered');

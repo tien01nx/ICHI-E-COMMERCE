@@ -29,8 +29,48 @@
             </form>
           </div>
         </div>
+        <div class="col-auto">
+          <div class="btn-group position-static" role="group">
+            <div class="btn-group position-static text-nowrap">
+              <button
+                class="btn btn-phoenix-secondary px-7 flex-shrink-0"
+                type="button"
+                data-bs-toggle="dropdown"
+                data-boundary="window"
+                aria-haspopup="true"
+                aria-expanded="false"
+                data-bs-reference="parent"
+              >
+                {{ titleOrder }}
+                <span class="fas fa-angle-down ms-2"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" (click)="orderStatus('PENDING')"
+                    >Chưa xử lý</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" (click)="orderStatus('APPROVED')"
+                    >Đã xử lý</a
+                  >
+                </li>
+
+                <li>
+                  <a class="dropdown-item" (click)="orderStatus('REJECTED')"
+                    >Từ chối xử lý</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <div class="col-auto ms-auto">
-          <button class="btn btn-primary">
+          <button
+            class="btn btn-primary"
+            routerLink="/admin/save_return"
+            type="button"
+          >
             <span class="fas fa-plus me-2"></span>Thêm phiếu đổi trả
           </button>
         </div>
@@ -235,25 +275,10 @@
                   <button
                     class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2"
                     type="button"
-                    data-bs-toggle="dropdown"
-                    data-boundary="window"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                    data-bs-reference="parent"
+                    routerLink="/admin/product_return/{{ category.id }}"
                   >
-                    <span class="fas fa-ellipsis-h fs--2"></span>
+                    <i class="fal fa-edit"></i>
                   </button>
-                  <div class="dropdown-menu dropdown-menu-end py-2">
-                    <button
-                      class="dropdown-item"
-                      data-bs-target="#modalcategory"
-                      data-bs-toggle="modal"
-                    >
-                      Cập nhật
-                    </button>
-                    <div class="dropdown-divider"></div>
-                    <button class="dropdown-item text-danger">Xóa</button>
-                  </div>
                 </div>
               </td>
             </tr>

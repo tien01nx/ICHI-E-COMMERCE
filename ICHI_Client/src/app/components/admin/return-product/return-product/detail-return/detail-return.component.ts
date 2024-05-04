@@ -7,6 +7,8 @@ import { ElementRef, ViewChild } from '@angular/core';
 import { Environment } from '../../../../../environment/environment';
 import { ProductsService } from '../../../../../service/products.service';
 import { ReturnProductService } from '../../../../../service/ReturnService.service';
+import { ProductReturnVM } from '../../../../../dtos/product.return.vm';
+import { ProductReturnMV } from '../../../../../models/product.return.dto';
 
 @Component({
   selector: 'app-detail-return',
@@ -16,11 +18,10 @@ import { ReturnProductService } from '../../../../../service/ReturnService.servi
 export class DetailReturnComponent implements OnInit {
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   @ViewChild('textAreaReason') textAreaReason!: ElementRef;
-  returnProduct: any;
-  returnProductDetails: any;
+  productReturnVM: any;
   titleString = '';
-  baseUrl = Environment.apiBaseUrl;
   productId: any;
+  Environment = Environment;
 
   updateReturnStatusForm: FormGroup = new FormGroup({
     id: new FormControl(null),
@@ -62,10 +63,9 @@ export class DetailReturnComponent implements OnInit {
 
   findById(id: number) {
     this.returnService.findById(id).subscribe({
-      next: (data: any) => {
-        this.returnProduct = data;
-        this.returnProductDetails = data.returnProductDetails;
-        console.log(data);
+      next: (response: any) => {
+        this.productReturnVM = response.data;
+        console.log(response);
       },
       error: (err: any) => {
         console.log(err);
@@ -76,37 +76,35 @@ export class DetailReturnComponent implements OnInit {
 
   resetForm() {
     this.updateReturnStatusForm.reset();
-    this.updateReturnStatusForm.patchValue(this.returnProduct);
+    this.updateReturnStatusForm.patchValue(this.productReturnVM);
   }
 
-  // updateReturnStatus() {
-  //   this.updateReturnStatusForm.patchValue({ id: this.returnProduct.id });
+  updateReturnStatus() {
+    this.updateReturnStatusForm.patchValue({
+      id: this.productReturnVM.productReturn.id,
+    });
 
-  //   console.log(this.updateReturnStatusForm.value);
-  //   this.returnService
-  //     .updateReturnStatus(this.updateReturnStatusForm.value)
-  //     .subscribe({
-  //       next: (data: any) => {
-  //         this.toastr.success('Xử lý đổi trả thành công', 'Thông báo');
-  //         this.findById(this.returnProduct.id);
-  //         this.btnCloseModal.nativeElement.click();
-  //       },
-  //       error: (error: any) => {
-  //         console.log(error);
-  //         if (
-  //           error.status == 400 &&
-  //           error.error == 'RETURN_PRODUCT_NOT_FOUND'
-  //         ) {
-  //           this.toastr.error('Phiếu đổi trả không tồn tại', 'Thông báo');
-  //         } else if (
-  //           error.status == 400 &&
-  //           error.error == 'RETURN_PRODUCT_STATUS_CANNOT_BE_CHANGED'
-  //         ) {
-  //           this.toastr.error('Phiếu đổi trả đã được xử lý', 'Thông báo');
-  //         } else {
-  //           this.toastr.error('Lỗi không xác định', 'Thông báo');
-  //         }
-  //       },
-  //     });
-  // }
+    console.log(this.updateReturnStatusForm.value);
+    debugger;
+    this.returnService.findById(this.updateReturnStatusForm.value).subscribe({
+      next: (data: any) => {
+        this.toastr.success('Xử lý đổi trả thành công', 'Thông báo');
+        // this.findById(this.returnProduct.id);
+        this.btnCloseModal.nativeElement.click();
+      },
+      error: (error: any) => {
+        console.log(error);
+        if (error.status == 400 && error.error == 'RETURN_PRODUCT_NOT_FOUND') {
+          this.toastr.error('Phiếu đổi trả không tồn tại', 'Thông báo');
+        } else if (
+          error.status == 400 &&
+          error.error == 'RETURN_PRODUCT_STATUS_CANNOT_BE_CHANGED'
+        ) {
+          this.toastr.error('Phiếu đổi trả đã được xử lý', 'Thông báo');
+        } else {
+          this.toastr.error('Lỗi không xác định', 'Thông báo');
+        }
+      },
+    });
+  }
 }

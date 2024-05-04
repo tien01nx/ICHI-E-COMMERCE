@@ -4,10 +4,13 @@
   <div class="container-small cart">
     <div class="d-flex flex-wrap justify-content-between align-items-end mb-5">
       <div>
-        <h2>
-          Trạng thái đơn hàng số {{ orderTrackingDTO[0].trxTransactionId }}
-        </h2>
-        <p class="text-body-secondary mb-0">
+        <h2>Trạng thái đơn hàng số {{ trxTransactionId }}</h2>
+        <p
+          class="text-body-secondary mb-0"
+          *ngIf="
+            orderTrackingDTO[0].trxTransaction.orderStatus !== Utils.CANCELLED
+          "
+        >
           Hình thức thanh toán
           {{
             Utils.getPaymentType(
@@ -33,30 +36,57 @@
 
           <span class="ms-sm-1"></span>
         </p>
+
+         <p
+          class="text-body-secondary mb-0"
+          *ngIf="
+            orderTrackingDTO[0].trxTransaction.orderStatus === Utils.CANCELLED
+          "
+        >
+        <span>Đơn hàng đã hủy</span>
+        <span class="text-danger"> Đã hoàn tiền</span>
+        </p>
       </div>
 
-      <button
-        class="btn btn-subtle-success mt-3"
-        type="button"
-        (click)="getReportBill()"
-      >
-        <i class="fal fa-file-invoice"></i>
-        In Hóa đơn
-      </button>
+      <div>
+        <button
+          class="btn btn-danger mt-3 me-3"
+          type="button"
+          data-bs-target="#modalcategory"
+          data-bs-toggle="modal"
+          *ngIf="
+            orderTrackingDTO[0].trxTransaction.orderStatus === Utils.PENDING ||
+            orderTrackingDTO[0].trxTransaction.orderStatus === Utils.ONHOLD
+          "
+        >
+          <i class="fal fa-file-invoice"></i>
+          Hủy đơn hàng
+        </button>
 
-      <button
-        class="btn btn-outline-primary mt-3"
-        type="button"
-        *ngIf="
-          orderTrackingDTO[0].trxTransaction.paymentTypes ===
-            'PAYMENTVIACARD' &&
-          orderTrackingDTO[0].trxTransaction.paymentStatus === 'PENDING'
-        "
-        (click)="repayment()"
-      >
-        <i class="fal fa-credit-card"></i>
-        Thanh toán lại
-      </button>
+        <button
+          class="btn btn-subtle-success mt-3 me-3"
+          type="button"
+          (click)="getReportBill()"
+          *ngIf="orderTrackingDTO[0].trxTransaction.orderStatus === 'DELIVERED'"
+        >
+          <i class="fal fa-file-invoice"></i>
+          In Hóa đơn
+        </button>
+
+        <button
+          class="btn btn-outline-primary mt-3 me-3"
+          type="button"
+          *ngIf="
+            orderTrackingDTO[0].trxTransaction.paymentTypes ===
+              'PAYMENTVIACARD' &&
+            orderTrackingDTO[0].trxTransaction.paymentStatus === 'PENDING'
+          "
+          (click)="repayment()"
+        >
+          <i class="fal fa-credit-card"></i>
+          Thanh toán lại
+        </button>
+      </div>
     </div>
     <div class="row gy-9 gx-5">
       <div class="col-12 col-lg-6">
@@ -153,7 +183,7 @@
                     class="icon-item icon-item-sm bg-success"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-check text-white fs-10"></span>
+                    <span class="fas fa-spinner text-white fs-10"></span>
                   </div>
                   <span class="timeline-bar border-end border-warning"></span>
                 </div>
@@ -187,6 +217,7 @@
                   <span class="timeline-bar border-end border-dashed"></span>
                 </div>
               </div>
+              .
               <div class="col">
                 <div class="timeline-item-content ps-6 ps-md-3">
                   <h4>Đã xác nhận</h4>
@@ -211,7 +242,7 @@
                     class="icon-item icon-item-sm bg-body-quaternary"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-truck-ramp-box text-white fs-10"></span>
+                    <span class="fas fa-shipping-timed text-white fs-10"></span>
                   </div>
                   <span class="timeline-bar border-end border-dashed"></span>
                 </div>
@@ -240,7 +271,7 @@
                     class="icon-item icon-item-sm bg-body-quaternary"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-truck text-white fs-10"></span>
+                    <span class="fas fa-shipping-fast text-white fs-10"></span>
                   </div>
                   <span class="timeline-bar border-end border-dashed"></span>
                 </div>
@@ -269,7 +300,7 @@
                     class="icon-item icon-item-sm bg-body-quaternary"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-truck-fast text-white fs-10"></span>
+                    <span class="fas fa-person-booth text-white fs-10"></span>
                   </div>
                 </div>
               </div>
@@ -312,7 +343,7 @@
                     class="icon-item icon-item-sm bg-success"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-check text-white fs-10"></span>
+                    <span class="fas fa-spinner text-white fs-10"></span>
                   </div>
                   <span class="timeline-bar border-end border-success"></span>
                 </div>
@@ -378,7 +409,7 @@
                     class="icon-item icon-item-sm bg-warning"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-truck-ramp-box text-white fs-10"></span>
+                    <span class="fas fa-shipping-timed text-white fs-10"></span>
                   </div>
                   <span class="timeline-bar border-end border-dashed"></span>
                 </div>
@@ -407,7 +438,7 @@
                     class="icon-item icon-item-sm bg-body-quaternary"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-truck text-white fs-10"></span>
+                    <span class="fas fa-shipping-fast text-white fs-10"></span>
                   </div>
                   <span class="timeline-bar border-end border-dashed"></span>
                 </div>
@@ -436,7 +467,7 @@
                     class="icon-item icon-item-sm bg-body-quaternary"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-truck-fast text-white fs-10"></span>
+                    <span class="fas fa-person-booth text-white fs-10"></span>
                   </div>
                 </div>
               </div>
@@ -484,7 +515,7 @@
                     class="icon-item icon-item-sm bg-success"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-check text-white fs-10"></span>
+                    <span class="fas fa-spinner text-white fs-10"></span>
                   </div>
                   <span class="timeline-bar border-end border-success"></span>
                 </div>
@@ -558,7 +589,7 @@
                     class="icon-item icon-item-sm bg-success"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-truck-ramp-box text-white fs-10"></span>
+                    <span class="fas fa-shipping-timed text-white fs-10"></span>
                   </div>
                   <span class="timeline-bar border-end border-warning"></span>
                 </div>
@@ -587,7 +618,7 @@
                     class="icon-item icon-item-sm bg-warning"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-truck text-white fs-10"></span>
+                    <span class="fas fa-shipping-fast text-white fs-10"></span>
                   </div>
                   <span class="timeline-bar border-end border-dashed"></span>
                 </div>
@@ -616,7 +647,7 @@
                     class="icon-item icon-item-sm bg-body-quaternary"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-truck-fast text-white fs-10"></span>
+                    <span class="fas fa-person-booth text-white fs-10"></span>
                   </div>
                 </div>
               </div>
@@ -662,7 +693,7 @@
                     class="icon-item icon-item-sm bg-success"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-check text-white fs-10"></span>
+                    <span class="fas fa-spinner text-white fs-10"></span>
                   </div>
                   <span class="timeline-bar border-end border-success"></span>
                 </div>
@@ -736,7 +767,7 @@
                     class="icon-item icon-item-sm bg-success"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-truck-ramp-box text-white fs-10"></span>
+                    <span class="fas fa-shipping-timed text-white fs-10"></span>
                   </div>
                   <span class="timeline-bar border-end border-success"></span>
                 </div>
@@ -773,7 +804,7 @@
                     class="icon-item icon-item-sm bg-success"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-truck text-white fs-10"></span>
+                    <span class="fas fa-shipping-fast text-white fs-10"></span>
                   </div>
                   <span class="timeline-bar border-end border-warning"></span>
                 </div>
@@ -802,7 +833,7 @@
                     class="icon-item icon-item-sm bg-warning"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-truck-fast text-white fs-10"></span>
+                    <span class="fas fa-person-booth text-white fs-10"></span>
                   </div>
                 </div>
               </div>
@@ -849,7 +880,7 @@
                     class="icon-item icon-item-sm bg-success"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-check text-white fs-10"></span>
+                    <span class="fas fa-spinner text-white fs-10"></span>
                   </div>
                   <span class="timeline-bar border-end border-success"></span>
                 </div>
@@ -923,7 +954,7 @@
                     class="icon-item icon-item-sm bg-success"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-truck-ramp-box text-white fs-10"></span>
+                    <span class="fas fa-shipping-timed text-white fs-10"></span>
                   </div>
                   <span class="timeline-bar border-end border-success"></span>
                 </div>
@@ -960,7 +991,7 @@
                     class="icon-item icon-item-sm bg-success"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-truck text-white fs-10"></span>
+                    <span class="fas fa-shipping-fast text-white fs-10"></span>
                   </div>
                   <span class="timeline-bar border-end border-success"></span>
                 </div>
@@ -998,7 +1029,7 @@
                     class="icon-item icon-item-sm bg-success"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-truck-fast text-white fs-10"></span>
+                    <span class="fas fa-person-booth text-white fs-10"></span>
                   </div>
                 </div>
               </div>
@@ -1042,7 +1073,7 @@
                     class="icon-item icon-item-sm bg-success"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-check text-white fs-10"></span>
+                    <span class="fas fa-spinner text-white fs-10"></span>
                   </div>
                   <span class="timeline-bar border-end border-success"></span>
                 </div>
@@ -1079,7 +1110,7 @@
                     class="icon-item icon-item-sm bg-success"
                     data-bs-theme="light"
                   >
-                    <span class="fas fa-check text-white fs-10"></span>
+                    <span class="fas fa-spinner text-white fs-10"></span>
                   </div>
                 </div>
               </div>
@@ -1100,3 +1131,77 @@
   <!-- end of .container-->
 </section>
 <app-client-footer></app-client-footer>
+
+<div class="modal fade" id="modalcategory" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalcategoryLabel">
+          Thông tin hủy đơn hàng
+        </h5>
+        <button
+          class="btn p-1"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          #btnCloseModal
+        >
+          <span class="fas fa-times fs-9"></span>
+        </button>
+      </div>
+      <form class="form" [formGroup]="trxTranForm" (submit)="onSubmit()">
+        <div class="modal-body">
+          <div class="row px-3" *ngIf="errorMessage != ''">
+            <label
+              class="col-sm-12 col-form-label fs-9 alert alert-subtle-danger p-2"
+              role="alert"
+            >
+              {{ errorMessage }}
+            </label>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label fs-9" for="cancelReason"
+              >Lý do hủy <sup class="text-danger">*</sup></label
+            >
+            <div class="col-sm-8">
+              <textarea
+                class="form-control"
+                id="cancelReason"
+                type="text"
+                formControlName="cancelReason"
+                placeholder="Lý do hủy"
+              ></textarea>
+              <small
+                class="text-danger mt-1"
+                *ngIf="trxTranForm['controls']['cancelReason'].dirty"
+              >
+                <span
+                  *ngIf="trxTranForm['controls']['cancelReason'].errors?.['required']"
+                >
+                  Lý do không được để trống
+                </span>
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-primary"
+            type="submit"
+            [disabled]="trxTranForm.invalid"
+          >
+            <span>Hủy đơn</span>
+          </button>
+
+          <button
+            class="btn btn-outline-primary"
+            type="button"
+            data-bs-dismiss="modal"
+          >
+            Quay lại
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

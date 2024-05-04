@@ -24,6 +24,7 @@ export class ListReturnComponent implements OnInit {
   sortDir: string = 'ASC';
   SortBy: string = 'id';
 
+  titleOrder: string = 'Lọc phiếu đổi trả ';
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   titleModal: string = '';
   btnSave: string = '';
@@ -50,11 +51,12 @@ export class ListReturnComponent implements OnInit {
     this.title.setTitle('Quản lý đổi trả sản phẩm');
     this.activatedRoute.queryParams.subscribe((params) => {
       const search = params['search'] || '';
+      const status = params['status'] || '';
       const pageSize = +params['page-size'] || 10;
       const pageNumber = +params['page-number'] || 1;
       const sortDir = params['sort-direction'] || 'DESC';
       const sortBy = params['sort-by'] || 'CreateDate';
-      this.findAll(pageSize, pageNumber, sortBy, sortDir, search);
+      this.findAll(pageSize, pageNumber, sortBy, sortDir, search, status);
     });
   }
 
@@ -68,7 +70,7 @@ export class ListReturnComponent implements OnInit {
     sortBy: string,
     sortDir: string,
     search: string,
-    status: string = '' // status for return product
+    status: string
   ) {
     this.productReturn
       .findAll(pageNumber, pageSize, sortDir, sortBy, search, status)
@@ -129,5 +131,17 @@ export class ListReturnComponent implements OnInit {
         queryParamsHandling: 'merge',
       })
       .then((r) => {});
+  }
+
+  orderStatus(order: string) {
+    this.router
+      .navigate(['/admin/list_return'], {
+        queryParams: {
+          status: order,
+        },
+        queryParamsHandling: 'merge',
+      })
+      .then((r) => {});
+    this.titleOrder = Utils.getProductReturnStatus(order);
   }
 }

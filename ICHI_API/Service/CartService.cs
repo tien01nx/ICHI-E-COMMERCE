@@ -1,4 +1,5 @@
 ﻿
+using DevExpress.CodeParser;
 using ICHI.DataAccess.Repository.IRepository;
 using ICHI_API.Data;
 using ICHI_API.Helpers;
@@ -156,9 +157,8 @@ namespace ICHI_API.Service
           // thì giảm số lượng sản phẩm trong giỏ hàng xuống còn product.quantity
           if (cart.Quantity + existCart.Quantity > existCart.Product.Quantity)
           {
-            existCart.Quantity = existCart.Product.Quantity;
             strMessage = Constants.PRODUCTNOTENOUGHCART;
-            return null;
+            throw  new BadRequestException(Constants.PRODUCTNOTENOUGHOUT);
           }
           else
           {

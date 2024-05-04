@@ -1,13 +1,17 @@
 ﻿using API.Model;
+using DevExpress.ClipboardSource.SpreadsheetML;
+using DevExpress.XtraRichEdit;
 using ICHI.DataAccess.Repository.IRepository;
 using ICHI_API.Data;
 using ICHI_API.Model;
 using ICHI_API.Report;
+using ICHI_API.Service;
 using ICHI_API.Service.IService;
 using ICHI_CORE.Domain.MasterModel;
 using ICHI_CORE.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 namespace ICHI_CORE.Controllers.MasterController
 {
     [ApiController]
@@ -15,10 +19,12 @@ namespace ICHI_CORE.Controllers.MasterController
     public class ReportController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IInventoryReceiptService _inventoryReceiptService;
 
-        public ReportController(IUnitOfWork unitOfWork)
+        public ReportController(IUnitOfWork unitOfWork, IInventoryReceiptService inventoryReceiptService)
         {
             _unitOfWork = unitOfWork;
+            _inventoryReceiptService = inventoryReceiptService;
         }
 
         [HttpGet("bill/{invoiceId}")]
@@ -42,6 +48,17 @@ namespace ICHI_CORE.Controllers.MasterController
 
             //return File(stream, "application/pdf", "BillReport.pdf");
         }
+
+        [HttpGet("inventory/{year}")]
+        public ActionResult GetInventoryReport(int year)
+        {
+            var fileContents = _inventoryReceiptService.GenerateExcelReport(year);
+            var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            var fileName = "Updated_Report.xlsx";
+            return File(fileContents, contentType, fileName);
+        }
+
+
 
     }
 }

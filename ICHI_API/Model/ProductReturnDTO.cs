@@ -51,7 +51,9 @@ namespace ICHI_API.Model
         _productReturn = value;
         Id = _productReturn.Id;
         EmployeeId = _productReturn.EmployeeId;
+        Employee = _productReturn.Employee;
         TrxTransactionId = _productReturn.TrxTransactionId;
+        TrxTransaction = _productReturn.TrxTransaction;
         Status = _productReturn.Status;
         Reason = _productReturn.Reason;
         CreateDate = _productReturn.CreateDate;

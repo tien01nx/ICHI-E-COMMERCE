@@ -1,5 +1,5 @@
 import { TrxTransactionDetailModel } from './../../../models/trx.transaction.detail.model';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { TrxTransactionService } from '../../../service/trx-transaction.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -8,6 +8,7 @@ import { Utils } from '../../../Utils.ts/utils';
 import { Environment } from '../../../environment/environment';
 import { OrderTrackingDTO } from '../../../dtos/order.tracking.dto';
 import { VnPaymentRequestDTO } from '../../../dtos/vn.payment.request.dto';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-order-tracking',
@@ -16,6 +17,7 @@ import { VnPaymentRequestDTO } from '../../../dtos/vn.payment.request.dto';
 })
 export class OrderTrackingComponent implements OnInit {
   protected readonly Utils = Utils;
+  @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   protected readonly Environment = Environment;
   orderTrackingDTO: OrderTrackingDTO[] = [];
   priceDiscount: number = 0;
@@ -27,7 +29,24 @@ export class OrderTrackingComponent implements OnInit {
     orderStatus: '',
     createDate: new Date(),
   };
+  trxTransactionId: any;
+  show: boolean = true;
+  orderStatus: string = '';
+  errorMessage: string = '';
 
+  trxTranForm: FormGroup = new FormGroup({
+    id: new FormControl(''),
+    cancelReason: new FormControl('', Validators.required),
+  });
+
+  cancelReason: string = '';
+  otherReason: string = '';
+  reasons: string[] = [
+    'Tôi muốn cập nhật địa chỉ/sđt nhận hàng',
+    'Người bán không trả lời thắc mắc/yêu cầu của tôi',
+    'Thay đổi đơn hàng (màu sắc, kích thước, thêm mã giảm giá...)',
+    'Tôi không có nhu cầu mua nữa',
+  ];
   constructor(
     private toastr: ToastrService,
     private orderService: TrxTransactionService,
@@ -38,15 +57,40 @@ export class OrderTrackingComponent implements OnInit {
   ngOnInit(): void {
     this.getData();
   }
+  onSubmit() {
+    this.trxTranForm.patchValue({ id: this.trxTransactionId });
+    if (this.trxTranForm.invalid) {
+      this.errorMessage = 'Vui lòng nhập lý do hủy đơn hàng';
+      return;
+    }
+    this.orderService
+      .cancelOrder(this.trxTranForm.value)
+      .subscribe((response: any) => {
+        if (response.code === 200) {
+          this.toastr.success('Hủy đơn hàng thành công');
+          this.getData();
+          this.trxTranForm.reset();
+          this.btnCloseModal.nativeElement.click();
+
+          this.show = true;
+        } else {
+          this.toastr.error(response.message);
+        }
+      });
+  }
 
   getData() {
     this.orderService
       .getOrderTracking(this.activatedRoute.snapshot.params['id'])
       .subscribe({
         next: (response: any) => {
-          console.log('data', response.data);
+          console.log('dataOrderUpdate', response.data);
           if (response.code === 200) {
             this.orderTrackingDTO = response.data;
+            this.orderStatus =
+              this.orderTrackingDTO[0].trxTransaction.orderStatus;
+            this.trxTransactionId = this.orderTrackingDTO[0].trxTransaction.id;
+            console.log('dataOrderUpdate1', this.orderStatus);
 
             this.orderTrackingDTO.forEach((item) => {
               // nếu discount > 0 thì tính ra số tiền giảm giá của sản phẩm đó

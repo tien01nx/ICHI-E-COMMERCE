@@ -47,6 +47,33 @@ namespace ICHI_CORE.Controllers.MasterController
         }
 
 
+        [HttpGet("FindAllPagedPromotion")]
+        public async Task<ActionResult<ApiResponse<ICHI_API.Helpers.PagedResult<ProductDTO>>>> GetProductPromotion(
+        [FromQuery(Name = "search")] string name = "",
+        [FromQuery(Name = "page-size")] int pageSize = 10,
+        [FromQuery(Name = "page-number")] int pageNumber = 1,
+        [FromQuery(Name = "sort-direction")] string sortDir = "desc",
+        [FromQuery(Name = "sort-by")] string sortBy = "Id")
+        {
+            ApiResponse<ICHI_API.Helpers.PagedResult<ProductDTO>> result;
+            string strMessage = "";
+            try
+            {
+                var data = _productService.GetPromotion(name, pageSize, pageNumber, sortDir, sortBy, out strMessage);
+                result = new ApiResponse<ICHI_API.Helpers.PagedResult<ProductDTO>>(
+                              System.Net.HttpStatusCode.OK,
+                                         strMessage,
+                                                      data);
+            }
+            catch (Exception ex)
+            {
+                var handler = new GlobalExceptionHandler();
+                return handler.HandleException<ICHI_API.Helpers.PagedResult<ProductDTO>>(ex);
+            }
+            return result;
+        }
+
+
         [HttpGet("FindAll")]
         public async Task<ApiResponse<List<ProductDTO>>> GetAll()
         {
