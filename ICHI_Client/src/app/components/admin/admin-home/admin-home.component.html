@@ -345,7 +345,7 @@
       </div>
       <button
         class="col-1 pt-2"
-        *ngIf="intDisplay === 2"
+        *ngIf="intDisplay === 1"
         (click)="clickDownloadExcel()"
       >
         <i class="fal fa-folder-download"></i>
@@ -369,9 +369,9 @@
               <li>
                 <a class="dropdown-item" (click)="showDisplay(1)">Doanh thu</a>
               </li>
-              <li>
+              <!-- <li>
                 <a class="dropdown-item" (click)="showDisplay(2)">Lợi nhuận</a>
-              </li>
+              </li> -->
               <li>
                 <a class="dropdown-item" (click)="showDisplay(3)">Nhập hàng</a>
               </li>

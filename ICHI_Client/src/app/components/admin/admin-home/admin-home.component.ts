@@ -96,14 +96,14 @@ export class AdminHomeComponent implements OnInit, AfterViewInit {
         },
       });
     }
-
+    debugger;
     // data lợi nhuận
     if (this.intDisplay === 2) {
       this.transactionService.getCost(this.chooseYear).subscribe({
         next: (res: any) => {
-          console.log(res);
+          console.log('Lợi nhuân:', res.data);
           this.dataLoiNhuan = res.data;
-          // this.updateChartData(this.dataLoiNhuan);
+          this.updateChartData(this.dataLoiNhuan);
         },
         error: (err) => {
           console.log(err);
@@ -205,7 +205,6 @@ export class AdminHomeComponent implements OnInit, AfterViewInit {
       this.lineChart = new Chart('lineChart', {
         data: {
           labels: [
-            'Tháng',
             'Tháng 1',
             'Tháng 2',
             'Tháng 3',
@@ -261,7 +260,6 @@ export class AdminHomeComponent implements OnInit, AfterViewInit {
       this.lineChart = new Chart('lineChart', {
         data: {
           labels: [
-            'Tháng',
             'Tháng 1',
             'Tháng 2',
             'Tháng 3',
