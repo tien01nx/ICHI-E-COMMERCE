@@ -1,221 +1,310 @@
-Deleted Cart
-
-@startuml
-(*) --> "Retrieve existing cart item"
-if (Cart item exists?) then
-  -->[Yes] "Remove cart item"
-  --> "Save changes"
-  --> "Return deleted cart item"
-  --> (*)
-else
-  -->[No] "Throw BadRequestException (PRODUCTCCARTNOTFOUND)"
-endif
---> (*)
-@enduml
 
 
 
-Getcart
-
-@startuml
-(*) --> "Retrieve carts by user email"
-if (Carts found?) then
-  -->[Yes] "Retrieve active promotions"
-  --> "Update cart items with product image, customer information, and discounts"
-  --> "Return carts"
-  --> (*)
-else
-  -->[No] "Return null"
-endif
---> (*)
-@enduml
-
-GetShoppingCart
+<!-- 
+<div class="grid grid-cols-5 grid-rows-8 gap-4 h-screen" >
+  <div class="col-span-3 row-span-8">1</div>
+  <div class="col-span-2 row-span-4 col-start-4">2</div>
+  <div class="col-span-2 row-span-4 col-start-4 row-start-5">3</div>
+</div> -->
 
 
-@startuml
-(*) --> "Initialize ShoppingCartVM object"
-if (Customer found?) then
-  -->[Yes] "Check cart promotion"
-  --> "Update ShoppingCartVM with cart information"
-  --> "Retrieve customer information"
-  --> "Update TrxTransaction with customer details"
-  --> "Return ShoppingCartVM object"
-  --> (*)
-else
-  -->[No] "Throw BadRequestException (CUSTOMERNOTFOUND)"
-  --> (*)
-endif
-@enduml
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+  <div class="flex items-center justify-between p-4 border-b">
+      <div class="flex items-center space-x-2">
+          <button class="px-2 py-1 bg-gray-200 rounded"><i class="fas fa-sort"></i></button>
+          <span class="font-semibold">Project</span>
+      </div>
+      <!-- Thêm class cho input để chỉnh chiều rộng -->
+      <input type="text" placeholder="Enter text to search..." class="border rounded px-2 py-1">
+  </div>
+  <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+          <tr> 
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <input type="checkbox" class="mr-2"><i class="fas fa-sort"></i>
+          </th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owner</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assignee</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Modified</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fixed</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+          </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+          <tr>
+              <td colspan="8" class="px-4 py-2 text-sm font-medium text-gray-900">Project: Enterprise Accounting System (Count: 14)</td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 whitespace-nowrap " style="width: 50px;">
+              <input type="checkbox" class="mr-2" >
+            </td>
+              <td class="px-4 py-2 whitespace-nowrap">
+                  <a href="#" class="text-blue-600 hover:underline">Web Edition: Data Entry Page</a>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Brad Barnes</td>
+              <td class="px-4 py-2 whitespace-nowrap">Steve Lee</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="text-gray-500">Postponed</span></td>
+              <td class="px-4 py-2 whitespace-nowrap">12/4/2003</td>
+              <td class="px-4 py-2 whitespace-nowrap">12/5/2003</td>
+              <td class="px-4 py-2 whitespace-nowrap">12/5/2003</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Low</span></td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 whitespace-nowrap">
+              <input type="checkbox" class="mr-2">
+            </td>
+              <td class="px-4 py-2 whitespace-nowrap">
+                  <a href="#" class="text-blue-600 hover:underline">Web Edition: Search Page</a>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Mark Hamilton</td>
+              <td class="px-4 py-2 whitespace-nowrap">Tom Hamlett</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="text-blue-500">New</span></td>
+              <td class="px-4 py-2 whitespace-nowrap">3/31/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">3/5/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">8/9/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Medium</span></td>
+          </tr>
+         
+          <tr>
+            <td class="px-4 py-2 whitespace-nowrap">
+              <input type="checkbox" class="mr-2">
+            </td>
+              <td class="px-4 py-2 whitespace-nowrap">
+                  <a href="#" class="text-blue-600 hover:underline">Web Edition: Search Page</a>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Mark Hamilton</td>
+              <td class="px-4 py-2 whitespace-nowrap">Tom Hamlett</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="text-blue-500">New</span></td>
+              <td class="px-4 py-2 whitespace-nowrap">3/31/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">3/5/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">8/9/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Medium</span></td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 whitespace-nowrap">
+              <input type="checkbox" class="mr-2">
+            </td>
+              <td class="px-4 py-2 whitespace-nowrap">
+                  <a href="#" class="text-blue-600 hover:underline">Web Edition: Search Page</a>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Mark Hamilton</td>
+              <td class="px-4 py-2 whitespace-nowrap">Tom Hamlett</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="text-blue-500">New</span></td>
+              <td class="px-4 py-2 whitespace-nowrap">3/31/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">3/5/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">8/9/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Medium</span></td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 whitespace-nowrap">
+              <input type="checkbox" class="mr-2">
+            </td>
+              <td class="px-4 py-2 whitespace-nowrap">
+                  <a href="#" class="text-blue-600 hover:underline">Web Edition: Search Page</a>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Mark Hamilton</td>
+              <td class="px-4 py-2 whitespace-nowrap">Tom Hamlett</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="text-blue-500">New</span></td>
+              <td class="px-4 py-2 whitespace-nowrap">3/31/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">3/5/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">8/9/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Medium</span></td>
+          </tr>
+      </tbody>
+  </table>
+  <div class="flex items-center justify-between p-4 border-t">
+      <span class="text-sm font-medium text-gray-900">Count: 34</span>
+      <div class="flex space-x-2">
+          <button class="px-3 py-1 bg-purple-600 text-white rounded">1</button>
+          <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded">2</button>
+          <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded">3</button>
+      </div>
+  </div>
+</div>
 
 
-
-InsertCard
-@startuml
-(*) --> "Retrieve existing cart item"
-if (Cart item exists?) then
-  -->[Yes] "Check if quantity exceeds product quantity"
-  if (Quantity exceeds product quantity?) then
-    -->[Yes] "Set quantity to product quantity"
-    --> "Update existing cart item"
-    --> (*)
-  else
-    -->[No] "Update quantity of existing cart item"
-    --> (*)
-  endif
-else
-  -->[No] "Add new cart item"
-  --> "Save changes"
-  --> (*)
-endif
-@enduml
-
-UpdateCart
-@startuml
-(*) --> "Retrieve existing cart item"
-if (Cart item exists?) then
-  -->[Yes] "Check if new quantity exceeds product quantity"
-  if (New quantity exceeds product quantity?) then
-    -->[Yes] "Set quantity to product quantity"
-    --> "Update existing cart item"
-   --> "Save changes"
-    --> (*)
-  else
-    -->[No] "Update quantity of existing cart item"
-    --> "Save changes"
-    --> (*)
-  endif
-else
-  -->[No] "Throw BadRequestException"
-  --> (*)
-endif
-@enduml
-
-
-Sequence diagram
-
-
-Thêm sản phẩm vào giỏ hàng
-
-@startuml
-actor User
-participant "ProductDetailTemplate" as ProductDetail
-participant "ProductDetaiComponent" as DetailComponent
-participant "CartService" as TrxTransactionService
-participant "CartController" as OrderController
-participant "ICartService" as TrxTransactionServiceImpl
-participant "ICartRepository" as OrderRepository
-
-User -> ProductDetail: submit form "onSubmit"
-activate ProductDetail
-ProductDetail -> DetailComponent: Gọi onSubmit()
-activate DetailComponent
-DetailComponent -> TrxTransactionService: Gọi AddToCart(InsertCartDTO)
-activate TrxTransactionService
-TrxTransactionService -> OrderController: Gọi Insert(Cart)
-activate OrderController
-OrderController -> TrxTransactionServiceImpl: Gọi create(cart,strMessage)
-activate TrxTransactionServiceImpl
-TrxTransactionServiceImpl -> OrderRepository: Add,Save(cart)
-activate OrderRepository
-OrderRepository --> TrxTransactionServiceImpl: Return save cart 
-deactivate OrderRepository
-deactivate OrderRepository
-TrxTransactionServiceImpl --> OrderController: Return (cart, strMessage)
-deactivate TrxTransactionServiceImpl
-OrderController --> TrxTransactionService: Return (cart, strMessage)
-deactivate OrderController
-TrxTransactionService --> DetailComponent: Return (cart, strMessage)
-deactivate TrxTransactionService
-DetailComponent --> ProductDetail: Display message
-deactivate DetailComponent
-deactivate ProductDetail
-ProductDetail --> User: Display message
-@enduml
-
-
-
-Cập nhật số lượng sản phẩm trong giỏ hàng
-
-@startuml
-actor User
-participant "CartTemplate" as ProductDetail
-participant "CartComponent" as DetailComponent
-participant "CartService" as TrxTransactionService
-participant "CartController" as OrderController
-participant "ICartService" as TrxTransactionServiceImpl
-participant "ICartRepository" as OrderRepository
-
-User -> ProductDetail: click increaseQuantity(CartModel) or decreaseQuantity(CartModel)
-activate ProductDetail
-ProductDetail -> DetailComponent: Gọi updateQuantity(cartModel,change)
-activate DetailComponent
-DetailComponent -> TrxTransactionService: Gọi Update(CartModel)
-activate TrxTransactionService
-TrxTransactionService -> OrderController: Gọi Update(Cart)
-activate OrderController
-OrderController -> TrxTransactionServiceImpl: Gọi Update(cart,strMessage)
-activate TrxTransactionServiceImpl
-TrxTransactionServiceImpl -> OrderRepository: Update,Save(cart)
-activate OrderRepository
-OrderRepository --> TrxTransactionServiceImpl: Return save cart 
-deactivate OrderRepository
-deactivate OrderRepository
-TrxTransactionServiceImpl --> OrderController: Return (cart, strMessage)
-deactivate TrxTransactionServiceImpl
-OrderController --> TrxTransactionService: Return (cart, strMessage)
-deactivate OrderController
-TrxTransactionService --> DetailComponent: Return (cart, strMessage)
-deactivate TrxTransactionService
-DetailComponent --> ProductDetail: Display message
-deactivate DetailComponent
-deactivate ProductDetail
-ProductDetail --> User: Display message
-@enduml
-
-
-
-Tạo đơn hàng
-
-
-@startuml
-actor User
-participant "CheckoutTemplate" as OrderTemplate
-participant "CheckoutComponent" as OrderComponent
-participant "TrxTransactionServer" as OrderService
-participant "TrxTransactionController" as OrderController
-participant "TrxTransactionService" as OrderServiceImpl
-participant "TrxTransactionRepository" as TransactionRepository
-participant "TransactionDetailRepository" as transactionDetail
-User -> OrderTemplate: Bắt sự kiện submit()
-activate OrderTemplate
-OrderTemplate -> OrderComponent: Gọi submit()
-activate OrderComponent
-OrderComponent -> OrderService: Gọi PaymentExecute(TrxTransactionDTO)
-activate OrderService
-OrderService -> OrderController: Gọi Insert(TrxTransactionDTO)
-activate OrderController
-OrderController -> OrderServiceImpl: Gọi Insert(TrxTransactionDTO,strMessage)
-activate OrderServiceImpl
-OrderServiceImpl -> TransactionRepository: Add,save(trxTransaction)
-activate TransactionRepository
-TransactionRepository --> OrderServiceImpl: Return saved order
-deactivate TransactionRepository
-
-OrderServiceImpl -> transactionDetail: Add, Save(TransactionDetail)
-activate transactionDetail
-transactionDetail --> OrderServiceImpl
-deactivate transactionDetail
-
-deactivate TransactionRepository
-OrderServiceImpl --> OrderController: Return (TrxTransactionDTO,strMessage)
-deactivate OrderServiceImpl
-OrderController --> OrderService: Return (TrxTransactionDTO,strMessage)
-deactivate OrderController
-OrderService --> OrderComponent: (TrxTransactionDTO,strMessage)
-deactivate OrderService
-OrderComponent --> OrderTemplate: Display message
-deactivate OrderComponent
-deactivate OrderTemplate
-OrderTemplate --> User: Display message
-@enduml
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+  <div class="flex items-center justify-between p-4 border-b">
+      <div class="flex items-center space-x-2">
+          <button class="px-2 py-1 bg-gray-200 rounded"><i class="fas fa-sort"></i></button>
+          <span class="font-semibold">Project</span>
+      </div>
+      <input type="text" placeholder="Enter text to search..." class="border rounded px-2 py-1">
+  </div>
+  <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+          <tr>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owner</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assignee</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Modified</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fixed</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+          </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+          <tr>
+              <td colspan="8" class="px-4 py-2 text-sm font-medium text-gray-900">Project: Enterprise Accounting System (Count: 14)</td>
+          </tr>
+          <tr>
+              <td class="px-4 py-2 whitespace-nowrap">
+                  <input type="checkbox" class="mr-2">
+                  <a href="#" class="text-blue-600 hover:underline">Web Edition: Data Entry Page</a>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Brad Barnes</td>
+              <td class="px-4 py-2 whitespace-nowrap">Steve Lee</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="text-gray-500">Postponed</span></td>
+              <td class="px-4 py-2 whitespace-nowrap">12/4/2003</td>
+              <td class="px-4 py-2 whitespace-nowrap">12/5/2003</td>
+              <td class="px-4 py-2 whitespace-nowrap">12/5/2003</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Low</span></td>
+          </tr>
+          <tr>
+              <td class="px-4 py-2 whitespace-nowrap">
+                  <input type="checkbox" class="mr-2">
+                  <a href="#" class="text-blue-600 hover:underline">Web Edition: Search Page</a>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Mark Hamilton</td>
+              <td class="px-4 py-2 whitespace-nowrap">Tom Hamlett</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="text-blue-500">New</span></td>
+              <td class="px-4 py-2 whitespace-nowrap">3/31/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">3/5/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">8/9/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Medium</span></td>
+          </tr>
+          <tr>
+              <td class="px-4 py-2 whitespace-nowrap">
+                  <input type="checkbox" class="mr-2">
+                  <a href="#" class="text-blue-600 hover:underline">Main Menu: Duplicate Items</a>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Tom Hamlett</td>
+              <td class="px-4 py-2 whitespace-nowrap">Mike Roller</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="text-green-500">Fixed</span></td>
+              <td class="px-4 py-2 whitespace-nowrap">7/27/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">7/10/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">7/10/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="bg-red-100 text-red-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">High</span></td>
+          </tr>
+          <tr>
+              <td class="px-4 py-2 whitespace-nowrap">
+                  <input type="checkbox" class="mr-2">
+                  <a href="#" class="text-blue-600 hover:underline">Ledger: Inconsistency</a>
+                  <i class="fas fa-exclamation-circle text-red-500 ml-2"></i>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Mike Roller</td>
+              <td class="px-4 py-2 whitespace-nowrap">Bert Parkins</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="text-green-500">Fixed</span></td>
+              <td class="px-4 py-2 whitespace-nowrap">6/6/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">7/4/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">7/4/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Medium</span></td>
+          </tr>
+          <tr>
+              <td class="px-4 py-2 whitespace-nowrap">
+                  <input type="checkbox" class="mr-2">
+                  <a href="#" class="text-blue-600 hover:underline">Receivables Printing</a>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Brad Barnes</td>
+              <td class="px-4 py-2 whitespace-nowrap">Tom Hamlett</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="text-blue-500">New</span></td>
+              <td class="px-4 py-2 whitespace-nowrap">7/4/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">8/10/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap"></td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Medium</span></td>
+          </tr>
+          <tr>
+              <td class="px-4 py-2 whitespace-nowrap">
+                  <input type="checkbox" class="mr-2">
+                  <a href="#" class="text-blue-600 hover:underline">Email System</a>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Dave Murrel</td>
+              <td class="px-4 py-2 whitespace-nowrap">Steve Lee</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="text-green-500">Fixed</span></td>
+              <td class="px-4 py-2 whitespace-nowrap">11/5/2003</td>
+              <td class="px-4 py-2 whitespace-nowrap">1/28/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap"></td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Low</span></td>
+          </tr>
+          <tr>
+              <td class="px-4 py-2 whitespace-nowrap">
+                  <input type="checkbox" class="mr-2">
+                  <a href="#" class="text-blue-600 hover:underline">Email Attachments</a>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Brad Barnes</td>
+              <td class="px-4 py-2 whitespace-nowrap">Mike Roller</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="text-blue-500">New</span></td>
+              <td class="px-4 py-2 whitespace-nowrap">7/14/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap"></td>
+              <td class="px-4 py-2 whitespace-nowrap">8/2/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Low</span></td>
+          </tr>
+          <tr>
+              <td class="px-4 py-2 whitespace-nowrap">
+                  <input type="checkbox" class="mr-2">
+                  <a href="#" class="text-blue-600 hover:underline">Transaction Log</a>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Brad Barnes</td>
+              <td class="px-4 py-2 whitespace-nowrap">Carl Lucas</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="text-green-500">Fixed</span></td>
+              <td class="px-4 py-2 whitespace-nowrap">5/10/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">5/15/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">5/26/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Low</span></td>
+          </tr>
+          <tr>
+              <td class="px-4 py-2 whitespace-nowrap">
+                  <input type="checkbox" class="mr-2">
+                  <a href="#" class="text-blue-600 hover:underline">Transaction History</a>
+                  <i class="fas fa-exclamation-circle text-red-500 ml-2"></i>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Brad Barnes</td>
+              <td class="px-4 py-2 whitespace-nowrap">Carl Lucas</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="text-blue-500">New</span></td>
+              <td class="px-4 py-2 whitespace-nowrap">3/27/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">4/19/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">4/28/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Low</span></td>
+          </tr>
+          <tr>
+              <td class="px-4 py-2 whitespace-nowrap">
+                  <input type="checkbox" class="mr-2">
+                  <a href="#" class="text-blue-600 hover:underline">Help: Phone scripts</a>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Mark Hamilton</td>
+              <td class="px-4 py-2 whitespace-nowrap">Andrew Miller</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="text-red-500">Rejected</span></td>
+              <td class="px-4 py-2 whitespace-nowrap">5/27/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">6/17/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap"></td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Low</span></td>
+          </tr>
+          <tr>
+              <td class="px-4 py-2 whitespace-nowrap">
+                  <input type="checkbox" class="mr-2">
+                  <a href="#" class="text-blue-600 hover:underline">Help File Topics</a>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Dave Murrel</td>
+              <td class="px-4 py-2 whitespace-nowrap">Carl Lucas</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="text-green-500">Fixed</span></td>
+              <td class="px-4 py-2 whitespace-nowrap">2/21/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">4/3/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap">8/17/2004</td>
+              <td class="px-4 py-2 whitespace-nowrap"><span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Low</span></td>
+          </tr>
+      </tbody>
+  </table>
+  <div class="flex items-center justify-between p-4 border-t">
+      <span class="text-sm font-medium text-gray-900">Count: 34</span>
+      <div class="flex space-x-2">
+          <button class="px-3 py-1 bg-purple-600 text-white rounded">1</button>
+          <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded">2</button>
+          <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded">3</button>
+      </div>
+  </div>
+</div>
